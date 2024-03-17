@@ -1,71 +1,98 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
+  import { Link, navigate } from 'svelte-routing'
   import Panel from '../components/Panel.svelte'
-  import { isLoading, queryGame } from '../stores'
+  import { fetchQueryGames } from '../lib/queryGames'
+  import { queryGame, queryGames } from '../stores'
   import type { QueryGame } from '../types/types'
 
-  let list: QueryGame[] = [
-    { name: 'test', version: 'v1.0' },
-    { name: 'truc', version: 'v1.12' },
-    { name: 'yolo', version: 'v0.41' }
-  ] // TODO: à supprimer
+  export let edit = false
+
+  let inputSearch = edit ? $queryGame.name : ''
+  let spanSearch = edit ? $queryGame.version : ''
+  onMount(() => {
+    fetchQueryGames()
+    if (false) {
+      const { name, version } = $queryGame
+      inputSearch = name
+      spanSearch = version
+    }
+  })
 
   let filtered: QueryGame[] = []
-  function handleChange() {
+  const handleChange = (
+    event: Event & { currentTarget: EventTarget & HTMLInputElement }
+  ) => {
     spanSearch = ''
 
-    filtered = list.filter((l, i) => {
-      // @ts-ignore
-      const value = this.value
+    filtered = $queryGames?.filter((game, i) => {
+      const value = event.currentTarget.value
 
       if (i <= 5 && value) {
-        return l.name.toLowerCase().includes(value.toLowerCase())
+        return game.name.toLowerCase().includes(value.toLowerCase())
       }
       return false
     })
   }
-
-  let inputSearch = ''
-  let spanSearch = ''
-  function handleClick(data: QueryGame) {
+  const handleClick = (data: QueryGame) => {
     spanSearch = data.version
     inputSearch = data.name
     filtered = []
     queryGame.set(data)
+    navigate('/edit')
   }
 
-  function handleKeyPress(event: any, item: QueryGame) {
+  const handleKeyPress = (event: KeyboardEvent, item: QueryGame) => {
     if (event.key === 'Enter' || event.key === ' ') {
       handleClick(item)
     }
   }
 
-  function handleClickReset() {
-    inputSearch = ''
-    spanSearch = ''
+  const handleFocus = () => {
+    if (spanSearch !== '') {
+      inputSearch = ''
+      spanSearch = ''
+    }
+  }
+
+  const handleCtrlK = (event: KeyboardEvent) => {
+    if (event.ctrlKey && event.key === 'k') {
+      event.preventDefault()
+      const inputField = document.getElementById('searchField')
+      if (inputField) {
+        inputField.focus()
+      }
+    }
   }
 </script>
+
+<svelte:window on:keydown={handleCtrlK} />
 
 <Panel title="Rechercher un jeu" description={false}>
   <div slot="panel-content">
     <div class="flex gap-4">
       <div id="container-search" class="relative w-full">
-        <input
-          disabled={$isLoading}
-          type="text"
-          placeholder="Rechercher un jeu"
-          class="w-full input input-bordered"
-          name="theme"
-          value={inputSearch}
-          on:input={handleChange}
-          on:click={handleClickReset}
-        />
-        {#if spanSearch}
-          <div class="absolute top-0 flex items-center h-full right-4">
-            <div class="badge badge-primary">{spanSearch}</div>
-          </div>
-        {/if}
+        <label class="input input-bordered flex items-center gap-2">
+          <input
+            disabled={$queryGames === undefined}
+            type="text"
+            placeholder="Rechercher un jeu"
+            class="bg-transparent grow"
+            name="theme"
+            id="searchField"
+            value={inputSearch}
+            on:input={handleChange}
+            on:focus={handleFocus}
+          />
+          {#if spanSearch}
+            <span class="badge badge-primary">{spanSearch}</span>
+          {/if}
+          <kbd class="kbd kbd-sm">ctrl</kbd>
+          <kbd class="kbd kbd-sm">K</kbd>
+        </label>
+
         {#if filtered.length > 0}
-          <ul class="z-10 w-full menu bg-base-200 rounded-box">
+          <ul class="z-10 w-full menu bg-base-200 rounded-box absolute">
             {#each filtered as item}
               <li>
                 <button
@@ -75,7 +102,7 @@
                   on:keypress={e => handleKeyPress(e, item)}
                 >
                   {item.name}
-                  <div class="badge badge-primary">{item.version}</div>
+                  <span class="badge badge-primary">{item.version}</span>
                 </button>
               </li>
             {/each}
@@ -83,9 +110,9 @@
         {/if}
         <span id="span-search"></span>
       </div>
-      <a href="/add">
-        <button class="btn btn-primary">AJOUTER UN JEU</button>
-      </a>
+      <Link to="/add">
+        <button class="btn btn-primary sm:w-40">AJOUTER UN JEU</button>
+      </Link>
     </div>
   </div>
 </Panel>

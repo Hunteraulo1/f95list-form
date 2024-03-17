@@ -1,6 +1,6 @@
+import { z } from "zod";
 import { UserType } from "../../types/schemas";
 import { createUser_ } from "../lib/createUser_";
-import { z } from "zod";
 
 export type GetUserArgs = {
   email: string | null;

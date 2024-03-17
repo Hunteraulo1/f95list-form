@@ -1,8 +1,8 @@
 export interface Game {
   domain: "F95z" | "LewdCorner" | "Autre";
   id: number | null;
-  name: string | null;
-  link: string | null;
+  name: string;
+  link: string;
   status: "EN COURS" | "TERMINÉ" | "ABANDONNÉ";
   tags: string | null;
   type:
@@ -16,8 +16,8 @@ export interface Game {
     | "Autre"
     | "RenPy/RPGM"
     | "RenPy/Unity";
-  version: string | null;
-  tversion: string | null;
+  version: string;
+  tversion: string;
   tname:
     | "Traduction"
     | "Traduction (mod inclu)"
@@ -33,6 +33,7 @@ export interface Game {
     | "VO Française"
     | "À tester";
   ac: boolean;
+  trlink?: string | null;
 }
 
 export interface QueryGame {

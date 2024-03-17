@@ -1,7 +1,5 @@
-import { z } from "zod";
-import { Game, GameType } from "../../types/schemas";
-import { createGame_ } from "../lib/createGame_";
-import { getGames } from "./getGames";
+import { GameType } from "../../types/schemas";
+import { getQueryGames } from "./getQueryGames";
 
 export type GetGameArgs = {
   name: string | null;
@@ -13,29 +11,18 @@ export type GetGameArgs = {
  * @param {GetGameArgs} [optionalArgs] - Optional parameter containing game name and version.
  * @returns {Promise<Game>}
  */
-export async function getGame(
-  { name, version }: GetGameArgs = { name: null, version: null }
-): Promise<GameType | null> {
+export async function getGame({
+  name,
+  version,
+}: GetGameArgs): Promise<GameType | null> {
   // Report request
   console.log("getGame called with args:", { name, version });
 
-  // Validate the arguments against the schema
-  const GetUserArgsSchema = z.object({
-    name: z.string(),
-    version: z.string(),
-  });
+  const games = await getQueryGames();
 
-  const games = getGames();
-
-  // Otherwise, the user object exists and we can return it.
-  let game = games.find(
-    (game: GameType) => game.name === name && game.version === version
+  let game = games?.find(
+    (game: any) => game.name === name && game.version === version
   );
 
-  if (!games) {
-    let game = createGame_(Game.parse({}));
-    return game;
-  }
-
-  return game;
+  return game as GameType;
 }

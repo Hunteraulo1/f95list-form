@@ -11,9 +11,7 @@ export const userIsAdmin = derived(sessionUser, ($sessionUser) => {
 });
 
 export const isLoading = writable<boolean>(false);
-export const queryGame = writable<QueryGame>({
-  name: "",
-  version: "",
-});
+export const queryGame = writable<QueryGame>();
+export const queryGames = writable<QueryGame[]>();
 
 export const appConfiguration = writable<AppConfigurationType | null>(null);

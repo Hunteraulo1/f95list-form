@@ -24,7 +24,8 @@ export const users: UserType[] = [
     roles: ["admin"],
     profile: {
       pseudo: "John",
-      imageUrl: "https://lh3.googleusercontent.com",
+      imageUrl:
+        "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100",
     },
     preferences: {
       theme: "light",
@@ -39,7 +40,8 @@ export const users: UserType[] = [
     roles: [],
     profile: {
       pseudo: "Jane",
-      imageUrl: "https://lh3.googleusercontent.com",
+      imageUrl:
+        "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100",
     },
     preferences: {
       theme: "light",

@@ -30,9 +30,9 @@ const User = z.object({
 const Game = z.object({
   id: z.number(),
   domain: z.enum(["F95z", "LewdCorner", "Autre"]),
-  name: z.string(),
-  version: z.string(),
-  tversion: z.string(),
+  name: z.string().min(1),
+  version: z.string().min(1),
+  tversion: z.string().min(1),
   tname: z.enum([
     "Traduction",
     "Traduction (mod inclu)",
@@ -64,11 +64,14 @@ const Game = z.object({
   ]),
   ac: z.boolean(),
   link: z.string().url(),
-  tlink: z.string().url(),
-  trlink: z.string().url(),
+  tlink: z.string().url().or(z.string().nullable()),
+  trlink: z.string().url().or(z.string().nullable()).optional(),
 });
 
-const Games = z.array(Game);
+const QueryGames = z.object({
+  name: z.string(),
+  version: z.string(),
+});
 
 const AppConfiguration = z.object({
   appName: z.string(),
@@ -82,7 +85,7 @@ const AppConfiguration = z.object({
 export {
   AppConfiguration,
   Game,
-  Games,
+  QueryGames,
   User,
   UserActivity,
   UserPreferences,
@@ -95,4 +98,4 @@ export type UserProfileType = z.infer<typeof UserProfile>;
 export type UserActivityType = z.infer<typeof UserActivity>;
 export type UserType = z.infer<typeof User>;
 export type GameType = z.infer<typeof Game>;
-export type GamesType = z.infer<typeof Games>;
+export type QueryGamesType = z.infer<typeof QueryGames>;

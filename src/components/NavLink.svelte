@@ -1,12 +1,11 @@
 <script>
-    import { link } from "svelte-routing";
+  import { Link } from 'svelte-routing'
 
-    export let to = "";
-    export let onClick = () => {};
+  export let to = ''
 </script>
 
 <li>
-    <a href={to} use:link on:click={onClick}>
-        <slot />
-    </a>
+  <Link {to}>
+    <slot />
+  </Link>
 </li>

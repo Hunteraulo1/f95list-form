@@ -1,0 +1,381 @@
+<script lang="ts">
+  import { navigate } from 'svelte-routing'
+  import Modal from '../components/Modal.svelte'
+  import Search from '../components/Search.svelte'
+  import { GAS_API } from '../lib/GAS_API'
+  import { isLoading, queryGame } from '../stores'
+  import type { Game } from '../types/types'
+
+  export let step: number = 5 // TODO: default step value: 0
+  export let edit: boolean = false
+  export let game: Game = {
+    domain: 'F95z',
+    id: 0,
+    name: '',
+    link: '',
+    status: 'EN COURS',
+    tags: '',
+    type: 'RenPy',
+    version: '',
+    tversion: '',
+    tname: 'Traduction',
+    tlink: '',
+    traductor: '',
+    reader: '',
+    ttype: 'Traduction Humaine',
+    ac: false
+  }
+
+  let stepDisablePrev = true
+  let stepDisableNext = false
+
+  const changeStep = (n: number) => {
+    if (step + n >= 0 && step + n <= 5) {
+      step += n
+    }
+
+    if (
+      (step === 1 && game.domain === 'Autre') ||
+      (step === 4 && game.domain === 'Autre') ||
+      (step === 2 && (game.domain === 'F95z' || game.domain === 'LewdCorner'))
+    ) {
+      step += n
+    }
+
+    stepDisablePrev = step <= 0
+    stepDisableNext = step >= 5
+  }
+
+  const handleChange = (
+    event: Event & {
+      currentTarget: EventTarget &
+        (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)
+    }
+  ) => {
+    const { name, value } = event.currentTarget
+    ;(game as any)[name] = value
+  }
+
+  const handleInput = (
+    event: Event & { currentTarget: EventTarget & HTMLInputElement }
+  ) => {
+    const { value, classList } = event.currentTarget
+    value === ''
+      ? classList.add('input-error')
+      : classList.remove('input-error')
+  }
+
+  const handleSubmit = () => {
+    isLoading.set(true)
+
+    if (edit) {
+      const query = $queryGame
+
+      GAS_API.putGame({ game, query })
+        .then((result: string) => {
+          console.log(result)
+          navigate('/')
+        })
+        .catch(err => {
+          console.error('Error fetching game', err)
+        })
+        .finally(() => {
+          isLoading.set(false)
+        })
+    } else {
+      GAS_API.postGame(game)
+        .then((result: string) => {
+          console.log(result)
+          navigate('/')
+        })
+        .catch(err => {
+          console.error('Error added game', err)
+        })
+        .finally(() => {
+          isLoading.set(false)
+        })
+    }
+  }
+
+  const handleInvalid = (
+    event: Event & { currentTarget: EventTarget & HTMLInputElement }
+  ) => {
+    event.currentTarget.setCustomValidity('Veuillez remplir ce champ')
+  }
+</script>
+
+{#if !$isLoading}
+  <div class="flex flex-col items-center justify-center gap-4 mt-0">
+    <Search {edit} />
+    <form
+      class="relative flex flex-col items-center"
+      on:submit|preventDefault={handleSubmit}
+    >
+      <div
+        class="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      >
+        {#if step === 0 || step === 5}
+          <div>
+            <label for="domain">Platforme:</label>
+            <select
+              placeholder=" du jeu"
+              class="w-full select-bordered select"
+              name="domain"
+              value={game.domain}
+              on:change={handleChange}
+              required
+            >
+              <option>F95z</option>
+              <option>LewdCorner</option>
+              <option>Autre</option>
+            </select>
+          </div>
+        {/if}
+        {#if step === 1 || step === 5}
+          <div>
+            <label for="id">ID:</label>
+            <input
+              type="number"
+              placeholder="Id du jeu"
+              class="w-full appearance-none input input-bordered number-input"
+              pattern="[0-9]*"
+              inputmode="numeric"
+              name="id"
+              on:change={handleChange}
+              value={game.id}
+            />
+          </div>
+        {/if}
+        {#if step === 2 || step === 5}
+          <div>
+            <label for="name">Nom:</label>
+            <input
+              type="text"
+              placeholder="Nom du jeu"
+              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              name="name"
+              on:change={handleChange}
+              on:input={e => handleInput(e)}
+              on:invalid={handleInvalid}
+              required
+              value={game.name}
+            />
+          </div>
+
+          <div>
+            <label for="link">Lien:</label>
+            <input
+              type="text"
+              placeholder="Lien du jeu"
+              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              name="link"
+              on:change={handleChange}
+              on:input={e => handleInput(e)}
+              required
+              value={game.link}
+            />
+          </div>
+
+          <div>
+            <label for="status">Status:</label>
+            <select
+              placeholder="Status du jeu"
+              class="w-full select-bordered select"
+              name="status"
+              on:change={handleChange}
+              value={game.status}
+              required
+            >
+              <option>EN COURS</option>
+              <option>TERMINÉ</option>
+              <option>ABANDONNÉ</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="tags">Tags:</label>
+            <textarea
+              id="tags"
+              name="tags"
+              placeholder="Tags du jeu"
+              class="w-full textarea textarea-bordered textarea-xs max-h-24"
+              on:change={handleChange}
+              value={game.tags}
+            ></textarea>
+          </div>
+
+          <div>
+            <label for="type">Type:</label>
+            <select
+              placeholder="Type du jeu"
+              class="w-full select-bordered select"
+              name="type"
+              on:change={handleChange}
+              value={game.type}
+              required
+            >
+              <option>RenPy</option>
+              <option>RPGM</option>
+              <option>Unity</option>
+              <option>Unreal</option>
+              <option>Flash</option>
+              <option>HTLM</option>
+              <option>QSP</option>
+              <option>Autre</option>
+              <option>RenPy/RPGM</option>
+              <option>RenPy/Unity</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="version">Version actuelle:</label>
+            <input
+              type="text"
+              placeholder="Version du jeu"
+              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              name="version"
+              on:change={handleChange}
+              on:input={e => handleInput(e)}
+              required
+              value={game.version}
+            />
+          </div>
+        {/if}
+        {#if step === 3 || step === 5}
+          <div>
+            <label for="tversion">Version de la traduction:</label>
+            <input
+              type="text"
+              placeholder="Version de la traduction"
+              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              name="tversion"
+              on:change={handleChange}
+              on:input={e => handleInput(e)}
+              required
+              value={game.tversion}
+            />
+          </div>
+
+          <div>
+            <label for="tname">Status de la traduction:</label>
+            <select
+              placeholder="Status de la traduction"
+              class="w-full select-bordered select"
+              name="tname"
+              on:change={handleChange}
+              value={game.tname}
+              required
+            >
+              <option>Traduction</option>
+              <option>Traduction (mod inclu)</option>
+              <option>Intégrée</option>
+              <option>Pas de traduction</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="tlink">Lien de la traduction:</label>
+            <input
+              type="text"
+              placeholder="Lien de la traduction"
+              class="w-full input input-bordered"
+              name="tlink"
+              on:change={handleChange}
+              value={game.tlink}
+            />
+          </div>
+
+          <div>
+            <label for="traductor">Traducteur:</label>
+            <input
+              placeholder="Nom du traducteur"
+              type="search"
+              id="traductor"
+              class="w-full select select-bordered"
+              list="traductor-list"
+              on:change={handleChange}
+              value={game.traductor}
+            />
+            <datalist id="traductor-list"></datalist>
+          </div>
+
+          <div>
+            <label for="reader">Relecteur:</label>
+            <input
+              placeholder="Nom du relecteur"
+              type="search"
+              id="reader"
+              class="w-full select select-bordered"
+              list="reader-list"
+              on:change={handleChange}
+              value={game.reader}
+            />
+            <datalist id="reader-list"></datalist>
+          </div>
+
+          <div>
+            <label for="ttype">Type de Traduction:</label>
+            <select
+              placeholder="Type de la traduction"
+              class="w-full select-bordered select"
+              name="ttype"
+              on:change={handleChange}
+              value={game.ttype}
+              required
+            >
+              <option>Traduction Humaine</option>
+              <option>Traduction Automatique</option>
+              <option>Traduction Semi-Automatique</option>
+              <option>VO Française</option>
+              <option>À tester</option>
+            </select>
+          </div>
+        {/if}
+        {#if step === 4 || step === 5}
+          <div class="flex items-end">
+            <div
+              class="flex flex-col items-center justify-center w-full h-12 gap-2"
+            >
+              <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
+              <input
+                type="checkbox"
+                class="checkbox checkbox-lg"
+                on:change={handleChange}
+                value={game.ac}
+              />
+            </div>
+          </div>
+        {/if}
+      </div>
+      {#if step < 5}
+        <div class="flex gap-4">
+          <button
+            class="w-48 btn btn-outline btn-primary"
+            on:click={() => changeStep(-1)}
+            disabled={stepDisablePrev}>Précédent</button
+          >
+          <button
+            class="w-48 btn btn-primary"
+            on:click={() => changeStep(1)}
+            disabled={stepDisableNext}>Suivant</button
+          >
+        </div>
+      {:else}
+        <button class="w-48 btn btn-primary" type="submit">
+          {edit ? 'Éditer le jeu' : 'Ajouter le jeu'}
+        </button>
+      {/if}
+    </form>
+  </div>
+{/if}
+
+<Modal id="add_admin_modal" title="Supprimer le jeu">
+  <div slot="modal-content">
+    <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
+    <textarea
+      placeholder="Pourquoi veux-tu supprimer le jeu ?"
+      class="textarea textarea-bordered max-h-32"
+    ></textarea>
+  </div>
+  <button slot="modal-action" on:click class="btn">Supprimer</button>
+</Modal>

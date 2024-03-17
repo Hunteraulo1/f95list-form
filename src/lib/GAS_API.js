@@ -61,9 +61,21 @@ export const GAS_API = {
   getGame: (args) => callAPI("getGame", args),
 
   /**
-   * @returns {Promise<Games>}
+   * @param {PostGameArgs} [args] - Optional parameter containing game
+   * @returns {Promise<string>}
    */
-  getGames: () => callAPI("getGames"),
+  postGame: (args) => callAPI("postGame", args),
+
+  /**
+   * @param {PutGameArgs} [args] - Optional parameter containing game
+   * @returns {Promise<string>}
+   */
+  putGame: (args) => callAPI("putGame", args),
+
+  /**
+   * @returns {Promise<QueryGames>}
+   */
+  getQueryGames: () => callAPI("getQueryGames"),
 
   /**
    * @returns {Promise<string>}

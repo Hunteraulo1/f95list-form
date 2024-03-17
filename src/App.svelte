@@ -9,6 +9,7 @@
   import { GAS_API } from './lib/GAS_API'
   import { fetchAppConfiguration } from './lib/fetchAppConfig'
   import Add from './routes/Add.svelte'
+  import Edit from './routes/Edit.svelte'
   import Home from './routes/Home.svelte'
   import Profile from './routes/Profile.svelte'
   import Settings from './routes/Settings.svelte'
@@ -107,9 +108,12 @@
           <Route path="user/:email" let:params>
             <Profile email={params.email} />
           </Route>
-          <Route path="add">
+          <ProtectedRoute path="add">
             <Add />
-          </Route>
+          </ProtectedRoute>
+          <ProtectedRoute path="edit">
+            <Edit />
+          </ProtectedRoute>
         </main>
       </div>
       <div class="drawer-side">
