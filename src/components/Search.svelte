@@ -110,9 +110,7 @@
         {/if}
         <span id="span-search"></span>
       </div>
-      <Link to="/add">
-        <button class="btn btn-primary sm:w-40">AJOUTER UN JEU</button>
-      </Link>
+      <Link to="/add" class="btn btn-primary sm:w-40">AJOUTER UN JEU</Link>
     </div>
   </div>
 </Panel>

@@ -28,7 +28,7 @@ const User = z.object({
 });
 
 const Game = z.object({
-  id: z.number(),
+  id: z.string(),
   domain: z.enum(["F95z", "LewdCorner", "Autre"]),
   name: z.string().min(1),
   version: z.string().min(1),
@@ -68,9 +68,27 @@ const Game = z.object({
   trlink: z.string().url().or(z.string().nullable()).optional(),
 });
 
-const QueryGames = z.object({
+const QueryGame = z.object({
+  name: z.string().min(1),
+  version: z.string().min(1),
+});
+
+const ScrapeGame = z.object({
   name: z.string(),
   version: z.string(),
+  status: z.enum(["EN COURS", "TERMINÉ", "ABANDONNÉ"]),
+  tags: z.string(),
+  type: z.enum([
+    "RenPy",
+    "RPGM",
+    "Unity",
+    "Unreal",
+    "Flash",
+    "HTLM",
+    "QSP",
+    "Autre",
+    "",
+  ]),
 });
 
 const AppConfiguration = z.object({
@@ -85,7 +103,7 @@ const AppConfiguration = z.object({
 export {
   AppConfiguration,
   Game,
-  QueryGames,
+  QueryGame,
   User,
   UserActivity,
   UserPreferences,
@@ -98,4 +116,5 @@ export type UserProfileType = z.infer<typeof UserProfile>;
 export type UserActivityType = z.infer<typeof UserActivity>;
 export type UserType = z.infer<typeof User>;
 export type GameType = z.infer<typeof Game>;
-export type QueryGamesType = z.infer<typeof QueryGames>;
+export type QueryGameType = z.infer<typeof QueryGame>;
+export type ScrapeGameType = z.infer<typeof ScrapeGame>;

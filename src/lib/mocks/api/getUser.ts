@@ -1,7 +1,7 @@
-import sleep from "../sleep";
-import { user, users } from "../data/user";
-import { UserType } from "../../../types/schemas";
 import { GetUserArgs } from "../../../server/api/getUser";
+import { UserType } from "../../../types/schemas";
+import { user, users } from "../data/user";
+import sleep from "../sleep";
 
 /**
  * @param {GetUserArgs} [optionalArgs] - Optional parameter containing user email
@@ -14,6 +14,8 @@ export async function getUser(
 
   /** @type {User | undefined} */
   let mockResponse = null;
+
+  console.log({ email });
 
   if (!email) {
     mockResponse = user;

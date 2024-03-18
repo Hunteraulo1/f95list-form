@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { isLoading } from '../stores'
 
   export let title = ''

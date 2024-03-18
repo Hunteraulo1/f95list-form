@@ -8,6 +8,7 @@
   import Toaster from './components/Toaster.svelte'
   import { GAS_API } from './lib/GAS_API'
   import { fetchAppConfiguration } from './lib/fetchAppConfig'
+  import Error404 from './routes/404.svelte'
   import Add from './routes/Add.svelte'
   import Edit from './routes/Edit.svelte'
   import Home from './routes/Home.svelte'
@@ -114,6 +115,9 @@
           <ProtectedRoute path="edit">
             <Edit />
           </ProtectedRoute>
+          <Route path="*">
+            <Error404 />
+          </Route>
         </main>
       </div>
       <div class="drawer-side">

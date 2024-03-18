@@ -1,6 +1,6 @@
 export interface Game {
   domain: "F95z" | "LewdCorner" | "Autre";
-  id: number | null;
+  id: string | null;
   name: string;
   link: string;
   status: "EN COURS" | "TERMINÉ" | "ABANDONNÉ";

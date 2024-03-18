@@ -2,7 +2,7 @@ import type { Game, QueryGame } from "../../../types/types";
 
 export const game: Game = {
   domain: "F95z",
-  id: 6547,
+  id: "6547",
   name: "Sisterly Lust",
   link: "https://f95zone.to/threads/6547",
   status: "TERMINÉ",
@@ -23,7 +23,7 @@ export const games: Game[] = [
   game,
   {
     domain: "F95z",
-    id: 70317,
+    id: "70317",
     name: "A Split Existence",
     link: "https://f95zone.to/threads/70317",
     status: "ABANDONNÉ",
@@ -41,7 +41,7 @@ export const games: Game[] = [
   },
   {
     domain: "LewdCorner",
-    id: 3390,
+    id: "3390",
     name: "Found in Translation",
     link: "https://lewdcorner.com/threads/3390",
     status: "EN COURS",
@@ -62,3 +62,60 @@ export const queryGames: QueryGame[] = games.map((game) => ({
   name: game.name,
   version: game.version,
 }));
+
+export const checkerF95z = (id: string) => {
+  switch (id) {
+    case "100":
+      return {
+        status: "ok",
+        msg: { "100": "v0.68" },
+      };
+    case "110":
+      return {
+        status: "ok",
+        msg: { "110": "v4.1" },
+      };
+    case "150":
+      return {
+        status: "ok",
+        msg: { "150": "v1.0" },
+      };
+    default:
+      return {
+        status: "error",
+        msg: "Thread not found",
+      };
+  }
+};
+
+export const scrape = (domain: "F95z" | "LewdCorner", id: string) => {
+  switch (domain) {
+    case "F95z":
+      switch (id) {
+        case "100":
+          return {
+            name: "Camelot",
+            status: "ABANDONNÉ",
+            tags: "2dcg, adventure, big tits, fantasy, handjob, male protagonist, monster girl, oral sex, rpg, sex toys",
+            type: "RPGM",
+            version: "v0.68",
+          };
+        case "110":
+          return {
+            name: "Dragon Throne",
+            status: "ABANDONNÉ",
+            tags: "3dcg, adventure, combat, fantasy, male protagonist, oral sex, romance, vaginal sex",
+            type: "RPGM",
+            version: "v4.1",
+          };
+        case "150":
+          return {
+            name: "Pokkaloh",
+            status: "TERMINÉ",
+            tags: "2d game, dating sim, harem, male protagonist",
+            type: "Flash",
+            version: "v1.0",
+          };
+      }
+  }
+};

@@ -9,6 +9,9 @@ export const userIsAdmin = derived(sessionUser, ($sessionUser) => {
     $sessionUser?.roles.includes("superAdmin")
   );
 });
+export const userIsSuperAdmin = derived(sessionUser, ($sessionUser) => {
+  return $sessionUser?.roles.includes("superAdmin");
+});
 
 export const isLoading = writable<boolean>(false);
 export const queryGame = writable<QueryGame>();

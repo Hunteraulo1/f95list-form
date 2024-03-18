@@ -3,14 +3,14 @@
   import Modal from '../components/Modal.svelte'
   import Search from '../components/Search.svelte'
   import { GAS_API } from '../lib/GAS_API'
-  import { isLoading, queryGame } from '../stores'
+  import { isLoading, queryGame, userIsSuperAdmin } from '../stores'
   import type { Game } from '../types/types'
 
-  export let step: number = 5 // TODO: default step value: 0
+  export let step: number = 0 // TODO: default step value: 0
   export let edit: boolean = false
   export let game: Game = {
     domain: 'F95z',
-    id: 0,
+    id: '',
     name: '',
     link: '',
     status: 'EN COURS',
@@ -26,6 +26,7 @@
     ac: false
   }
 
+  let savedId: string | null = null
   let stepDisablePrev = true
   let stepDisableNext = false
 
@@ -44,6 +45,32 @@
 
     stepDisablePrev = step <= 0
     stepDisableNext = step >= 5
+
+    if (
+      step === 3 &&
+      (game.domain === 'F95z' || game.domain === 'LewdCorner') &&
+      (savedId === null || savedId !== game.id) &&
+      game.id &&
+      game.id !== '0'
+    ) {
+      const { id, domain } = game
+
+      savedId = id
+
+      GAS_API.getScrape({ id: id, domain })
+        .then(result => {
+          const { name, version, status, tags, type } = result
+
+          game.name = name
+          game.version = version
+          game.status = status
+          game.tags = tags
+          game.type = type
+        })
+        .catch(err => {
+          console.error('Error scraped game', err)
+        })
+    }
   }
 
   const handleChange = (
@@ -54,6 +81,17 @@
   ) => {
     const { name, value } = event.currentTarget
     ;(game as any)[name] = value
+
+    const { domain, id } = game
+    if ((name === 'platform' || name === 'id') && id && id !== '0') {
+      switch (domain) {
+        case 'F95z':
+          game.link = `https://f95zone.to/threads/${id}`
+          break
+        case 'LewdCorner':
+          game.link = `https://lewdcorner.com/threads/${id}`
+      }
+    }
   }
 
   const handleInput = (
@@ -108,17 +146,17 @@
   <div class="flex flex-col items-center justify-center gap-4 mt-0">
     <Search {edit} />
     <form
-      class="relative flex flex-col items-center"
+      class="relative flex flex-col items-center w-full"
       on:submit|preventDefault={handleSubmit}
     >
       <div
-        class="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        class="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full"
       >
         {#if step === 0 || step === 5}
           <div>
             <label for="domain">Platforme:</label>
             <select
-              placeholder=" du jeu"
+              placeholder="Platforme du jeu"
               class="w-full select-bordered select"
               name="domain"
               value={game.domain}
@@ -347,24 +385,59 @@
           </div>
         {/if}
       </div>
-      {#if step < 5}
-        <div class="flex gap-4">
+      <div class="flex gap-4">
+        {#if step < 5}
           <button
             class="w-48 btn btn-outline btn-primary"
+            type="button"
             on:click={() => changeStep(-1)}
             disabled={stepDisablePrev}>Précédent</button
           >
           <button
             class="w-48 btn btn-primary"
+            type="button"
             on:click={() => changeStep(1)}
             disabled={stepDisableNext}>Suivant</button
           >
-        </div>
-      {:else}
-        <button class="w-48 btn btn-primary" type="submit">
-          {edit ? 'Éditer le jeu' : 'Ajouter le jeu'}
-        </button>
-      {/if}
+        {:else}
+          <button class="w-48 btn btn-primary" type="submit">
+            {edit ? 'Éditer le jeu' : 'Ajouter le jeu'}
+          </button>
+          {#if edit}
+            <button class="w-48 btn btn-error" type="button">
+              Supprimer le jeu
+            </button>
+          {/if}
+        {/if}
+        {#if !edit && $userIsSuperAdmin}
+          <button
+            class="w-48 btn btn-info"
+            type="button"
+            on:click={() => {
+              step = 5
+              game = {
+                domain: 'Autre',
+                id: '666',
+                name: 'TEST GAME FOR DEV',
+                link: 'https://testgame.dev',
+                status: 'ABANDONNÉ',
+                tags: 'TEST, DEV, NE PAS TOUCHER',
+                type: 'Autre',
+                version: 'v666',
+                tversion: 'n/a',
+                tname: 'Pas de traduction',
+                tlink: 'https://traduction.dev',
+                traductor: 'Hunteraulo',
+                reader: 'Hunteraulo',
+                ttype: 'À tester',
+                ac: false
+              }
+            }}
+          >
+            Dev button
+          </button>
+        {/if}
+      </div>
     </form>
   </div>
 {/if}

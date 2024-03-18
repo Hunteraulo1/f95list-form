@@ -61,6 +61,12 @@ export const GAS_API = {
   getGame: (args) => callAPI("getGame", args),
 
   /**
+   * @param {GetScrapeArgs} [args] - Optional parameter containing game domain and id
+   * @returns {Promise<ScrapeGameType>}
+   */
+  getScrape: (args) => callAPI("getScrape", args),
+
+  /**
    * @param {PostGameArgs} [args] - Optional parameter containing game
    * @returns {Promise<string>}
    */

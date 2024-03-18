@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte'
+  import { Link } from 'svelte-routing'
   import AddAdminModal from '../components/AddAdminModal.svelte'
   import Panel from '../components/Panel.svelte'
   import RemoveAdminModal from '../components/RemoveAdminModal.svelte'
@@ -97,28 +98,30 @@
                 <!-- row -->
                 <tr>
                   <td>
-                    <div class="flex items-center space-x-3">
-                      <div class="avatar">
-                        <div class="w-12 h-12 mask mask-squircle">
-                          <img
-                            src={admin.profile.imageUrl}
-                            alt="Avatar Tailwind CSS Component"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <div class="font-bold">
-                          {admin.email}
+                    <Link to={`/user/${admin.email}`}>
+                      <div class="flex items-center space-x-3">
+                        <div class="avatar">
+                          <div class="w-12 h-12 mask mask-squircle">
+                            <img
+                              src={admin.profile.imageUrl}
+                              alt="Avatar Tailwind CSS Component"
+                            />
+                          </div>
                         </div>
                         <div>
-                          {#each admin.roles as role}
-                            <span class="mr-2 badge badge-ghost badge-sm"
-                              >{role}</span
-                            >
-                          {/each}
+                          <div class="font-bold">
+                            {admin.email}
+                          </div>
+                          <div>
+                            {#each admin.roles as role}
+                              <span class="mr-2 badge badge-ghost badge-sm"
+                                >{role}</span
+                              >
+                            {/each}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </td>
                   <th>
                     <button

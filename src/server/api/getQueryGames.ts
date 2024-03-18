@@ -1,11 +1,11 @@
-import { QueryGames, QueryGamesType } from "../../types/schemas";
+import { QueryGame, QueryGameType } from "../../types/schemas";
 import { createGames_ } from "../lib/createGame_";
 
 /**
  * **API Endpoint** | Returns the accessing games array
- * @returns {Promise<QueryGames>}
+ * @returns {Promise<QueryGame>}
  */
-export async function getQueryGames(): Promise<QueryGamesType[] | null> {
+export async function getQueryGames(): Promise<QueryGameType[] | null> {
   // Report request
   console.log("getQueryGames called");
 
@@ -24,7 +24,7 @@ export async function getQueryGames(): Promise<QueryGamesType[] | null> {
   if (!queryGames) {
     let result = [];
     for (let i = 0; i < 10; i++) {
-      result.push(createGames_(QueryGames.parse({})));
+      result.push(createGames_(QueryGame.parse({})));
     }
     return result;
   }

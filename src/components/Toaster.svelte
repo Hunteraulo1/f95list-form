@@ -1,8 +1,8 @@
 <script>
-    import Toast from './Toast.svelte';
-    export let toasts = [];
-  </script>
-
+  // TODO: type component
+  import Toast from './Toast.svelte'
+  export let toasts = []
+</script>
 
 <div id="toaster" class="fixed z-50 bottom-4 left-2 mx-0 my-auto">
   {#each toasts as toast (toast.id)}
