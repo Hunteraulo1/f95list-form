@@ -15,7 +15,7 @@
   import Profile from './routes/Profile.svelte'
   import Settings from './routes/Settings.svelte'
   import UserPreferences from './routes/UserPreferences.svelte'
-  import View from './routes/View.svelte'
+  //import View from './routes/View.svelte'
   import {
     appConfiguration,
     isLoading,
@@ -103,9 +103,9 @@
           <Route path="user-preferences">
             <UserPreferences user={$sessionUser} on:newToast={handleNewToast} />
           </Route>
-          <Route path="view/:id" let:params>
+          <!-- <Route path="view/:id" let:params>
             <View id={params.id} />
-          </Route>
+          </Route> -->
           <Route path="user/:email" let:params>
             <Profile email={params.email} />
           </Route>

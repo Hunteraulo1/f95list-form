@@ -12,10 +12,11 @@ export async function putAppConfiguration({
 }: PutAppConfigArgs): Promise<AppConfigurationType | null> {
   await sleep();
 
-  let validAppConfig = AppConfiguration.parse(appConfiguration);
+  const validAppConfig: AppConfigurationType =
+    AppConfiguration.parse(appConfiguration);
 
   /** @type {AppConfiguration} */
-  let mockResponse = validAppConfig;
+  const mockResponse = validAppConfig;
 
   return JSON.parse(JSON.stringify(mockResponse));
 }

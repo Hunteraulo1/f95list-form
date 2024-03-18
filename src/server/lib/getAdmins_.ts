@@ -1,8 +1,8 @@
-import { UserType, User } from "../../types/schemas";
+import { User, UserType } from "../../types/schemas";
 
 export function getAdmins_(): UserType[] {
   // Return variable
-  let adminUsers = [];
+  const adminUsers = [];
 
   // Load all of the script properties as an object
   const scriptProperties =
@@ -12,7 +12,7 @@ export function getAdmins_(): UserType[] {
   for (const property in scriptProperties) {
     try {
       // Weed out properties that do not reprsent users
-      let user = User.parse(JSON.parse(scriptProperties[property]));
+      const user = User.parse(JSON.parse(scriptProperties[property]));
 
       // If the user has an admin role, add them to our list
       if (user.roles.includes("admin") || user.roles.includes("superAdmin")) {

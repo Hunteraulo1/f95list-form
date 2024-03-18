@@ -8,7 +8,7 @@ import sleep from "../sleep";
  * @returns {Promise<UserType>}
  */
 export async function getUser(
-  { email }: GetUserArgs = { email: null }
+  { email }: GetUserArgs = { email: null },
 ): Promise<UserType | null> {
   await sleep();
 
@@ -20,7 +20,7 @@ export async function getUser(
   if (!email) {
     mockResponse = user;
   } else {
-    let user = users.find((user) => user.email === email);
+    const user = users.find((user) => user.email === email);
     if (user) {
       mockResponse = user;
     }

@@ -1,4 +1,5 @@
-import { AppConfigurationType, AppConfiguration } from "../../types/schemas";
+import { AppConfiguration, AppConfigurationType } from "../../types/schemas";
+import { getAdmins_ } from "./getAdmins_";
 
 /**
  * Loads the app configuration from the script properties
@@ -13,7 +14,7 @@ const loadAppConfiguration_ = (): AppConfigurationType | null => {
     return null;
   }
 
-  let appConfig: AppConfigurationType = {
+  const appConfig: AppConfigurationType = {
     ...JSON.parse(appConfigurationString),
     admins: getAdmins_(),
   };
@@ -21,8 +22,6 @@ const loadAppConfiguration_ = (): AppConfigurationType | null => {
   AppConfiguration.parse(appConfig);
 
   return appConfig;
-}
+};
 
-export {
-  loadAppConfiguration_,
-}
+export { loadAppConfiguration_ };

@@ -1,15 +1,17 @@
-import sleep from "../sleep";
 import query from "../query";
+import sleep from "../sleep";
 import { getViewConfiguration } from "./getViewConfiguration";
-import { ViewType } from "../../../types/schemas";
-import { GetViewDataArgs } from "../../../server/api/getViewData";
+//import { ViewType } from "../../../types/schemas";
+//import { GetViewDataArgs } from "../../../server/api/getViewData";
 
 /**
  *
  * @param {GetViewDataArgs} args
  * @returns {Promise<ViewType>}
  */
-export async function getViewData({ id }: GetViewDataArgs): Promise<ViewType> {
+export async function getViewData(
+  { id }: never /*: GetViewDataArgs*/,
+) /*: Promise<ViewType>*/ {
   console.log("getting view data for viewId:", id);
   const viewConfiguration = await getViewConfiguration({ id });
 
@@ -22,7 +24,7 @@ export async function getViewData({ id }: GetViewDataArgs): Promise<ViewType> {
   const resultSet = query(viewConfiguration);
 
   /** @type {View} */
-  let mockResponse = {
+  const mockResponse = {
     source: "mocks",
     configuration: viewConfiguration,
     queryResult: {

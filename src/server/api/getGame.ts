@@ -20,8 +20,8 @@ export async function getGame({
 
   const games = await getQueryGames();
 
-  let game = games?.find(
-    (game: any) => game.name === name && game.version === version
+  const game = games?.find(
+    (game) => game.name === name && game.version === version,
   );
 
   return game as GameType;

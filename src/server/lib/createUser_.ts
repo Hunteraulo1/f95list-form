@@ -1,11 +1,11 @@
-import { UserType, User } from "../../types/schemas";
+import { User, UserType } from "../../types/schemas";
 import { loadUserProfileImageUrl_ } from "./loadUserProfileImageUrl_";
 
 export function createUser_(email: string, overrides = {}): UserType {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const profileImgUrl = loadUserProfileImageUrl_(email);
 
-  let userDefaults: UserType = {
+  const userDefaults: UserType = {
     email,
     roles: [],
     preferences: {
@@ -22,12 +22,12 @@ export function createUser_(email: string, overrides = {}): UserType {
     ],
   };
 
-  let user = {
+  const user = {
     ...userDefaults,
     ...overrides,
   };
 
-  let validUser = User.parse(user); // throws if invalid
+  const validUser = User.parse(user); // throws if invalid
 
   scriptPropertiesService.setProperty(email, JSON.stringify(validUser));
 

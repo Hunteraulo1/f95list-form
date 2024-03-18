@@ -4,8 +4,7 @@ import { getQueryGames } from "./api/getQueryGames";
 import { getScrape } from "./api/getScrape";
 import { getTest } from "./api/getTest";
 import { getUser } from "./api/getUser";
-import { getViewConfiguration } from "./api/getViewConfiguration";
-import { getViewData } from "./api/getViewData";
+//import { getViewConfiguration } from "./api/getViewConfiguration";
 import { postGame } from "./api/postGame";
 import { putAppConfiguration } from "./api/putAppConfiguration";
 import { putGame } from "./api/putGame";
@@ -31,8 +30,8 @@ type MockEndpoints = {
   getScrape: typeof getScrape;
 
   // Views
-  getViewConfiguration: typeof getViewConfiguration;
-  getViewData: typeof getViewData;
+  // getViewConfiguration: typeof getViewConfiguration;
+  // getViewData: typeof getViewData;
 };
 
 export default function getMockEndpoints(): MockEndpoints {
@@ -56,7 +55,7 @@ export default function getMockEndpoints(): MockEndpoints {
     getScrape,
 
     // Views
-    getViewConfiguration,
-    getViewData,
+    // getViewConfiguration,
+    // getViewData,
   };
 }

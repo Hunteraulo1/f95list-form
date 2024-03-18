@@ -6,7 +6,7 @@ import { loadAppConfiguration_ } from "./loadAppConfiguration_";
 /**
  * Initialize the app
  */
-export function initializeApp_(): Object {
+export function initializeApp_(): AppConfigurationType {
   let superAdminEmail: string = "";
   if (ENV.executeAs === "USER_DEPLOYING") {
     superAdminEmail = Session.getEffectiveUser().getEmail();
@@ -22,7 +22,7 @@ export function initializeApp_(): Object {
 
   createUser_(superAdminEmail, { roles: ["superAdmin"] });
 
-  let newAppConfig: AppConfigurationType = {
+  const newAppConfig: AppConfigurationType = {
     appName: "My App",
     deployingUserEmail: deployingUserEmail,
     admins: [],
@@ -31,10 +31,10 @@ export function initializeApp_(): Object {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   scriptPropertiesService.setProperty(
     "appConfiguration",
-    JSON.stringify(newAppConfig)
+    JSON.stringify(newAppConfig),
   );
 
-  let appConfig = loadAppConfiguration_();
+  const appConfig = loadAppConfiguration_();
 
   return JSON.parse(JSON.stringify(appConfig));
 }

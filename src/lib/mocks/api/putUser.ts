@@ -1,6 +1,6 @@
-import sleep from "../sleep";
 import { PutUserArgs } from "../../../server/api/putUser";
 import { User, UserType } from "../../../types/schemas";
+import sleep from "../sleep";
 
 /**
  * **API Endpoint** | Updates the app configuration and returns it
@@ -13,7 +13,7 @@ export async function putUser({ user }: PutUserArgs): Promise<UserType> {
   const validUser = User.parse(user);
 
   /** @type {UserType} */
-  let mockResponse = validUser;
+  const mockResponse = validUser;
 
   console.log("mockResponse_user", mockResponse);
 

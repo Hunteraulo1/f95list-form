@@ -1,6 +1,6 @@
 import { user } from "./user";
 
-export let appConfiguration = {
+export const appConfiguration = {
   appName: "Mock App",
   deployingUserEmail: user.email,
 };

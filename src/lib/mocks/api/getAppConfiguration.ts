@@ -1,17 +1,17 @@
-import sleep from "../sleep";
+import { AppConfigurationType, User, UserType } from "../../../types/schemas";
 import { appConfiguration } from "../data/appConfiguration";
-import { AppConfigurationType, UserType, User } from "../../../types/schemas";
 import { users } from "../data/user";
+import sleep from "../sleep";
 
 export async function getAppConfiguration(): Promise<AppConfigurationType> {
   sleep();
 
-  let appConfig = {
+  const appConfig = {
     ...appConfiguration,
     admins: getAdmins_(),
   };
 
-  let mockResponse = appConfig;
+  const mockResponse = appConfig;
 
   console.log("mockResponse", mockResponse);
 
@@ -19,13 +19,13 @@ export async function getAppConfiguration(): Promise<AppConfigurationType> {
 
   function getAdmins_(): UserType[] {
     // Return variable
-    let adminUsers = [];
+    const adminUsers = [];
 
     // Loop through script properties object
     for (let a = 0; a < users.length; a++) {
       try {
         // Weed out properties that do not reprsent users
-        let user = User.parse(users[a]);
+        const user = User.parse(users[a]);
 
         // If the user has an admin role, add them to our list
         if (user.roles.includes("admin")) {

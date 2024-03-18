@@ -7,9 +7,9 @@ export type PutAppConfigArgs = {
 /**
  * **API Endpoint** | Updates the app configuration and returns it
  * @param {PutAppConfigArgs} args
- * @returns {AppConfiguration | null}
+ * @returns {AppConfigurationType | null}
  */
-function putAppConfiguration({
+export function putAppConfiguration({
   appConfiguration,
 }: PutAppConfigArgs): AppConfigurationType {
   console.log("putAppConfiguration() called with: ", appConfiguration);
@@ -21,7 +21,7 @@ function putAppConfiguration({
 
   scriptPropertiesService.setProperty(
     propertyKey,
-    JSON.stringify(appConfiguration)
+    JSON.stringify(appConfiguration),
   );
 
   return validAppConfiguration;

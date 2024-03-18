@@ -23,8 +23,8 @@ export async function getGame({
   if (!name && !version) {
     mockResponse = game;
   } else {
-    let game = games.find(
-      (game) => game.name === name && game.version === version
+    const game = games.find(
+      (game) => game.name === name && game.version === version,
     );
     if (game) {
       mockResponse = game;

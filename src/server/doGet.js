@@ -1,4 +1,6 @@
-function doGet(e) {
+/* eslint-disable no-undef */ // GoogleAppScript
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const doGet = (e) => {
   // We shouldn't load the application if we aren't able to get the user's
   // identity. In this case, we return the noAuth.html page.
   let activeUserEmail = Session.getActiveUser().getEmail();
@@ -18,6 +20,6 @@ function doGet(e) {
   // At this point we should
 
   return HtmlService.createHtmlOutputFromFile(
-    "client/index.html"
+    "client/index.html",
   ).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
+};

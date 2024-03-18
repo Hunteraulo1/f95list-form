@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */ // GoogleAppScript
 function convertToObjects_(data) {
   const [headers, ...rows] = data;
   return rows.map((row) => {
@@ -12,7 +13,7 @@ function convertToObjects_(data) {
  * @param {ViewConfiguration} viewConfiguration
  * @returns {QueryResult}
  */
-function query(viewConfiguration) {
+export function query(viewConfiguration) {
   const { spreadsheetId, gid } = viewConfiguration.dataSource;
   const { fields } = viewConfiguration;
 

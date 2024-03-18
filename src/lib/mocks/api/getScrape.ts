@@ -17,7 +17,7 @@ export async function getScrape({
 }: GetScrapeArgs): Promise<ScrapeGameType | null> {
   await sleep();
 
-  let mockResponse = scrape(domain, id);
+  const mockResponse = scrape(domain, id);
   console.log({ mockResponse });
   return JSON.parse(JSON.stringify(mockResponse));
 }

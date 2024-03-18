@@ -18,15 +18,15 @@ export interface PutGameArgs {
 export async function putGame({ game, query }: PutGameArgs) {
   await sleep();
 
-  let gamesData = await getGames();
+  const gamesData = await getGames();
 
   if (gamesData) {
     const gameIndex = gamesData.findIndex(
-      (g: GameType) => g.name === query.name && g.version === query.version
+      (g: GameType) => g.name === query.name && g.version === query.version,
     );
 
     if (gameIndex !== -1) {
-      let validGame = Game.parse(game);
+      const validGame = Game.parse(game);
       console.log("mockResponse_game", { validGame, games });
 
       return "success";

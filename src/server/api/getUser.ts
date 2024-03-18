@@ -11,16 +11,16 @@ export type GetUserArgs = {
  * @param {GetUserArgs} [optionalArgs] - Optional parameter containing user email. If no email is provided, the requesting user's email is used.
  * @returns {Promise<User>}
  */
-async function getUser(
-  { email }: GetUserArgs = { email: null }
+export async function getUser(
+  { email }: GetUserArgs = { email: null },
 ): Promise<UserType | null> {
-  let requestingUserEmail = Session.getActiveUser().getEmail();
+  const requestingUserEmail = Session.getActiveUser().getEmail();
   // Report request
   console.log(
     "getUser called with args:",
     { email },
     " | by: ",
-    requestingUserEmail
+    requestingUserEmail,
   );
 
   // Validate the arguments against the schema
@@ -29,12 +29,12 @@ async function getUser(
   });
   const validArgs = GetUserArgsSchema.parse({ email });
 
-  let EMAIL_FOR_RETRIEVAL = validArgs.email || requestingUserEmail;
-  let isRequestForSelf = requestingUserEmail === EMAIL_FOR_RETRIEVAL;
+  const EMAIL_FOR_RETRIEVAL = validArgs.email || requestingUserEmail;
+  const isRequestForSelf = requestingUserEmail === EMAIL_FOR_RETRIEVAL;
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
-  let userObjectString = scriptProperties[EMAIL_FOR_RETRIEVAL];
+  const userObjectString = scriptProperties[EMAIL_FOR_RETRIEVAL];
 
   // If the requested user's object doesnt exist and the request is from
   // someone other than the requested user, return null.
@@ -45,12 +45,12 @@ async function getUser(
   // from the requested user, create the user object and return it. They
   // now exist in the system.
   else if (!userObjectString && isRequestForSelf) {
-    let user = createUser_(EMAIL_FOR_RETRIEVAL);
+    const user = createUser_(EMAIL_FOR_RETRIEVAL);
     return user;
   }
 
   // Otherwise, the user object exists and we can return it.
-  let user = JSON.parse(userObjectString);
+  const user = JSON.parse(userObjectString);
 
   return user;
 }

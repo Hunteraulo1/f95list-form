@@ -10,9 +10,11 @@ polyfillScriptRun();
 const callAPI = async (functionName, args = []) => {
   console.log("calling api", functionName, args);
   return new Promise((resolve, reject) => {
+    // eslint-disable-next-line no-undef
     google.script.run
       .withSuccessHandler(resolve)
       .withFailureHandler(reject)
+      // eslint-disable-next-line no-unexpected-multiline
       [functionName](...(Array.isArray(args) ? args : [args]));
   });
 };
