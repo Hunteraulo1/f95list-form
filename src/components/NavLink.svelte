@@ -1,11 +1,23 @@
 <script lang="ts">
-  import { Link } from 'svelte-routing'
+  import { navigate } from 'svelte-routing'
 
   export let to = ''
+  export let onClick = () => {}
+
+  const handleClick = () => {
+    navigate(to)
+    onClick()
+  }
+
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleClick()
+    }
+  }
 </script>
 
 <li>
-  <Link {to}>
+  <button on:click={handleClick} on:keypress={handleKeyPress}>
     <slot />
-  </Link>
+  </button>
 </li>
