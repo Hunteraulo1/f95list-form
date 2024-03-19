@@ -12,11 +12,6 @@
   let spanSearch = edit ? $queryGame.version : ''
   onMount(() => {
     fetchQueryGames()
-    if (false) {
-      const { name, version } = $queryGame
-      inputSearch = name
-      spanSearch = version
-    }
   })
 
   let filtered: QueryGame[] = []
@@ -28,10 +23,7 @@
     filtered = $queryGames?.filter((game, i) => {
       const value = event.currentTarget.value
 
-      if (i <= 5 && value) {
-        return game.name.toLowerCase().includes(value.toLowerCase())
-      }
-      return false
+      return game.name.toLowerCase().includes(value.toLowerCase())
     })
   }
   const handleClick = (data: QueryGame) => {
@@ -93,18 +85,20 @@
 
         {#if filtered.length > 0}
           <ul class="z-10 w-full menu bg-base-200 rounded-box absolute">
-            {#each filtered as item}
-              <li>
-                <button
-                  class="w-full"
-                  tabindex="0"
-                  on:click={() => handleClick(item)}
-                  on:keypress={e => handleKeyPress(e, item)}
-                >
-                  {item.name}
-                  <span class="badge badge-primary">{item.version}</span>
-                </button>
-              </li>
+            {#each filtered as item, index}
+              {#if index < 10}
+                <li>
+                  <button
+                    class="w-full"
+                    tabindex="0"
+                    on:click={() => handleClick(item)}
+                    on:keypress={e => handleKeyPress(e, item)}
+                  >
+                    {item.name}
+                    <span class="badge badge-primary">{item.version}</span>
+                  </button>
+                </li>
+              {/if}
             {/each}
           </ul>
         {/if}

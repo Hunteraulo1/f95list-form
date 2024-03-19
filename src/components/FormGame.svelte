@@ -236,7 +236,7 @@
               id="tags"
               name="tags"
               placeholder="Tags du jeu"
-              class="w-full textarea textarea-bordered textarea-xs max-h-24"
+              class="w-full textarea textarea-bordered textarea-xs max-h-32"
               on:change={handleChange}
               value={game.tags}
             ></textarea>

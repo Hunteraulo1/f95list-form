@@ -8,7 +8,6 @@
   import Toaster from './components/Toaster.svelte'
   import { GAS_API } from './lib/GAS_API'
   import { fetchAppConfiguration } from './lib/fetchAppConfig'
-  import Error404 from './routes/404.svelte'
   import Add from './routes/Add.svelte'
   import Edit from './routes/Edit.svelte'
   import Home from './routes/Home.svelte'
@@ -94,7 +93,7 @@
         <!-- Page content here -->
         <HeaderBar title={$appConfiguration?.appName} />
         <main class="container pb-8 mx-auto">
-          <Route path="/">
+          <Route path="*">
             <Home on:newToast={handleNewToast} />
           </Route>
           <ProtectedRoute path="settings">
@@ -115,9 +114,6 @@
           <ProtectedRoute path="edit">
             <Edit />
           </ProtectedRoute>
-          <Route path="*">
-            <Error404 />
-          </Route>
         </main>
       </div>
       <div class="drawer-side">

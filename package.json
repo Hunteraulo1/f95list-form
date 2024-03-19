@@ -8,7 +8,7 @@
     "rollup:npm": "rollup -c rollup.config.npm.js",
     "build": "vite build && pnpm run rollup:npm && node postBuildProcess.js",
     "build:push": "pnpm run build && clasp push",
-    "build:deploy": "pnpm run build:push && clasp deploy -i AKfycbzGFWdw2U9ciPWBnV1YSxSfYBA8uS6Ly9dWCdBiCEiKHMjBzBOT8niQ-uRb74jNje73",
+    "build:deploy": "pnpm run build:push && clasp deploy -i AKfycbxXI2VPp3Pzkwso2MbRgUCIJJkhiZ34fApqEiZyH6zl9aMTdeIQSt_mBWQZ0fLuUXvf9Q",
     "build:css:watch": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",
     "preview": "vite preview",
     "lint": "pnpx eslint src",
