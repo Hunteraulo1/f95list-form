@@ -20,6 +20,6 @@ const doGet = (e) => {
   // At this point we should
 
   return HtmlService.createHtmlOutputFromFile(
-    "client/index.html",
+    "client/index.html"
   ).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 };

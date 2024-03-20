@@ -8,7 +8,7 @@ import sleep from "../sleep";
  * @returns {Promise<UserType>}
  */
 export async function getUser(
-  { email }: GetUserArgs = { email: null },
+  { email }: GetUserArgs = { email: null }
 ): Promise<UserType | null> {
   await sleep();
 

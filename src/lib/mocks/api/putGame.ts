@@ -22,7 +22,7 @@ export async function putGame({ game, query }: PutGameArgs) {
 
   if (gamesData) {
     const gameIndex = gamesData.findIndex(
-      (g: GameType) => g.name === query.name && g.version === query.version,
+      (g: GameType) => g.name === query.name && g.version === query.version
     );
 
     if (gameIndex !== -1) {

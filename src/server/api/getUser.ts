@@ -12,7 +12,7 @@ export type GetUserArgs = {
  * @returns {Promise<User>}
  */
 export async function getUser(
-  { email }: GetUserArgs = { email: null },
+  { email }: GetUserArgs = { email: null }
 ): Promise<UserType | null> {
   const requestingUserEmail = Session.getActiveUser().getEmail();
   // Report request
@@ -20,7 +20,7 @@ export async function getUser(
     "getUser called with args:",
     { email },
     " | by: ",
-    requestingUserEmail,
+    requestingUserEmail
   );
 
   // Validate the arguments against the schema

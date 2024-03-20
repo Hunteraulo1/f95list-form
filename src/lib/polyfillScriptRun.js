@@ -9,8 +9,8 @@ export default async function polyfillScriptRun() {
     typeof window !== "undefined"
       ? window
       : typeof globalThis !== "undefined"
-        ? globalThis
-        : {};
+      ? globalThis
+      : {};
 
   const google = _window.google || {};
   _window.google = google;

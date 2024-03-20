@@ -6,14 +6,14 @@
   "scripts": {
     "dev": "vite",
     "rollup:npm": "rollup -c rollup.config.npm.js",
-    "build": "vite build && pnpm run rollup:npm && node postBuildProcess.js",
+    "build": "vite build && pnpm run rollup:npm && node postBuildProcess",
     "build:push": "pnpm run build && clasp push",
     "build:deploy": "pnpm run build:push && clasp deploy -i AKfycbxXI2VPp3Pzkwso2MbRgUCIJJkhiZ34fApqEiZyH6zl9aMTdeIQSt_mBWQZ0fLuUXvf9Q",
     "build:css:watch": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",
     "preview": "vite preview",
     "lint": "pnpx eslint src",
     "lint:fix": "pnpm run lint -- --fix",
-    "prettier": "pnpx prettier src --check",
+    "prettier": "npx prettier src --check",
     "prettier:fix": "npm run prettier -- --write",
     "format": "pnpm run prettier:fix",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"

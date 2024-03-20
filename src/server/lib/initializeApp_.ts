@@ -31,7 +31,7 @@ export function initializeApp_(): AppConfigurationType {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   scriptPropertiesService.setProperty(
     "appConfiguration",
-    JSON.stringify(newAppConfig),
+    JSON.stringify(newAppConfig)
   );
 
   const appConfig = loadAppConfiguration_();

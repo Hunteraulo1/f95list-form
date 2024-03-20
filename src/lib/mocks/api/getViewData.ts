@@ -10,7 +10,7 @@ import { getViewConfiguration } from "./getViewConfiguration";
  * @returns {Promise<ViewType>}
  */
 export async function getViewData(
-  { id }: never /*: GetViewDataArgs*/,
+  { id }: never /*: GetViewDataArgs*/
 ) /*: Promise<ViewType>*/ {
   console.log("getting view data for viewId:", id);
   const viewConfiguration = await getViewConfiguration({ id });

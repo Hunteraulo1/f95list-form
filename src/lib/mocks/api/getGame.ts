@@ -24,7 +24,7 @@ export async function getGame({
     mockResponse = game;
   } else {
     const game = games.find(
-      (game) => game.name === name && game.version === version,
+      (game) => game.name === name && game.version === version
     );
     if (game) {
       mockResponse = game;

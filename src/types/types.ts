@@ -20,7 +20,7 @@ export interface Game {
   tversion: string;
   tname:
     | "Traduction"
-    | "Traduction (mod inclu)"
+    | "Traduction (mod inclus)"
     | "Intégrée"
     | "Pas de traduction";
   tlink: string | null;
@@ -39,4 +39,14 @@ export interface Game {
 export interface QueryGame {
   name: string;
   version: string;
+}
+
+export interface Traductor {
+  name: string;
+  links: [
+    {
+      name: string;
+      link: string;
+    }
+  ];
 }

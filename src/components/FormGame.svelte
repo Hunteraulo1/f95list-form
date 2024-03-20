@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
   import { navigate } from 'svelte-routing'
   import Modal from '../components/Modal.svelte'
   import Search from '../components/Search.svelte'
   import { GAS_API } from '../lib/GAS_API'
   import { isLoading, queryGame, userIsSuperAdmin } from '../stores'
-  import type { Game } from '../types/types'
+  import type { Game, Traductor } from '../types/types'
 
   export let step: number = 0 // TODO: default step value: 0
   export let edit: boolean = false
@@ -27,8 +28,21 @@
   }
 
   let savedId: string | null = null
-  let stepDisablePrev = true
-  let stepDisableNext = false
+  let traductors: Traductor[] = []
+
+  onMount(() => {
+    GAS_API.getTraductors()
+      .then(result => {
+        console.log(result)
+        traductors = result
+      })
+      .catch(err => {
+        console.error('Error deleting game', err)
+      })
+      .finally(() => {
+        isLoading.set(false)
+      })
+  })
 
   const changeStep = (n: number) => {
     if (step + n >= 0 && step + n <= 5) {
@@ -42,9 +56,6 @@
     ) {
       step += n
     }
-
-    stepDisablePrev = step <= 0
-    stepDisableNext = step >= 5
 
     if (
       step === 3 &&
@@ -127,7 +138,7 @@
           navigate('/')
         })
         .catch(err => {
-          console.error('Error added game', err)
+          console.error('Error adding game', err)
         })
         .finally(() => {
           isLoading.set(false)
@@ -139,6 +150,28 @@
     event: Event & { currentTarget: EventTarget & HTMLInputElement }
   ) => {
     event.currentTarget.setCustomValidity('Veuillez remplir ce champ')
+  }
+
+  // @ts-ignore
+  const deleteGameModal = () => delete_game_modal.showModal()
+  let deleteMessage = ''
+  const handleClickDelete = () => {
+    if (deleteMessage !== '') {
+      const query = $queryGame
+      const msg = deleteMessage
+
+      GAS_API.delGame({ query, msg })
+        .then((result: string) => {
+          console.log(result)
+          navigate('/')
+        })
+        .catch(err => {
+          console.error('Error deleting game', err)
+        })
+        .finally(() => {
+          isLoading.set(false)
+        })
+    }
   }
 </script>
 
@@ -329,12 +362,16 @@
               placeholder="Nom du traducteur"
               type="search"
               id="traductor"
-              class="w-full select select-bordered"
+              class="w-full input input-bordered"
               list="traductor-list"
               on:change={handleChange}
               value={game.traductor}
             />
-            <datalist id="traductor-list"></datalist>
+            <datalist id="traductor-list">
+              {#each traductors as traductor}
+                <option>{traductor.name}</option>
+              {/each}
+            </datalist>
           </div>
 
           <div>
@@ -343,12 +380,16 @@
               placeholder="Nom du relecteur"
               type="search"
               id="reader"
-              class="w-full select select-bordered"
+              class="w-full input input-bordered"
               list="reader-list"
               on:change={handleChange}
               value={game.reader}
             />
-            <datalist id="reader-list"></datalist>
+            <datalist id="reader-list">
+              {#each traductors as traductor}
+                <option>{traductor.name}</option>
+              {/each}
+            </datalist>
           </div>
 
           <div>
@@ -385,33 +426,41 @@
           </div>
         {/if}
       </div>
-      <div class="flex gap-4">
+      <div class="flex px-8 w-full gap-4 flex-col sm:flex-row">
         {#if step < 5}
           <button
-            class="w-48 btn btn-outline btn-primary"
+            class="sm:w-48 w-full btn btn-outline btn-primary"
             type="button"
             on:click={() => changeStep(-1)}
-            disabled={stepDisablePrev}>Précédent</button
+            disabled={step <= 0}
           >
+            Précédent
+          </button>
           <button
-            class="w-48 btn btn-primary"
+            class="sm:w-48 w-full btn btn-primary"
             type="button"
             on:click={() => changeStep(1)}
-            disabled={stepDisableNext}>Suivant</button
           >
+            Suivant
+          </button>
         {:else}
-          <button class="w-48 btn btn-primary" type="submit">
+          <button class="sm:w-48 w-full btn btn-primary" type="submit">
             {edit ? 'Éditer le jeu' : 'Ajouter le jeu'}
           </button>
           {#if edit}
-            <button class="w-48 btn btn-error" type="button">
+            <!-- svelte-ignore missing-declaration -->
+            <button
+              class="sm:w-48 w-full btn btn-error"
+              type="button"
+              on:click={deleteGameModal}
+            >
               Supprimer le jeu
             </button>
           {/if}
         {/if}
         {#if !edit && $userIsSuperAdmin}
           <button
-            class="w-48 btn btn-info"
+            class="sm:w-48 w-full btn btn-info"
             type="button"
             on:click={() => {
               step = 5
@@ -442,13 +491,20 @@
   </div>
 {/if}
 
-<Modal id="add_admin_modal" title="Supprimer le jeu">
+<Modal id="delete_game_modal" title="Supprimer le jeu">
   <div slot="modal-content">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea
-      placeholder="Pourquoi veux-tu supprimer le jeu ?"
-      class="textarea textarea-bordered max-h-32"
+      placeholder="Pourquoi voulez-vous supprimer le jeu ?"
+      class="textarea textarea-bordered max-h-32 w-full"
+      bind:value={deleteMessage}
     ></textarea>
   </div>
-  <button slot="modal-action" on:click class="btn">Supprimer</button>
+  <button
+    slot="modal-action"
+    on:click={handleClickDelete}
+    class="btn btn-error"
+  >
+    Supprimer définitivement
+  </button>
 </Modal>

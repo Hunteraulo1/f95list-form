@@ -20,11 +20,14 @@
   ) => {
     spanSearch = ''
 
-    filtered = $queryGames?.filter((game, i) => {
+    filtered = $queryGames?.filter(game => {
       const value = event.currentTarget.value
 
       return game.name.toLowerCase().includes(value.toLowerCase())
     })
+
+    console.log({ inputSearch, filtered })
+    filtered = inputSearch !== '' ? filtered : []
   }
   const handleClick = (data: QueryGame) => {
     spanSearch = data.version
@@ -62,7 +65,7 @@
 
 <Panel title="Rechercher un jeu" description={false}>
   <div slot="panel-content">
-    <div class="flex gap-4">
+    <div class="flex gap-4 sm:flex-row flex-col">
       <div id="container-search" class="relative w-full">
         <label class="input input-bordered flex items-center gap-2">
           <input
@@ -72,7 +75,7 @@
             class="bg-transparent grow"
             name="theme"
             id="searchField"
-            value={inputSearch}
+            bind:value={inputSearch}
             on:input={handleChange}
             on:focus={handleFocus}
           />

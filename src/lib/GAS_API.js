@@ -81,9 +81,20 @@ export const GAS_API = {
   putGame: (args) => callAPI("putGame", args),
 
   /**
-   * @returns {Promise<QueryGames>}
+   * @param {DelGameArgs} [args] - Optional parameter containing game
+   * @returns {Promise<string>}
+   */
+  delGame: (args) => callAPI("delGame", args),
+
+  /**
+   * @returns {Promise<QueryGamesType>}
    */
   getQueryGames: () => callAPI("getQueryGames"),
+
+  /**
+   * @returns {Promise<TraductorsArgsType>}
+   */
+  getTraductors: () => callAPI("getTraductors"),
 
   /**
    * @returns {Promise<string>}

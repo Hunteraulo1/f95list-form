@@ -21,7 +21,7 @@ export function putAppConfiguration({
 
   scriptPropertiesService.setProperty(
     propertyKey,
-    JSON.stringify(appConfiguration),
+    JSON.stringify(appConfiguration)
   );
 
   return validAppConfiguration;

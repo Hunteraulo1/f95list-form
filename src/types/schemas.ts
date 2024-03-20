@@ -96,6 +96,16 @@ const CheckerF95z = z.object({
   msg: z.record(z.string()),
 });
 
+const Traductor = z.object({
+  name: z.string(),
+  links: z.array(
+    z.object({
+      name: z.string(),
+      link: z.string(),
+    })
+  ),
+});
+
 const AppConfiguration = z.object({
   appName: z.string(),
   deployingUserEmail: z.string(),
@@ -107,8 +117,11 @@ const AppConfiguration = z.object({
 // for more info.
 export {
   AppConfiguration,
+  CheckerF95z,
   Game,
   QueryGame,
+  ScrapeGame,
+  Traductor,
   User,
   UserActivity,
   UserPreferences,
@@ -122,5 +135,6 @@ export type UserActivityType = z.infer<typeof UserActivity>;
 export type UserType = z.infer<typeof User>;
 export type GameType = z.infer<typeof Game>;
 export type QueryGameType = z.infer<typeof QueryGame>;
+export type TraductorType = z.infer<typeof Traductor>;
 export type ScrapeGameType = z.infer<typeof ScrapeGame>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
