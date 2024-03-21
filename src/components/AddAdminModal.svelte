@@ -44,9 +44,11 @@
         isLoading.set(false)
       })
   }
+
+  export let dialog: HTMLDialogElement
 </script>
 
-<Modal id="add_admin_modal" title="Add Admin">
+<Modal bind:dialog title="Add Admin">
   <div slot="modal-content">
     <p class="py-4">Select a user to make an admin</p>
     <UserSelect on:update={e => (selectedUsersFromChild = e.detail)} />

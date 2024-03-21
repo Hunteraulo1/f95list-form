@@ -1,16 +1,17 @@
-<script>
+<script lang="ts">
   import Panel from '../components/Panel.svelte'
   import { GAS_API } from '../lib/GAS_API'
   import { isLoading } from '../stores'
+  //import { UserType } from '../types/schemas'
 
   /** @type {string} id - comes from URL params */
-  export let email
+  export let email: string
 
   /** @type {boolean} */
   let loading = false
 
   /** @type {User | undefined} */
-  let user = undefined
+  let user: any | undefined = undefined
 
   // Fetch the user on mount
   $: fetchUser(email)
@@ -19,7 +20,7 @@
    * Fetches the requested user from the server.
    * @param {string} email
    */
-  async function fetchUser(email) {
+  const fetchUser = async (email: string) => {
     isLoading.set(true)
 
     console.log('fetching user data for profile...')
@@ -40,19 +41,6 @@
 </script>
 
 {#if user && !loading}
-  <!-- <div class="flex flex-col items-center border-2">
-    <div class="mb-4 avatar online">
-      <div
-        class="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-"
-      >
-        <img src={user.profileImgUrl} />
-      </div>
-    </div>
-    <div>
-      <h2 class="card-title">{user.preferences.pseudo}</h2>
-    </div>
-    <span>{user.email}@email.com</span>
-  </div> -->
   <div class="flex flex-row">
     <div class="flex flex-col px-12 py-2">
       <div class="mb-4 avatar">
@@ -117,12 +105,6 @@
           <div class="stat-value text-secondary">263</div>
           <div class="stat-desc">Fonctionnalité à venir</div>
         </div>
-
-        <!-- <div class="stat">
-          <div class="stat-value">86%</div>
-          <div class="stat-title">Tasks done</div>
-          <div class="stat-desc text-secondary">31 tasks remaining</div>
-        </div> -->
       </div>
       <Panel title="Recent Activity">
         <div slot="panel-content" class="overflow-x-auto">

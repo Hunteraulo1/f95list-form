@@ -29,14 +29,5 @@ export async function getScrape({
     };
   }
 
-  // Fonctionne pas en local
-  // if (domain === "F95z") {
-  //   const fetchId = await getFetchF95z(id);
-
-  //   if (fetchId && mockResponse?.version) {
-  //     mockResponse.version = fetchId;
-  //   }
-  // }
-
   return JSON.parse(JSON.stringify(mockResponse));
 }

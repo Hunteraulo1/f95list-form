@@ -1,30 +1,21 @@
 import { z } from "zod";
 
-// const UserPreferences = z.record(z.any());
-const UserPreferences = z.object({
-  theme: z.enum(["light", "dark"]).optional(),
-});
-
-const UserProfile = z
-  .object({
-    imageUrl: z.string(),
-  })
-  .and(z.record(z.string()))
-  .optional();
-
-const UserActivity = z.object({
-  label: z.string(),
-  value: z.string(), // You can add custom validation to ensure it's an ISO string
-});
-
-const UserRoles = z.array(z.enum(["superAdmin", "admin"]));
-
 const User = z.object({
   email: z.string().email(),
-  roles: UserRoles,
-  profile: UserProfile,
-  preferences: UserPreferences,
-  activity: z.array(UserActivity),
+  roles: z.array(z.enum(["superAdmin", "admin"])),
+  profile: z.object({
+    pseudo: z.string(),
+    imageUrl: z.string(),
+  }),
+  preferences: z.object({
+    theme: z.enum(["light", "dark"]).optional(),
+  }),
+  activity: z.array(
+    z.object({
+      label: z.string(),
+      value: z.string(), // You can add custom validation to ensure it's an ISO string
+    })
+  ),
 });
 
 const Game = z.object({
@@ -98,12 +89,14 @@ const CheckerF95z = z.object({
 
 const Traductor = z.object({
   name: z.string(),
-  links: z.array(
-    z.object({
-      name: z.string(),
-      link: z.string(),
-    })
-  ),
+  links: z
+    .array(
+      z.object({
+        name: z.string(),
+        link: z.string(),
+      })
+    )
+    .optional(),
 });
 
 const AppConfiguration = z.object({
@@ -123,15 +116,9 @@ export {
   ScrapeGame,
   Traductor,
   User,
-  UserActivity,
-  UserPreferences,
-  UserProfile,
 };
 
 export type AppConfigurationType = z.infer<typeof AppConfiguration>;
-export type UserPreferencesType = z.infer<typeof UserPreferences>;
-export type UserProfileType = z.infer<typeof UserProfile>;
-export type UserActivityType = z.infer<typeof UserActivity>;
 export type UserType = z.infer<typeof User>;
 export type GameType = z.infer<typeof Game>;
 export type QueryGameType = z.infer<typeof QueryGame>;

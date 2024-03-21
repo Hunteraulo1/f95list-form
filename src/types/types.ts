@@ -43,10 +43,8 @@ export interface QueryGame {
 
 export interface Traductor {
   name: string;
-  links: [
-    {
-      name: string;
-      link: string;
-    }
-  ];
+  links?: {
+    name: string;
+    link: string;
+  }[];
 }

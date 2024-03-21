@@ -45,18 +45,6 @@ export const GAS_API = {
   putUser: (args) => callAPI("putUser", args),
 
   /**
-   * @param {GetViewConfigArgs} args
-   * @returns {Promise<ViewConfiguration>}
-   */
-  getViewConfiguration: (args) => callAPI("getViewConfiguration", args),
-
-  /**
-   * @param {GetViewDataArgs} args
-   * @returns {Promise<View>}
-   */
-  getViewData: (args) => callAPI("getViewData", args),
-
-  /**
    * @param {GetGameArgs} [args] - Optional parameter containing game name and version
    * @returns {Promise<Game>}
    */
@@ -95,9 +83,4 @@ export const GAS_API = {
    * @returns {Promise<TraductorsArgsType>}
    */
   getTraductors: () => callAPI("getTraductors"),
-
-  /**
-   * @returns {Promise<string>}
-   */
-  getTest: () => callAPI("getTest"),
 };

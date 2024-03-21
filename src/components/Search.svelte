@@ -63,7 +63,7 @@
 
 <svelte:window on:keydown={handleCtrlK} />
 
-<Panel title="Rechercher un jeu" description={false}>
+<Panel title="Rechercher un jeu" showDivider={false}>
   <div slot="panel-content">
     <div class="flex gap-4 sm:flex-row flex-col">
       <div id="container-search" class="relative w-full">

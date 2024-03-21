@@ -1,25 +1,27 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from 'svelte'
   import { Link } from 'svelte-routing'
   import AddAdminModal from '../components/AddAdminModal.svelte'
   import Panel from '../components/Panel.svelte'
   import RemoveAdminModal from '../components/RemoveAdminModal.svelte'
   import { GAS_API } from '../lib/GAS_API'
-  import { sanitizeEmail } from '../lib/sanitizeEmail'
   import { appConfiguration, isLoading, sessionUser } from '../stores'
   const dispatch = createEventDispatcher()
 
-  async function handleClick() {
-    console.log('Button clicked!')
-    await updateAppConfiguration($appConfiguration)
+  const handleClick = async () => {
+    if ($appConfiguration !== null) {
+      await updateAppConfiguration()
+    } else {
+      console.error('App configuration is null.')
+    }
   }
 
-  async function updateAppConfiguration(appConfiguration) {
+  const updateAppConfiguration = async () => {
     isLoading.set(true)
 
-    console.log('submitting app configuration update', appConfiguration)
+    console.log('submitting app configuration update', $appConfiguration)
 
-    GAS_API.putAppConfiguration({ appConfiguration })
+    GAS_API.putAppConfiguration({ $appConfiguration })
       .then(result => {
         console.log('result', result)
         dispatch('newToast', {
@@ -45,6 +47,9 @@
         isLoading.set(false)
       })
   }
+
+  let dialogAdd: HTMLDialogElement
+  let dialogRemove: HTMLDialogElement[] = []
 </script>
 
 <div>
@@ -74,10 +79,10 @@
     <Panel title="Admins">
       <button
         slot="button"
-        onclick="add_admin_modal.showModal()"
+        on:click={() => dialogAdd.showModal()}
         disabled={!(
-          $sessionUser.roles.includes('superAdmin') ||
-          $sessionUser.roles.includes('admin')
+          $sessionUser?.roles.includes('superAdmin') ||
+          $sessionUser?.roles.includes('admin')
         )}
         class="btn">Ajouter un administrateur</button
       >
@@ -94,7 +99,7 @@
               </tr>
             </thead>
             <tbody>
-              {#each $appConfiguration.admins as admin}
+              {#each $appConfiguration.admins as admin, index}
                 <!-- row -->
                 <tr>
                   <td>
@@ -103,7 +108,7 @@
                         <div class="avatar">
                           <div class="w-12 h-12 mask mask-squircle">
                             <img
-                              src={admin.profile.imageUrl}
+                              src={admin.profile?.imageUrl}
                               alt="Avatar Tailwind CSS Component"
                             />
                           </div>
@@ -125,12 +130,14 @@
                   </td>
                   <th>
                     <button
-                      onclick={`remove_admin_${sanitizeEmail(
-                        admin.email
-                      )}.showModal()`}
+                      on:click={() => dialogRemove[index].showModal()}
                       class="btn btn-ghost btn-xs">Supprimer</button
                     >
-                    <RemoveAdminModal on:newToast user={admin} />
+                    <RemoveAdminModal
+                      bind:dialog={dialogRemove[index]}
+                      on:newToast
+                      user={admin}
+                    />
                   </th>
                 </tr>
               {/each}
@@ -140,6 +147,6 @@
       </div>
     </Panel>
 
-    <AddAdminModal on:newToast />
+    <AddAdminModal dialog={dialogAdd} on:newToast />
   {/if}
 </div>

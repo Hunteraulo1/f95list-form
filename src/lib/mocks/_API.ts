@@ -3,10 +3,8 @@ import { getAppConfiguration } from "./api/getAppConfiguration";
 import { getGame } from "./api/getGame";
 import { getQueryGames } from "./api/getQueryGames";
 import { getScrape } from "./api/getScrape";
-import { getTest } from "./api/getTest";
 import { getTraductors } from "./api/getTraductors";
 import { getUser } from "./api/getUser";
-//import { getViewConfiguration } from "./api/getViewConfiguration";
 import { postGame } from "./api/postGame";
 import { putAppConfiguration } from "./api/putAppConfiguration";
 import { putGame } from "./api/putGame";
@@ -21,9 +19,6 @@ type MockEndpoints = {
   getUser: typeof getUser;
   putUser: typeof putUser;
 
-  // Test
-  getTest: typeof getTest;
-
   // Game
   getGame: typeof getGame;
   postGame: typeof postGame;
@@ -32,10 +27,6 @@ type MockEndpoints = {
   getQueryGames: typeof getQueryGames;
   getTraductors: typeof getTraductors;
   getScrape: typeof getScrape;
-
-  // Views
-  // getViewConfiguration: typeof getViewConfiguration;
-  // getViewData: typeof getViewData;
 };
 
 export default function getMockEndpoints(): MockEndpoints {
@@ -48,9 +39,6 @@ export default function getMockEndpoints(): MockEndpoints {
     getUser,
     putUser,
 
-    // Test
-    getTest,
-
     // Game
     getGame,
     postGame,
@@ -59,9 +47,5 @@ export default function getMockEndpoints(): MockEndpoints {
     getQueryGames,
     getTraductors,
     getScrape,
-
-    // Views
-    // getViewConfiguration,
-    // getViewData,
   };
 }

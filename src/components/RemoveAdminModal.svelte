@@ -2,14 +2,12 @@
   import { createEventDispatcher } from 'svelte'
   import { GAS_API } from '../lib/GAS_API'
   import { fetchAppConfiguration } from '../lib/fetchAppConfig'
-  import { sanitizeEmail } from '../lib/sanitizeEmail'
   import { isLoading } from '../stores'
   import type { UserType } from '../types/schemas'
   import Modal from './Modal.svelte'
   const dispatch = createEventDispatcher()
 
   export let user: UserType
-  let userId = sanitizeEmail(user.email)
 
   function handleAdminRemovalSubmit() {
     // TODO: validate input
@@ -45,9 +43,11 @@
         isLoading.set(false)
       })
   }
+
+  export let dialog: HTMLDialogElement
 </script>
 
-<Modal id={`remove_admin_${userId}`} title="Remove Admin">
+<Modal bind:dialog title="Remove Admin">
   <div slot="modal-content">
     <p class="py-4">
       Are you sure you want to remove this user's admin privileges
@@ -57,7 +57,7 @@
     >
       <div class="flex justify-center items-center space-x-3">
         <div class="mask mask-squircle w-12 h-12">
-          <img src={user.profile?.imageUrl} alt="User" />
+          <img src={user.profile.imageUrl} alt="User" />
         </div>
         <div>
           <div class="font-bold">{user.email}</div>

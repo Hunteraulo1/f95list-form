@@ -29,6 +29,7 @@
 
   let savedId: string | null = null
   let traductors: Traductor[] = []
+  let dialog: HTMLDialogElement
 
   onMount(() => {
     GAS_API.getTraductors()
@@ -452,7 +453,7 @@
             <button
               class="sm:w-48 w-full btn btn-error"
               type="button"
-              on:click={deleteGameModal}
+              on:click={() => dialog.showModal()}
             >
               Supprimer le jeu
             </button>
@@ -491,7 +492,7 @@
   </div>
 {/if}
 
-<Modal id="delete_game_modal" title="Supprimer le jeu">
+<Modal bind:dialog title="Supprimer le jeu">
   <div slot="modal-content">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea
