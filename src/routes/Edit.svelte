@@ -10,7 +10,7 @@
 
   const fetchGame = () => {
     const query = $queryGame
-    console.log(`Fetching results for query: ${query}`)
+    console.log(`Fetching results for query: ${query.name} ${query.version}`)
 
     isLoading.set(true)
 

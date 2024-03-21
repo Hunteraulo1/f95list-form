@@ -159,9 +159,10 @@
   const handleClickDelete = () => {
     if (deleteMessage !== '') {
       const query = $queryGame
-      const msg = deleteMessage
+      const comment = deleteMessage
 
-      GAS_API.delGame({ query, msg })
+      const { name, version } = query
+      GAS_API.delGame({ name, version, comment })
         .then((result: string) => {
           console.log(result)
           navigate('/')

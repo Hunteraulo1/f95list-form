@@ -1,5 +1,5 @@
 /**
- * @param {string} [optionalArgs] - Required parameter containing id of game
+ * @param {string} - Required parameter containing id of game
  * @returns {Promise<string>}
  */
 export async function getFetchF95z(id: string): Promise<string | null> {

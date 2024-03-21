@@ -8,7 +8,7 @@ export interface GetGameArgs {
 
 /**
  * **API Endpoint** | Returns the accessing game object
- * @param {GetGameArgs} [optionalArgs] - Optional parameter containing game name and version.
+ * @param {GetGameArgs} - Required parameter containing game name and version.
  * @returns {Promise<Game>}
  */
 export async function getGame({
@@ -24,7 +24,7 @@ export async function getGame({
     (game) => game.name === name && game.version === version
   );
 
-  if (gameIndex && gameIndex !== -1) {
+  if (gameIndex !== undefined && gameIndex !== -1) {
     const sheet = SpreadsheetApp.getActiveSpreadsheet();
     const gameSheet = sheet.getSheetByName("Jeux");
 
@@ -38,7 +38,7 @@ export async function getGame({
         .getRange(`C${gameIndex + 2}:J${gameIndex + 2}`)
         .getRichTextValues()[0];
 
-      if (data) {
+      if (data[2] === name && data[3] === version) {
         return {
           id: data[0],
           domain: data[1],
@@ -57,8 +57,14 @@ export async function getGame({
           tlink: dataLink ? dataLink[3]?.getLinkUrl() : "",
           trlink: dataLink ? dataLink[7]?.getLinkUrl() : "",
         };
+      } else {
+        console.error("No return getGame with args:", { name, version });
       }
+    } else {
+      console.error("No gameSheet detected");
     }
+  } else {
+    console.error("No detected getGame with index:", { gameIndex });
   }
 
   return null;
