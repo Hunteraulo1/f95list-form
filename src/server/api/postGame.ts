@@ -4,25 +4,14 @@ import { reloadFilter } from "../lib/reloadFilter";
 import { getQueryGames } from "./getQueryGames";
 import { getTraductors } from "./getTraductors";
 
-export interface GetGameArgs {
-  dataGame: GameType;
-  query: {
-    name: string | null;
-    version: string | null;
-  };
-}
-
 /**
  * **API Endpoint** | Returns the accessing game object
- * @param {GetGameArgs} - Required parameter containing game data, name and version.
+ * @param {GameType} - Required parameter containing game name and version.
  * @returns {Promise<string>}
  */
-export async function putGame({
-  dataGame,
-  query,
-}: GetGameArgs): Promise<string> {
+export async function postGame(dataGame: GameType): Promise<string> {
   // Report request
-  console.log("putGame called with args:", { dataGame });
+  console.log("postGame called with args:", { dataGame });
 
   const validGame = Game.parse(dataGame); // prout
 
@@ -32,7 +21,7 @@ export async function putGame({
     (game) => game.name === validGame.name && game.version === validGame.version
   );
 
-  if (gameIndex !== undefined && gameIndex !== -1) {
+  if (gameIndex !== undefined && gameIndex === -1) {
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Jeux");
 
     if (sheet) {
@@ -82,10 +71,12 @@ export async function putGame({
         validGame.ttype,
         validGame.ac.toString(),
       ];
+      const totalRow = sheet.getLastRow();
 
-      console.log("putGame convert:", { convertedGame });
+      console.log("postGame convert:", { convertedGame });
 
-      const row = sheet.getRange(`A${gameIndex + 2}:M${gameIndex + 2}`);
+      sheet.insertRowAfter(totalRow);
+      const row = sheet.getRange(`A${totalRow + 1}:M${totalRow + 1}`);
       await row.setValues([convertedGame]);
 
       await sheet.sort(3, true);
@@ -94,8 +85,8 @@ export async function putGame({
       console.error("No gameSheet detected");
     }
   } else {
-    console.error("No detect game putGame with index:", { gameIndex });
-    return "Impossible de trouver le jeu dans la liste";
+    console.error("Detect duplicate postGame with index:", { gameIndex });
+    return "Un jeu existe déjà avec le même nom et version";
   }
-  return "Un problème est survenu lors de la modification du jeu";
+  return "Un problème est survenu lors de l'ajout du jeu";
 }

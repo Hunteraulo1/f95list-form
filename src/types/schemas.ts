@@ -26,7 +26,7 @@ const Game = z.object({
   tversion: z.string().min(1),
   tname: z.enum([
     "Traduction",
-    "Traduction (mod inclu)",
+    "Traduction (mod inclus)",
     "Intégrée",
     "Pas de traduction",
   ]),
@@ -52,9 +52,10 @@ const Game = z.object({
     "Traduction Semi-Automatique",
     "VO Française",
     "À tester",
+    "Lien Trad HS",
   ]),
   ac: z.boolean(),
-  link: z.string().url(),
+  link: z.string(),
   tlink: z.string().url().or(z.string().nullable()),
   trlink: z.string().url().or(z.string().nullable()).optional(),
 });

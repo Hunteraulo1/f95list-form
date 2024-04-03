@@ -13,7 +13,6 @@ export async function getQueryGames(): Promise<QueryGameType[] | null> {
 
   const totalRow = gameSheet?.getLastRow();
   const data = gameSheet?.getRange(`C2:D${totalRow}`).getValues();
-  //const dataLink = gameSheet?.getRange(`C2:J${totalRow}`).getRichTextValues();
 
   const queryGames = data?.map((game: string[]) => ({
     name: game[0],

@@ -9,6 +9,7 @@ import { postGame } from "./api/postGame";
 import { putAppConfiguration } from "./api/putAppConfiguration";
 import { putGame } from "./api/putGame";
 import { putUser } from "./api/putUser";
+import { sendWebhook } from "./api/webhook";
 
 type MockEndpoints = {
   // App Configuration
@@ -27,6 +28,7 @@ type MockEndpoints = {
   getQueryGames: typeof getQueryGames;
   getTraductors: typeof getTraductors;
   getScrape: typeof getScrape;
+  sendWebhook: typeof sendWebhook;
 };
 
 export default function getMockEndpoints(): MockEndpoints {
@@ -47,5 +49,6 @@ export default function getMockEndpoints(): MockEndpoints {
     getQueryGames,
     getTraductors,
     getScrape,
+    sendWebhook,
   };
 }

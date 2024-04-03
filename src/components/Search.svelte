@@ -26,7 +26,6 @@
       return game.name.toLowerCase().includes(value.toLowerCase())
     })
 
-    console.log({ inputSearch, filtered })
     filtered = inputSearch !== '' ? filtered : []
   }
   const handleClick = (data: QueryGame) => {

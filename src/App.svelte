@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte'
   import { Route, Router } from 'svelte-routing'
   import HeaderBar from './components/HeaderBar.svelte'
@@ -20,6 +20,8 @@
     sessionUser,
     userIsAdmin
   } from './stores'
+  import type { UserType } from './types/schemas'
+  import type { Toast } from './types/types'
 
   /**
    *
@@ -28,7 +30,8 @@
    * @property {string} event.detail.message
    * @property {number} event.detail.time
    */
-  function handleNewToast(event) {
+  export function handleNewToast(event: CustomEvent<Toast>): void {
+    console.log('toast launch')
     console.log(event.detail)
     toasts = [...toasts, event.detail]
     setTimeout(() => {
@@ -43,7 +46,7 @@
     isDrawerOpen = !isDrawerOpen
   }
 
-  let toasts = []
+  let toasts: Toast[] = []
 
   onMount(() => {
     fetchUser()
@@ -58,13 +61,13 @@
 
     console.log('fetching user...')
 
-    GAS_API.getUser()
-      .then(result => {
+    GAS_API.getUser({})
+      .then((result: UserType): void => {
         sessionUser.set(result)
         console.log('User:', result)
         document
           .querySelector('html')
-          .setAttribute('data-theme', result?.preferences?.theme)
+          ?.setAttribute('data-theme', result.preferences?.theme)
       })
       .catch(err => {
         console.error('Could not get user:', err)
@@ -105,10 +108,10 @@
             <Profile email={params.email} />
           </Route>
           <ProtectedRoute path="add">
-            <Add />
+            <Add on:newToast={handleNewToast} />
           </ProtectedRoute>
           <ProtectedRoute path="edit">
-            <Edit />
+            <Edit on:newToast={handleNewToast} />
           </ProtectedRoute>
         </main>
       </div>

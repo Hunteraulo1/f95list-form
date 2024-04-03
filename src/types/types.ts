@@ -31,7 +31,8 @@ export interface Game {
     | "Traduction Automatique"
     | "Traduction Semi-Automatique"
     | "VO Française"
-    | "À tester";
+    | "À tester"
+    | "Lien Trad HS";
   ac: boolean;
   trlink?: string | null;
 }
@@ -47,4 +48,10 @@ export interface Traductor {
     name: string;
     link: string;
   }[];
+}
+
+export interface Toast {
+  id: string;
+  message: string;
+  milliseconds: number;
 }

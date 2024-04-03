@@ -11,10 +11,7 @@ import sleep from "../sleep";
 export async function postGame(game: DataGame) {
   await sleep();
 
-  const validGame = Game.parse({
-    ...game,
-    trlink: "",
-  });
+  const validGame = Game.parse(game);
 
   games.push(validGame);
 

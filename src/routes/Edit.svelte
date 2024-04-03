@@ -16,10 +16,12 @@
 
     if (query) {
       GAS_API.getGame(query)
-        .then(result => {
-          if (result) {
+        .then((result: Game | string) => {
+          if (typeof result !== 'string') {
             game = result
             console.log(result)
+          } else {
+            console.error(result)
           }
         })
         .catch(err => {

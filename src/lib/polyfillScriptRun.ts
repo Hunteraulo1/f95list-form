@@ -5,7 +5,7 @@ export default async function polyfillScriptRun() {
   if (polyfilled) return;
   polyfilled = true;
 
-  const _window =
+  const _window: any =
     typeof window !== "undefined"
       ? window
       : typeof globalThis !== "undefined"
@@ -19,12 +19,12 @@ export default async function polyfillScriptRun() {
     const mocks = getMockEndpoints();
     google.script = google.script || {};
     google.script.run = {
-      withSuccessHandler: (resolve) => {
+      withSuccessHandler: (resolve: any) => {
         return {
-          withFailureHandler: (reject) => {
-            const wrappedMocks = {};
-            for (const [key, value] of Object.entries(mocks)) {
-              wrappedMocks[key] = async (...args) => {
+          withFailureHandler: (reject: any) => {
+            const wrappedMocks: any = {};
+            for (const [key, value] of (Object as any).entries(mocks)) {
+              wrappedMocks[key] = async (...args: any) => {
                 try {
                   const result = await value(...args);
                   resolve(result);

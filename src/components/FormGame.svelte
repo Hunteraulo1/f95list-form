@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
   import { navigate } from 'svelte-routing'
   import Modal from '../components/Modal.svelte'
   import Search from '../components/Search.svelte'
   import { GAS_API } from '../lib/GAS_API'
   import { isLoading, queryGame, userIsSuperAdmin } from '../stores'
-  import type { Game, Traductor } from '../types/types'
+  import type { TraductorType } from '../types/schemas'
+  import type { Game } from '../types/types'
+  const dispatch = createEventDispatcher()
 
   export let step: number = 0 // TODO: default step value: 0
   export let edit: boolean = false
@@ -28,17 +30,33 @@
   }
 
   let savedId: string | null = null
-  let traductors: Traductor[] = []
+  let traductors: TraductorType[] = []
   let dialog: HTMLDialogElement
 
   onMount(() => {
     GAS_API.getTraductors()
-      .then(result => {
-        console.log(result)
-        traductors = result
+      .then((result: TraductorType[] | unknown) => {
+        if (Array.isArray(result)) {
+          traductors = result
+        } else {
+          console.error('Error: Type of unexpected result from translators')
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'error',
+            message:
+              'Erreur lors de la récupération de la liste des traducteurs',
+            milliseconds: 3000
+          })
+        }
       })
       .catch(err => {
         console.error('Error deleting game', err)
+        dispatch('newToast', {
+          id: Date.now(),
+          alertType: 'error',
+          message: 'Impossible de récupérer la liste des traducteurs',
+          milliseconds: 3000
+        })
       })
       .finally(() => {
         isLoading.set(false)
@@ -71,16 +89,24 @@
 
       GAS_API.getScrape({ id: id, domain })
         .then(result => {
-          const { name, version, status, tags, type } = result
+          if (result) {
+            const { name, version, status, tags, type } = result as any
 
-          game.name = name
-          game.version = version
-          game.status = status
-          game.tags = tags
-          game.type = type
+            game.name = name
+            game.version = version
+            game.status = status
+            game.tags = tags
+            game.type = type
+          }
         })
         .catch(err => {
           console.error('Error scraped game', err)
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'error',
+            message: 'Impossible de récupérer les informations du jeu',
+            milliseconds: 3000
+          })
         })
     }
   }
@@ -122,24 +148,47 @@
       const query = $queryGame
 
       GAS_API.putGame({ game, query })
-        .then((result: string) => {
-          console.log(result)
+        .then((result: string | unknown) => {
           navigate('/')
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'success',
+            message: 'Le jeu à bien été modifié',
+            milliseconds: 3000
+          })
         })
         .catch(err => {
           console.error('Error fetching game', err)
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'error',
+            message: 'Impossible de modifier le jeu',
+            milliseconds: 3000
+          })
         })
         .finally(() => {
           isLoading.set(false)
         })
     } else {
       GAS_API.postGame(game)
-        .then((result: string) => {
+        .then((result: string | unknown) => {
           console.log(result)
-          navigate('/')
+          //navigate('/')
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'success',
+            message: 'Le jeu à bien été ajouté',
+            milliseconds: 3000
+          })
         })
         .catch(err => {
           console.error('Error adding game', err)
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'error',
+            message: "Impossible d'ajouter le jeu",
+            milliseconds: 3000
+          })
         })
         .finally(() => {
           isLoading.set(false)
@@ -163,12 +212,24 @@
 
       const { name, version } = query
       GAS_API.delGame({ name, version, comment })
-        .then((result: string) => {
+        .then((result: string | unknown) => {
           console.log(result)
           navigate('/')
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'success',
+            message: 'Le jeu à bien été supprimé',
+            milliseconds: 3000
+          })
         })
         .catch(err => {
           console.error('Error deleting game', err)
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'error',
+            message: 'Impossible de supprimer le jeu',
+            milliseconds: 3000
+          })
         })
         .finally(() => {
           isLoading.set(false)
@@ -340,7 +401,7 @@
               required
             >
               <option>Traduction</option>
-              <option>Traduction (mod inclu)</option>
+              <option>Traduction (mod inclus)</option>
               <option>Intégrée</option>
               <option>Pas de traduction</option>
             </select>
@@ -428,7 +489,7 @@
           </div>
         {/if}
       </div>
-      <div class="flex px-8 w-full gap-4 flex-col sm:flex-row">
+      <div class="flex justify-center px-8 w-full gap-4 flex-col sm:flex-row">
         {#if step < 5}
           <button
             class="sm:w-48 w-full btn btn-outline btn-primary"

@@ -1,4 +1,4 @@
-import { GameType } from "../../types/schemas";
+import { Game, GameType } from "../../types/schemas";
 import { getQueryGames } from "./getQueryGames";
 
 export interface GetGameArgs {
@@ -9,12 +9,12 @@ export interface GetGameArgs {
 /**
  * **API Endpoint** | Returns the accessing game object
  * @param {GetGameArgs} - Required parameter containing game name and version.
- * @returns {Promise<Game>}
+ * @returns {Promise<Game | string>}
  */
 export async function getGame({
   name,
   version,
-}: GetGameArgs): Promise<GameType | null> {
+}: GetGameArgs): Promise<GameType | string> {
   // Report request
   console.log("getGame called with args:", { name, version });
 
@@ -29,18 +29,17 @@ export async function getGame({
     const gameSheet = sheet.getSheetByName("Jeux");
 
     if (gameSheet) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const data: Array<any> = gameSheet
+      const data = gameSheet
         .getRange(`A${gameIndex + 2}:M${gameIndex + 2}`)
         .getValues()[0];
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const dataLink: Array<any> = gameSheet
+
+      const dataLink = gameSheet
         .getRange(`C${gameIndex + 2}:J${gameIndex + 2}`)
         .getRichTextValues()[0];
 
       if (data[2] === name && data[3] === version) {
-        return {
-          id: data[0],
+        return Game.parse({
+          id: data[0].toString(),
           domain: data[1],
           name: data[2],
           version: data[3],
@@ -56,7 +55,7 @@ export async function getGame({
           link: dataLink ? dataLink[0]?.getLinkUrl() : "",
           tlink: dataLink ? dataLink[3]?.getLinkUrl() : "",
           trlink: dataLink ? dataLink[7]?.getLinkUrl() : "",
-        };
+        });
       } else {
         console.error("No return getGame with args:", { name, version });
       }
@@ -66,6 +65,5 @@ export async function getGame({
   } else {
     console.error("No detected getGame with index:", { gameIndex });
   }
-
-  return null;
+  return "Un problème est survenu lors de la récupération du jeu";
 }
