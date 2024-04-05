@@ -13,7 +13,7 @@ export async function postGame(dataGame: GameType): Promise<string> {
   // Report request
   console.log("postGame called with args:", { dataGame });
 
-  const validGame = Game.parse(dataGame); // prout
+  const validGame = Game.parse(dataGame);
 
   const games = await getQueryGames();
 

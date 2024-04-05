@@ -9,12 +9,12 @@ export type GetScrapeArgs = {
 
 /**
  * @param {GetScrapeArgs} [optionalArgs] - Required parameter containing platform and id of game
- * @returns {Promise<ScrapeGameType>}
+ * @returns {Promise<ScrapeGameType | null>}
  */
 export async function getScrape({
   domain,
   id,
-}: GetScrapeArgs): Promise<ScrapeGameType> {
+}: GetScrapeArgs): Promise<ScrapeGameType | null> {
   await sleep();
 
   let mockResponse = await scrape(domain, id);
@@ -29,5 +29,5 @@ export async function getScrape({
     };
   }
 
-  return JSON.parse(JSON.stringify(mockResponse));
+  return JSON.parse(JSON.stringify(mockResponse)) || null;
 }

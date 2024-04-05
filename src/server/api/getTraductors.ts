@@ -1,4 +1,4 @@
-import { Traductor } from "../../types/types";
+import type { Traductor } from "../../types/types";
 
 /**
  * **API Endpoint** | Returns the accessing game object

@@ -1,8 +1,8 @@
 export const sendWebhook = (logsMode = false) => {
   const env = PropertiesService.getScriptProperties();
   const link = logsMode
-    ? env.getProperty("webhookUrl")
-    : env.getProperty("logsUrl");
+    ? env.getProperty("logsUrl")
+    : env.getProperty("webhookUrl");
 
   link &&
     UrlFetchApp.fetch(link, {

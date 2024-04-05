@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "rollup:npm": "rollup -c rollup.config.npm.js",
-    "build": "vite build && pnpm run rollup:npm && node postBuildProcess",
+    "build": "vite build && node postBuildProcess",
     "build:push": "pnpm run build && clasp push",
     "build:deploy": "pnpm run build:push && clasp deploy -i AKfycbxXI2VPp3Pzkwso2MbRgUCIJJkhiZ34fApqEiZyH6zl9aMTdeIQSt_mBWQZ0fLuUXvf9Q",
     "build:css:watch": "npx tailwindcss -i ./src/input.css -o ./src/output.css --watch",
@@ -22,8 +21,6 @@
     "*.{js,ts,svelte,html,css}": "prettier --write"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
     "@sveltejs/vite-plugin-svelte": "^2.5.3",
     "@types/google-apps-script": "^1.0.82",
     "@types/jest": "29.5.12",
@@ -41,7 +38,6 @@
     "postcss": "^8.4.36",
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.4.1",
-    "rollup": "^3.29.4",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-delete": "^2.0.0",
     "svelte": "^4.2.12",
@@ -49,10 +45,11 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5.4.2",
     "vite": "^4.5.2",
-    "vite-plugin-singlefile": "^0.13.5"
+    "vite-plugin-singlefile": "^0.13.5",
+    "zod": "^3.22.4"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
-    "zod": "^3.22.4"
+    "cheerio": "1.0.0-rc.12",
+    "lodash": "^4.17.21"
   }
 }

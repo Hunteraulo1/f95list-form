@@ -90,13 +90,15 @@
       GAS_API.getScrape({ id: id, domain })
         .then(result => {
           if (result) {
-            const { name, version, status, tags, type } = result as any
+            console.log({ result })
 
-            game.name = name
-            game.version = version
-            game.status = status
-            game.tags = tags
-            game.type = type
+            // const { name, version, status, tags, type } = result as any
+
+            // game.name = name
+            // game.version = version
+            // game.status = status
+            // game.tags = tags
+            // game.type = type
           }
         })
         .catch(err => {

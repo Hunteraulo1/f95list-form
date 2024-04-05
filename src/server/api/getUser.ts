@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { UserType } from "../../types/schemas";
 import { createUser_ } from "../lib/createUser_";
 
@@ -25,7 +25,7 @@ export async function getUser(
 
   // Validate the arguments against the schema
   const GetUserArgsSchema = z.object({
-    email: z.string().nullable(),
+    email: z.string().nullable().optional(),
   });
   const validArgs = GetUserArgsSchema.parse({ email });
 
