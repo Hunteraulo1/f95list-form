@@ -28,8 +28,6 @@
 
       const result = await GAS_API.putUser({ user: $sessionUser })
 
-      if (typeof result === 'string') throw new Error('putUser no result')
-
       console.info('result', result)
       dispatch('newToast', {
         id: Date.now(),

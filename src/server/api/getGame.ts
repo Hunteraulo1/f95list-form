@@ -9,7 +9,7 @@ export interface GetGameArgs {
 export const getGame = async ({
   name,
   version,
-}: GetGameArgs): Promise<GameType | string> => {
+}: GetGameArgs): Promise<GameType> => {
   console.info("getGame called with args:", { name, version });
 
   const games = await getQueryGames();
@@ -20,7 +20,7 @@ export const getGame = async ({
 
   if (gameIndex === undefined || gameIndex === -1) {
     console.error("No detected getGame with index:", { gameIndex });
-    return "No detected getGame";
+    throw new Error("No detected getGame");
   }
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -28,7 +28,7 @@ export const getGame = async ({
 
   if (!gameSheet) {
     console.error("No gameSheet detected");
-    return "No gameSheet detected";
+    throw new Error("No gameSheet detected");
   }
 
   const data = gameSheet
@@ -40,7 +40,7 @@ export const getGame = async ({
 
   if (data[2] !== name || data[3] !== version) {
     console.error("No return getGame with args:", { name, version });
-    return `No return getGame`;
+    throw new Error("No return getGame");
   }
 
   return Game.parse({

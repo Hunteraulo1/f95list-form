@@ -14,7 +14,7 @@ export const delGame = async ({
   name,
   version,
   comment,
-}: DelGameArgs): Promise<string> => {
+}: DelGameArgs): Promise<void> => {
   // Report request
   console.info("delGame called with args:", { name, version, comment });
 
@@ -30,7 +30,7 @@ export const delGame = async ({
     if (gameIndex === -1) {
       console.error("No detected getGame with index:", { gameIndex });
 
-      return "No detected getGame";
+      throw new Error("No detected getGame");
     }
 
     const sheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -42,7 +42,7 @@ export const delGame = async ({
     if (!gameSheet) {
       console.error("No gameSheet detected");
 
-      return "No gameSheet detected";
+      throw new Error("No gameSheet detected");
     }
 
     await gameSheet.deleteRow(gameIndex + 2);
@@ -68,12 +68,10 @@ export const delGame = async ({
       color,
       game,
     });
-
-    return "success";
   } catch (error) {
     console.error(error);
 
-    return "Un problème est survenue lors de la suppression du jeu";
+    throw new Error("Un problème est survenue lors de la suppression du jeu");
   } finally {
     await disableLock();
   }

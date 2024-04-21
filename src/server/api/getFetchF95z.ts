@@ -1,6 +1,6 @@
 import { CheckerF95zType } from "$types/schemas";
 
-export const getFetchF95z = async (id: string): Promise<string | undefined> => {
+export const getFetchF95z = async (id: string): Promise<CheckerF95zType> => {
   const host = "https://f95zone.to";
   const url = `${host}/sam/checker.php?threads=${id}`;
 
@@ -22,5 +22,7 @@ export const getFetchF95z = async (id: string): Promise<string | undefined> => {
     throw new Error("getFetchF95z no return");
   } catch (error) {
     console.error("Error fetching data:", error);
+
+    throw new Error("Error fetching data");
   }
 };

@@ -10,9 +10,11 @@ export const getQueryGames = async (): Promise<QueryGameType[]> => {
   const totalRow = gameSheet?.getLastRow();
   const data = gameSheet?.getRange(`C2:D${totalRow}`).getValues();
 
-  const queryGames = data?.map(([name, version]) => {
+  if (!data) throw new Error("getQueryGames no return");
+
+  const queryGames = data.map(([name, version]) => {
     return { name, version };
   });
 
-  return queryGames || [];
+  return queryGames;
 };

@@ -58,8 +58,6 @@
     try {
       const result = await GAS_API.getUser()
 
-      if (typeof result === 'string') throw new Error('getUser no result')
-
       $sessionUser = result
 
       console.info('User:', result)
@@ -68,7 +66,7 @@
         .querySelector('html')
         ?.setAttribute('data-theme', result.preferences.theme ?? 'dark')
     } catch (err) {
-      console.error('Could not get user:', err)
+      console.error('Could not get user:', err) // TODO: dispatch toast
     } finally {
       console.info('User loaded.')
 

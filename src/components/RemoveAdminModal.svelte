@@ -21,9 +21,8 @@
     try {
       const result = await GAS_API.putUser({ user })
 
-      if (typeof result === 'string') throw new Error('putUser no result')
-
       console.info('Admin removed:', result)
+
       await fetchAppConfiguration()
 
       dispatch('newToast', {

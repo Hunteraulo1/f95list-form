@@ -27,7 +27,11 @@ const callAPI = async <T, A = unknown>(
   return new Promise<T>((resolve, reject) => {
     google.script.run
       .withSuccessHandler((result: T) => resolve(result))
-      .withFailureHandler((error: unknown) => reject(error))
+      .withFailureHandler((error: unknown) => {
+        console.error("errrrrror !!!"); // TODO: test reject
+
+        reject(error);
+      })
       [functionName](...(Array.isArray(args) ? args : [args]));
   });
 };
@@ -42,31 +46,32 @@ export const GAS_API = {
 
   // User
   getUser: (args?: GetUserArgs) =>
-    callAPI<UserType | string, typeof args>("getUser", args),
+    callAPI<UserType, typeof args>("getUser", args),
 
   putUser: (args: PutUserArgs) =>
-    callAPI<UserType | string, typeof args>("putUser", args),
+    callAPI<UserType, typeof args>("putUser", args),
 
   // Game
   getGame: (args: GetGameArgs) =>
-    callAPI<GameType | string, typeof args>("getGame", args),
+    callAPI<GameType, typeof args>("getGame", args),
 
   postGame: (args: PostGameArgs) =>
-    callAPI<string, typeof args>("postGame", args),
+    callAPI<void | string, typeof args>("postGame", args),
 
-  putGame: (args: PutGameArgs) => callAPI<string, typeof args>("putGame", args),
+  putGame: (args: PutGameArgs) =>
+    callAPI<void | string, typeof args>("putGame", args),
 
-  delGame: (args: DelGameArgs) => callAPI<string, typeof args>("delGame", args),
+  delGame: (args: DelGameArgs) => callAPI<void, typeof args>("delGame", args),
 
-  getQueryGames: () => callAPI<QueryGameType[] | string>("getQueryGames"),
+  getQueryGames: () => callAPI<QueryGameType[]>("getQueryGames"),
 
   // Traducteurs
-  getTraductors: () => callAPI<TraductorType | string>("getTraductors"),
+  getTraductors: () => callAPI<TraductorType>("getTraductors"),
 
   // Others
   getScrape: (args: GetScrapeArgs) =>
-    callAPI<ScrapeGameType | string, typeof args>("getScrape", args),
+    callAPI<ScrapeGameType, typeof args>("getScrape", args),
 
   sendWebhook: (args: boolean) =>
-    callAPI<string, typeof args>("sendWebhook", args),
+    callAPI<void, typeof args>("sendWebhook", args),
 };

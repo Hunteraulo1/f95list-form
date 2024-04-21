@@ -19,13 +19,9 @@
     try {
       const result = await GAS_API.getGame(query)
 
-      if (typeof result !== 'string') {
-        game = result
+      console.info(result)
 
-        console.info(result)
-      } else {
-        console.error(result)
-      }
+      game = result
     } catch (error) {
       console.error('Error fetching game', error)
     } finally {

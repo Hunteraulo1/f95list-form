@@ -19,7 +19,7 @@ export interface GetGameArgs {
 export const putGame = async ({
   game: dataGame,
   query,
-}: GetGameArgs): Promise<string> => {
+}: GetGameArgs): Promise<void | string> => {
   // Report request
   console.info("putGame called with args:", { dataGame });
 
@@ -37,8 +37,8 @@ export const putGame = async ({
 
     if (gameIndex === undefined || gameIndex === -1) {
       console.error("No detect game putGame with index:", { gameIndex });
-      return "Impossible de trouver le jeu dans la liste";
-    }
+      throw new Error("Impossible de trouver le jeu dans la liste");
+    } // TODO: duplicate game
 
     const convertedGame: string[] = [
       validGame.id || "",
@@ -105,12 +105,10 @@ export const putGame = async ({
       oldGame,
       game: validGame,
     });
-
-    return "success";
   } catch (error) {
     console.error(error);
 
-    return "Un problème est survenue lors de modification du jeu";
+    throw new Error("Un problème est survenue lors de modification du jeu");
   } finally {
     await disableLock();
   }
@@ -123,7 +121,7 @@ const dataLink = async (data: string | null, domain: string) => {
 
   if (!traductors) {
     console.error({ traductors });
-    return "Une erreur est survenue !";
+    throw new Error("Une erreur est survenue !");
   }
 
   let result = data;

@@ -6,11 +6,14 @@ export type GetScrapeArgs = {
   id: string;
 };
 
-export const getScrape = async ({ domain, id }: GetScrapeArgs) => {
+export const getScrape = async ({
+  domain,
+  id,
+}: GetScrapeArgs): Promise<GameType> => {
   // Report request
   console.info("getScrape called with args: " + { domain, id });
 
-  if (domain !== "F95z") return null;
+  if (domain !== "F95z") throw new Error("domaine incompatible");
 
   let link = `https://f95zone.to/threads/${id}`;
   let regName = /.*-\s(.*?)\s\[/i;
@@ -40,7 +43,6 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs) => {
   console.log("🚀 ~ getScrape ~ regName:", title.match(regName));
 
   let version = "";
-  if (domain !== "F95z") return null;
 
   try {
     const result = await getFetchF95z(id);
@@ -50,6 +52,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs) => {
     version = result || "";
   } catch (error) {
     console.error("Error getFetchF95z: ", error);
+    throw new Error("getFetchF95z no return");
   }
 
   console.log("scrapePage", { name, version, status, tags, type, domain });

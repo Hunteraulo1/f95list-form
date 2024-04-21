@@ -38,7 +38,7 @@ export const getUser = async (
   // If the requested user's object doesnt exist and the request is from
   // someone other than the requested user, return null.
   if (!userObjectString && !isRequestForSelf) {
-    return "User not found";
+    throw new Error("User not found");
   }
 
   // Else if the the request user's object doesn't exist but it is a request

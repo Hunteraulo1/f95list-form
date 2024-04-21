@@ -7,7 +7,7 @@ export type PutUserArgs = {
 /**
  * **API Endpoint** | Updates the app configuration and returns it
  */
-export const putUser = ({ user }: PutUserArgs): Promise<UserType | string> => {
+export const putUser = ({ user }: PutUserArgs): Promise<UserType> => {
   const invokingUserEmail = Session.getActiveUser().getEmail();
 
   console.info("putUser() called with: ", user, "by: ", invokingUserEmail);
@@ -22,7 +22,7 @@ export const putUser = ({ user }: PutUserArgs): Promise<UserType | string> => {
   // if (
   //   validUser.email === invokingUserEmail &&
   //   validUser.email === Session.getEffectiveUser().getEmail()
-  // ) return "A user resource can only be updated by themselves or the superAdmin."
+  // ) throw new Error("A user resource can only be updated by themselves or the superAdmin.")
 
   // If the code reaches here, the user object is valid
   // and the invoking user is either the user or a superAdmin.

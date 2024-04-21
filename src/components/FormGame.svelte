@@ -3,7 +3,7 @@
   import Search from '$components/Search.svelte'
   import { GAS_API } from '$lib/GAS_API'
   import { isLoading, queryGame, userIsSuperAdmin } from '$lib/stores'
-  import type { GameType, ScrapeGameType, TraductorType } from '$types/schemas'
+  import type { GameType, TraductorType } from '$types/schemas'
   import { createEventDispatcher, onMount } from 'svelte'
   import { navigate } from 'svelte-routing'
   import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements'
@@ -73,10 +73,9 @@
       try {
         const result = await GAS_API.getScrape({ id, domain })
 
-        if (typeof result === 'string') throw new Error('getScrape no result')
-
         console.info({ result })
-        const { name, version, status, tags, type } = result as ScrapeGameType
+
+        const { name, version, status, tags, type } = result
 
         game.name = name
         game.version = version
@@ -138,9 +137,7 @@
       const query = $queryGame
 
       try {
-        const result = await GAS_API.putGame({ game, query })
-
-        if (result !== 'success') throw new Error('putGame no result')
+        await GAS_API.putGame({ game, query })
 
         navigate('/')
         dispatch('newToast', {
@@ -165,7 +162,7 @@
       try {
         const result = await GAS_API.postGame({ game })
 
-        if (result === 'Le jeu existe déjà dans la liste') {
+        if (result === 'duplicate') {
           dispatch('newToast', {
             id: Date.now(),
             alertType: 'error',
@@ -175,8 +172,6 @@
 
           return
         }
-
-        if (result !== 'success') throw new Error('postGame no result')
 
         navigate('/')
         dispatch('newToast', {
@@ -225,9 +220,7 @@
     $isLoading = true
 
     try {
-      const result = await GAS_API.delGame({ name, version, comment })
-
-      if (result !== 'success') throw new Error('delGame no result')
+      await GAS_API.delGame({ name, version, comment })
 
       navigate('/')
       dispatch('newToast', {

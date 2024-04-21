@@ -24,8 +24,6 @@
     try {
       const result = await GAS_API.getUser({ email })
 
-      if (typeof result === 'string') throw new Error('getUser no result')
-
       user = result
       console.info('User data:', user)
     } catch (error) {

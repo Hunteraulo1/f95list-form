@@ -10,7 +10,9 @@ export interface PostGameArgs {
   game: GameType;
 }
 
-export const postGame = async ({ game }: PostGameArgs): Promise<string> => {
+export const postGame = async ({
+  game,
+}: PostGameArgs): Promise<void | string> => {
   // Report request
   console.info("postGame called with args:", { dataGame: game });
 
@@ -26,22 +28,22 @@ export const postGame = async ({ game }: PostGameArgs): Promise<string> => {
     );
 
     if (gameIndex !== -1) {
-      return "Le jeu existe déjà dans la liste";
+      return "duplicate";
     }
 
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Jeux");
 
-    if (!sheet) return "No gameSheet found";
+    if (!sheet) throw new Error("No gameSheet found");
 
     const dataLink = async (data: string | null, domain: string) => {
       let result = "";
 
-      if (!data) return "No data found";
+      if (!data) throw new Error("No data found");
 
       result = data;
       const traductors = await getTraductors();
 
-      if (!traductors) return "No traductors found";
+      if (!traductors) throw new Error("No traductors found");
 
       for (const { name, links } of traductors) {
         if (name !== data || !links?.length) continue;
@@ -109,12 +111,10 @@ export const postGame = async ({ game }: PostGameArgs): Promise<string> => {
       color,
       game: validGame,
     });
-
-    return "success";
   } catch (error) {
     console.error(error);
 
-    return "Un problème est survenue lors de l'ajout du jeu";
+    throw new Error("Un problème est survenue lors de l'ajout du jeu");
   } finally {
     disableLock();
   }

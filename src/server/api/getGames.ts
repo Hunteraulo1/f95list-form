@@ -1,6 +1,6 @@
 import { Game, type GameType } from "$types/schemas";
 
-export const getGames = async (): Promise<GameType[] | string> => {
+export const getGames = async (): Promise<GameType[]> => {
   // Report request
   console.info("getGames called");
 
@@ -9,7 +9,7 @@ export const getGames = async (): Promise<GameType[] | string> => {
   const totalRow = gameSheet?.getLastRow();
 
   if (!gameSheet) {
-    return "No gameSheet detected";
+    throw new Error("No gameSheet detected");
   }
 
   const data = gameSheet.getRange(`A2:M${totalRow}`).getValues();

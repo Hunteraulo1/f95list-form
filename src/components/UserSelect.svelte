@@ -30,8 +30,6 @@
       try {
         const result = await GAS_API.getUser({ email: searchQuery })
 
-        if (typeof result === 'string') throw new Error('getUser no result')
-
         console.info({ result })
 
         if (result) {
