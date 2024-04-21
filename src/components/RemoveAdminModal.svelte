@@ -1,47 +1,49 @@
 <script lang="ts">
+  import { GAS_API } from '$lib/GAS_API'
+  import { fetchAppConfiguration } from '$lib/fetchAppConfig'
+  import { isLoading } from '$lib/stores'
+  import type { UserType } from '$types/schemas'
   import { createEventDispatcher } from 'svelte'
-  import { GAS_API } from '../lib/GAS_API'
-  import { fetchAppConfiguration } from '../lib/fetchAppConfig'
-  import { isLoading } from '../stores'
-  import type { UserType } from '../types/schemas'
   import Modal from './Modal.svelte'
   const dispatch = createEventDispatcher()
 
   export let user: UserType
 
-  function handleAdminRemovalSubmit() {
-    // TODO: validate input
-    console.log('removing admin status from user', user)
+  const handleAdminRemovalSubmit = async () => {
+    console.info('removing admin status from user', user)
 
-    isLoading.set(true)
+    $isLoading = true
 
+    const roles: UserType['roles'] = ['admin']
     // remove any instances of the admin role from users.roles
-    user.roles = user.roles.filter(role => role !== 'admin')
+    user.roles = user.roles.filter(role => !roles.includes(role))
 
-    GAS_API.putUser({ user })
-      .then(async result => {
-        console.log('Admin removed:', result)
-        await fetchAppConfiguration()
+    try {
+      const result = await GAS_API.putUser({ user })
 
-        dispatch('newToast', {
-          id: Date.now(),
-          alertType: 'success',
-          message: 'Admin removed!',
-          milliseconds: 3000
-        })
+      if (typeof result === 'string') throw new Error('putUser no result')
+
+      console.info('Admin removed:', result)
+      await fetchAppConfiguration()
+
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'success',
+        message: 'Admin removed!',
+        milliseconds: 3000
       })
-      .catch(err => {
-        console.error('Could not remove admin:', err)
-        dispatch('newToast', {
-          id: Date.now(),
-          alertType: 'error',
-          message: 'Your changes could not be saved',
-          milliseconds: 3000
-        })
+    } catch (error) {
+      console.error('Could not remove admin:', error)
+
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'error',
+        message: 'Your changes could not be saved',
+        milliseconds: 3000
       })
-      .finally(() => {
-        isLoading.set(false)
-      })
+    } finally {
+      $isLoading = false
+    }
   }
 
   export let dialog: HTMLDialogElement
@@ -53,10 +55,10 @@
       Are you sure you want to remove this user's admin privileges
     </p>
     <div
-      class="flex items-center space-x-3 p-2 my-2 hover:bg-base-200 hover:cursor-pointer"
+      class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
     >
-      <div class="flex justify-center items-center space-x-3">
-        <div class="mask mask-squircle w-12 h-12">
+      <div class="flex items-center justify-center space-x-3">
+        <div class="mask mask-squircle h-12 w-12">
           <img src={user.profile.imageUrl} alt="User" />
         </div>
         <div>

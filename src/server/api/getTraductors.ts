@@ -1,12 +1,8 @@
-import type { Traductor } from "../../types/types";
+import type { TraductorType } from "$types/schemas";
 
-/**
- * **API Endpoint** | Returns the accessing game object
- * @returns {Promise<Traductor[] | null>}
- */
-export async function getTraductors(): Promise<Traductor[] | null> {
+export const getTraductors = async (): Promise<TraductorType[] | null> => {
   // Report request
-  console.log("getTraductors called");
+  console.info("getTraductors called");
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
     "Traducteurs/Relecteurs"
@@ -33,4 +29,4 @@ export async function getTraductors(): Promise<Traductor[] | null> {
   }
 
   return result || null;
-}
+};

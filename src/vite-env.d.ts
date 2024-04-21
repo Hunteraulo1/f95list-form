@@ -1,3 +1,3 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
-import "./global.d.ts";
+/// <reference types="google-apps-script" />

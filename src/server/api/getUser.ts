@@ -1,6 +1,5 @@
+import type { UserType } from "$types/schemas";
 import * as z from "zod";
-import { UserType } from "../../types/schemas";
-import { createUser_ } from "../lib/createUser_";
 
 export type GetUserArgs = {
   email: string | null;
@@ -8,15 +7,13 @@ export type GetUserArgs = {
 
 /**
  * **API Endpoint** | Returns the accessing user object
- * @param {GetUserArgs} [optionalArgs] - Optional parameter containing user email. If no email is provided, the requesting user's email is used.
- * @returns {Promise<User>}
  */
-export async function getUser(
+export const getUser = async (
   { email }: GetUserArgs = { email: null }
-): Promise<UserType | null> {
+): Promise<UserType | string> => {
   const requestingUserEmail = Session.getActiveUser().getEmail();
   // Report request
-  console.log(
+  console.info(
     "getUser called with args:",
     { email },
     " | by: ",
@@ -25,11 +22,13 @@ export async function getUser(
 
   // Validate the arguments against the schema
   const GetUserArgsSchema = z.object({
-    email: z.string().nullable().optional(),
+    email: z.string().email().nullable().optional(),
   });
   const validArgs = GetUserArgsSchema.parse({ email });
 
   const EMAIL_FOR_RETRIEVAL = validArgs.email || requestingUserEmail;
+  console.log({ EMAIL_FOR_RETRIEVAL });
+
   const isRequestForSelf = requestingUserEmail === EMAIL_FOR_RETRIEVAL;
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
@@ -39,18 +38,17 @@ export async function getUser(
   // If the requested user's object doesnt exist and the request is from
   // someone other than the requested user, return null.
   if (!userObjectString && !isRequestForSelf) {
-    return null;
+    return "User not found";
   }
+
   // Else if the the request user's object doesn't exist but it is a request
   // from the requested user, create the user object and return it. They
   // now exist in the system.
-  else if (!userObjectString && isRequestForSelf) {
-    const user = createUser_(EMAIL_FOR_RETRIEVAL);
-    return user;
-  }
+  // if (!userObjectString || !isRequestForSelf)
+  //   return createUser(EMAIL_FOR_RETRIEVAL);
+
+  console.log(userObjectString);
 
   // Otherwise, the user object exists and we can return it.
-  const user = JSON.parse(userObjectString);
-
-  return user;
-}
+  return JSON.parse(userObjectString) as UserType;
+};

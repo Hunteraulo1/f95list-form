@@ -1,4 +1,4 @@
-import { AppConfiguration, AppConfigurationType } from "../../types/schemas";
+import { AppConfiguration, type AppConfigurationType } from "$types/schemas";
 
 export type PutAppConfigArgs = {
   appConfiguration: AppConfigurationType;
@@ -6,13 +6,11 @@ export type PutAppConfigArgs = {
 
 /**
  * **API Endpoint** | Updates the app configuration and returns it
- * @param {PutAppConfigArgs} args
- * @returns {AppConfigurationType | null}
  */
-export function putAppConfiguration({
+export const putAppConfiguration = ({
   appConfiguration,
-}: PutAppConfigArgs): AppConfigurationType {
-  console.log("putAppConfiguration() called with: ", appConfiguration);
+}: PutAppConfigArgs): Promise<AppConfigurationType> => {
+  console.info("putAppConfiguration() called with: ", appConfiguration);
 
   const validAppConfiguration = AppConfiguration.parse(appConfiguration);
 
@@ -25,4 +23,4 @@ export function putAppConfiguration({
   );
 
   return validAppConfiguration;
-}
+};

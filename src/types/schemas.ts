@@ -58,29 +58,20 @@ const Game = z.object({
   link: z.string(),
   tlink: z.string().url().or(z.string().nullable()),
   trlink: z.string().url().or(z.string().nullable()).optional(),
+  image: z.string(),
 });
 
 const QueryGame = z.object({
-  name: z.string().min(1),
-  version: z.string().min(1),
+  name: Game.shape.name,
+  version: Game.shape.version,
 });
 
 const ScrapeGame = z.object({
-  name: z.string(),
-  version: z.string(),
-  status: z.enum(["EN COURS", "TERMINÉ", "ABANDONNÉ"]),
-  tags: z.string(),
-  type: z.enum([
-    "RenPy",
-    "RPGM",
-    "Unity",
-    "Unreal",
-    "Flash",
-    "HTLM",
-    "QSP",
-    "Autre",
-    "",
-  ]),
+  name: Game.shape.name,
+  version: Game.shape.version,
+  status: Game.shape.status,
+  tags: Game.shape.tags,
+  type: Game.shape.type,
 });
 
 const CheckerF95z = z.object({
@@ -109,6 +100,7 @@ const AppConfiguration = z.object({
 // You need to export in this format. See
 // https://stackoverflow.com/questions/48791868/use-typescript-with-google-apps-script
 // for more info.
+// export { AppConfiguration, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
 export {
   AppConfiguration,
   CheckerF95z,

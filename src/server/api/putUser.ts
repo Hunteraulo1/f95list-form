@@ -1,4 +1,4 @@
-import { User, UserType } from "../../types/schemas";
+import { User, type UserType } from "$types/schemas";
 
 export type PutUserArgs = {
   user: UserType;
@@ -6,17 +6,15 @@ export type PutUserArgs = {
 
 /**
  * **API Endpoint** | Updates the app configuration and returns it
- * @param {PutUserArgs} args
- * @returns {UserType}
  */
-export function putUser({ user }: PutUserArgs): UserType {
+export const putUser = ({ user }: PutUserArgs): Promise<UserType | string> => {
   const invokingUserEmail = Session.getActiveUser().getEmail();
 
-  console.log("putUser() called with: ", user, "by: ", invokingUserEmail);
+  console.info("putUser() called with: ", user, "by: ", invokingUserEmail);
 
   user.activity.push({
     value: new Date().toISOString(),
-    label: "User Updated",
+    label: "Utilisateur mis à jour",
   });
 
   const validUser = User.parse(user);
@@ -24,11 +22,7 @@ export function putUser({ user }: PutUserArgs): UserType {
   // if (
   //   validUser.email === invokingUserEmail &&
   //   validUser.email === Session.getEffectiveUser().getEmail()
-  // ) {
-  //   throw new Error(
-  //     "A user resource can only be updated by themselves or the superAdmin."
-  //   );
-  // }
+  // ) return "A user resource can only be updated by themselves or the superAdmin."
 
   // If the code reaches here, the user object is valid
   // and the invoking user is either the user or a superAdmin.
@@ -36,6 +30,7 @@ export function putUser({ user }: PutUserArgs): UserType {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   scriptPropertiesService.setProperty(propertyKey, JSON.stringify(validUser));
 
-  console.log("User successfully saved.");
+  console.info("User successfully saved.");
+
   return validUser;
-}
+};

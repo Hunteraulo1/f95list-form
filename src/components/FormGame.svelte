@@ -1,128 +1,117 @@
 <script lang="ts">
+  import Modal from '$components/Modal.svelte'
+  import Search from '$components/Search.svelte'
+  import { GAS_API } from '$lib/GAS_API'
+  import { isLoading, queryGame, userIsSuperAdmin } from '$lib/stores'
+  import type { GameType, ScrapeGameType, TraductorType } from '$types/schemas'
   import { createEventDispatcher, onMount } from 'svelte'
   import { navigate } from 'svelte-routing'
-  import Modal from '../components/Modal.svelte'
-  import Search from '../components/Search.svelte'
-  import { GAS_API } from '../lib/GAS_API'
-  import { isLoading, queryGame, userIsSuperAdmin } from '../stores'
-  import type { TraductorType } from '../types/schemas'
-  import type { Game } from '../types/types'
+  import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements'
+
   const dispatch = createEventDispatcher()
 
-  export let step: number = 0 // TODO: default step value: 0
+  export let step: number = 0
   export let edit: boolean = false
-  export let game: Game = {
+  export let game: GameType = {
+    status: 'EN COURS',
+    type: 'RenPy',
+    tname: 'Traduction',
+    ttype: 'Traduction Humaine',
+    ac: false,
     domain: 'F95z',
     id: '',
-    name: '',
     link: '',
-    status: 'EN COURS',
+    name: '',
+    reader: '',
     tags: '',
-    type: 'RenPy',
-    version: '',
-    tversion: '',
-    tname: 'Traduction',
     tlink: '',
     traductor: '',
-    reader: '',
-    ttype: 'Traduction Humaine',
-    ac: false
+    tversion: '',
+    version: '',
+    trlink: '',
+    image: ''
   }
 
-  let savedId: string | null = null
+  let savedId = ''
   let traductors: TraductorType[] = []
   let dialog: HTMLDialogElement
 
-  onMount(() => {
-    GAS_API.getTraductors()
-      .then((result: TraductorType[] | unknown) => {
-        if (Array.isArray(result)) {
-          traductors = result
-        } else {
-          console.error('Error: Type of unexpected result from translators')
-          dispatch('newToast', {
-            id: Date.now(),
-            alertType: 'error',
-            message:
-              'Erreur lors de la récupération de la liste des traducteurs',
-            milliseconds: 3000
-          })
-        }
+  onMount(async () => {
+    try {
+      const result = await GAS_API.getTraductors()
+
+      if (!Array.isArray(result)) {
+        throw new Error('getTraductor no result')
+      }
+
+      traductors = result
+    } catch (error) {
+      console.error('Error deleting game', error)
+
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'error',
+        message: 'Impossible de récupérer la liste des traducteurs',
+        milliseconds: 3000
       })
-      .catch(err => {
-        console.error('Error deleting game', err)
+    }
+  })
+
+  const changeStep = async (amount: number) => {
+    if (step + amount >= 0 && step + amount <= 5) step += amount
+    if (step === 1 && game.domain === 'Autre') step += amount // ID
+    if (step === 2 && game.domain === 'F95z') step += amount // Game informations
+    if (step === 4 && game.domain === 'Autre') step += amount // Auto-Check
+
+    const gameId = parseInt(game.id ?? '0')
+
+    if (step === 3 && game.domain === 'F95z' && gameId && savedId !== game.id) {
+      const { id, domain } = game
+
+      savedId = id!
+
+      try {
+        const result = await GAS_API.getScrape({ id, domain })
+
+        if (typeof result === 'string') throw new Error('getScrape no result')
+
+        console.info({ result })
+        const { name, version, status, tags, type } = result as ScrapeGameType
+
+        game.name = name
+        game.version = version
+        game.status = status
+        game.tags = tags
+        game.type = type
+      } catch (error) {
+        console.error('Error scrapped game', error)
         dispatch('newToast', {
           id: Date.now(),
           alertType: 'error',
-          message: 'Impossible de récupérer la liste des traducteurs',
+          message: 'Impossible de récupérer les informations du jeu',
           milliseconds: 3000
         })
-      })
-      .finally(() => {
-        isLoading.set(false)
-      })
-  })
-
-  const changeStep = (n: number) => {
-    if (step + n >= 0 && step + n <= 5) {
-      step += n
-    }
-
-    if (
-      (step === 1 && game.domain === 'Autre') ||
-      (step === 4 && game.domain === 'Autre') ||
-      (step === 2 && (game.domain === 'F95z' || game.domain === 'LewdCorner'))
-    ) {
-      step += n
-    }
-
-    if (
-      step === 3 &&
-      (game.domain === 'F95z' || game.domain === 'LewdCorner') &&
-      (savedId === null || savedId !== game.id) &&
-      game.id &&
-      game.id !== '0'
-    ) {
-      const { id, domain } = game
-
-      savedId = id
-
-      GAS_API.getScrape({ id: id, domain })
-        .then(result => {
-          if (result) {
-            console.log({ result })
-
-            // const { name, version, status, tags, type } = result as any
-
-            // game.name = name
-            // game.version = version
-            // game.status = status
-            // game.tags = tags
-            // game.type = type
-          }
-        })
-        .catch(err => {
-          console.error('Error scraped game', err)
-          dispatch('newToast', {
-            id: Date.now(),
-            alertType: 'error',
-            message: 'Impossible de récupérer les informations du jeu',
-            milliseconds: 3000
-          })
-        })
+      }
     }
   }
 
-  const handleChange = (
-    event: Event & {
-      currentTarget: EventTarget &
-        (HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement)
-    }
-  ) => {
+  const handleChange: ChangeEventHandler<
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  > = event => {
     const { name, value } = event.currentTarget
-    ;(game as any)[name] = value
+    const key = name as keyof Omit<GameType, 'trlink' | 'ac'>
 
     const { domain, id } = game
+
+    if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
+      game['ac'] = event.currentTarget.checked
+
+      return
+    }
+
+    // @ts-ignore
+    game[key] = value
+
     if ((name === 'platform' || name === 'id') && id && id !== '0') {
       switch (domain) {
         case 'F95z':
@@ -130,132 +119,155 @@
           break
         case 'LewdCorner':
           game.link = `https://lewdcorner.com/threads/${id}`
+          break
       }
     }
   }
 
-  const handleInput = (
-    event: Event & { currentTarget: EventTarget & HTMLInputElement }
-  ) => {
+  const handleInput: FormEventHandler<HTMLInputElement> = event => {
     const { value, classList } = event.currentTarget
     value === ''
       ? classList.add('input-error')
       : classList.remove('input-error')
   }
 
-  const handleSubmit = () => {
-    isLoading.set(true)
+  const handleSubmit = async () => {
+    $isLoading = true
 
     if (edit) {
       const query = $queryGame
 
-      GAS_API.putGame({ game, query })
-        .then((result: string | unknown) => {
-          navigate('/')
-          dispatch('newToast', {
-            id: Date.now(),
-            alertType: 'success',
-            message: 'Le jeu à bien été modifié',
-            milliseconds: 3000
-          })
+      try {
+        const result = await GAS_API.putGame({ game, query })
+
+        if (result !== 'success') throw new Error('putGame no result')
+
+        navigate('/')
+        dispatch('newToast', {
+          id: Date.now(),
+          alertType: 'success',
+          message: 'Le jeu a bien été modifié',
+          milliseconds: 3000
         })
-        .catch(err => {
-          console.error('Error fetching game', err)
-          dispatch('newToast', {
-            id: Date.now(),
-            alertType: 'error',
-            message: 'Impossible de modifier le jeu',
-            milliseconds: 3000
-          })
+      } catch (error) {
+        console.error('Error fetching game', error)
+
+        dispatch('newToast', {
+          id: Date.now(),
+          alertType: 'error',
+          message: 'Impossible de modifier le jeu',
+          milliseconds: 3000
         })
-        .finally(() => {
-          isLoading.set(false)
-        })
+      } finally {
+        $isLoading = false
+      }
     } else {
-      GAS_API.postGame(game)
-        .then((result: string | unknown) => {
-          console.log(result)
-          //navigate('/')
-          dispatch('newToast', {
-            id: Date.now(),
-            alertType: 'success',
-            message: 'Le jeu à bien été ajouté',
-            milliseconds: 3000
-          })
-        })
-        .catch(err => {
-          console.error('Error adding game', err)
+      try {
+        const result = await GAS_API.postGame({ game })
+
+        if (result === 'Le jeu existe déjà dans la liste') {
           dispatch('newToast', {
             id: Date.now(),
             alertType: 'error',
-            message: "Impossible d'ajouter le jeu",
+            message: 'Le jeu existe déjà dans la liste',
             milliseconds: 3000
           })
+
+          return
+        }
+
+        if (result !== 'success') throw new Error('postGame no result')
+
+        navigate('/')
+        dispatch('newToast', {
+          id: Date.now(),
+          alertType: 'success',
+          message: 'Le jeu a bien été ajouté',
+          milliseconds: 3000
         })
-        .finally(() => {
-          isLoading.set(false)
+      } catch (error) {
+        console.error('Error adding game', error)
+
+        dispatch('newToast', {
+          id: Date.now(),
+          alertType: 'error',
+          message: "Impossible d'ajouter le jeu",
+          milliseconds: 3000
         })
+      } finally {
+        $isLoading = false
+      }
     }
   }
 
-  const handleInvalid = (
-    event: Event & { currentTarget: EventTarget & HTMLInputElement }
-  ) => {
+  const handleInvalid: FormEventHandler<HTMLInputElement> = event => {
     event.currentTarget.setCustomValidity('Veuillez remplir ce champ')
   }
 
-  // @ts-ignore
-  const deleteGameModal = () => delete_game_modal.showModal()
-  let deleteMessage = ''
-  const handleClickDelete = () => {
-    if (deleteMessage !== '') {
-      const query = $queryGame
-      const comment = deleteMessage
+  let comment = ''
 
-      const { name, version } = query
-      GAS_API.delGame({ name, version, comment })
-        .then((result: string | unknown) => {
-          console.log(result)
-          navigate('/')
-          dispatch('newToast', {
-            id: Date.now(),
-            alertType: 'success',
-            message: 'Le jeu à bien été supprimé',
-            milliseconds: 3000
-          })
-        })
-        .catch(err => {
-          console.error('Error deleting game', err)
-          dispatch('newToast', {
-            id: Date.now(),
-            alertType: 'error',
-            message: 'Impossible de supprimer le jeu',
-            milliseconds: 3000
-          })
-        })
-        .finally(() => {
-          isLoading.set(false)
-        })
+  const handleClickDelete = async () => {
+    if (!comment) {
+      console.log('no comment')
+
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'warning',
+        message: 'Impossible de supprimer le jeu',
+        milliseconds: 3000
+      })
+
+      return null
+    }
+    const query = $queryGame
+    const { name, version } = query
+
+    $isLoading = true
+
+    try {
+      const result = await GAS_API.delGame({ name, version, comment })
+
+      if (result !== 'success') throw new Error('delGame no result')
+
+      navigate('/')
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'success',
+        message: 'Le jeu a bien été supprimé',
+        milliseconds: 3000
+      })
+    } catch (error) {
+      console.error('Error deleting game', error)
+
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'error',
+        message: 'Impossible de supprimer le jeu',
+        milliseconds: 3000
+      })
+    } finally {
+      $isLoading = false
     }
   }
 </script>
 
 {#if !$isLoading}
-  <div class="flex flex-col items-center justify-center gap-4 mt-0">
+  <div class="mt-0 flex flex-col items-center justify-center gap-4">
     <Search {edit} />
     <form
-      class="relative flex flex-col items-center w-full"
+      class="relative flex w-full flex-col items-center"
       on:submit|preventDefault={handleSubmit}
+      autocomplete="off"
     >
       <div
-        class="grid grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full"
+        class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         {#if step === 0 || step === 5}
           <div>
             <label for="domain">Platforme:</label>
             <select
               placeholder="Platforme du jeu"
-              class="w-full select-bordered select"
+              class="select select-bordered w-full"
               name="domain"
               value={game.domain}
               on:change={handleChange}
@@ -267,13 +279,14 @@
             </select>
           </div>
         {/if}
+
         {#if step === 1 || step === 5}
           <div>
             <label for="id">ID:</label>
             <input
               type="number"
               placeholder="Id du jeu"
-              class="w-full appearance-none input input-bordered number-input"
+              class="number-input input input-bordered w-full appearance-none"
               pattern="[0-9]*"
               inputmode="numeric"
               name="id"
@@ -282,13 +295,14 @@
             />
           </div>
         {/if}
+
         {#if step === 2 || step === 5}
           <div>
             <label for="name">Nom:</label>
             <input
               type="text"
               placeholder="Nom du jeu"
-              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
               name="name"
               on:change={handleChange}
               on:input={e => handleInput(e)}
@@ -303,7 +317,7 @@
             <input
               type="text"
               placeholder="Lien du jeu"
-              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
               name="link"
               on:change={handleChange}
               on:input={e => handleInput(e)}
@@ -316,7 +330,7 @@
             <label for="status">Status:</label>
             <select
               placeholder="Status du jeu"
-              class="w-full select-bordered select"
+              class="select select-bordered w-full"
               name="status"
               on:change={handleChange}
               value={game.status}
@@ -334,7 +348,7 @@
               id="tags"
               name="tags"
               placeholder="Tags du jeu"
-              class="w-full textarea textarea-bordered textarea-xs max-h-32"
+              class="textarea textarea-bordered textarea-xs max-h-32 w-full"
               on:change={handleChange}
               value={game.tags}
             ></textarea>
@@ -344,7 +358,7 @@
             <label for="type">Type:</label>
             <select
               placeholder="Type du jeu"
-              class="w-full select-bordered select"
+              class="select select-bordered w-full"
               name="type"
               on:change={handleChange}
               value={game.type}
@@ -368,7 +382,7 @@
             <input
               type="text"
               placeholder="Version du jeu"
-              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
               name="version"
               on:change={handleChange}
               on:input={e => handleInput(e)}
@@ -383,7 +397,7 @@
             <input
               type="text"
               placeholder="Version de la traduction"
-              class={`w-full input input-bordered ${edit ? '' : 'input-error'}`}
+              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
               name="tversion"
               on:change={handleChange}
               on:input={e => handleInput(e)}
@@ -396,7 +410,7 @@
             <label for="tname">Status de la traduction:</label>
             <select
               placeholder="Status de la traduction"
-              class="w-full select-bordered select"
+              class="select select-bordered w-full"
               name="tname"
               on:change={handleChange}
               value={game.tname}
@@ -414,7 +428,7 @@
             <input
               type="text"
               placeholder="Lien de la traduction"
-              class="w-full input input-bordered"
+              class="input input-bordered w-full"
               name="tlink"
               on:change={handleChange}
               value={game.tlink}
@@ -427,7 +441,8 @@
               placeholder="Nom du traducteur"
               type="search"
               id="traductor"
-              class="w-full input input-bordered"
+              name="traductor"
+              class="input input-bordered w-full"
               list="traductor-list"
               on:change={handleChange}
               value={game.traductor}
@@ -445,7 +460,8 @@
               placeholder="Nom du relecteur"
               type="search"
               id="reader"
-              class="w-full input input-bordered"
+              name="reader"
+              class="input input-bordered w-full"
               list="reader-list"
               on:change={handleChange}
               value={game.reader}
@@ -461,7 +477,7 @@
             <label for="ttype">Type de Traduction:</label>
             <select
               placeholder="Type de la traduction"
-              class="w-full select-bordered select"
+              class="select select-bordered w-full"
               name="ttype"
               on:change={handleChange}
               value={game.ttype}
@@ -478,23 +494,24 @@
         {#if step === 4 || step === 5}
           <div class="flex items-end">
             <div
-              class="flex flex-col items-center justify-center w-full h-12 gap-2"
+              class="flex h-12 w-full flex-col items-center justify-center gap-2"
             >
               <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
               <input
                 type="checkbox"
+                name="ac"
                 class="checkbox checkbox-lg"
                 on:change={handleChange}
-                value={game.ac}
+                checked={game.ac}
               />
             </div>
           </div>
         {/if}
       </div>
-      <div class="flex justify-center px-8 w-full gap-4 flex-col sm:flex-row">
+      <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">
         {#if step < 5}
           <button
-            class="sm:w-48 w-full btn btn-outline btn-primary"
+            class="btn btn-outline btn-primary w-full sm:w-48"
             type="button"
             on:click={() => changeStep(-1)}
             disabled={step <= 0}
@@ -502,20 +519,19 @@
             Précédent
           </button>
           <button
-            class="sm:w-48 w-full btn btn-primary"
+            class="btn btn-primary w-full sm:w-48"
             type="button"
             on:click={() => changeStep(1)}
           >
             Suivant
           </button>
         {:else}
-          <button class="sm:w-48 w-full btn btn-primary" type="submit">
+          <button class="btn btn-primary w-full sm:w-48" type="submit">
             {edit ? 'Éditer le jeu' : 'Ajouter le jeu'}
           </button>
           {#if edit}
-            <!-- svelte-ignore missing-declaration -->
             <button
-              class="sm:w-48 w-full btn btn-error"
+              class="btn btn-error w-full sm:w-48"
               type="button"
               on:click={() => dialog.showModal()}
             >
@@ -525,7 +541,7 @@
         {/if}
         {#if !edit && $userIsSuperAdmin}
           <button
-            class="sm:w-48 w-full btn btn-info"
+            class="btn btn-info w-full sm:w-48"
             type="button"
             on:click={() => {
               step = 5
@@ -544,7 +560,8 @@
                 traductor: 'Hunteraulo',
                 reader: 'Hunteraulo',
                 ttype: 'À tester',
-                ac: false
+                ac: false,
+                image: ''
               }
             }}
           >
@@ -562,7 +579,7 @@
     <textarea
       placeholder="Pourquoi voulez-vous supprimer le jeu ?"
       class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={deleteMessage}
+      bind:value={comment}
     ></textarea>
   </div>
   <button

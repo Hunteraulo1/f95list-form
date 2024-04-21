@@ -1,11 +1,9 @@
-import daisyui from "daisyui";
-
 module.exports = {
-  content: ["./src/**/*.{html,js,svelte,ts}"],
+  content: ['./src/**/*.{html,js,svelte,ts}'],
   theme: {
-    extend: {},
+    extend: {}
   },
-  plugins: [daisyui],
+  plugins: [require("daisyui")],
 
   daisyui: {
     themes: ["light", "dark"],

@@ -1,92 +1,99 @@
 <script lang="ts">
+  import Panel from '$components/Panel.svelte'
+  import { fetchQueryGames } from '$lib/queryGames'
+  import { queryGame, queryGames } from '$lib/stores'
+  import type { QueryGameType } from '$types/schemas'
   import { onMount } from 'svelte'
   import { Link, navigate } from 'svelte-routing'
-  import Panel from '../components/Panel.svelte'
-  import { fetchQueryGames } from '../lib/queryGames'
-  import { queryGame, queryGames } from '../stores'
-  import type { QueryGame } from '../types/types'
+  import type { ChangeEventHandler } from 'svelte/elements'
 
   export let edit = false
 
   let inputSearch = edit ? $queryGame.name : ''
-  let spanSearch = edit ? $queryGame.version : ''
-  onMount(() => {
-    fetchQueryGames()
-  })
+  let badgeSearch = edit ? $queryGame.version : ''
 
-  let filtered: QueryGame[] = []
-  const handleChange = (
-    event: Event & { currentTarget: EventTarget & HTMLInputElement }
-  ) => {
-    spanSearch = ''
+  let filtered: QueryGameType[] = []
+  let timer: NodeJS.Timeout
 
-    filtered = $queryGames?.filter(game => {
-      const value = event.currentTarget.value
+  const handleChange: ChangeEventHandler<HTMLInputElement> = event => {
+    badgeSearch = ''
 
-      return game.name.toLowerCase().includes(value.toLowerCase())
-    })
+    if (!inputSearch) {
+      filtered = []
 
-    filtered = inputSearch !== '' ? filtered : []
+      return
+    }
+
+    clearTimeout(timer)
+    const value = event.currentTarget.value
+
+    timer = setTimeout(() => {
+      filtered = $queryGames.filter(game => {
+        return game.name.toLowerCase().includes(value.toLowerCase())
+      })
+    }, 200)
   }
-  const handleClick = (data: QueryGame) => {
-    spanSearch = data.version
+
+  const handleClick = (data: QueryGameType) => {
     inputSearch = data.name
+    badgeSearch = data.version
     filtered = []
-    queryGame.set(data)
+    $queryGame = data
+
     navigate('/edit')
   }
 
-  const handleKeyPress = (event: KeyboardEvent, item: QueryGame) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      handleClick(item)
-    }
-  }
-
   const handleFocus = () => {
-    if (spanSearch !== '') {
-      inputSearch = ''
-      spanSearch = ''
-    }
+    if (!badgeSearch) return
+
+    inputSearch = ''
+    badgeSearch = ''
   }
 
   const handleCtrlK = (event: KeyboardEvent) => {
     if (event.ctrlKey && event.key === 'k') {
       event.preventDefault()
+
       const inputField = document.getElementById('searchField')
-      if (inputField) {
-        inputField.focus()
-      }
+      inputField?.focus()
     }
   }
+
+  onMount(() => {
+    fetchQueryGames()
+  })
 </script>
 
 <svelte:window on:keydown={handleCtrlK} />
 
 <Panel title="Rechercher un jeu" showDivider={false}>
   <div slot="panel-content">
-    <div class="flex gap-4 sm:flex-row flex-col">
+    <div class="flex flex-col gap-4 sm:flex-row">
       <div id="container-search" class="relative w-full">
         <label class="input input-bordered flex items-center gap-2">
           <input
-            disabled={$queryGames === undefined}
+            disabled={$queryGames.length === 0}
             type="text"
             placeholder="Rechercher un jeu"
-            class="bg-transparent grow"
+            class="grow bg-transparent"
             name="theme"
             id="searchField"
+            autocomplete="off"
             bind:value={inputSearch}
             on:input={handleChange}
             on:focus={handleFocus}
           />
-          {#if spanSearch}
-            <span class="badge badge-primary">{spanSearch}</span>
+
+          {#if badgeSearch}
+            <span class="badge badge-primary">{badgeSearch}</span>
           {/if}
+
           <kbd class="kbd kbd-sm">ctrl</kbd>
           <kbd class="kbd kbd-sm">K</kbd>
         </label>
 
         {#if filtered.length > 0}
-          <ul class="z-10 w-full menu bg-base-200 rounded-box absolute">
+          <ul class="menu absolute z-10 w-full rounded-box bg-base-200">
             {#each filtered as item, index}
               {#if index < 10}
                 <li>
@@ -94,7 +101,6 @@
                     class="w-full"
                     tabindex="0"
                     on:click={() => handleClick(item)}
-                    on:keypress={e => handleKeyPress(e, item)}
                   >
                     {item.name}
                     <span class="badge badge-primary">{item.version}</span>
@@ -106,6 +112,7 @@
         {/if}
         <span id="span-search"></span>
       </div>
+
       <Link to="/add" class="btn btn-primary sm:w-40">AJOUTER UN JEU</Link>
     </div>
   </div>

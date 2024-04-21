@@ -1,4 +1,4 @@
-import { UserType } from "../../../types/schemas";
+import { UserType } from "$types/schemas";
 
 export const user: UserType = {
   email: "mock_mockerson@test.com",

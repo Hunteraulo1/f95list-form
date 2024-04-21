@@ -1,90 +1,72 @@
+import type {
+  AppConfigurationType,
+  GameType,
+  QueryGameType,
+  ScrapeGameType,
+  TraductorType,
+  UserType,
+} from "$types/schemas";
+import { GetUserArgs } from "../server/api/getUser";
+import { PutAppConfigArgs } from "../server/api/putAppConfiguration";
+import { PutUserArgs } from "../server/api/putUser";
+import { DelGameArgs } from "./mocks/api/delGame";
+import { GetGameArgs } from "./mocks/api/getGame";
+import { GetScrapeArgs } from "./mocks/api/getScrape";
+import { PostGameArgs } from "./mocks/api/postGame";
+import { PutGameArgs } from "./mocks/api/putGame";
 import polyfillScriptRun from "./polyfillScriptRun";
+
 polyfillScriptRun();
 
-/**
- * Generic function to handle API calls
- * @param {string} functionName
- * @param {any} [args=[]] - Optional arguments
- * @returns {Promise<any>}
- */
-const callAPI = async (functionName: string, args = []) => {
-  console.log("calling api", functionName, args);
-  return new Promise((resolve, reject) => {
+const callAPI = async <T, A = unknown>(
+  functionName: string,
+  args: A = [] as unknown as A
+) => {
+  console.info("calling api", functionName, args);
+
+  return new Promise<T>((resolve, reject) => {
     google.script.run
-      .withSuccessHandler(resolve)
-      .withFailureHandler(reject)
-      // eslint-disable-next-line no-unexpected-multiline
+      .withSuccessHandler((result: T) => resolve(result))
+      .withFailureHandler((error: unknown) => reject(error))
       [functionName](...(Array.isArray(args) ? args : [args]));
   });
 };
 
 export const GAS_API = {
-  /**
-   * @returns {Promise<AppConfiguration>} the app configuration
-   */
-  getAppConfiguration: () => callAPI("getAppConfiguration"),
+  // AppConfiguration
+  getAppConfiguration: (): Promise<AppConfigurationType> =>
+    callAPI<AppConfigurationType>("getAppConfiguration"),
 
-  /**
-   * @param {PutAppConfigArgs} args
-   * @returns {Promise<AppConfiguration>} the app configuration
-   */
-  putAppConfiguration: (args: any) => callAPI("putAppConfiguration", args),
+  putAppConfiguration: (args: PutAppConfigArgs): Promise<void> =>
+    callAPI<AppConfigurationType, typeof args>("putAppConfiguration", args),
 
-  /**
-   * @param {GetUserArgs} [args] - Optional parameter containing user email
-   * @returns {Promise<User>}
-   */
-  getUser: (args: any) => callAPI("getUser", args),
+  // User
+  getUser: (args?: GetUserArgs) =>
+    callAPI<UserType | string, typeof args>("getUser", args),
 
-  /**
-   *
-   * @param {PutUserArgs} args
-   * @returns {Promise<User>}
-   */
-  putUser: (args: any) => callAPI("putUser", args),
+  putUser: (args: PutUserArgs) =>
+    callAPI<UserType | string, typeof args>("putUser", args),
 
-  /**
-   * @param {GetGameArgs} [args] - Optional parameter containing game name and version
-   * @returns {Promise<Game>}
-   */
-  getGame: (args: any) => callAPI("getGame", args),
+  // Game
+  getGame: (args: GetGameArgs) =>
+    callAPI<GameType | string, typeof args>("getGame", args),
 
-  /**
-   * @param {GetScrapeArgs} [args] - Optional parameter containing game domain and id
-   * @returns {Promise<ScrapeGameType>}
-   */
-  getScrape: (args: any) => callAPI("getScrape", args),
+  postGame: (args: PostGameArgs) =>
+    callAPI<string, typeof args>("postGame", args),
 
-  /**
-   * @param {PostGameArgs} [args] - Optional parameter containing game
-   * @returns {Promise<string>}
-   */
-  postGame: (args: any) => callAPI("postGame", args),
+  putGame: (args: PutGameArgs) => callAPI<string, typeof args>("putGame", args),
 
-  /**
-   * @param {PutGameArgs} [args] - Optional parameter containing game
-   * @returns {Promise<string>}
-   */
-  putGame: (args: any) => callAPI("putGame", args),
+  delGame: (args: DelGameArgs) => callAPI<string, typeof args>("delGame", args),
 
-  /**
-   * @param {DelGameArgs} [args] - Optional parameter containing game
-   * @returns {Promise<string>}
-   */
-  delGame: (args: any) => callAPI("delGame", args),
+  getQueryGames: () => callAPI<QueryGameType[] | string>("getQueryGames"),
 
-  /**
-   * @returns {Promise<QueryGamesType>}
-   */
-  getQueryGames: () => callAPI("getQueryGames"),
+  // Traducteurs
+  getTraductors: () => callAPI<TraductorType | string>("getTraductors"),
 
-  /**
-   * @returns {Promise<TraductorsArgsType>}
-   */
-  getTraductors: () => callAPI("getTraductors"),
+  // Others
+  getScrape: (args: GetScrapeArgs) =>
+    callAPI<ScrapeGameType | string, typeof args>("getScrape", args),
 
-  /**
-   * @returns {Promise<WebhookArgsType>}
-   */
-  sendWebhook: () => callAPI("sendWebhook"),
+  sendWebhook: (args: boolean) =>
+    callAPI<string, typeof args>("sendWebhook", args),
 };

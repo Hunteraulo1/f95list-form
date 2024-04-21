@@ -1,92 +1,121 @@
-import { Game } from "../../types/schemas";
-import { Game as GameType } from "../../types/types";
+import { Game, type GameType } from "$types/schemas";
+import { changelog } from "../lib/changeLog";
+import { disableLock, enableLock } from "../lib/lockMode";
 import { reloadFilter } from "../lib/reloadFilter";
+import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook";
 import { getQueryGames } from "./getQueryGames";
 import { getTraductors } from "./getTraductors";
 
-/**
- * **API Endpoint** | Returns the accessing game object
- * @param {GameType} - Required parameter containing game name and version.
- * @returns {Promise<string>}
- */
-export async function postGame(dataGame: GameType): Promise<string> {
+export interface PostGameArgs {
+  game: GameType;
+}
+
+export const postGame = async ({ game }: PostGameArgs): Promise<string> => {
   // Report request
-  console.log("postGame called with args:", { dataGame });
+  console.info("postGame called with args:", { dataGame: game });
 
-  const validGame = Game.parse(dataGame);
+  try {
+    enableLock();
 
-  const games = await getQueryGames();
+    const validGame = await Game.parse(game);
+    const games = await getQueryGames();
 
-  const gameIndex = games?.findIndex(
-    (game) => game.name === validGame.name && game.version === validGame.version
-  );
+    const gameIndex = games?.findIndex(
+      (game) =>
+        game.name === validGame.name && game.version === validGame.version
+    );
 
-  if (gameIndex !== undefined && gameIndex === -1) {
+    if (gameIndex !== -1) {
+      return "Le jeu existe déjà dans la liste";
+    }
+
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Jeux");
 
-    if (sheet) {
-      const dataLink = async (data: string | null, domain: string) => {
-        let result = "";
+    if (!sheet) return "No gameSheet found";
 
-        if (data) {
-          result = data;
-          const traductors = await getTraductors();
+    const dataLink = async (data: string | null, domain: string) => {
+      let result = "";
 
-          if (traductors) {
-            for (let i = 0; i < traductors.length; i++) {
-              const { name, links } = traductors[i];
+      if (!data) return "No data found";
 
-              if (name === data && links && links.length > 0) {
-                result = links[0].name;
+      result = data;
+      const traductors = await getTraductors();
 
-                for (let il = 0; il < links.length; il++) {
-                  result = `=HYPERLINK("${links[0].link}"; "${data}")`;
+      if (!traductors) return "No traductors found";
 
-                  if (links[il].name === domain) {
-                    return `=HYPERLINK("${links[il].link}"; "${data}")`;
-                  }
-                }
-              }
-            }
+      for (const { name, links } of traductors) {
+        if (name !== data || !links?.length) continue;
+
+        result = links[0].name;
+
+        for (let index = 0; index < links.length; index++) {
+          result = `=HYPERLINK("${links[0].link}"; "${data}")`;
+
+          if (links[index].name === domain) {
+            return `=HYPERLINK("${links[index].link}"; "${data}")`;
           }
         }
+      }
 
-        return result;
-      };
+      return result;
+    };
 
-      const convertedGame: string[] = [
-        validGame.id || "",
-        validGame.domain,
-        `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
-        validGame.version,
-        validGame.tversion,
-        validGame.tname.startsWith("Traduction")
-          ? `=HYPERLINK("${validGame.tlink}"; "${validGame.tname}")`
-          : validGame.tname,
-        validGame.status,
-        validGame.tags || "",
-        validGame.type,
-        (await dataLink(validGame.traductor, validGame.domain)).toString(),
-        (await dataLink(validGame.reader, validGame.domain)).toString(),
-        validGame.ttype,
-        validGame.ac.toString(),
-      ];
-      const totalRow = sheet.getLastRow();
+    const convertedGame: string[] = [
+      validGame.id || "",
+      validGame.domain,
+      `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
+      validGame.version,
+      validGame.tversion,
+      validGame.tname.startsWith("Traduction")
+        ? `=HYPERLINK("${validGame.tlink}"; "${validGame.tname}")`
+        : validGame.tname,
+      validGame.status,
+      validGame.tags || "",
+      validGame.type,
+      (await dataLink(validGame.traductor, validGame.domain)).toString(),
+      (await dataLink(validGame.reader, validGame.domain)).toString(),
+      validGame.ttype,
+      validGame.ac.toString(),
+    ];
+    const totalRow = await sheet.getLastRow();
 
-      console.log("postGame convert:", { convertedGame });
+    console.info("postGame convert:", { convertedGame });
 
-      sheet.insertRowAfter(totalRow);
-      const row = sheet.getRange(`A${totalRow + 1}:M${totalRow + 1}`);
-      await row.setValues([convertedGame]);
+    await sheet.insertRowAfter(totalRow);
+    const row = await sheet.getRange(`A${totalRow + 1}:M${totalRow + 1}`);
+    await row.setValues([convertedGame]);
 
-      await sheet.sort(3, true);
-      reloadFilter(sheet);
-    } else {
-      console.error("No gameSheet detected");
-    }
-  } else {
-    console.error("Detect duplicate postGame with index:", { gameIndex });
-    return "Un jeu existe déjà avec le même nom et version";
+    await sheet.sort(3, true);
+    reloadFilter(sheet);
+
+    changelog({ game: validGame.name, status: "AJOUT DE JEU" });
+
+    let title = "Nouveau jeu ajouté:";
+    let color = 115201;
+
+    sendWebhookUpdate({
+      title,
+      url: validGame.link,
+      color,
+      name: validGame.name,
+      tversion: validGame.tversion,
+      traductor: validGame.traductor,
+      reader: validGame.reader,
+      image: validGame.image,
+    });
+
+    sendWebhookLogs({
+      title,
+      color,
+      game: validGame,
+    });
+
+    return "success";
+  } catch (error) {
+    console.error(error);
+
+    return "Un problème est survenue lors de l'ajout du jeu";
+  } finally {
+    disableLock();
   }
-  return "Un problème est survenu lors de l'ajout du jeu";
-}
+};

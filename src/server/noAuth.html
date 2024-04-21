@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <base target="_top" />
-  </head>
 
-  <body>
-    <p>
-      This application requires your Google account to be identifiable in order
-      to work properly. The link you're accessing now has been deployed in such
-      a way that prevents the app from accessing your account. Please contact
-      <?= Session.getEffectiveUser().getEmail() ?>
-      for assistance.
-    </p>
-  </body>
+<head>
+  <base target="_top" />
+</head>
+
+<body>
+  <p>
+    Cette application nécessite l'identification de votre compte Google pour fonctionner correctement.
+    fonctionner correctement. Le lien auquel vous accédez actuellement a été déployé de manière à empêcher l'application
+    d'accéder à votre compte.
+    d'empêcher l'application d'accéder à votre compte. Veuillez contacter
+    <?= Session.getEffectiveUser().getUsername() ?>
+    pour obtenir de l'aide.
+  </p>
+</body>
+
 </html>

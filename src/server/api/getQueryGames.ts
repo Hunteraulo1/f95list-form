@@ -1,12 +1,8 @@
-import { QueryGameType } from "../../types/schemas";
+import type { QueryGameType } from "$types/schemas";
 
-/**
- * **API Endpoint** | Returns the accessing games array
- * @returns {Promise<QueryGame>}
- */
-export async function getQueryGames(): Promise<QueryGameType[] | null> {
+export const getQueryGames = async (): Promise<QueryGameType[]> => {
   // Report request
-  console.log("getQueryGames called");
+  console.info("getQueryGames called");
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const gameSheet = sheet.getSheetByName("Jeux");
@@ -14,10 +10,9 @@ export async function getQueryGames(): Promise<QueryGameType[] | null> {
   const totalRow = gameSheet?.getLastRow();
   const data = gameSheet?.getRange(`C2:D${totalRow}`).getValues();
 
-  const queryGames = data?.map((game: string[]) => ({
-    name: game[0],
-    version: game[1],
-  }));
+  const queryGames = data?.map(([name, version]) => {
+    return { name, version };
+  });
 
-  return queryGames || null;
-}
+  return queryGames || [];
+};

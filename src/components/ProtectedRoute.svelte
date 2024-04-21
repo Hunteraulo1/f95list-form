@@ -1,9 +1,9 @@
-<script lang="ts">
-  import { Route } from 'svelte-routing'
-  import PageNotFound from '../routes/404.svelte'
-  import { userIsAdmin } from '../stores'
+<script>
+  import { Route } from 'svelte-routing';
+  import PageNotFound from '../routes/404.svelte';
+  import { userIsAdmin } from '$lib/stores';
 
-  export let path: string
+  export let path;
 </script>
 
 {#if $userIsAdmin}

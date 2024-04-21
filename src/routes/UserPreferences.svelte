@@ -1,56 +1,57 @@
 <script lang="ts">
+  import Panel from '$components/Panel.svelte'
+  import { GAS_API } from '$lib/GAS_API'
+  import { isLoading, sessionUser } from '$lib/stores'
   import { createEventDispatcher } from 'svelte'
-  import Panel from '../components/Panel.svelte'
-  import { GAS_API } from '../lib/GAS_API'
-  import { isLoading, sessionUser } from '../stores'
+  import { navigate } from 'svelte-routing'
   const dispatch = createEventDispatcher()
 
-  /** @type {User | undefined} */
-  let user = $sessionUser
+  const handleClick = async () => {
+    console.info('Button clicked!')
 
-  async function handleClick() {
-    console.log('Button clicked!')
-
-    if (user) {
+    if ($sessionUser) {
       await submitUserUpdate()
-      user.preferences?.theme &&
+      $sessionUser.preferences?.theme &&
         document
           .querySelector('html')
-          ?.setAttribute('data-theme', user.preferences.theme)
+          ?.setAttribute('data-theme', $sessionUser.preferences.theme)
     }
   }
 
-  async function submitUserUpdate() {
-    isLoading.set(true)
+  const submitUserUpdate = async () => {
+    $isLoading = true
 
-    console.log('submitting user update', $sessionUser)
+    console.info('submitting user update', $sessionUser)
 
-    GAS_API.putUser({ $sessionUser })
-      .then(result => {
-        console.log('result', result)
-        dispatch('newToast', {
-          id: Date.now(),
-          alertType: 'success',
-          message: 'User updated!',
-          milliseconds: 3000
-        })
+    try {
+      if (!$sessionUser) return navigate('/')
+
+      const result = await GAS_API.putUser({ user: $sessionUser })
+
+      if (typeof result === 'string') throw new Error('putUser no result')
+
+      console.info('result', result)
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'success',
+        message: "Mise à jour de l'utilisateur!",
+        milliseconds: 3000
       })
-      .catch(err => {
-        console.error('Error submitting user change', err)
-        dispatch('newToast', {
-          id: Date.now(),
-          alertType: 'error',
-          message: 'Your changes could not be saved',
-          milliseconds: 3000
-        })
+    } catch (error) {
+      console.error('Error submitting user change', error)
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'error',
+        message: "Vos modifications n'ont pas pu être enregistrées",
+        milliseconds: 3000
       })
-      .finally(() => {
-        isLoading.set(false)
-      })
+    } finally {
+      $isLoading = false
+    }
   }
 </script>
 
-{#if user}
+{#if $sessionUser}
   <div>
     <Panel title="Informations de profil">
       <button on:click={handleClick} slot="button" class="btn btn-primary"
@@ -61,16 +62,16 @@
         page de profil.
       </p>
       <div slot="panel-content">
-        <div class="w-full max-w-xs form-control">
+        <div class="form-control w-full max-w-xs">
           <label class="label" for="first-name">
             <span class="label-text">Pseudo</span>
           </label>
           <input
-            bind:value={user.profile.pseudo}
+            bind:value={$sessionUser.profile.pseudo}
             disabled={$isLoading}
             type="text"
             placeholder="Tapez ici"
-            class="w-full max-w-xs input input-bordered"
+            class="input input-bordered w-full max-w-xs"
             name="first-name"
           />
         </div>
@@ -84,14 +85,14 @@
         Modifiez vos préférences d'utilisateur. N'oubliez pas de sauvegarder !
       </p>
       <div slot="panel-content">
-        <div class="w-full max-w-xs form-control">
+        <div class="form-control w-full max-w-xs">
           <label class="label" for="theme">
             <span class="label-text">Thème</span>
           </label>
           <select
-            bind:value={user.preferences.theme}
+            bind:value={$sessionUser.preferences.theme}
             disabled={$isLoading}
-            class="w-full max-w-xs select select-bordered"
+            class="select select-bordered w-full max-w-xs"
             name="theme"
           >
             <option value="light">Clair</option>
@@ -99,7 +100,7 @@
           </select>
         </div>
       </div>
-      <div class="justify-end card-actions" />
+      <div class="card-actions justify-end"></div>
     </Panel>
   </div>
 {/if}

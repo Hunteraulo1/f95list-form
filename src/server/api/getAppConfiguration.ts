@@ -1,18 +1,14 @@
-import { AppConfigurationType } from "../../types/schemas";
-import { loadAppConfiguration_ } from "../lib/loadAppConfiguration_";
+import type { AppConfigurationType } from "$types/schemas";
+import { loadAppConfiguration } from "../lib/loadAppConfiguration";
 
-/**
- * **API Endpoint** | Returns the app configuration
- * @returns {AppConfiguration | null}
- */
-export function getAppConfiguration(): AppConfigurationType | null {
-  console.log("getting app configuration");
+export const getAppConfiguration = (): AppConfigurationType | null => {
+  console.info("getting app configuration");
 
-  const appConfigurationObject = loadAppConfiguration_();
+  const appConfigurationObject = loadAppConfiguration();
 
-  console.log(appConfigurationObject);
+  console.info(appConfigurationObject);
 
   // Do we want to filter the appConfig based on user?
 
   return appConfigurationObject;
-}
+};

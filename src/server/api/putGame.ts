@@ -1,101 +1,175 @@
-import { Game } from "../../types/schemas";
-import { Game as GameType } from "../../types/types";
+import type { GameType } from "$types/schemas";
+import { Game } from "$types/schemas";
+import { changelog } from "../lib/changeLog";
+import { disableLock, enableLock } from "../lib/lockMode";
 import { reloadFilter } from "../lib/reloadFilter";
+import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook";
+import { getGame } from "./getGame";
 import { getQueryGames } from "./getQueryGames";
 import { getTraductors } from "./getTraductors";
 
 export interface GetGameArgs {
-  dataGame: GameType;
+  game: GameType;
   query: {
     name: string | null;
     version: string | null;
   };
 }
 
-/**
- * **API Endpoint** | Returns the accessing game object
- * @param {GetGameArgs} - Required parameter containing game data, name and version.
- * @returns {Promise<string>}
- */
-export async function putGame({
-  dataGame,
+export const putGame = async ({
+  game: dataGame,
   query,
-}: GetGameArgs): Promise<string> {
+}: GetGameArgs): Promise<string> => {
   // Report request
-  console.log("putGame called with args:", { dataGame });
+  console.info("putGame called with args:", { dataGame });
 
-  const validGame = Game.parse(dataGame); // prout
+  try {
+    await enableLock();
 
-  const games = await getQueryGames();
+    const validGame = await Game.parse(dataGame);
 
-  const gameIndex = games?.findIndex(
-    (game) => game.name === validGame.name && game.version === validGame.version
-  );
+    const games = await getQueryGames();
 
-  if (gameIndex !== undefined && gameIndex !== -1) {
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Jeux");
+    const gameIndex = await games?.findIndex(
+      (oldGame) =>
+        oldGame.name === query.name && oldGame.version === query.version
+    );
 
-    if (sheet) {
-      const dataLink = async (data: string | null, domain: string) => {
-        let result = "";
-
-        if (data) {
-          result = data;
-          const traductors = await getTraductors();
-
-          if (traductors) {
-            for (let i = 0; i < traductors.length; i++) {
-              const { name, links } = traductors[i];
-
-              if (name === data && links && links.length > 0) {
-                result = links[0].name;
-
-                for (let il = 0; il < links.length; il++) {
-                  result = `=HYPERLINK("${links[0].link}"; "${data}")`;
-
-                  if (links[il].name === domain) {
-                    return `=HYPERLINK("${links[il].link}"; "${data}")`;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        return result;
-      };
-
-      const convertedGame: string[] = [
-        validGame.id || "",
-        validGame.domain,
-        `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
-        validGame.version,
-        validGame.tversion,
-        validGame.tname.startsWith("Traduction")
-          ? `=HYPERLINK("${validGame.tlink}"; "${validGame.tname}")`
-          : validGame.tname,
-        validGame.status,
-        validGame.tags || "",
-        validGame.type,
-        (await dataLink(validGame.traductor, validGame.domain)).toString(),
-        (await dataLink(validGame.reader, validGame.domain)).toString(),
-        validGame.ttype,
-        validGame.ac.toString(),
-      ];
-
-      console.log("putGame convert:", { convertedGame });
-
-      const row = sheet.getRange(`A${gameIndex + 2}:M${gameIndex + 2}`);
-      await row.setValues([convertedGame]);
-
-      await sheet.sort(3, true);
-      reloadFilter(sheet);
-    } else {
-      console.error("No gameSheet detected");
+    if (gameIndex === undefined || gameIndex === -1) {
+      console.error("No detect game putGame with index:", { gameIndex });
+      return "Impossible de trouver le jeu dans la liste";
     }
-  } else {
-    console.error("No detect game putGame with index:", { gameIndex });
-    return "Impossible de trouver le jeu dans la liste";
+
+    const convertedGame: string[] = [
+      validGame.id || "",
+      validGame.domain,
+      `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
+      validGame.version,
+      validGame.tversion,
+      validGame.tname.startsWith("Traduction")
+        ? `=HYPERLINK("${validGame.tlink}"; "${validGame.tname}")`
+        : validGame.tname,
+      validGame.status,
+      validGame.tags || "",
+      validGame.type,
+      (await dataLink(validGame.traductor, validGame.domain)).toString(),
+      (await dataLink(validGame.reader, validGame.domain)).toString(),
+      validGame.ttype,
+      validGame.ac.toString(),
+    ];
+
+    const oldGame: GameType = await getGame(query);
+
+    console.info("putGame convert:", { convertedGame });
+
+    const sheet = await SpreadsheetApp.getActiveSpreadsheet();
+    const gameSheet = sheet.getSheetByName("Jeux");
+
+    if (!gameSheet) {
+      console.error({ gameSheet });
+      throw Error("Une erreur est survenue !");
+    }
+
+    const row = await gameSheet.getRange(`A${gameIndex + 2}:M${gameIndex + 2}`);
+    await row.setValues([convertedGame]);
+
+    await gameSheet.sort(3, true);
+    reloadFilter(gameSheet);
+
+    if (validGame.tversion !== oldGame.tversion) {
+      changelog({ game: validGame.name, status: "MISE À JOUR" });
+    }
+
+    let title = "Modification d'un jeu";
+    let color = 5814783;
+
+    if (validGame.tlink !== oldGame.tlink && validGame.tlink === "n/a") {
+      title = "Traduction manquante";
+      color = 12256517;
+
+      webhookUpdate(oldGame, validGame, title, color);
+    } else if (validGame.tversion !== oldGame.tversion) {
+      title = "Traduction mise à jour:";
+
+      webhookUpdate(oldGame, validGame, title, color);
+    } else if (validGame.tlink !== oldGame.tlink) {
+      title = "Mise à jour d'un lien de traduction:";
+      color = 15122688;
+
+      webhookUpdate(oldGame, validGame, title, color);
+    }
+
+    sendWebhookLogs({
+      title,
+      color,
+      oldGame,
+      game: validGame,
+    });
+
+    return "success";
+  } catch (error) {
+    console.error(error);
+
+    return "Un problème est survenue lors de modification du jeu";
+  } finally {
+    await disableLock();
   }
-  return "Un problème est survenu lors de la modification du jeu";
-}
+};
+
+const dataLink = async (data: string | null, domain: string) => {
+  if (!data) return "";
+
+  const traductors = await getTraductors();
+
+  if (!traductors) {
+    console.error({ traductors });
+    return "Une erreur est survenue !";
+  }
+
+  let result = data;
+
+  for (let i = 0; i < traductors.length; i++) {
+    const { name, links } = traductors[i];
+
+    if (name === data && links && links.length > 0) {
+      result = links[0].name;
+
+      for (let il = 0; il < links.length; il++) {
+        result = `=HYPERLINK("${links[0].link}"; "${data}")`;
+
+        if (links[il].name === domain) {
+          return `=HYPERLINK("${links[il].link}"; "${data}")`;
+        }
+      }
+    }
+  }
+
+  return result;
+};
+
+const webhookUpdate = (
+  oldGame: GameType,
+  validGame: GameType,
+  title: string,
+  color: number
+) => {
+  sendWebhookUpdate({
+    title,
+    url: validGame.link,
+    color,
+    name: validGame.name,
+    tversion:
+      oldGame.tversion !== validGame.tversion
+        ? `${oldGame.tversion} > ${validGame.tversion}`
+        : validGame.tversion,
+    traductor:
+      oldGame.traductor !== validGame.traductor
+        ? `${oldGame.traductor} > ${validGame.traductor}`
+        : validGame.traductor,
+    reader:
+      oldGame.reader !== validGame.reader
+        ? `${oldGame.reader} > ${validGame.reader}`
+        : validGame.reader,
+    image: oldGame.image,
+  });
+};

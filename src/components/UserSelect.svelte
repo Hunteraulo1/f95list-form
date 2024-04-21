@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { debounce } from 'lodash'
+  import { GAS_API } from '$lib/GAS_API'
+  import type { UserType } from '$types/schemas'
   import { createEventDispatcher } from 'svelte'
-  import { GAS_API } from '../lib/GAS_API'
-  import type { UserType } from '../types/schemas'
   import LoadingSpinner from './LoadingSpinner.svelte'
 
   const dispatch = createEventDispatcher()
@@ -13,34 +12,43 @@
   let searchResults: UserType[] = []
   let selectedUsers: UserType[] = []
 
-  const fetchResults = debounce(async (query: string) => {
+  let debounceTimeout: NodeJS.Timeout | null = null
+
+  const fetchResults = (query: string) => {
     selectedUsers = []
     dispatch('update', selectedUsers)
 
     // Simulating a server request
-    console.log(`Fetching results for query: ${query}`)
+    console.info(`Fetching results for query: ${query}`)
     searching = true
 
-    GAS_API.getUser({ email: searchQuery })
-      .then(result => {
-        console.log({ result })
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout)
+    }
+
+    debounceTimeout = setTimeout(async () => {
+      try {
+        const result = await GAS_API.getUser({ email: searchQuery })
+
+        if (typeof result === 'string') throw new Error('getUser no result')
+
+        console.info({ result })
 
         if (result) {
           searchResults = [result]
         } else {
           searchResults = []
         }
-      })
-      .catch(err => {
-        console.error('Error fetching user', err)
-      })
-      .finally(() => {
+      } catch (error) {
+        console.error('Error fetching user', error)
+      } finally {
         searchCount = searchCount + 1
         searching = false
-      })
-  }, 1000)
+      }
+    }, 1000)
+  }
 
-  function toggleSelect(user: UserType) {
+  const toggleSelect = (user: UserType) => {
     const index = selectedUsers.findIndex(
       selected => selected.email === user.email
     )
@@ -85,7 +93,7 @@
     {#if searchResults.length > 0}
       {#each searchResults as userResult}
         <div
-          class="flex items-center space-x-3 p-2 my-2 hover:bg-base-200 hover:cursor-pointer"
+          class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
           on:click={() => toggleSelect(userResult)}
           on:keypress={event => {
             if (event.key === 'Enter' || event.key === ' ') {
@@ -98,8 +106,8 @@
             selected => selected.email === userResult.email
           )}
         >
-          <div class="flex justify-center items-center space-x-3">
-            <div class="mask mask-squircle w-12 h-12">
+          <div class="flex items-center justify-center space-x-3">
+            <div class="mask mask-squircle h-12 w-12">
               <img src={userResult.profile?.imageUrl} alt="User" />
             </div>
             <div>
@@ -114,7 +122,7 @@
   </div>
 </div>
 
-<style>
+<style lang="postcss">
   .selected {
     background-color: hsl(var(--s));
   }

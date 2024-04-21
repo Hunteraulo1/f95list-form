@@ -8,16 +8,10 @@
     navigate(to)
     onClick()
   }
-
-  const handleKeyPress = (event: KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      handleClick()
-    }
-  }
 </script>
 
 <li>
-  <button on:click={handleClick} on:keypress={handleKeyPress}>
+  <button on:click={handleClick}>
     <slot />
   </button>
 </li>

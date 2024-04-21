@@ -1,7 +1,7 @@
+import type { GameType, QueryGameType } from "$types/schemas";
 import { TraductorType } from "../../../types/schemas";
-import type { Game, QueryGame } from "../../../types/types";
 
-export const game: Game = {
+export const game: GameType = {
   domain: "F95z",
   id: "6547",
   name: "Sisterly Lust",
@@ -18,9 +18,10 @@ export const game: Game = {
   reader: "",
   ttype: "Traduction Humaine",
   ac: true,
+  image: "",
 };
 
-export const games: Game[] = [
+export const games: GameType[] = [
   game,
   {
     domain: "F95z",
@@ -39,6 +40,7 @@ export const games: Game[] = [
     reader: "━ ₭úʍᾰ :･ﾟ✧",
     ttype: "Traduction Humaine",
     ac: true,
+    image: "",
   },
   {
     domain: "LewdCorner",
@@ -56,10 +58,11 @@ export const games: Game[] = [
     reader: "ⱤØⱤɎ ₥ɆⱤ₵ɄⱤɎ",
     ttype: "Traduction Humaine",
     ac: true,
+    image: "",
   },
 ];
 
-export const queryGames: QueryGame[] = games.map((game) => ({
+export const queryGames: QueryGameType[] = games.map((game) => ({
   name: game.name,
   version: game.version,
 }));

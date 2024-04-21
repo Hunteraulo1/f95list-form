@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { isLoading } from '../stores'
+  import { isLoading } from '$lib/stores';
 
-  export let title = ''
-  export let showDivider = true
+  export let title = '';
+  export let showDivider = true;
 </script>
 
 <div class="mt-8 w-full">
@@ -11,14 +11,16 @@
     <slot name="button" />
   </div>
   <div
-    class="card mt-4 bg-base-100 p-8 border-base-300 border-2 rounded-md shadow-sm"
+    class="card mt-4 rounded-md border-2 border-base-300 bg-base-100 p-8 shadow-sm"
   >
     {#if $isLoading}
-      <div class="absolute w-full bg-base-300 opacity-50 h-full top-0 left-0" />
+      <div
+        class="absolute left-0 top-0 h-full w-full bg-base-300 opacity-50"
+      ></div>
     {/if}
     <slot class="text-base-200" name="description" />
     {#if showDivider}
-      <div class="divider" />
+      <div class="divider"></div>
     {/if}
     <div class="panel-content">
       <slot name="panel-content" />

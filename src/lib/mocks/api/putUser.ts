@@ -1,21 +1,17 @@
-import { PutUserArgs } from "../../../server/api/putUser";
-import { User, UserType } from "../../../types/schemas";
+import { User, UserType } from "$types/schemas";
 import sleep from "../sleep";
+
+interface PutUserArgs {
+  user: UserType;
+}
 
 /**
  * **API Endpoint** | Updates the app configuration and returns it
- * @param {PutUserArgs} args
- * @returns {Promise<UserType>}
  */
-export async function putUser({ user }: PutUserArgs): Promise<UserType> {
+export const putUser = async ({ user }: PutUserArgs): Promise<UserType> => {
   await sleep();
 
-  const validUser = User.parse(user);
-
-  /** @type {UserType} */
-  const mockResponse = validUser;
-
-  console.log("mockResponse_user", mockResponse);
+  const mockResponse = User.parse(user);
 
   return JSON.parse(JSON.stringify(mockResponse));
-}
+};

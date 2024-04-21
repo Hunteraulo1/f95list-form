@@ -1,22 +1,18 @@
 import sleep from "../sleep";
 
-import { PutAppConfigArgs } from "../../../server/api/putAppConfiguration";
-import { AppConfiguration, AppConfigurationType } from "../../../types/schemas";
+import { AppConfiguration, AppConfigurationType } from "$types/schemas";
 
-/**
- * @param {PutAppConfigArgs} args
- * @returns {Promise<AppConfigurationType | null>}
- */
-export async function putAppConfiguration({
+interface PutAppConfigArgs {
+  appConfiguration: AppConfigurationType;
+}
+
+export const putAppConfiguration = async ({
   appConfiguration,
-}: PutAppConfigArgs): Promise<AppConfigurationType | null> {
+}: PutAppConfigArgs) => {
   await sleep();
 
-  const validAppConfig: AppConfigurationType =
+  const mockResponse: AppConfigurationType =
     AppConfiguration.parse(appConfiguration);
 
-  /** @type {AppConfiguration} */
-  const mockResponse = validAppConfig;
-
-  return JSON.parse(JSON.stringify(mockResponse));
-}
+  return JSON.parse(JSON.stringify(mockResponse)) as AppConfigurationType;
+};

@@ -1,53 +1,80 @@
+import { GameType } from "$types/schemas";
+import { disableLock, enableLock } from "../lib/lockMode";
+import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook";
+import { getGame } from "./getGame";
 import { getQueryGames } from "./getQueryGames";
 
-interface delGameArgs {
+export interface DelGameArgs {
   name: string;
   version: string;
   comment: string;
 }
 
-/**
- * @param {delGameArgs} - Required parameter containing id of game
- * @returns {Promise<string>}
- */
-export async function delGame({
+export const delGame = async ({
   name,
   version,
   comment,
-}: delGameArgs): Promise<string | null> {
+}: DelGameArgs): Promise<string> => {
   // Report request
-  console.log("delGame called with args:", { name, version, comment });
+  console.info("delGame called with args:", { name, version, comment });
 
-  const games = await getQueryGames();
+  await enableLock();
 
-  const gameIndex = games?.findIndex(
-    (game) => game.name === name && game.version === version
-  );
+  try {
+    const games = (await getQueryGames()) ?? [];
 
-  if (gameIndex !== undefined && gameIndex !== -1) {
+    const gameIndex = games.findIndex(
+      (game) => game.name === name && game.version === version
+    );
+
+    if (gameIndex === -1) {
+      console.error("No detected getGame with index:", { gameIndex });
+
+      return "No detected getGame";
+    }
+
     const sheet = SpreadsheetApp.getActiveSpreadsheet();
+
+    const game: GameType = await getGame({ name, version });
+
     const gameSheet = sheet.getSheetByName("Jeux");
 
-    if (gameSheet) {
-      const data = gameSheet
-        .getRange(`A${gameIndex + 2}:M${gameIndex + 2}`)
-        .getValues()[0];
-
-      if ((data[2] === name, data[3] === version)) {
-        await gameSheet.deleteRow(gameIndex + 2);
-        return "success";
-      } else {
-        console.error("No equal values for delGame:", data[2], data[3], {
-          name,
-          version,
-        });
-      }
-    } else {
+    if (!gameSheet) {
       console.error("No gameSheet detected");
-    }
-  } else {
-    console.error("No detected getGame with index:", { gameIndex });
-  }
 
-  return null;
-}
+      return "No gameSheet detected";
+    }
+
+    await gameSheet.deleteRow(gameIndex + 2);
+
+    const { link, traductor, reader, image, tversion } = game;
+    let title = "Suppression du jeu:";
+    let color = 12256517;
+
+    sendWebhookUpdate({
+      title,
+      url: link,
+      color,
+      comment,
+      name,
+      tversion,
+      traductor,
+      reader,
+      image,
+    });
+
+    sendWebhookLogs({
+      title,
+      color,
+      game,
+    });
+
+    return "success";
+  } catch (error) {
+    console.error(error);
+
+    return "Un problème est survenue lors de la suppression du jeu";
+  } finally {
+    await disableLock();
+  }
+};

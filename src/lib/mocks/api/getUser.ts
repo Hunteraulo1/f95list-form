@@ -1,21 +1,19 @@
-import { GetUserArgs } from "../../../server/api/getUser";
-import { UserType } from "../../../types/schemas";
+import { UserType } from "$types/schemas";
 import { user, users } from "../data/user";
 import sleep from "../sleep";
 
-/**
- * @param {GetUserArgs} [optionalArgs] - Optional parameter containing user email
- * @returns {Promise<UserType>}
- */
-export async function getUser(
+interface GetUserArgs {
+  email: UserType["email"] | null;
+}
+
+export const getUser = async (
   { email }: GetUserArgs = { email: null }
-): Promise<UserType | null> {
+): Promise<UserType | null> => {
   await sleep();
 
-  /** @type {User | undefined} */
   let mockResponse = null;
 
-  console.log({ email });
+  console.info({ email });
 
   if (!email) {
     mockResponse = user;
@@ -26,7 +24,7 @@ export async function getUser(
     }
   }
 
-  console.log("mockResponse", mockResponse);
+  console.info("mockResponse", mockResponse);
 
   return JSON.parse(JSON.stringify(mockResponse));
-}
+};
