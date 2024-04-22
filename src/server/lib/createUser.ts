@@ -19,6 +19,10 @@ export const createUser = (email: string, overrides = {}) => {
         value: new Date().toISOString(),
       },
     ],
+    statistics: {
+      gameAdded: 0,
+      gameEdited: 0,
+    },
   };
 
   const user = {

@@ -4,7 +4,7 @@ import { users } from "../data/user";
 import sleep from "../sleep";
 
 export const getAppConfiguration = async (): Promise<AppConfigurationType> => {
-  sleep();
+  await sleep();
 
   const appConfig = {
     ...appConfiguration,

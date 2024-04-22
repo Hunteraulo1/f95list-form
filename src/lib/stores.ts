@@ -1,9 +1,9 @@
-import { derived, writable } from "svelte/store";
 import type {
   AppConfigurationType,
   QueryGameType,
   UserType,
 } from "$types/schemas";
+import { derived, writable } from "svelte/store";
 
 export const sessionUser = writable<UserType | null>(null);
 export const userIsAdmin = derived(sessionUser, ($sessionUser) => {

@@ -9,7 +9,7 @@ export type PutAppConfigArgs = {
  */
 export const putAppConfiguration = ({
   appConfiguration,
-}: PutAppConfigArgs): Promise<AppConfigurationType> => {
+}: PutAppConfigArgs): AppConfigurationType => {
   console.info("putAppConfiguration() called with: ", appConfiguration);
 
   const validAppConfiguration = AppConfiguration.parse(appConfiguration);

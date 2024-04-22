@@ -1,12 +1,15 @@
 <script>
-  import { Route } from 'svelte-routing';
-  import PageNotFound from '../routes/404.svelte';
-  import { userIsAdmin } from '$lib/stores';
+  import { userIsAdmin, userIsSuperAdmin } from '$lib/stores'
+  import { Route } from 'svelte-routing'
+  import PageNotFound from '../routes/404.svelte'
 
-  export let path;
+  export let path
+  export let superAdmin = false
+
+  console.log({ superAdmin })
 </script>
 
-{#if $userIsAdmin}
+{#if ($userIsAdmin && !superAdmin) || $userIsSuperAdmin}
   <Route {path}>
     <slot />
   </Route>

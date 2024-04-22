@@ -10,8 +10,9 @@
 
   const dispatch = createEventDispatcher()
 
-  export let step: number = 0
-  export let edit: boolean = false
+  export let step = 0
+  export let edit = false
+
   export let game: GameType = {
     status: 'EN COURS',
     type: 'RenPy',
@@ -35,6 +36,7 @@
   let savedId = ''
   let traductors: TraductorType[] = []
   let dialog: HTMLDialogElement
+  let silentMode = false
 
   onMount(async () => {
     try {
@@ -45,6 +47,12 @@
       }
 
       traductors = result
+
+      const { id, domain } = game
+
+      if (step !== 5 || domain !== 'F95z') return
+
+      await scrapeData({ id, domain })
     } catch (error) {
       console.error('Error deleting game', error)
 
@@ -63,34 +71,50 @@
     if (step === 2 && game.domain === 'F95z') step += amount // Game informations
     if (step === 4 && game.domain === 'Autre') step += amount // Auto-Check
 
-    const gameId = parseInt(game.id ?? '0')
+    const gameId = parseInt(game.id)
 
-    if (step === 3 && game.domain === 'F95z' && gameId && savedId !== game.id) {
+    if (
+      step === 3 &&
+      game.domain === 'F95z' &&
+      game.id &&
+      gameId &&
+      savedId !== game.id
+    ) {
       const { id, domain } = game
 
-      savedId = id!
+      savedId = game.id
 
-      try {
-        const result = await GAS_API.getScrape({ id, domain })
+      await scrapeData({ id, domain })
+    }
+  }
 
-        console.info({ result })
+  interface ScrapeDataArgs {
+    id: GameType['id']
+    domain: Extract<GameType['domain'], 'F95z'>
+  }
 
-        const { name, version, status, tags, type } = result
+  const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
+    try {
+      const result = await GAS_API.getScrape({ id, domain })
 
-        game.name = name
-        game.version = version
-        game.status = status
-        game.tags = tags
-        game.type = type
-      } catch (error) {
-        console.error('Error scrapped game', error)
-        dispatch('newToast', {
-          id: Date.now(),
-          alertType: 'error',
-          message: 'Impossible de récupérer les informations du jeu',
-          milliseconds: 3000
-        })
-      }
+      console.info({ result })
+
+      const { name, version, status, tags, type, image } = result
+
+      game.name = name ?? game.name
+      game.version = version ?? game.version
+      game.status = status ?? game.status
+      game.tags = tags ?? game.tags
+      game.type = type ?? game.type
+      game.image = image ?? game.image
+    } catch (error) {
+      console.error('Error scrapped game', error)
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'error',
+        message: 'Impossible de récupérer les informations du jeu',
+        milliseconds: 3000
+      })
     }
   }
 
@@ -104,21 +128,23 @@
 
     if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
       game['ac'] = event.currentTarget.checked
-
       return
     }
 
     // @ts-ignore
     game[key] = value
 
-    if ((name === 'platform' || name === 'id') && id && id !== '0') {
+    console.log({ game })
+
+    if ((name === 'domain' || name === 'id') && id && id !== '0') {
+      console.log({ domain })
+
       switch (domain) {
         case 'F95z':
           game.link = `https://f95zone.to/threads/${id}`
           break
         case 'LewdCorner':
           game.link = `https://lewdcorner.com/threads/${id}`
-          break
       }
     }
   }
@@ -137,7 +163,18 @@
       const query = $queryGame
 
       try {
-        await GAS_API.putGame({ game, query })
+        const result = await GAS_API.putGame({ game, query, silentMode })
+
+        if (result === 'duplicate') {
+          dispatch('newToast', {
+            id: Date.now(),
+            alertType: 'warning',
+            message: 'Le jeu existe déjà dans la liste',
+            milliseconds: 3000
+          })
+
+          return
+        }
 
         navigate('/')
         dispatch('newToast', {
@@ -160,12 +197,12 @@
       }
     } else {
       try {
-        const result = await GAS_API.postGame({ game })
+        const result = await GAS_API.postGame({ game, silentMode })
 
         if (result === 'duplicate') {
           dispatch('newToast', {
             id: Date.now(),
-            alertType: 'error',
+            alertType: 'warning',
             message: 'Le jeu existe déjà dans la liste',
             milliseconds: 3000
           })
@@ -220,7 +257,9 @@
     $isLoading = true
 
     try {
-      await GAS_API.delGame({ name, version, comment })
+      const query = { name, version }
+
+      await GAS_API.delGame({ query, comment, silentMode })
 
       navigate('/')
       dispatch('newToast', {
@@ -252,6 +291,17 @@
       on:submit|preventDefault={handleSubmit}
       autocomplete="off"
     >
+      <div class="form-control">
+        <label class="label cursor-pointer">
+          <span class="label-text pr-2">Mode silencieux</span>
+          <input
+            type="checkbox"
+            class="toggle"
+            checked={silentMode}
+            on:change={() => (silentMode = !silentMode)}
+          />
+        </label>
+      </div>
       <div
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
@@ -284,7 +334,7 @@
               inputmode="numeric"
               name="id"
               on:change={handleChange}
-              value={game.id}
+              bind:value={game.id}
             />
           </div>
         {/if}
@@ -295,7 +345,8 @@
             <input
               type="text"
               placeholder="Nom du jeu"
-              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
+              class="input input-bordered w-full"
+              class:input-error={!edit && game.domain !== 'F95z'}
               name="name"
               on:change={handleChange}
               on:input={e => handleInput(e)}
@@ -310,7 +361,8 @@
             <input
               type="text"
               placeholder="Lien du jeu"
-              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
+              class="input input-bordered w-full"
+              class:input-error={!edit && game.domain !== 'F95z'}
               name="link"
               on:change={handleChange}
               on:input={e => handleInput(e)}
@@ -371,11 +423,27 @@
           </div>
 
           <div>
+            <label for="image">Lien de l'image:</label>
+            <input
+              type="text"
+              placeholder="Lien du jeu"
+              class="input input-bordered w-full"
+              class:input-error={!edit && game.domain !== 'F95z'}
+              name="image"
+              on:change={handleChange}
+              on:input={e => handleInput(e)}
+              required
+              value={game.image}
+            />
+          </div>
+
+          <div>
             <label for="version">Version actuelle:</label>
             <input
               type="text"
               placeholder="Version du jeu"
-              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
+              class="input input-bordered w-full"
+              class:input-error={!edit && game.domain !== 'F95z'}
               name="version"
               on:change={handleChange}
               on:input={e => handleInput(e)}
@@ -390,7 +458,8 @@
             <input
               type="text"
               placeholder="Version de la traduction"
-              class={`input input-bordered w-full ${edit ? '' : 'input-error'}`}
+              class="input input-bordered w-full"
+              class:input-error={!edit}
               name="tversion"
               on:change={handleChange}
               on:input={e => handleInput(e)}

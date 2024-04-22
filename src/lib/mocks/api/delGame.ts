@@ -1,25 +1,50 @@
 import { games } from "../data/game";
 import sleep from "../sleep";
+import { sendWebhookLogs, sendWebhookUpdate } from "../webhook";
 
 export interface DelGameArgs {
-  name: string;
-  version: string;
+  query: { name: string; version: string };
   comment?: string;
+  silentMode: boolean;
 }
 
 export const delGame = async ({
-  name,
-  version,
-}: DelGameArgs): Promise<string | null> => {
+  query,
+  comment,
+  silentMode,
+}: DelGameArgs): Promise<void> => {
   await sleep();
 
-  let mockResponse = null;
+  const { name, version } = query;
 
   const game = games.find(
     (game) => game.name === name && game.version === version
   );
 
-  mockResponse = game ? "success" : null;
+  console.info("mockResponse_delGame", { query, comment, silentMode, games });
 
-  return JSON.parse(JSON.stringify(mockResponse));
+  let title = "Suppression du jeu:";
+  let color = 12256517;
+
+  const { link, tversion, traductor, reader, image } = game;
+
+  if (!silentMode) {
+    sendWebhookUpdate({
+      title,
+      url: link,
+      color,
+      comment,
+      name,
+      tversion,
+      traductor,
+      reader,
+      image,
+    });
+  }
+
+  sendWebhookLogs({
+    title,
+    color,
+    game,
+  });
 };

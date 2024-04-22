@@ -12,7 +12,7 @@ export const getGames = async (): Promise<GameType[]> => {
     throw new Error("No gameSheet detected");
   }
 
-  const data = gameSheet.getRange(`A2:M${totalRow}`).getValues();
+  const data = gameSheet.getRange(`A2:N${totalRow}`).getValues();
 
   return data.map((game) =>
     Game.parse({
@@ -29,6 +29,7 @@ export const getGames = async (): Promise<GameType[]> => {
       reader: game[10],
       ttype: game[11],
       ac: game[12],
+      image: game[13],
       link: "",
       tlink: "",
       trlink: "",

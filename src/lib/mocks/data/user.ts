@@ -15,6 +15,10 @@ export const user: UserType = {
     { label: "User Created", value: "2021-01-01T00:00:00.000Z" },
     { label: "User Updated", value: "2021-01-01T00:00:00.000Z" },
   ],
+  statistics: {
+    gameAdded: 84,
+    gameEdited: 518,
+  },
 };
 
 export const users: UserType[] = [
@@ -34,6 +38,10 @@ export const users: UserType[] = [
       { label: "User Created", value: "2023-01-01T00:00:00.000Z" },
       { label: "User Updated", value: "2023-03-12T00:00:00.000Z" },
     ],
+    statistics: {
+      gameAdded: 25,
+      gameEdited: 263,
+    },
   },
   {
     email: "janedoe@test.com",
@@ -50,5 +58,9 @@ export const users: UserType[] = [
       { label: "User Created", value: "2023-01-01T00:00:00.000Z" },
       { label: "User Updated", value: "2023-03-12T00:00:00.000Z" },
     ],
+    statistics: {
+      gameAdded: 18,
+      gameEdited: 372,
+    },
   },
 ];

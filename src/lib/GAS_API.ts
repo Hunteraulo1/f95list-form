@@ -27,11 +27,7 @@ const callAPI = async <T, A = unknown>(
   return new Promise<T>((resolve, reject) => {
     google.script.run
       .withSuccessHandler((result: T) => resolve(result))
-      .withFailureHandler((error: unknown) => {
-        console.error("errrrrror !!!"); // TODO: test reject
-
-        reject(error);
-      })
+      .withFailureHandler((error: unknown) => reject(error))
       [functionName](...(Array.isArray(args) ? args : [args]));
   });
 };
@@ -41,7 +37,9 @@ export const GAS_API = {
   getAppConfiguration: (): Promise<AppConfigurationType> =>
     callAPI<AppConfigurationType>("getAppConfiguration"),
 
-  putAppConfiguration: (args: PutAppConfigArgs): Promise<void> =>
+  putAppConfiguration: (
+    args: PutAppConfigArgs
+  ): Promise<AppConfigurationType> =>
     callAPI<AppConfigurationType, typeof args>("putAppConfiguration", args),
 
   // User
@@ -71,7 +69,4 @@ export const GAS_API = {
   // Others
   getScrape: (args: GetScrapeArgs) =>
     callAPI<ScrapeGameType, typeof args>("getScrape", args),
-
-  sendWebhook: (args: boolean) =>
-    callAPI<void, typeof args>("sendWebhook", args),
 };

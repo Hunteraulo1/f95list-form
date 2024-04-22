@@ -23,10 +23,7 @@ export const sendWebhookUpdate = async ({
   reader,
   image,
 }: SendWebhookUpdateArgs) => {
-  const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty("webhookUrl");
-
-  if (!link || !tversion || !name) return null;
+  if (!tversion || !name) return null;
 
   let fields = [];
 
@@ -66,7 +63,7 @@ export const sendWebhookUpdate = async ({
     return;
   }
 
-  await UrlFetchApp.fetch(link, {
+  console.info({
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -109,11 +106,6 @@ export const sendWebhookLogs = async ({
   game,
   comment,
 }: SendWebhookLogsArgs) => {
-  const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty("logsUrl");
-
-  if (!link) return null;
-
   let fields = [];
 
   for (const prop in game) {
@@ -121,15 +113,15 @@ export const sendWebhookLogs = async ({
 
     const key = prop as keyof Omit<GameType, "trlink">;
 
-    const dataProp = game[key]?.toString();
-    const oldDataProp = oldGame ? oldGame[key]?.toString() : null;
+    const gameProp = game[key]?.toString();
+    const oldGameProp = oldGame ? oldGame[key]?.toString() : null;
 
     fields.push({
       name: `${prop}:`,
       value:
-        oldDataProp && dataProp !== oldDataProp
-          ? `${oldDataProp} **>** ${dataProp}`
-          : dataProp,
+        oldGameProp && gameProp !== oldGameProp
+          ? `${oldGameProp} **>** ${gameProp}`
+          : gameProp,
       inline: false,
     });
   }
@@ -148,7 +140,7 @@ export const sendWebhookLogs = async ({
     return;
   }
 
-  await UrlFetchApp.fetch(link, {
+  console.info({
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -162,7 +154,7 @@ export const sendWebhookLogs = async ({
           color,
           fields,
           author: {
-            name: getName(),
+            name: "mock",
           },
         },
       ],
@@ -170,25 +162,4 @@ export const sendWebhookLogs = async ({
       actions: {},
     }),
   });
-};
-
-const getName = () => {
-  const user = Session.getActiveUser();
-  // @ts-ignore
-  const username = user.getUsername();
-
-  switch (username) {
-    case "a.fergani91":
-      return "Rory-Mercury91";
-    case "antoine.depadoux71":
-      return "frelon7144";
-    case "nougat71c2p":
-      return "Asterix71300";
-    case "hunteraulo":
-      return "Hunteraulo";
-    case "larmeedesnoobs":
-      return "Hunteraulo";
-    default:
-      return username || user.getEmail();
-  }
 };

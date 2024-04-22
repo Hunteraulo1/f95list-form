@@ -18,6 +18,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs) => {
       tags: "",
       type: "",
       version: "",
+      image: "",
     };
   }
 

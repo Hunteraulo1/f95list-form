@@ -1,15 +1,26 @@
-import { GameType } from "$types/schemas";
+import { GameType, ScrapeGame } from "$types/schemas";
 import { getFetchF95z } from "./getFetchF95z";
 
 export type GetScrapeArgs = {
-  domain: Exclude<GameType["domain"], "Autre">;
+  domain: Extract<GameType["domain"], "F95z">;
   id: string;
 };
 
+interface GetScrape {
+  name: GameType["name"];
+  version: GameType["version"];
+  status: GameType["status"];
+  tags: GameType["tags"];
+  type: GameType["type"];
+  image: GameType["image"];
+}
 export const getScrape = async ({
   domain,
   id,
-}: GetScrapeArgs): Promise<GameType> => {
+}: GetScrapeArgs): Promise<GetScrape> => {
+  // const domain = "F95z";
+  // const id = "100";
+
   // Report request
   console.info("getScrape called with args: " + { domain, id });
 
@@ -31,16 +42,18 @@ export const getScrape = async ({
   const $ = Cheerio.load(response.getContentText());
   const tags = $(".tagItem")
     .map((_, tag) => $(tag).text().trim())
-    .get();
-  let title = $("title").text();
-  console.log("🚀 ~ getScrape ~ title:", title);
+    .get()
+    .join(", ");
+  const title = $("title").text();
+  const img = $("img.bbImage").attr("src");
 
-  const titleMatch = title.match(regName) ?? [];
+  const image = img?.replace("thumb/", "") ?? "";
 
-  const name = titleMatch?.[1] ?? "";
+  const titleMatch = title.match(regTitle) ?? [];
+  const nameMatch = title.match(regName) ?? [];
+
+  const name = nameMatch?.[1] ?? "";
   const { status, type } = scrapeGetTitle(titleMatch);
-
-  console.log("🚀 ~ getScrape ~ regName:", title.match(regName));
 
   let version = "";
 
@@ -49,14 +62,32 @@ export const getScrape = async ({
 
     console.log({ result });
 
-    version = result || "";
+    version = result ?? "";
   } catch (error) {
     console.error("Error getFetchF95z: ", error);
     throw new Error("getFetchF95z no return");
   }
 
-  console.log("scrapePage", { name, version, status, tags, type, domain });
-  return { name, version, status, tags, type };
+  console.log("scrapePage", {
+    name,
+    version,
+    status,
+    tags,
+    type,
+    image,
+    domain,
+  });
+
+  const validScrapeGame = ScrapeGame.parse({
+    name,
+    version,
+    status,
+    tags,
+    type,
+    image,
+  });
+
+  return validScrapeGame;
 };
 
 const scrapeGetTitle = (data: string[]) => {
@@ -97,7 +128,7 @@ const scrapeGetTitle = (data: string[]) => {
       case "QSP":
         type = "QSP";
         break;
-      case "Other":
+      case "Others":
         type = "Autre";
         break;
     }

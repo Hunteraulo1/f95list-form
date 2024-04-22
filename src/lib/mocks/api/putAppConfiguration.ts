@@ -8,7 +8,7 @@ interface PutAppConfigArgs {
 
 export const putAppConfiguration = async ({
   appConfiguration,
-}: PutAppConfigArgs) => {
+}: PutAppConfigArgs): Promise<AppConfigurationType> => {
   await sleep();
 
   const mockResponse: AppConfigurationType =

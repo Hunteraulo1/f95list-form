@@ -128,6 +128,7 @@ export const scrape = (domain: "F95z" | "LewdCorner", id: string) => {
             tags: "2dcg, adventure, big tits, fantasy, handjob, male protagonist, monster girl, oral sex, rpg, sex toys",
             type: "RPGM",
             version: "v0.68",
+            image: "https://attachments.f95zone.to/2017/07/23177_t.png",
           };
         case "110":
           return {
@@ -136,6 +137,7 @@ export const scrape = (domain: "F95z" | "LewdCorner", id: string) => {
             tags: "3dcg, adventure, combat, fantasy, male protagonist, oral sex, romance, vaginal sex",
             type: "RPGM",
             version: "v4.1",
+            image: "",
           };
         case "150":
           return {
@@ -144,6 +146,7 @@ export const scrape = (domain: "F95z" | "LewdCorner", id: string) => {
             tags: "2d game, dating sim, harem, male protagonist",
             type: "Flash",
             version: "v1.0",
+            image: "",
           };
       }
   }

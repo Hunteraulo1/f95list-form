@@ -7,19 +7,23 @@ import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook";
 import { getGame } from "./getGame";
 import { getQueryGames } from "./getQueryGames";
 import { getTraductors } from "./getTraductors";
+import { getUser } from "./getUser";
+import { putUser } from "./putUser";
 
-export interface GetGameArgs {
+export interface PutGameArgs {
   game: GameType;
   query: {
     name: string | null;
     version: string | null;
   };
+  silentMode: boolean;
 }
 
 export const putGame = async ({
   game: dataGame,
   query,
-}: GetGameArgs): Promise<void | string> => {
+  silentMode,
+}: PutGameArgs): Promise<void | string> => {
   // Report request
   console.info("putGame called with args:", { dataGame });
 
@@ -29,6 +33,17 @@ export const putGame = async ({
     const validGame = await Game.parse(dataGame);
 
     const games = await getQueryGames();
+
+    if (query.name !== dataGame.name || query.version !== dataGame.version) {
+      const duplicateGame = await games?.findIndex(
+        (oldGame) =>
+          oldGame.name === dataGame.name && oldGame.version === dataGame.version
+      );
+
+      if (duplicateGame !== -1) {
+        return "duplicate";
+      }
+    }
 
     const gameIndex = await games?.findIndex(
       (oldGame) =>
@@ -56,6 +71,7 @@ export const putGame = async ({
       (await dataLink(validGame.reader, validGame.domain)).toString(),
       validGame.ttype,
       validGame.ac.toString(),
+      validGame.image,
     ];
 
     const oldGame: GameType = await getGame(query);
@@ -70,7 +86,7 @@ export const putGame = async ({
       throw Error("Une erreur est survenue !");
     }
 
-    const row = await gameSheet.getRange(`A${gameIndex + 2}:M${gameIndex + 2}`);
+    const row = await gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`);
     await row.setValues([convertedGame]);
 
     await gameSheet.sort(3, true);
@@ -80,23 +96,30 @@ export const putGame = async ({
       changelog({ game: validGame.name, status: "MISE À JOUR" });
     }
 
+    const user = await getUser();
+    user.statistics.gameEdited++;
+
+    putUser({ user });
+
     let title = "Modification d'un jeu";
     let color = 5814783;
 
-    if (validGame.tlink !== oldGame.tlink && validGame.tlink === "n/a") {
-      title = "Traduction manquante";
-      color = 12256517;
+    if (!silentMode) {
+      if (validGame.tlink !== oldGame.tlink && validGame.tlink === "n/a") {
+        title = "Traduction manquante";
+        color = 12256517;
 
-      webhookUpdate(oldGame, validGame, title, color);
-    } else if (validGame.tversion !== oldGame.tversion) {
-      title = "Traduction mise à jour:";
+        webhookUpdate(oldGame, validGame, title, color);
+      } else if (validGame.tversion !== oldGame.tversion) {
+        title = "Traduction mise à jour:";
 
-      webhookUpdate(oldGame, validGame, title, color);
-    } else if (validGame.tlink !== oldGame.tlink) {
-      title = "Mise à jour d'un lien de traduction:";
-      color = 15122688;
+        webhookUpdate(oldGame, validGame, title, color);
+      } else if (validGame.tlink !== oldGame.tlink) {
+        title = "Mise à jour d'un lien de traduction:";
+        color = 15122688;
 
-      webhookUpdate(oldGame, validGame, title, color);
+        webhookUpdate(oldGame, validGame, title, color);
+      }
     }
 
     sendWebhookLogs({

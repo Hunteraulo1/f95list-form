@@ -57,9 +57,9 @@ export const getGame = async ({
     reader: data[10],
     ttype: data[11],
     ac: data[12],
+    image: data[13], // TODO: ajouter les images
     link: dataLink ? dataLink[0]?.getLinkUrl() : "",
     tlink: dataLink ? dataLink[3]?.getLinkUrl() : "",
     trlink: dataLink ? dataLink[7]?.getLinkUrl() : "",
-    image: data[13], // TODO: ajouter les images
   });
 };

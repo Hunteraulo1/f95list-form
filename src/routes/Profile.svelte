@@ -85,8 +85,7 @@
             >
           </div>
           <div class="stat-title">Total de jeu ajouté</div>
-          <div class="stat-value text-primary">25</div>
-          <div class="stat-desc">Fonctionnalité à venir</div>
+          <div class="stat-value text-primary">{user.statistics.gameAdded}</div>
         </div>
 
         <div class="stat">
@@ -105,8 +104,9 @@
             >
           </div> -->
           <div class="stat-title">Total de jeu modifié</div>
-          <div class="stat-value text-secondary">263</div>
-          <div class="stat-desc">Fonctionnalité à venir</div>
+          <div class="stat-value text-secondary">
+            {user.statistics.gameEdited}
+          </div>
         </div>
       </div>
       <Panel title="Recent Activity">

@@ -3,18 +3,21 @@ import { disableLock, enableLock } from "../lib/lockMode";
 import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook";
 import { getGame } from "./getGame";
 import { getQueryGames } from "./getQueryGames";
+import { getUser } from "./getUser";
+import { putUser } from "./putUser";
 
 export interface DelGameArgs {
-  name: string;
-  version: string;
+  query: { name: string; version: string };
   comment: string;
+  silentMode: boolean;
 }
 
 export const delGame = async ({
-  name,
-  version,
+  query,
   comment,
+  silentMode,
 }: DelGameArgs): Promise<void> => {
+  const { name, version } = query;
   // Report request
   console.info("delGame called with args:", { name, version, comment });
 
@@ -47,21 +50,28 @@ export const delGame = async ({
 
     await gameSheet.deleteRow(gameIndex + 2);
 
+    const user = await getUser();
+    user.statistics.gameEdited++;
+
+    putUser({ user });
+
     const { link, traductor, reader, image, tversion } = game;
     let title = "Suppression du jeu:";
     let color = 12256517;
 
-    sendWebhookUpdate({
-      title,
-      url: link,
-      color,
-      comment,
-      name,
-      tversion,
-      traductor,
-      reader,
-      image,
-    });
+    if (!silentMode) {
+      sendWebhookUpdate({
+        title,
+        url: link,
+        color,
+        comment,
+        name,
+        tversion,
+        traductor,
+        reader,
+        image,
+      });
+    }
 
     sendWebhookLogs({
       title,

@@ -1,5 +1,6 @@
 import type { UserType } from "$types/schemas";
 import * as z from "zod";
+import { createUser } from "../lib/createUser";
 
 export type GetUserArgs = {
   email: string | null;
@@ -8,9 +9,7 @@ export type GetUserArgs = {
 /**
  * **API Endpoint** | Returns the accessing user object
  */
-export const getUser = async (
-  { email }: GetUserArgs = { email: null }
-): Promise<UserType | string> => {
+export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   const requestingUserEmail = Session.getActiveUser().getEmail();
   // Report request
   console.info(
@@ -44,8 +43,8 @@ export const getUser = async (
   // Else if the the request user's object doesn't exist but it is a request
   // from the requested user, create the user object and return it. They
   // now exist in the system.
-  // if (!userObjectString || !isRequestForSelf)
-  //   return createUser(EMAIL_FOR_RETRIEVAL);
+  if (!userObjectString || !isRequestForSelf)
+    return createUser(EMAIL_FOR_RETRIEVAL);
 
   console.log(userObjectString);
 

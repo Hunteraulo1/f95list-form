@@ -1,6 +1,7 @@
 // let tempLogs = [];
 
 import { getGames } from "../api/getGames";
+import { getScrape } from "../api/getScrape";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const checkVersion = async () => {
@@ -34,7 +35,7 @@ const checkVersion = async () => {
     }
   }
 
-  checkedGames.forEach((game) => {
+  checkedGames.forEach(async (game) => {
     const { index, id, version } = game;
     if (version === result[id]) {
       // console.info(`ID: ${id} | version: ${version} / newVersion: ok`);
@@ -49,6 +50,18 @@ const checkVersion = async () => {
 
       if (row && row[0] == id) {
         sheet?.getRange(`D${index + 2}`).setValue(result[id]);
+
+        try {
+          const result = await getScrape({ domain: "F95z", id });
+
+          console.log(`${id}: ${result?.image}`);
+
+          if (result?.image === "") return;
+
+          sheet?.getRange(`N${index + 2}`).setValue(result.image);
+        } catch (error) {
+          console.error("scrape image error: ", error);
+        }
       } else {
         console.error({ row, id, version });
       }

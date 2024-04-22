@@ -1,6 +1,6 @@
 import { CheckerF95zType } from "$types/schemas";
 
-export const getFetchF95z = async (id: string): Promise<CheckerF95zType> => {
+export const getFetchF95z = async (id: string): Promise<string> => {
   const host = "https://f95zone.to";
   const url = `${host}/sam/checker.php?threads=${id}`;
 

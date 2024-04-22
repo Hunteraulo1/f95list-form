@@ -16,6 +16,10 @@ const User = z.object({
       value: z.string(), // You can add custom validation to ensure it's an ISO string
     })
   ),
+  statistics: z.object({
+    gameAdded: z.number().min(0),
+    gameEdited: z.number().min(0),
+  }),
 });
 
 const Game = z.object({
@@ -69,9 +73,10 @@ const QueryGame = z.object({
 const ScrapeGame = z.object({
   name: Game.shape.name,
   version: Game.shape.version,
-  status: Game.shape.status,
+  status: Game.shape.status || "",
   tags: Game.shape.tags,
-  type: Game.shape.type,
+  type: Game.shape.type || "",
+  image: Game.shape.image,
 });
 
 const CheckerF95z = z.object({
