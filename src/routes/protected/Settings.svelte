@@ -150,6 +150,6 @@
       </div>
     </Panel>
 
-    <AddAdminModal dialog={dialogAdd} on:newToast />
+    <AddAdminModal bind:dialog={dialogAdd} on:newToast />
   {/if}
 </div>
