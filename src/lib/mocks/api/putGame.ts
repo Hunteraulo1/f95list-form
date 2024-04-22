@@ -33,6 +33,15 @@ export const putGame = async ({
       throw new Error("Le jeu est introuvable dans la liste");
     }
 
+    const duplicate = games?.findIndex(
+      (gameData) =>
+        gameData.name === game.name && gameData.version === game.version
+    );
+
+    if (duplicate !== -1) {
+      return "duplicate";
+    }
+
     const validGame = Game.parse(game);
     console.info("mockResponse_putGame", { validGame, games });
 

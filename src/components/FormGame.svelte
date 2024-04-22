@@ -40,26 +40,35 @@
 
   onMount(async () => {
     try {
-      const result = await GAS_API.getTraductors()
+      const traductors = await GAS_API.getTraductors()
 
-      if (!Array.isArray(result)) {
+      if (!Array.isArray(traductors)) {
         throw new Error('getTraductor no result')
       }
-
-      traductors = result
-
-      const { id, domain } = game
-
-      if (step !== 5 || domain !== 'F95z') return
-
-      await scrapeData({ id, domain })
     } catch (error) {
-      console.error('Error deleting game', error)
+      console.error('getTradutor no return: ', error)
 
       dispatch('newToast', {
         id: Date.now(),
         alertType: 'error',
         message: 'Impossible de récupérer la liste des traducteurs',
+        milliseconds: 3000
+      })
+    }
+
+    const { id, domain } = game
+
+    if (step !== 5 || domain !== 'F95z') return
+
+    try {
+      await scrapeData({ id, domain })
+    } catch (error) {
+      console.error('scrapeData no return: ', error)
+
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'warning',
+        message: 'Impossible de scraper les information du jeu',
         milliseconds: 3000
       })
     }

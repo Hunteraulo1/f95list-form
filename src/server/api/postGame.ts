@@ -26,12 +26,12 @@ export const postGame = async ({
     const validGame = await Game.parse(game);
     const games = await getQueryGames();
 
-    const gameIndex = games?.findIndex(
+    const duplicate = games?.findIndex(
       (game) =>
         game.name === validGame.name && game.version === validGame.version
     );
 
-    if (gameIndex !== -1) {
+    if (duplicate !== -1) {
       return "duplicate";
     }
 

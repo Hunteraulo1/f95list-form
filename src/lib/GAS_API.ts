@@ -64,7 +64,8 @@ export const GAS_API = {
   getQueryGames: () => callAPI<QueryGameType[]>("getQueryGames"),
 
   // Traducteurs
-  getTraductors: () => callAPI<TraductorType>("getTraductors"),
+  getTraductors: () => callAPI<TraductorType[]>("getTraductors"),
+  putTraductors: () => callAPI<void | string>("putTraductors"),
 
   // Others
   getScrape: (args: GetScrapeArgs) =>
