@@ -78,7 +78,7 @@ export const putGame = async ({
 
     console.info("putGame convert:", { convertedGame });
 
-    const sheet = await SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = SpreadsheetApp.getActiveSpreadsheet();
     const gameSheet = sheet.getSheetByName("Jeux");
 
     if (!gameSheet) {
@@ -86,17 +86,17 @@ export const putGame = async ({
       throw Error("Une erreur est survenue !");
     }
 
-    const row = await gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`);
-    await row.setValues([convertedGame]);
+    const row = gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`);
+    row.setValues([convertedGame]);
 
-    await gameSheet.sort(3, true);
-    reloadFilter(gameSheet);
+    gameSheet.sort(3, true);
+    await reloadFilter(gameSheet);
 
     if (validGame.tversion !== oldGame.tversion) {
       changelog({ game: validGame.name, status: "MISE À JOUR" });
     }
 
-    const user = await getUser();
+    const user = getUser();
     user.statistics.gameEdited++;
 
     putUser({ user });

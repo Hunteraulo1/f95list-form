@@ -31,3 +31,6 @@ dist-ssr
 
 # temporarily adding to ignore image assets
 images/
+
+# development
+*.txt
