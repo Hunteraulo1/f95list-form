@@ -7,7 +7,7 @@ interface EnvironmentDetails {
 }
 
 const ENV: EnvironmentDetails = {
-  executeAs: "USER_DEPLOYING", // "USER_DEPLOYING" | "USER_ACCESSING"
+  executeAs: "USER_ACCESSING", // "USER_DEPLOYING" | "USER_ACCESSING"
   domain: {
     type: "Personal",
     name: "",

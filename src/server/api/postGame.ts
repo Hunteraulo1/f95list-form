@@ -79,7 +79,8 @@ export const postGame = async ({
       validGame.tags ?? "",
       validGame.type,
       (await dataLink(validGame.traductor, validGame.domain))?.toString() ?? "",
-      (await dataLink(validGame.reader, validGame.domain))?.toString() ?? "",
+      (await dataLink(validGame.proofreader, validGame.domain))?.toString() ??
+        "",
       validGame.ttype,
       validGame.ac.toString(),
       validGame.image,
@@ -113,7 +114,7 @@ export const postGame = async ({
         name: validGame.name,
         tversion: validGame.tversion,
         traductor: validGame.traductor,
-        reader: validGame.reader,
+        proofreader: validGame.proofreader,
         image: validGame.image,
       });
     }

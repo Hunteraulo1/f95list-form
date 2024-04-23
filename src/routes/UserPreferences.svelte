@@ -59,13 +59,26 @@
         Les informations contenues dans cette section sont affichées sur votre
         page de profil.
       </p>
-      <div slot="panel-content">
+      <div slot="panel-content" class="flex gap-8">
         <div class="form-control w-full max-w-xs">
           <label class="label" for="first-name">
             <span class="label-text">Pseudo</span>
           </label>
           <input
             bind:value={$sessionUser.profile.pseudo}
+            disabled={$isLoading}
+            type="text"
+            placeholder="Tapez ici"
+            class="input input-bordered w-full max-w-xs"
+            name="first-name"
+          />
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <label class="label" for="imageUrl">
+            <span class="label-text">Photo de profil</span>
+          </label>
+          <input
+            bind:value={$sessionUser.profile.imageUrl}
             disabled={$isLoading}
             type="text"
             placeholder="Tapez ici"

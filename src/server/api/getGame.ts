@@ -54,7 +54,7 @@ export const getGame = async ({
     tags: data[7],
     type: data[8],
     traductor: data[9],
-    reader: data[10],
+    proofreader: data[10],
     ttype: data[11],
     ac: data[12],
     image: data[13], // TODO: ajouter les images

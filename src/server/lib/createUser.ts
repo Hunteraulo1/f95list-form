@@ -7,11 +7,12 @@ export const createUser = (email: string, overrides = {}) => {
     email,
     roles: [],
     preferences: {
-      theme: "light",
+      theme: "dark",
     },
     profile: {
       pseudo: "",
-      imageUrl: "",
+      imageUrl:
+        "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100",
     },
     activity: [
       {

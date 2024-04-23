@@ -55,7 +55,7 @@ export const delGame = async ({
 
     putUser({ user });
 
-    const { link, traductor, reader, image, tversion } = game;
+    const { link, traductor, proofreader, image, tversion } = game;
     let title = "Suppression du jeu:";
     let color = 12256517;
 
@@ -68,7 +68,7 @@ export const delGame = async ({
         name,
         tversion,
         traductor,
-        reader,
+        proofreader,
         image,
       });
     }

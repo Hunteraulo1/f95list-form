@@ -48,7 +48,7 @@
                 {#if traductor.links && traductor.links.length > 0}
                   {#each traductor.links as link}
                     <li class="text-secondary">
-                      <a href={link.link}>{link.name}</a>
+                      <a href={link.link} target="_blank">{link.name}</a>
                     </li>
                   {/each}
                 {:else}

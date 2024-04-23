@@ -21,12 +21,14 @@ export const delGame = async ({
     (game) => game.name === name && game.version === version
   );
 
+  if (!game) throw new Error("delGame game not found");
+
   console.info("mockResponse_delGame", { query, comment, silentMode, games });
 
   let title = "Suppression du jeu:";
   let color = 12256517;
 
-  const { link, tversion, traductor, reader, image } = game;
+  const { link, tversion, traductor, proofreader, image } = game;
 
   if (!silentMode) {
     sendWebhookUpdate({
@@ -37,7 +39,7 @@ export const delGame = async ({
       name,
       tversion,
       traductor,
-      reader,
+      proofreader,
       image,
     });
   }

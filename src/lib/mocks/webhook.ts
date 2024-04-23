@@ -8,7 +8,7 @@ interface SendWebhookUpdateArgs {
   name: string;
   tversion: string;
   traductor: string;
-  reader: string;
+  proofreader: string;
   image: string;
 }
 
@@ -20,7 +20,7 @@ export const sendWebhookUpdate = async ({
   name,
   tversion,
   traductor,
-  reader,
+  proofreader,
   image,
 }: SendWebhookUpdateArgs) => {
   if (!tversion || !name) return null;
@@ -41,10 +41,10 @@ export const sendWebhookUpdate = async ({
     });
   }
 
-  if (reader) {
+  if (proofreader) {
     fields.push({
       name: "Relecteur:",
-      value: reader,
+      value: proofreader,
       inline: true,
     });
   }

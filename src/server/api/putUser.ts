@@ -26,7 +26,7 @@ export const putUser = ({ user }: PutUserArgs): UserType => {
   const propertyKey = validUser.email;
 
   const properties: UserType = JSON.parse(
-    scriptPropertiesService.getProperty(propertyKey) ?? ""
+    scriptPropertiesService.getProperty(propertyKey ?? "") ?? ""
   );
 
   if (user.statistics === properties.statistics) {
@@ -36,7 +36,10 @@ export const putUser = ({ user }: PutUserArgs): UserType => {
     });
   }
 
-  scriptPropertiesService.setProperty(propertyKey, JSON.stringify(validUser));
+  scriptPropertiesService.setProperty(
+    propertyKey ?? "",
+    JSON.stringify(validUser)
+  );
 
   console.info("User successfully saved.");
 

@@ -26,7 +26,7 @@ export const getGames = async (): Promise<GameType[]> => {
       tags: game[7],
       type: game[8],
       traductor: game[9],
-      reader: game[10],
+      proofreader: game[10],
       ttype: game[11],
       ac: game[12],
       image: game[13],

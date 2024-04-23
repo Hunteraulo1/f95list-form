@@ -3,7 +3,12 @@
   import Panel from '$components/Panel.svelte'
   import RemoveAdminModal from '$components/RemoveAdminModal.svelte'
   import { GAS_API } from '$lib/GAS_API'
-  import { appConfiguration, isLoading, sessionUser } from '$lib/stores'
+  import {
+    appConfiguration,
+    isLoading,
+    sessionUser,
+    userIsSuperAdmin
+  } from '$lib/stores'
   import { createEventDispatcher } from 'svelte'
   import { Link } from 'svelte-routing'
   const dispatch = createEventDispatcher()
@@ -56,8 +61,11 @@
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      <button slot="button" class="btn" on:click={handleClick}
-        >Sauvegarder</button
+      <button
+        slot="button"
+        class="btn"
+        on:click={handleClick}
+        disabled={!$userIsSuperAdmin}>Sauvegarder</button
       >
       <p class="text-gray-500" slot="description">
         Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
@@ -68,7 +76,7 @@
         </label>
         <input
           bind:value={$appConfiguration.appName}
-          disabled={$isLoading}
+          disabled={$isLoading || !$userIsSuperAdmin}
           type="text"
           placeholder="Type here"
           class="input input-bordered w-full max-w-xs"

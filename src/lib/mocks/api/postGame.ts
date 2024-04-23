@@ -23,7 +23,7 @@ export const postGame = async ({
   let title = "Suppression du jeu:";
   let color = 12256517;
 
-  const { link, name, tversion, traductor, reader, image } = validGame;
+  const { link, name, tversion, traductor, proofreader, image } = validGame;
 
   if (!silentMode) {
     sendWebhookUpdate({
@@ -33,7 +33,7 @@ export const postGame = async ({
       name,
       tversion,
       traductor,
-      reader,
+      proofreader,
       image,
     });
   }

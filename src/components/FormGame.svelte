@@ -23,7 +23,7 @@
     id: '',
     link: '',
     name: '',
-    reader: '',
+    proofreader: '',
     tags: '',
     tlink: '',
     traductor: '',
@@ -40,7 +40,7 @@
 
   onMount(async () => {
     try {
-      const traductors = await GAS_API.getTraductors()
+      traductors = await GAS_API.getTraductors()
 
       if (!Array.isArray(traductors)) {
         throw new Error('getTraductor no result')
@@ -160,6 +160,7 @@
 
   const handleInput: FormEventHandler<HTMLInputElement> = event => {
     const { value, classList } = event.currentTarget
+
     value === ''
       ? classList.add('input-error')
       : classList.remove('input-error')
@@ -526,18 +527,18 @@
           </div>
 
           <div>
-            <label for="reader">Relecteur:</label>
+            <label for="proofreader">Relecteur:</label>
             <input
               placeholder="Nom du relecteur"
               type="search"
-              id="reader"
-              name="reader"
+              id="proofreader"
+              name="proofreader"
               class="input input-bordered w-full"
-              list="reader-list"
+              list="proofreader-list"
               on:change={handleChange}
-              value={game.reader}
+              value={game.proofreader}
             />
-            <datalist id="reader-list">
+            <datalist id="proofreader-list">
               {#each traductors as traductor}
                 <option>{traductor.name}</option>
               {/each}
@@ -629,7 +630,7 @@
                 tname: 'Pas de traduction',
                 tlink: 'https://traduction.dev',
                 traductor: 'Hunteraulo',
-                reader: 'Hunteraulo',
+                proofreader: 'Hunteraulo',
                 ttype: 'À tester',
                 ac: false,
                 image: ''

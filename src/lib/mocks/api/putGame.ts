@@ -96,10 +96,10 @@ const webhookUpdate = (
       oldGame.traductor !== validGame.traductor
         ? `${oldGame.traductor} > ${validGame.traductor}`
         : validGame.traductor,
-    reader:
-      oldGame.reader !== validGame.reader
-        ? `${oldGame.reader} > ${validGame.reader}`
-        : validGame.reader,
+    proofreader:
+      oldGame.proofreader !== validGame.proofreader
+        ? `${oldGame.proofreader} > ${validGame.proofreader}`
+        : validGame.proofreader,
     image: oldGame.image,
   });
 };

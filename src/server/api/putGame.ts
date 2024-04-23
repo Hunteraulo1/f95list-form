@@ -68,7 +68,7 @@ export const putGame = async ({
       validGame.tags || "",
       validGame.type,
       (await dataLink(validGame.traductor, validGame.domain)).toString(),
-      (await dataLink(validGame.reader, validGame.domain)).toString(),
+      (await dataLink(validGame.proofreader, validGame.domain)).toString(),
       validGame.ttype,
       validGame.ac.toString(),
       validGame.image,
@@ -187,10 +187,10 @@ const webhookUpdate = (
       oldGame.traductor !== validGame.traductor
         ? `${oldGame.traductor} > ${validGame.traductor}`
         : validGame.traductor,
-    reader:
-      oldGame.reader !== validGame.reader
-        ? `${oldGame.reader} > ${validGame.reader}`
-        : validGame.reader,
+    proofreader:
+      oldGame.proofreader !== validGame.proofreader
+        ? `${oldGame.proofreader} > ${validGame.proofreader}`
+        : validGame.proofreader,
     image: oldGame.image,
   });
 };

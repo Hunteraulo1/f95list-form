@@ -28,7 +28,7 @@
       dispatch('newToast', {
         id: Date.now(),
         alertType: 'success',
-        message: 'Admin removed!',
+        message: 'Admin supprimé!',
         milliseconds: 3000
       })
     } catch (error) {
@@ -37,7 +37,7 @@
       dispatch('newToast', {
         id: Date.now(),
         alertType: 'error',
-        message: 'Your changes could not be saved',
+        message: "Vos modifications n'ont pas pu être enregistrées",
         milliseconds: 3000
       })
     } finally {
@@ -51,7 +51,8 @@
 <Modal bind:dialog title="Remove Admin">
   <div slot="modal-content">
     <p class="py-4">
-      Are you sure you want to remove this user's admin privileges
+      Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet
+      utilisateur ?
     </p>
     <div
       class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
@@ -70,6 +71,6 @@
     slot="modal-action"
     on:click={handleAdminRemovalSubmit}
     disabled={!user}
-    class="btn">Confirm</button
+    class="btn">Confirmer</button
   >
 </Modal>

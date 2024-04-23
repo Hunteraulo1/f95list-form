@@ -1,11 +1,11 @@
 <script lang="ts">
-  import Panel from '$components/Panel.svelte'
-  import { fetchQueryGames } from '$lib/queryGames'
-  import { queryGame, queryGames } from '$lib/stores'
-  import type { QueryGameType } from '$types/schemas'
-  import { onMount } from 'svelte'
-  import { Link, navigate } from 'svelte-routing'
-  import type { ChangeEventHandler } from 'svelte/elements'
+  import Panel from '$components/Panel.svelte';
+  import { fetchQueryGames } from '$lib/queryGames';
+  import { queryGame, queryGames } from '$lib/stores';
+  import type { QueryGameType } from '$types/schemas';
+  import { onMount } from 'svelte';
+  import { Link, navigate } from 'svelte-routing';
+  import type { ChangeEventHandler } from 'svelte/elements';
 
   export let edit = false
 
@@ -15,21 +15,27 @@
   let filtered: QueryGameType[] = []
   let timer: NodeJS.Timeout
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = event => {
+  const handleInput: ChangeEventHandler<HTMLInputElement> = event => {
     badgeSearch = ''
 
-    if (!inputSearch) {
+    const eventValue = event.currentTarget.value
+
+    if (eventValue === '') {
       filtered = []
 
       return
     }
 
     clearTimeout(timer)
-    const value = event.currentTarget.value
 
     timer = setTimeout(() => {
       filtered = $queryGames.filter(game => {
-        return game.name.toLowerCase().includes(value.toLowerCase())
+        const value = eventValue.toLowerCase()
+
+        const name = game.name.toLowerCase()
+        const id = game.id
+
+        if (name.includes(value) || id.includes(value)) return game
       })
     }, 200)
   }
@@ -80,7 +86,7 @@
             id="searchField"
             autocomplete="off"
             bind:value={inputSearch}
-            on:input={handleChange}
+            on:input={handleInput}
             on:focus={handleFocus}
           />
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const User = z.object({
-  email: z.string().email(),
+  email: z.string().email().optional(),
   roles: z.array(z.enum(["superAdmin", "admin"])),
   profile: z.object({
     pseudo: z.string(),
@@ -49,7 +49,7 @@ const Game = z.object({
     "RenPy/Unity",
   ]),
   traductor: z.string(),
-  reader: z.string(),
+  proofreader: z.string(),
   ttype: z.enum([
     "Traduction Humaine",
     "Traduction Automatique",
@@ -66,6 +66,7 @@ const Game = z.object({
 });
 
 const QueryGame = z.object({
+  id: Game.shape.version,
   name: Game.shape.name,
   version: Game.shape.version,
 });

@@ -1,6 +1,6 @@
-import { user } from './user';
+import { user } from "./user";
 
 export const appConfiguration = {
-	appName: 'Mock App',
-	deployingUserEmail: user.email
+  appName: "Mock App",
+  deployingUserEmail: user.email,
 };

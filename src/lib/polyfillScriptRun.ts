@@ -1,3 +1,4 @@
+// @ts-nocheck
 import getMockEndpoints from "./mocks/API";
 let polyfilled = false;
 

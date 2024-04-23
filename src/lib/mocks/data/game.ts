@@ -15,7 +15,7 @@ export const game: GameType = {
   tlink:
     "https://f95zone.to/threads/sisterly-lust-french-translation-v1-0-extra-scenes-maxo.31772/",
   traductor: "Maxo",
-  reader: "",
+  proofreader: "",
   ttype: "Traduction Humaine",
   ac: true,
   image: "",
@@ -37,7 +37,7 @@ export const games: GameType[] = [
     tlink:
       "https://drive.google.com/file/d/15yIHenTXFYyQJW9mGl3OscWJ9V4NQC6F/view?usp=sharing",
     traductor: "Franky28",
-    reader: "━ ₭úʍᾰ :･ﾟ✧",
+    proofreader: "━ ₭úʍᾰ :･ﾟ✧",
     ttype: "Traduction Humaine",
     ac: true,
     image: "",
@@ -55,7 +55,7 @@ export const games: GameType[] = [
     tname: "Traduction",
     tlink: "https://lewdcorner.com/threads/5133/post-46384",
     traductor: "✞ 𝕹𝖊𝖒𝖊𝖗𝖔𝖋 ✞",
-    reader: "ⱤØⱤɎ ₥ɆⱤ₵ɄⱤɎ",
+    proofreader: "ⱤØⱤɎ ₥ɆⱤ₵ɄⱤɎ",
     ttype: "Traduction Humaine",
     ac: true,
     image: "",
@@ -63,6 +63,7 @@ export const games: GameType[] = [
 ];
 
 export const queryGames: QueryGameType[] = games.map((game) => ({
+  id: game.id,
   name: game.name,
   version: game.version,
 }));

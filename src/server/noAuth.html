@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <base target="_top" />
+  </head>
 
-<head>
-  <base target="_top" />
-</head>
-
-<body>
-  <p>
-    Cette application nécessite l'identification de votre compte Google pour fonctionner correctement.
-    fonctionner correctement. Le lien auquel vous accédez actuellement a été déployé de manière à empêcher l'application
-    d'accéder à votre compte.
-    d'empêcher l'application d'accéder à votre compte. Veuillez contacter
-    <?= Session.getEffectiveUser().getUsername() ?>
-    pour obtenir de l'aide.
-  </p>
-</body>
-
+  <body>
+    <p>
+      Cette application nécessite l'identification de votre compte Google pour
+      fonctionner correctement. fonctionner correctement. Le lien auquel vous
+      accédez actuellement a été déployé de manière à empêcher l'application
+      d'accéder à votre compte. d'empêcher l'application d'accéder à votre
+      compte. Veuillez contacter
+      <?= Session.getEffectiveUser().getUsername() ?>
+      pour obtenir de l'aide.
+    </p>
+  </body>
 </html>
