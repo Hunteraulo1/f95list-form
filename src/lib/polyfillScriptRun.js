@@ -5,7 +5,8 @@ const polyfillScriptRun = async () => {
   if (polyfilled) return
   polyfilled = true
 
-  const _window = window ?? {}
+  // eslint-disable-next-line no-undef
+  const _window = typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : {}
 
   const google = _window.google || {}
   _window.google = google
@@ -36,4 +37,4 @@ const polyfillScriptRun = async () => {
   }
 }
 
-export default polyfillScriptRun
+polyfillScriptRun()

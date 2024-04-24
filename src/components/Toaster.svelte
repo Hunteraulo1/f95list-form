@@ -1,6 +1,7 @@
 <script lang="ts">
-  import type { Toast as ToastType } from '$types/index'
-  import Toast from './Toast.svelte'
+  import Toast from "./Toast.svelte"
+
+  import type { Toast as ToastType } from "$types/index"
 
   export let toasts: ToastType[] = []
 </script>

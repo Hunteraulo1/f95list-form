@@ -1,46 +1,35 @@
 <script lang="ts">
-  import HeaderBar from '$components/HeaderBar.svelte'
-  import InitialLoad from '$components/InitialLoad.svelte'
-  import NavLink from '$components/NavLink.svelte'
-  import ProtectedRoute from '$components/ProtectedRoute.svelte'
-  import Toaster from '$components/Toaster.svelte'
-  import { GAS_API } from '$lib/GAS_API'
-  import { fetchAppConfiguration } from '$lib/fetchAppConfig'
-  import {
-    appConfiguration,
-    isLoading,
-    sessionUser,
-    userIsAdmin,
-    userIsSuperAdmin
-  } from '$lib/stores'
-  import type { Toast } from '$types/index'
-  import { onMount } from 'svelte'
-  import {
-    AdjustmentsVertical,
-    Cog6Tooth,
-    Home as HomeIcon,
-    Icon,
-    Language,
-    UserCircle
-  } from 'svelte-hero-icons'
-  import { Route, Router } from 'svelte-routing'
-  import Home from './routes/Home.svelte'
-  import Profile from './routes/Profile.svelte'
-  import UserPreferences from './routes/UserPreferences.svelte'
-  import AddGame from './routes/protected/AddGame.svelte'
-  import Developper from './routes/protected/Developper.svelte'
-  import EditGame from './routes/protected/EditGame.svelte'
-  import EditTraductor from './routes/protected/EditTraductor.svelte'
-  import Settings from './routes/protected/Settings.svelte'
+  import { onMount } from "svelte"
+  import { AdjustmentsVertical, Cog6Tooth, Home as HomeIcon, Icon, Language, UserCircle } from "svelte-hero-icons"
+  import { Route, Router } from "svelte-routing"
 
-  export let url = ''
+  import Home from "./routes/Home.svelte"
+  import Profile from "./routes/Profile.svelte"
+  import AddGame from "./routes/protected/AddGame.svelte"
+  import Developper from "./routes/protected/Developper.svelte"
+  import EditGame from "./routes/protected/EditGame.svelte"
+  import EditTraductor from "./routes/protected/EditTraductor.svelte"
+  import Settings from "./routes/protected/Settings.svelte"
+  import UserPreferences from "./routes/UserPreferences.svelte"
+
+  import HeaderBar from "$components/HeaderBar.svelte"
+  import InitialLoad from "$components/InitialLoad.svelte"
+  import NavLink from "$components/NavLink.svelte"
+  import ProtectedRoute from "$components/ProtectedRoute.svelte"
+  import Toaster from "$components/Toaster.svelte"
+  import { fetchAppConfiguration } from "$lib/fetchAppConfig"
+  import { GAS_API } from "$lib/GAS_API"
+  import { appConfiguration, isLoading, sessionUser, userIsAdmin, userIsSuperAdmin } from "$lib/stores"
+  import type { Toast } from "$types/index"
+
+  export let url = ""
 
   export const handleNewToast = (event: CustomEvent<Toast>): void => {
-    console.info('toast launch')
+    console.info("toast launch")
     console.info(event.detail)
     toasts = [...toasts, event.detail]
     setTimeout(() => {
-      toasts = toasts.filter(toast => toast.id !== event.detail.id)
+      toasts = toasts.filter((toast) => toast.id !== event.detail.id)
     }, event.detail.milliseconds)
   }
 
@@ -64,22 +53,20 @@
   const fetchUser = async () => {
     $isLoading = true
 
-    console.info('fetching user...')
+    console.info("fetching user...")
 
     try {
       const result = await GAS_API.getUser()
 
       $sessionUser = result
 
-      console.info('User:', result)
+      console.info("User:", result)
 
-      document
-        .querySelector('html')
-        ?.setAttribute('data-theme', result.preferences.theme ?? 'dark')
+      document.querySelector("html")?.setAttribute("data-theme", result.preferences.theme ?? "dark")
     } catch (err) {
-      console.error('Could not get user:', err) // TODO: dispatch toast
+      console.error("Could not get user:", err) // TODO: dispatch toast
     } finally {
-      console.info('User loaded.')
+      console.info("User loaded.")
 
       $isLoading = false
     }
@@ -96,14 +83,13 @@
         type="checkbox"
         class="drawer-toggle"
         checked={isDrawerOpen}
-        on:change={toggleDrawer}
-      />
+        on:change={toggleDrawer} />
 
       <div class="drawer-content bg-base-200">
         <!-- Page content here -->
         <HeaderBar title={$appConfiguration.appName} />
 
-        <div class="container pb-8 mx-auto">
+        <div class="container mx-auto pb-8">
           <Route path="*">
             <Home on:newToast={handleNewToast} />
           </Route>

@@ -1,44 +1,47 @@
 <script lang="ts">
-  import { GAS_API } from '$lib/GAS_API'
-  import { fetchAppConfiguration } from '$lib/fetchAppConfig'
-  import { isLoading } from '$lib/stores'
-  import type { UserType } from '$types/schemas'
-  import { createEventDispatcher } from 'svelte'
-  import Modal from './Modal.svelte'
+  import { createEventDispatcher } from "svelte"
+
+  import Modal from "./Modal.svelte"
+
+  import { fetchAppConfiguration } from "$lib/fetchAppConfig"
+  import { GAS_API } from "$lib/GAS_API"
+  import { isLoading } from "$lib/stores"
+  import type { UserType } from "$types/schemas"
+
   const dispatch = createEventDispatcher()
 
   export let user: UserType
 
   const handleAdminRemovalSubmit = async () => {
-    console.info('removing admin status from user', user)
+    console.info("removing admin status from user", user)
 
     $isLoading = true
 
-    const roles: UserType['roles'] = ['admin']
+    const roles: UserType["roles"] = ["admin"]
     // remove any instances of the admin role from users.roles
-    user.roles = user.roles.filter(role => !roles.includes(role))
+    user.roles = user.roles.filter((role) => !roles.includes(role))
 
     try {
       const result = await GAS_API.putUser({ user })
 
-      console.info('Admin removed:', result)
+      console.info("Admin removed:", result)
 
       await fetchAppConfiguration()
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'success',
-        message: 'Admin supprimé!',
-        milliseconds: 3000
+        alertType: "success",
+        message: "Admin supprimé!",
+        milliseconds: 3000,
       })
     } catch (error) {
-      console.error('Could not remove admin:', error)
+      console.error("Could not remove admin:", error)
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
+        alertType: "error",
         message: "Vos modifications n'ont pas pu être enregistrées",
-        milliseconds: 3000
+        milliseconds: 3000,
       })
     } finally {
       $isLoading = false
@@ -50,13 +53,8 @@
 
 <Modal bind:dialog title="Remove Admin">
   <div slot="modal-content">
-    <p class="py-4">
-      Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet
-      utilisateur ?
-    </p>
-    <div
-      class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
-    >
+    <p class="py-4">Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet utilisateur ?</p>
+    <div class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200">
       <div class="flex items-center justify-center space-x-3">
         <div class="mask mask-squircle h-12 w-12">
           <img src={user.profile.imageUrl} alt="User" />
@@ -67,10 +65,5 @@
       </div>
     </div>
   </div>
-  <button
-    slot="modal-action"
-    on:click={handleAdminRemovalSubmit}
-    disabled={!user}
-    class="btn">Confirmer</button
-  >
+  <button slot="modal-action" on:click={handleAdminRemovalSubmit} disabled={!user} class="btn">Confirmer</button>
 </Modal>

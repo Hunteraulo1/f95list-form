@@ -1,7 +1,9 @@
 <script>
-  import { userIsAdmin, userIsSuperAdmin } from '$lib/stores'
-  import { Route } from 'svelte-routing'
-  import PageNotFound from '../routes/404.svelte'
+  import { Route } from "svelte-routing"
+
+  import PageNotFound from "../routes/404.svelte"
+
+  import { userIsAdmin, userIsSuperAdmin } from "$lib/stores"
 
   export let path
   export let superAdmin = false

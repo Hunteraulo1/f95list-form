@@ -9,8 +9,8 @@ import { getTraductors } from "./getTraductors"
 import { getUser } from "./getUser"
 import { putUser } from "./putUser"
 
-import { Game } from "$types/schemas"
 import type { GameType } from "$types/schemas"
+import { Game } from "$types/schemas"
 
 export interface PutGameArgs {
   game: GameType

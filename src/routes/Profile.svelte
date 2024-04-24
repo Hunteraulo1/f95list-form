@@ -1,10 +1,11 @@
 <script lang="ts">
-  import Panel from '$components/Panel.svelte'
-  import { GAS_API } from '$lib/GAS_API'
-  import { isLoading } from '$lib/stores'
-  import type { UserType } from '$types/schemas'
-  import { createEventDispatcher } from 'svelte'
-  import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons'
+  import { createEventDispatcher } from "svelte"
+  import { Icon, PencilSquare, PlusCircle } from "svelte-hero-icons"
+
+  import Panel from "$components/Panel.svelte"
+  import { GAS_API } from "$lib/GAS_API"
+  import { isLoading } from "$lib/stores"
+  import type { UserType } from "$types/schemas"
 
   export let email: string
 
@@ -20,24 +21,24 @@
   const fetchUser = async (email: string) => {
     $isLoading = true
 
-    console.info('fetching user data for profile...')
+    console.info("fetching user data for profile...")
 
     try {
       const result = await GAS_API.getUser({ email })
 
       user = result
-      console.info('User data:', user)
+      console.info("User data:", user)
     } catch (error) {
-      console.error('Could not get user data:', error)
+      console.error("Could not get user data:", error)
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
-        message: 'Impossible de récupérer les information utilisateur',
-        milliseconds: 3000
+        alertType: "error",
+        message: "Impossible de récupérer les information utilisateur",
+        milliseconds: 3000,
       })
     } finally {
-      console.info('User data loaded.')
+      console.info("User data loaded.")
 
       $isLoading = false
     }
@@ -48,9 +49,7 @@
   <div class="flex flex-row">
     <div class="flex flex-col px-12 py-2">
       <div class="avatar mb-4">
-        <div
-          class="w-32 rounded-full ring ring-primary ring-offset-1 ring-offset-base-100"
-        >
+        <div class="w-32 rounded-full ring ring-primary ring-offset-1 ring-offset-base-100">
           <img src={user.profile.imageUrl} alt="The user" />
         </div>
       </div>
@@ -103,11 +102,10 @@
                 <tr>
                   <td>{record.label}</td>
                   <td
-                    >{new Date(record.value).toLocaleDateString('fr-FR', {
-                      hour: 'numeric',
-                      minute: 'numeric'
-                    })}</td
-                  >
+                    >{new Date(record.value).toLocaleDateString("fr-FR", {
+                      hour: "numeric",
+                      minute: "numeric",
+                    })}</td>
                 </tr>
               {/each}
             </tbody>

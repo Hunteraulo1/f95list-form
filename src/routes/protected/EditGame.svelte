@@ -1,10 +1,11 @@
 <script lang="ts">
-  import FormGame from '$components/FormGame.svelte'
-  import { GAS_API } from '$lib/GAS_API'
-  import { isLoading, queryGame } from '$lib/stores'
-  import type { GameType } from '$types/schemas'
-  import { onMount } from 'svelte'
-  import { navigate } from 'svelte-routing'
+  import { onMount } from "svelte"
+  import { navigate } from "svelte-routing"
+
+  import FormGame from "$components/FormGame.svelte"
+  import { GAS_API } from "$lib/GAS_API"
+  import { isLoading, queryGame } from "$lib/stores"
+  import type { GameType } from "$types/schemas"
 
   let game: GameType | null = null
 
@@ -14,7 +15,7 @@
 
     $isLoading = true
 
-    if (!query) return navigate('/')
+    if (!query) return navigate("/")
 
     try {
       const result = await GAS_API.getGame(query)
@@ -23,7 +24,7 @@
 
       game = result
     } catch (error) {
-      console.error('Error fetching game', error)
+      console.error("Error fetching game", error)
     } finally {
       $isLoading = false
     }

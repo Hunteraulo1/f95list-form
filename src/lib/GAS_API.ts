@@ -7,7 +7,7 @@ import { GetGameArgs } from "./mocks/api/getGame"
 import { GetScrapeArgs } from "./mocks/api/getScrape"
 import { PostGameArgs } from "./mocks/api/postGame"
 import { PutGameArgs } from "./mocks/api/putGame"
-import polyfillScriptRun from "./polyfillScriptRun"
+import "./polyfillScriptRun.js"
 
 import type {
   AppConfigurationType,
@@ -17,8 +17,6 @@ import type {
   TraductorType,
   UserType,
 } from "$types/schemas"
-
-polyfillScriptRun()
 
 const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A) => {
   console.info("calling api", functionName, args)

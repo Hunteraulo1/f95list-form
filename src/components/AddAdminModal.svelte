@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { GAS_API } from '$lib/GAS_API'
-  import { fetchAppConfiguration } from '$lib/fetchAppConfig'
-  import { isLoading } from '$lib/stores'
-  import type { UserType } from '$types/schemas'
-  import { createEventDispatcher } from 'svelte'
-  import Modal from './Modal.svelte'
-  import UserSelect from './UserSelect.svelte'
+  import { createEventDispatcher } from "svelte"
+
+  import Modal from "./Modal.svelte"
+  import UserSelect from "./UserSelect.svelte"
+
+  import { fetchAppConfiguration } from "$lib/fetchAppConfig"
+  import { GAS_API } from "$lib/GAS_API"
+  import { isLoading } from "$lib/stores"
+  import type { UserType } from "$types/schemas"
 
   const dispatch = createEventDispatcher()
 
@@ -13,39 +15,39 @@
 
   const handleNewAdminSubmit = async () => {
     let user = selectedUsersFromChild[0]
-    console.info('raising user to admin status', user)
+    console.info("raising user to admin status", user)
 
     $isLoading = true
 
     const roles = new Set(user.roles)
-    roles.add('admin')
+    roles.add("admin")
 
     user = {
       ...user,
-      roles: [...roles]
+      roles: [...roles],
     }
 
     try {
       const result = await GAS_API.putUser({ user })
 
-      if (typeof result === 'string') throw new Error('putUser no return')
+      if (typeof result === "string") throw new Error("putUser no return")
 
-      console.info('New admin added:', result)
+      console.info("New admin added:", result)
       await fetchAppConfiguration()
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'success',
-        message: 'Admin ajouté!',
-        milliseconds: 3000
+        alertType: "success",
+        message: "Admin ajouté!",
+        milliseconds: 3000,
       })
     } catch (error) {
-      console.error('Could not add new admin:', error)
-      dispatch('newToast', {
+      console.error("Could not add new admin:", error)
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
+        alertType: "error",
         message: "Vos modifications n'ont pas pu être enregistrées",
-        milliseconds: 3000
+        milliseconds: 3000,
       })
     } finally {
       $isLoading = false
@@ -57,22 +59,18 @@
 
 <Modal bind:dialog title="Add Admin">
   <div slot="modal-content">
-    <p class="py-4">
-      Sélectionnez un utilisateur pour en faire un administrateur
-    </p>
+    <p class="py-4">Sélectionnez un utilisateur pour en faire un administrateur</p>
     <UserSelect
-      on:update={e => {
+      on:update={(e) => {
         selectedUsersFromChild = e.detail
-      }}
-    />
+      }} />
   </div>
 
   <button
     slot="modal-action"
     on:click={handleNewAdminSubmit}
     disabled={selectedUsersFromChild.length === 0}
-    class="btn"
-  >
+    class="btn">
     Envoyer
   </button>
 </Modal>

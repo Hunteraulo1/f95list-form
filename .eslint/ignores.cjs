@@ -1,4 +1,4 @@
-const tsEslint = require("typescript-eslint");
+const tsEslint = require("typescript-eslint")
 
 /** @type {import('eslint').Linter.FlatConfig} */
 module.exports = tsEslint.config({
@@ -18,4 +18,4 @@ module.exports = tsEslint.config({
     "package-lock.json",
     "yarn.lock",
   ],
-});
+})

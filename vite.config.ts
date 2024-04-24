@@ -1,10 +1,10 @@
-import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { resolve } from "path";
-import copy from "rollup-plugin-copy";
-import del from "rollup-plugin-delete";
-import { defineConfig } from "vite";
-import { viteSingleFile } from "vite-plugin-singlefile";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { svelte } from "@sveltejs/vite-plugin-svelte"
+import { resolve } from "path"
+import copy from "rollup-plugin-copy"
+import del from "rollup-plugin-delete"
+import { defineConfig } from "vite"
+import { viteSingleFile } from "vite-plugin-singlefile"
+import tsconfigPaths from "vite-tsconfig-paths"
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -36,4 +36,4 @@ export default defineConfig({
       $components: resolve(__dirname, "src/components"),
     },
   },
-});
+})

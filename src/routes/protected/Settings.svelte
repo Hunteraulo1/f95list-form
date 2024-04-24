@@ -1,53 +1,46 @@
 <script lang="ts">
-  import AddAdminModal from '$components/AddAdminModal.svelte'
-  import Panel from '$components/Panel.svelte'
-  import RemoveAdminModal from '$components/RemoveAdminModal.svelte'
-  import { GAS_API } from '$lib/GAS_API'
-  import {
-    appConfiguration,
-    isLoading,
-    sessionUser,
-    userIsSuperAdmin
-  } from '$lib/stores'
-  import { createEventDispatcher } from 'svelte'
-  import { Link } from 'svelte-routing'
+  import { createEventDispatcher } from "svelte"
+  import { Link } from "svelte-routing"
+
+  import AddAdminModal from "$components/AddAdminModal.svelte"
+  import Panel from "$components/Panel.svelte"
+  import RemoveAdminModal from "$components/RemoveAdminModal.svelte"
+  import { GAS_API } from "$lib/GAS_API"
+  import { appConfiguration, isLoading, sessionUser, userIsSuperAdmin } from "$lib/stores"
   const dispatch = createEventDispatcher()
 
   const handleClick = async () => {
     if ($appConfiguration !== null) {
       await updateAppConfiguration()
     } else {
-      console.error('App configuration is null.')
+      console.error("App configuration is null.")
     }
   }
 
   const updateAppConfiguration = async () => {
     $isLoading = true
 
-    console.info('submitting app configuration update', $appConfiguration)
+    console.info("submitting app configuration update", $appConfiguration)
 
     try {
       const result = GAS_API.putAppConfiguration({
-        appConfiguration: $appConfiguration
+        appConfiguration: $appConfiguration,
       })
 
-      console.info('result', result)
-      dispatch('newToast', {
+      console.info("result", result)
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'success',
+        alertType: "success",
         message: "Configuration de l'application mise à jour !",
-        milliseconds: 3000
+        milliseconds: 3000,
       })
     } catch (error) {
-      console.error(
-        "Erreur de transmission des changements de l'utilisateur",
-        error
-      )
-      dispatch('newToast', {
+      console.error("Erreur de transmission des changements de l'utilisateur", error)
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
+        alertType: "error",
         message: "Vos modifications n'ont pas pu être enregistrées",
-        milliseconds: 3000
+        milliseconds: 3000,
       })
     } finally {
       $isLoading = false
@@ -61,12 +54,7 @@
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      <button
-        slot="button"
-        class="btn"
-        on:click={handleClick}
-        disabled={!$userIsSuperAdmin}>Sauvegarder</button
-      >
+      <button slot="button" class="btn" on:click={handleClick} disabled={!$userIsSuperAdmin}>Sauvegarder</button>
       <p class="text-gray-500" slot="description">
         Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
       </p>
@@ -80,8 +68,7 @@
           type="text"
           placeholder="Type here"
           class="input input-bordered w-full max-w-xs"
-          name="app-name"
-        />
+          name="app-name" />
       </div>
     </Panel>
 
@@ -89,17 +76,11 @@
       <button
         slot="button"
         on:click={() => dialogAdd.showModal()}
-        disabled={!(
-          $sessionUser?.roles.includes('superAdmin') ||
-          $sessionUser?.roles.includes('admin')
-        )}
-        class="btn"
-      >
+        disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
+        class="btn">
         Ajouter un administrateur
       </button>
-      <p class="text-gray-500" slot="description">
-        Ajouter des administrateurs au formulaire !
-      </p>
+      <p class="text-gray-500" slot="description">Ajouter des administrateurs au formulaire !</p>
       <div slot="panel-content">
         <div class="overflow-x-auto">
           <table class="table">
@@ -118,10 +99,7 @@
                       <div class="flex items-center space-x-3">
                         <div class="avatar">
                           <div class="mask mask-squircle h-12 w-12">
-                            <img
-                              src={admin.profile?.imageUrl}
-                              alt="Avatar Tailwind CSS Component"
-                            />
+                            <img src={admin.profile?.imageUrl} alt="Avatar Tailwind CSS Component" />
                           </div>
                         </div>
                         <div>
@@ -130,9 +108,7 @@
                           </div>
                           <div>
                             {#each admin.roles as role}
-                              <span class="badge badge-ghost badge-sm mr-2"
-                                >{role}</span
-                              >
+                              <span class="badge badge-ghost badge-sm mr-2">{role}</span>
                             {/each}
                           </div>
                         </div>
@@ -140,15 +116,9 @@
                     </Link>
                   </td>
                   <th>
-                    <button
-                      on:click={() => dialogRemove[index].showModal()}
-                      class="btn btn-ghost btn-xs">Supprimer</button
-                    >
-                    <RemoveAdminModal
-                      bind:dialog={dialogRemove[index]}
-                      on:newToast
-                      user={admin}
-                    />
+                    <button on:click={() => dialogRemove[index].showModal()} class="btn btn-ghost btn-xs"
+                      >Supprimer</button>
+                    <RemoveAdminModal bind:dialog={dialogRemove[index]} on:newToast user={admin} />
                   </th>
                 </tr>
               {/each}

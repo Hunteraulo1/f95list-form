@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { appConfiguration, isLoading, sessionUser } from '$lib/stores'
-  import { Bars3, Icon } from 'svelte-hero-icons'
-  import { Link, navigate } from 'svelte-routing'
+  import { Bars3, Icon } from "svelte-hero-icons"
+  import { Link, navigate } from "svelte-routing"
 
-  export let title = ''
+  import { appConfiguration, isLoading, sessionUser } from "$lib/stores"
 
-  console.log('sessionUser', $sessionUser)
-  console.log('appConfiguration', $appConfiguration.appName)
+  export let title = ""
+
+  console.log("sessionUser", $sessionUser)
+  console.log("appConfiguration", $appConfiguration.appName)
 </script>
 
 <div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>
@@ -22,14 +23,12 @@
   </div>
 
   <button
-    class="flex-none btn btn-circle btn-ghost hover:scale-105"
-    on:click={() => navigate(`/user/${$sessionUser?.email}`)}
-  >
+    class="btn btn-circle btn-ghost flex-none hover:scale-105"
+    on:click={() => navigate(`/user/${$sessionUser?.email}`)}>
     <img
-      class="w-10 avatar rounded-full ring ring-primary ring-offset-1 ring-offset-base-100"
-      alt={$sessionUser?.profile.pseudo ?? 'The user'}
-      src={$sessionUser?.profile?.imageUrl}
-    />
+      class="avatar w-10 rounded-full ring ring-primary ring-offset-1 ring-offset-base-100"
+      alt={$sessionUser?.profile.pseudo ?? "The user"}
+      src={$sessionUser?.profile?.imageUrl} />
   </button>
 </div>
 

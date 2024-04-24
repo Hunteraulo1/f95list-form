@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { GAS_API } from '$lib/GAS_API'
-  import type { TraductorType } from '$types/schemas'
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { createEventDispatcher, onMount } from "svelte"
+
+  import { GAS_API } from "$lib/GAS_API"
+  import type { TraductorType } from "$types/schemas"
 
   const dispatch = createEventDispatcher()
 
@@ -12,16 +13,16 @@
       traductors = await GAS_API.getTraductors()
 
       if (!Array.isArray(traductors)) {
-        throw new Error('getTraductor no result')
+        throw new Error("getTraductor no result")
       }
     } catch (error) {
-      console.error('Error deleting game', error)
+      console.error("Error deleting game", error)
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
-        message: 'Impossible de récupérer la liste des traducteurs',
-        milliseconds: 3000
+        alertType: "error",
+        message: "Impossible de récupérer la liste des traducteurs",
+        milliseconds: 3000,
       })
     }
   })
@@ -42,7 +43,7 @@
         {#each traductors as traductor, index}
           <tr>
             <th>{index + 1}</th>
-            <td class="text-primary font-bold">{traductor.name}</td>
+            <td class="font-bold text-primary">{traductor.name}</td>
             <td>
               <ul>
                 {#if traductor.links && traductor.links.length > 0}
@@ -64,6 +65,6 @@
       </tbody>
     </table>
   {:else}
-    <p class="w-full flex justify-center">Aucun traducteur disponible</p>
+    <p class="flex w-full justify-center">Aucun traducteur disponible</p>
   {/if}
 </div>

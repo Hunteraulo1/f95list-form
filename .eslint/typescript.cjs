@@ -1,5 +1,5 @@
-const globals = require("globals");
-const tsEslint = require("typescript-eslint");
+const globals = require("globals")
+const tsEslint = require("typescript-eslint")
 
 /** @type {import('eslint').Linter.FlatConfig} */
 module.exports = tsEslint.config(
@@ -22,5 +22,5 @@ module.exports = tsEslint.config(
         ...globals.node,
       },
     },
-  }
-);
+  },
+)

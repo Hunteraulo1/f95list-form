@@ -1,15 +1,15 @@
 // svelte.cjs
-const svelteEslintPlugin = require('eslint-plugin-svelte')
-const globals = require('globals')
-const svelteParser = require('svelte-eslint-parser')
-const tsEslint = require('typescript-eslint')
+const svelteEslintPlugin = require("eslint-plugin-svelte")
+const globals = require("globals")
+const svelteParser = require("svelte-eslint-parser")
+const tsEslint = require("typescript-eslint")
 
 /** @type {import('eslint').Linter.FlatConfig} */
 module.exports = tsEslint.config(
-  ...svelteEslintPlugin.configs['flat/recommended'], //
+  ...svelteEslintPlugin.configs["flat/recommended"], //
   {
-    name: 'svelte',
-    files: ['**/*.svelte'],
+    name: "svelte",
+    files: ["**/*.svelte"],
     languageOptions: {
       parser: svelteParser,
       parserOptions: {
@@ -19,5 +19,5 @@ module.exports = tsEslint.config(
         ...globals.browser,
       },
     },
-  }
+  },
 )

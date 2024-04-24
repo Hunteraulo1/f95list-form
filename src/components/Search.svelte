@@ -1,26 +1,27 @@
 <script lang="ts">
-  import Panel from '$components/Panel.svelte';
-  import { fetchQueryGames } from '$lib/queryGames';
-  import { queryGame, queryGames } from '$lib/stores';
-  import type { QueryGameType } from '$types/schemas';
-  import { onMount } from 'svelte';
-  import { Link, navigate } from 'svelte-routing';
-  import type { ChangeEventHandler } from 'svelte/elements';
+  import { onMount } from "svelte"
+  import type { ChangeEventHandler } from "svelte/elements"
+  import { Link, navigate } from "svelte-routing"
+
+  import Panel from "$components/Panel.svelte"
+  import { fetchQueryGames } from "$lib/queryGames"
+  import { queryGame, queryGames } from "$lib/stores"
+  import type { QueryGameType } from "$types/schemas"
 
   export let edit = false
 
-  let inputSearch = edit ? $queryGame.name : ''
-  let badgeSearch = edit ? $queryGame.version : ''
+  let inputSearch = edit ? $queryGame.name : ""
+  let badgeSearch = edit ? $queryGame.version : ""
 
   let filtered: QueryGameType[] = []
-  let timer: NodeJS.Timeout
+  let timer: ReturnType<typeof setTimeout>
 
-  const handleInput: ChangeEventHandler<HTMLInputElement> = event => {
-    badgeSearch = ''
+  const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
+    badgeSearch = ""
 
     const eventValue = event.currentTarget.value
 
-    if (eventValue === '') {
+    if (eventValue === "") {
       filtered = []
 
       return
@@ -29,7 +30,7 @@
     clearTimeout(timer)
 
     timer = setTimeout(() => {
-      filtered = $queryGames.filter(game => {
+      filtered = $queryGames.filter((game) => {
         const value = eventValue.toLowerCase()
 
         const name = game.name.toLowerCase()
@@ -46,21 +47,21 @@
     filtered = []
     $queryGame = data
 
-    navigate('/edit')
+    navigate("/edit")
   }
 
   const handleFocus = () => {
     if (!badgeSearch) return
 
-    inputSearch = ''
-    badgeSearch = ''
+    inputSearch = ""
+    badgeSearch = ""
   }
 
   const handleCtrlK = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.key === 'k') {
+    if (event.ctrlKey && event.key === "k") {
       event.preventDefault()
 
-      const inputField = document.getElementById('searchField')
+      const inputField = document.getElementById("searchField")
       inputField?.focus()
     }
   }
@@ -87,8 +88,7 @@
             autocomplete="off"
             bind:value={inputSearch}
             on:input={handleInput}
-            on:focus={handleFocus}
-          />
+            on:focus={handleFocus} />
 
           {#if badgeSearch}
             <span class="badge badge-primary">{badgeSearch}</span>
@@ -103,11 +103,7 @@
             {#each filtered as item, index}
               {#if index < 10}
                 <li>
-                  <button
-                    class="w-full"
-                    tabindex="0"
-                    on:click={() => handleClick(item)}
-                  >
+                  <button class="w-full" tabindex="0" on:click={() => handleClick(item)}>
                     {item.name}
                     <span class="badge badge-primary">{item.version}</span>
                   </button>

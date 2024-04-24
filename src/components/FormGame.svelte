@@ -1,12 +1,13 @@
 <script lang="ts">
-  import Modal from '$components/Modal.svelte'
-  import Search from '$components/Search.svelte'
-  import { GAS_API } from '$lib/GAS_API'
-  import { isLoading, queryGame, userIsSuperAdmin } from '$lib/stores'
-  import type { GameType, TraductorType } from '$types/schemas'
-  import { createEventDispatcher, onMount } from 'svelte'
-  import { navigate } from 'svelte-routing'
-  import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements'
+  import { createEventDispatcher, onMount } from "svelte"
+  import type { ChangeEventHandler, FormEventHandler } from "svelte/elements"
+  import { navigate } from "svelte-routing"
+
+  import Modal from "$components/Modal.svelte"
+  import Search from "$components/Search.svelte"
+  import { GAS_API } from "$lib/GAS_API"
+  import { isLoading, queryGame, userIsSuperAdmin } from "$lib/stores"
+  import type { GameType, TraductorType } from "$types/schemas"
 
   const dispatch = createEventDispatcher()
 
@@ -14,26 +15,26 @@
   export let edit = false
 
   export let game: GameType = {
-    status: 'EN COURS',
-    type: 'RenPy',
-    tname: 'Traduction',
-    ttype: 'Traduction Humaine',
+    status: "EN COURS",
+    type: "RenPy",
+    tname: "Traduction",
+    ttype: "Traduction Humaine",
     ac: false,
-    domain: 'F95z',
-    id: '',
-    link: '',
-    name: '',
-    proofreader: '',
-    tags: '',
-    tlink: '',
-    traductor: '',
-    tversion: '',
-    version: '',
-    trlink: '',
-    image: ''
+    domain: "F95z",
+    id: "",
+    link: "",
+    name: "",
+    proofreader: "",
+    tags: "",
+    tlink: "",
+    traductor: "",
+    tversion: "",
+    version: "",
+    trlink: "",
+    image: "",
   }
 
-  let savedId = ''
+  let savedId = ""
   let traductors: TraductorType[] = []
   let dialog: HTMLDialogElement
   let silentMode = false
@@ -43,52 +44,46 @@
       traductors = await GAS_API.getTraductors()
 
       if (!Array.isArray(traductors)) {
-        throw new Error('getTraductor no result')
+        throw new Error("getTraductor no result")
       }
     } catch (error) {
-      console.error('getTradutor no return: ', error)
+      console.error("getTradutor no return: ", error)
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
-        message: 'Impossible de récupérer la liste des traducteurs',
-        milliseconds: 3000
+        alertType: "error",
+        message: "Impossible de récupérer la liste des traducteurs",
+        milliseconds: 3000,
       })
     }
 
     const { id, domain } = game
 
-    if (step !== 5 || domain !== 'F95z') return
+    if (step !== 5 || domain !== "F95z") return
 
     try {
       await scrapeData({ id, domain })
     } catch (error) {
-      console.error('scrapeData no return: ', error)
+      console.error("scrapeData no return: ", error)
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'warning',
-        message: 'Impossible de scraper les information du jeu',
-        milliseconds: 3000
+        alertType: "warning",
+        message: "Impossible de scraper les information du jeu",
+        milliseconds: 3000,
       })
     }
   })
 
   const changeStep = async (amount: number) => {
     if (step + amount >= 0 && step + amount <= 5) step += amount
-    if (step === 1 && game.domain === 'Autre') step += amount // ID
-    if (step === 2 && game.domain === 'F95z') step += amount // Game informations
-    if (step === 4 && game.domain === 'Autre') step += amount // Auto-Check
+    if (step === 1 && game.domain === "Autre") step += amount // ID
+    if (step === 2 && game.domain === "F95z") step += amount // Game informations
+    if (step === 4 && game.domain === "Autre") step += amount // Auto-Check
 
     const gameId = parseInt(game.id)
 
-    if (
-      step === 3 &&
-      game.domain === 'F95z' &&
-      game.id &&
-      gameId &&
-      savedId !== game.id
-    ) {
+    if (step === 3 && game.domain === "F95z" && game.id && gameId && savedId !== game.id) {
       const { id, domain } = game
 
       savedId = game.id
@@ -98,8 +93,8 @@
   }
 
   interface ScrapeDataArgs {
-    id: GameType['id']
-    domain: Extract<GameType['domain'], 'F95z'>
+    id: GameType["id"]
+    domain: Extract<GameType["domain"], "F95z">
   }
 
   const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
@@ -117,53 +112,49 @@
       game.type = type ?? game.type
       game.image = image ?? game.image
     } catch (error) {
-      console.error('Error scrapped game', error)
-      dispatch('newToast', {
+      console.error("Error scrapped game", error)
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
-        message: 'Impossible de récupérer les informations du jeu',
-        milliseconds: 3000
+        alertType: "error",
+        message: "Impossible de récupérer les informations du jeu",
+        milliseconds: 3000,
       })
     }
   }
 
-  const handleChange: ChangeEventHandler<
-    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  > = event => {
+  const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = (event) => {
     const { name, value } = event.currentTarget
-    const key = name as keyof Omit<GameType, 'trlink' | 'ac'>
+    const key = name as keyof Omit<GameType, "trlink" | "ac">
 
     const { domain, id } = game
 
-    if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
-      game['ac'] = event.currentTarget.checked
+    if (name === "ac" && event.currentTarget instanceof HTMLInputElement) {
+      game["ac"] = event.currentTarget.checked
       return
     }
 
-    // @ts-ignore
+    // @ts-expect-error - We know that key is a valid key of GameType
     game[key] = value
 
     console.log({ game })
 
-    if ((name === 'domain' || name === 'id') && id && id !== '0') {
+    if ((name === "domain" || name === "id") && id && id !== "0") {
       console.log({ domain })
 
       switch (domain) {
-        case 'F95z':
+        case "F95z":
           game.link = `https://f95zone.to/threads/${id}`
           break
-        case 'LewdCorner':
+        case "LewdCorner":
           game.link = `https://lewdcorner.com/threads/${id}`
       }
     }
   }
 
-  const handleInput: FormEventHandler<HTMLInputElement> = event => {
+  const handleInput: FormEventHandler<HTMLInputElement> = (event) => {
     const { value, classList } = event.currentTarget
 
-    value === ''
-      ? classList.add('input-error')
-      : classList.remove('input-error')
+    value === "" ? classList.add("input-error") : classList.remove("input-error")
   }
 
   const handleSubmit = async () => {
@@ -175,32 +166,32 @@
       try {
         const result = await GAS_API.putGame({ game, query, silentMode })
 
-        if (result === 'duplicate') {
-          dispatch('newToast', {
+        if (result === "duplicate") {
+          dispatch("newToast", {
             id: Date.now(),
-            alertType: 'warning',
-            message: 'Le jeu existe déjà dans la liste',
-            milliseconds: 3000
+            alertType: "warning",
+            message: "Le jeu existe déjà dans la liste",
+            milliseconds: 3000,
           })
 
           return
         }
 
-        navigate('/')
-        dispatch('newToast', {
+        navigate("/")
+        dispatch("newToast", {
           id: Date.now(),
-          alertType: 'success',
-          message: 'Le jeu a bien été modifié',
-          milliseconds: 3000
+          alertType: "success",
+          message: "Le jeu a bien été modifié",
+          milliseconds: 3000,
         })
       } catch (error) {
-        console.error('Error fetching game', error)
+        console.error("Error fetching game", error)
 
-        dispatch('newToast', {
+        dispatch("newToast", {
           id: Date.now(),
-          alertType: 'error',
-          message: 'Impossible de modifier le jeu',
-          milliseconds: 3000
+          alertType: "error",
+          message: "Impossible de modifier le jeu",
+          milliseconds: 3000,
         })
       } finally {
         $isLoading = false
@@ -209,32 +200,32 @@
       try {
         const result = await GAS_API.postGame({ game, silentMode })
 
-        if (result === 'duplicate') {
-          dispatch('newToast', {
+        if (result === "duplicate") {
+          dispatch("newToast", {
             id: Date.now(),
-            alertType: 'warning',
-            message: 'Le jeu existe déjà dans la liste',
-            milliseconds: 3000
+            alertType: "warning",
+            message: "Le jeu existe déjà dans la liste",
+            milliseconds: 3000,
           })
 
           return
         }
 
-        navigate('/')
-        dispatch('newToast', {
+        navigate("/")
+        dispatch("newToast", {
           id: Date.now(),
-          alertType: 'success',
-          message: 'Le jeu a bien été ajouté',
-          milliseconds: 3000
+          alertType: "success",
+          message: "Le jeu a bien été ajouté",
+          milliseconds: 3000,
         })
       } catch (error) {
-        console.error('Error adding game', error)
+        console.error("Error adding game", error)
 
-        dispatch('newToast', {
+        dispatch("newToast", {
           id: Date.now(),
-          alertType: 'error',
+          alertType: "error",
           message: "Impossible d'ajouter le jeu",
-          milliseconds: 3000
+          milliseconds: 3000,
         })
       } finally {
         $isLoading = false
@@ -242,21 +233,21 @@
     }
   }
 
-  const handleInvalid: FormEventHandler<HTMLInputElement> = event => {
-    event.currentTarget.setCustomValidity('Veuillez remplir ce champ')
+  const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
+    event.currentTarget.setCustomValidity("Veuillez remplir ce champ")
   }
 
-  let comment = ''
+  let comment = ""
 
   const handleClickDelete = async () => {
     if (!comment) {
-      console.log('no comment')
+      console.log("no comment")
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'warning',
-        message: 'Impossible de supprimer le jeu',
-        milliseconds: 3000
+        alertType: "warning",
+        message: "Impossible de supprimer le jeu",
+        milliseconds: 3000,
       })
 
       return null
@@ -271,21 +262,21 @@
 
       await GAS_API.delGame({ query, comment, silentMode })
 
-      navigate('/')
-      dispatch('newToast', {
+      navigate("/")
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'success',
-        message: 'Le jeu a bien été supprimé',
-        milliseconds: 3000
+        alertType: "success",
+        message: "Le jeu a bien été supprimé",
+        milliseconds: 3000,
       })
     } catch (error) {
-      console.error('Error deleting game', error)
+      console.error("Error deleting game", error)
 
-      dispatch('newToast', {
+      dispatch("newToast", {
         id: Date.now(),
-        alertType: 'error',
-        message: 'Impossible de supprimer le jeu',
-        milliseconds: 3000
+        alertType: "error",
+        message: "Impossible de supprimer le jeu",
+        milliseconds: 3000,
       })
     } finally {
       $isLoading = false
@@ -296,25 +287,14 @@
 {#if !$isLoading}
   <div class="mt-0 flex flex-col items-center justify-center gap-4">
     <Search {edit} />
-    <form
-      class="relative flex w-full flex-col items-center"
-      on:submit|preventDefault={handleSubmit}
-      autocomplete="off"
-    >
+    <form class="relative flex w-full flex-col items-center" on:submit|preventDefault={handleSubmit} autocomplete="off">
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text pr-2">Mode silencieux</span>
-          <input
-            type="checkbox"
-            class="toggle"
-            checked={silentMode}
-            on:change={() => (silentMode = !silentMode)}
-          />
+          <input type="checkbox" class="toggle" checked={silentMode} on:change={() => (silentMode = !silentMode)} />
         </label>
       </div>
-      <div
-        class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-      >
+      <div class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {#if step === 0 || step === 5}
           <div>
             <label for="domain">Platforme:</label>
@@ -324,8 +304,7 @@
               name="domain"
               value={game.domain}
               on:change={handleChange}
-              required
-            >
+              required>
               <option>F95z</option>
               <option>LewdCorner</option>
               <option>Autre</option>
@@ -344,8 +323,7 @@
               inputmode="numeric"
               name="id"
               on:change={handleChange}
-              bind:value={game.id}
-            />
+              bind:value={game.id} />
           </div>
         {/if}
 
@@ -356,14 +334,13 @@
               type="text"
               placeholder="Nom du jeu"
               class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== 'F95z'}
+              class:input-error={!edit && game.domain !== "F95z"}
               name="name"
               on:change={handleChange}
-              on:input={e => handleInput(e)}
+              on:input={(e) => handleInput(e)}
               on:invalid={handleInvalid}
               required
-              value={game.name}
-            />
+              value={game.name} />
           </div>
 
           <div>
@@ -372,13 +349,12 @@
               type="text"
               placeholder="Lien du jeu"
               class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== 'F95z'}
+              class:input-error={!edit && game.domain !== "F95z"}
               name="link"
               on:change={handleChange}
-              on:input={e => handleInput(e)}
+              on:input={(e) => handleInput(e)}
               required
-              value={game.link}
-            />
+              value={game.link} />
           </div>
 
           <div>
@@ -389,8 +365,7 @@
               name="status"
               on:change={handleChange}
               value={game.status}
-              required
-            >
+              required>
               <option>EN COURS</option>
               <option>TERMINÉ</option>
               <option>ABANDONNÉ</option>
@@ -405,8 +380,7 @@
               placeholder="Tags du jeu"
               class="textarea textarea-bordered textarea-xs max-h-32 w-full"
               on:change={handleChange}
-              value={game.tags}
-            ></textarea>
+              value={game.tags}></textarea>
           </div>
 
           <div>
@@ -417,8 +391,7 @@
               name="type"
               on:change={handleChange}
               value={game.type}
-              required
-            >
+              required>
               <option>RenPy</option>
               <option>RPGM</option>
               <option>Unity</option>
@@ -438,13 +411,12 @@
               type="text"
               placeholder="Lien du jeu"
               class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== 'F95z'}
+              class:input-error={!edit && game.domain !== "F95z"}
               name="image"
               on:change={handleChange}
-              on:input={e => handleInput(e)}
+              on:input={(e) => handleInput(e)}
               required
-              value={game.image}
-            />
+              value={game.image} />
           </div>
 
           <div>
@@ -453,13 +425,12 @@
               type="text"
               placeholder="Version du jeu"
               class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== 'F95z'}
+              class:input-error={!edit && game.domain !== "F95z"}
               name="version"
               on:change={handleChange}
-              on:input={e => handleInput(e)}
+              on:input={(e) => handleInput(e)}
               required
-              value={game.version}
-            />
+              value={game.version} />
           </div>
         {/if}
         {#if step === 3 || step === 5}
@@ -472,10 +443,9 @@
               class:input-error={!edit}
               name="tversion"
               on:change={handleChange}
-              on:input={e => handleInput(e)}
+              on:input={(e) => handleInput(e)}
               required
-              value={game.tversion}
-            />
+              value={game.tversion} />
           </div>
 
           <div>
@@ -486,8 +456,7 @@
               name="tname"
               on:change={handleChange}
               value={game.tname}
-              required
-            >
+              required>
               <option>Traduction</option>
               <option>Traduction (mod inclus)</option>
               <option>Intégrée</option>
@@ -503,8 +472,7 @@
               class="input input-bordered w-full"
               name="tlink"
               on:change={handleChange}
-              value={game.tlink}
-            />
+              value={game.tlink} />
           </div>
 
           <div>
@@ -517,8 +485,7 @@
               class="input input-bordered w-full"
               list="traductor-list"
               on:change={handleChange}
-              value={game.traductor}
-            />
+              value={game.traductor} />
             <datalist id="traductor-list">
               {#each traductors as traductor}
                 <option>{traductor.name}</option>
@@ -536,8 +503,7 @@
               class="input input-bordered w-full"
               list="proofreader-list"
               on:change={handleChange}
-              value={game.proofreader}
-            />
+              value={game.proofreader} />
             <datalist id="proofreader-list">
               {#each traductors as traductor}
                 <option>{traductor.name}</option>
@@ -553,8 +519,7 @@
               name="ttype"
               on:change={handleChange}
               value={game.ttype}
-              required
-            >
+              required>
               <option>Traduction Humaine</option>
               <option>Traduction Automatique</option>
               <option>Traduction Semi-Automatique</option>
@@ -565,17 +530,14 @@
         {/if}
         {#if step === 4 || step === 5}
           <div class="flex items-end">
-            <div
-              class="flex h-12 w-full flex-col items-center justify-center gap-2"
-            >
+            <div class="flex h-12 w-full flex-col items-center justify-center gap-2">
               <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
               <input
                 type="checkbox"
                 name="ac"
                 class="checkbox checkbox-lg"
                 on:change={handleChange}
-                checked={game.ac}
-              />
+                checked={game.ac} />
             </div>
           </div>
         {/if}
@@ -586,27 +548,16 @@
             class="btn btn-outline btn-primary w-full sm:w-48"
             type="button"
             on:click={() => changeStep(-1)}
-            disabled={step <= 0}
-          >
+            disabled={step <= 0}>
             Précédent
           </button>
-          <button
-            class="btn btn-primary w-full sm:w-48"
-            type="button"
-            on:click={() => changeStep(1)}
-          >
-            Suivant
-          </button>
+          <button class="btn btn-primary w-full sm:w-48" type="button" on:click={() => changeStep(1)}> Suivant </button>
         {:else}
           <button class="btn btn-primary w-full sm:w-48" type="submit">
-            {edit ? 'Éditer le jeu' : 'Ajouter le jeu'}
+            {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <button
-              class="btn btn-error w-full sm:w-48"
-              type="button"
-              on:click={() => dialog.showModal()}
-            >
+            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => dialog.showModal()}>
               Supprimer le jeu
             </button>
           {/if}
@@ -618,25 +569,24 @@
             on:click={() => {
               step = 5
               game = {
-                domain: 'Autre',
-                id: '666',
-                name: 'TEST GAME FOR DEV',
-                link: 'https://testgame.dev',
-                status: 'ABANDONNÉ',
-                tags: 'TEST, DEV, NE PAS TOUCHER',
-                type: 'Autre',
-                version: 'v666',
-                tversion: 'n/a',
-                tname: 'Pas de traduction',
-                tlink: 'https://traduction.dev',
-                traductor: 'Hunteraulo',
-                proofreader: 'Hunteraulo',
-                ttype: 'À tester',
+                domain: "Autre",
+                id: "666",
+                name: "TEST GAME FOR DEV",
+                link: "https://testgame.dev",
+                status: "ABANDONNÉ",
+                tags: "TEST, DEV, NE PAS TOUCHER",
+                type: "Autre",
+                version: "v666",
+                tversion: "n/a",
+                tname: "Pas de traduction",
+                tlink: "https://traduction.dev",
+                traductor: "Hunteraulo",
+                proofreader: "Hunteraulo",
+                ttype: "À tester",
                 ac: false,
-                image: ''
+                image: "",
               }
-            }}
-          >
+            }}>
             Dev button
           </button>
         {/if}
@@ -651,14 +601,7 @@
     <textarea
       placeholder="Pourquoi voulez-vous supprimer le jeu ?"
       class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={comment}
-    ></textarea>
+      bind:value={comment}></textarea>
   </div>
-  <button
-    slot="modal-action"
-    on:click={handleClickDelete}
-    class="btn btn-error"
-  >
-    Supprimer définitivement
-  </button>
+  <button slot="modal-action" on:click={handleClickDelete} class="btn btn-error"> Supprimer définitivement </button>
 </Modal>

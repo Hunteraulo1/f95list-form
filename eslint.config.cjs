@@ -1,14 +1,14 @@
 // eslint.config.cjs
-const eslint = require("@eslint/js");
-const tsEslint = require("typescript-eslint");
+const eslint = require("@eslint/js")
+const tsEslint = require("typescript-eslint")
 
-const eslintConfigCommonJS = require("./.eslint/commonjs.cjs");
-const eslintConfigEsm = require("./.eslint/esm.cjs");
-const eslintConfigIgnores = require("./.eslint/ignores.cjs");
-const eslintConfigImport = require("./.eslint/import.cjs");
-const eslintConfigPrettier = require("./.eslint/prettier.cjs");
-const eslintConfigSvelte = require("./.eslint/svelte.cjs");
-const eslintConfigTypescript = require("./.eslint/typescript.cjs");
+const eslintConfigCommonJS = require("./.eslint/commonjs.cjs")
+const eslintConfigEsm = require("./.eslint/esm.cjs")
+const eslintConfigIgnores = require("./.eslint/ignores.cjs")
+const eslintConfigImport = require("./.eslint/import.cjs")
+const eslintConfigPrettier = require("./.eslint/prettier.cjs")
+const eslintConfigSvelte = require("./.eslint/svelte.cjs")
+const eslintConfigTypescript = require("./.eslint/typescript.cjs")
 
 module.exports = tsEslint.config(
   eslint.configs.recommended,
@@ -18,5 +18,5 @@ module.exports = tsEslint.config(
   ...eslintConfigSvelte,
   ...eslintConfigImport,
   ...eslintConfigCommonJS,
-  ...eslintConfigEsm
-);
+  ...eslintConfigEsm,
+)
