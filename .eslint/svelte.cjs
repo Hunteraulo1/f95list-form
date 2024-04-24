@@ -1,27 +1,23 @@
 // svelte.cjs
-const globals = require("globals");
-const tsEslint = require("typescript-eslint");
+const svelteEslintPlugin = require('eslint-plugin-svelte')
+const globals = require('globals')
+const svelteParser = require('svelte-eslint-parser')
+const tsEslint = require('typescript-eslint')
 
 /** @type {import('eslint').Linter.FlatConfig} */
 module.exports = tsEslint.config(
-  ...tsEslint.configs.recommended, //
+  ...svelteEslintPlugin.configs['flat/recommended'], //
   {
-    name: "typescript",
-    plugins: {
-      "@typescript-eslint": tsEslint.plugin,
-    },
+    name: 'svelte',
+    files: ['**/*.svelte'],
     languageOptions: {
-      parser: tsEslint.parser,
+      parser: svelteParser,
       parserOptions: {
-        sourceType: "module",
-        ecmaVersion: 2020,
-        extraFileExtensions: [".svelte"],
+        parser: tsEslint.parser,
       },
       globals: {
         ...globals.browser,
-        ...globals.es2017,
-        ...globals.node,
       },
     },
   }
-);
+)
