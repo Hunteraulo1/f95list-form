@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { isLoading } from "$lib/stores"
+  import { isLoading } from "$lib/stores";
 
-  export let title = ""
-  export let showDivider = true
+  export let title = "";
+  export let showDivider = true;
 </script>
 
 <div class="mt-8 w-full">

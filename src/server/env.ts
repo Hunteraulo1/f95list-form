@@ -1,9 +1,9 @@
 interface EnvironmentDetails {
-  executeAs: "USER_DEPLOYING" | "USER_ACCESSING"
+  executeAs: "USER_DEPLOYING" | "USER_ACCESSING";
   domain: {
-    type: "Personal" | "Workspace"
-    name: string
-  }
+    type: "Personal" | "Workspace";
+    name: string;
+  };
 }
 
 const ENV: EnvironmentDetails = {
@@ -12,6 +12,6 @@ const ENV: EnvironmentDetails = {
     type: "Personal",
     name: "",
   },
-}
+};
 
-export { ENV }
+export { ENV };

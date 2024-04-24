@@ -1,4 +1,4 @@
-import { UserType } from "$types/schemas"
+import { UserType } from "$types/schemas";
 
 export const user: UserType = {
   email: "mock_mockerson@test.com",
@@ -18,7 +18,7 @@ export const user: UserType = {
     gameAdded: 84,
     gameEdited: 518,
   },
-}
+};
 
 export const users: UserType[] = [
   user,
@@ -60,4 +60,4 @@ export const users: UserType[] = [
       gameEdited: 372,
     },
   },
-]
+];

@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
+  import { createEventDispatcher } from "svelte";
 
-  import type { Toast } from "$types/index"
+  import type { Toast } from "$types/index";
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let selectToastValue: typeof alertTypes | string = "warning"
+  let selectToastValue: typeof alertTypes | string = "warning";
 
-  const alertTypes: Toast["alertType"][] = ["error", "info", "success", "warning"]
+  const alertTypes: Toast["alertType"][] = ["error", "info", "success", "warning"];
 </script>
 
 <div class="flex flex-col gap-2">

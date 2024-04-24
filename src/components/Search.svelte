@@ -1,74 +1,74 @@
 <script lang="ts">
-  import { onMount } from "svelte"
-  import type { ChangeEventHandler } from "svelte/elements"
-  import { Link, navigate } from "svelte-routing"
+  import { onMount } from "svelte";
+  import type { ChangeEventHandler } from "svelte/elements";
+  import { Link, navigate } from "svelte-routing";
 
-  import Panel from "$components/Panel.svelte"
-  import { fetchQueryGames } from "$lib/queryGames"
-  import { queryGame, queryGames } from "$lib/stores"
-  import type { QueryGameType } from "$types/schemas"
+  import Panel from "$components/Panel.svelte";
+  import { fetchQueryGames } from "$lib/queryGames";
+  import { queryGame, queryGames } from "$lib/stores";
+  import type { QueryGameType } from "$types/schemas";
 
-  export let edit = false
+  export let edit = false;
 
-  let inputSearch = edit ? $queryGame.name : ""
-  let badgeSearch = edit ? $queryGame.version : ""
+  let inputSearch = edit ? $queryGame.name : "";
+  let badgeSearch = edit ? $queryGame.version : "";
 
-  let filtered: QueryGameType[] = []
-  let timer: ReturnType<typeof setTimeout>
+  let filtered: QueryGameType[] = [];
+  let timer: ReturnType<typeof setTimeout>;
 
   const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
-    badgeSearch = ""
+    badgeSearch = "";
 
-    const eventValue = event.currentTarget.value
+    const eventValue = event.currentTarget.value;
 
     if (eventValue === "") {
-      filtered = []
+      filtered = [];
 
-      return
+      return;
     }
 
-    clearTimeout(timer)
+    clearTimeout(timer);
 
     timer = setTimeout(() => {
       filtered = $queryGames.filter((game) => {
-        const value = eventValue.toLowerCase()
+        const value = eventValue.toLowerCase();
 
-        const name = game.name.toLowerCase()
-        const id = game.id
+        const name = game.name.toLowerCase();
+        const id = game.id;
 
-        if (name.includes(value) || id.includes(value)) return game
-      })
-    }, 200)
-  }
+        if (name.includes(value) || id.includes(value)) return game;
+      });
+    }, 200);
+  };
 
   const handleClick = (data: QueryGameType) => {
-    inputSearch = data.name
-    badgeSearch = data.version
-    filtered = []
-    $queryGame = data
+    inputSearch = data.name;
+    badgeSearch = data.version;
+    filtered = [];
+    $queryGame = data;
 
-    navigate("/edit")
-  }
+    navigate("/edit");
+  };
 
   const handleFocus = () => {
-    if (!badgeSearch) return
+    if (!badgeSearch) return;
 
-    inputSearch = ""
-    badgeSearch = ""
-  }
+    inputSearch = "";
+    badgeSearch = "";
+  };
 
   const handleCtrlK = (event: KeyboardEvent) => {
     if (event.ctrlKey && event.key === "k") {
-      event.preventDefault()
+      event.preventDefault();
 
-      const inputField = document.getElementById("searchField")
-      inputField?.focus()
+      const inputField = document.getElementById("searchField");
+      inputField?.focus();
     }
-  }
+  };
 
   onMount(() => {
-    fetchQueryGames()
-  })
+    fetchQueryGames();
+  });
 </script>
 
 <svelte:window on:keydown={handleCtrlK} />

@@ -1,76 +1,76 @@
 <script lang="ts">
-  import { onMount } from "svelte"
-  import { AdjustmentsVertical, Cog6Tooth, Home as HomeIcon, Icon, Language, UserCircle } from "svelte-hero-icons"
-  import { Route, Router } from "svelte-routing"
+  import { onMount } from "svelte";
+  import { AdjustmentsVertical, Cog6Tooth, Home as HomeIcon, Icon, Language, UserCircle } from "svelte-hero-icons";
+  import { Route, Router } from "svelte-routing";
 
-  import Home from "./routes/Home.svelte"
-  import Profile from "./routes/Profile.svelte"
-  import AddGame from "./routes/protected/AddGame.svelte"
-  import Developper from "./routes/protected/Developper.svelte"
-  import EditGame from "./routes/protected/EditGame.svelte"
-  import EditTraductor from "./routes/protected/EditTraductor.svelte"
-  import Settings from "./routes/protected/Settings.svelte"
-  import UserPreferences from "./routes/UserPreferences.svelte"
+  import Home from "./routes/Home.svelte";
+  import Profile from "./routes/Profile.svelte";
+  import AddGame from "./routes/protected/AddGame.svelte";
+  import Developper from "./routes/protected/Developper.svelte";
+  import EditGame from "./routes/protected/EditGame.svelte";
+  import EditTraductor from "./routes/protected/EditTraductor.svelte";
+  import Settings from "./routes/protected/Settings.svelte";
+  import UserPreferences from "./routes/UserPreferences.svelte";
 
-  import HeaderBar from "$components/HeaderBar.svelte"
-  import InitialLoad from "$components/InitialLoad.svelte"
-  import NavLink from "$components/NavLink.svelte"
-  import ProtectedRoute from "$components/ProtectedRoute.svelte"
-  import Toaster from "$components/Toaster.svelte"
-  import { fetchAppConfiguration } from "$lib/fetchAppConfig"
-  import { GAS_API } from "$lib/GAS_API"
-  import { appConfiguration, isLoading, sessionUser, userIsAdmin, userIsSuperAdmin } from "$lib/stores"
-  import type { Toast } from "$types/index"
+  import HeaderBar from "$components/HeaderBar.svelte";
+  import InitialLoad from "$components/InitialLoad.svelte";
+  import NavLink from "$components/NavLink.svelte";
+  import ProtectedRoute from "$components/ProtectedRoute.svelte";
+  import Toaster from "$components/Toaster.svelte";
+  import { fetchAppConfiguration } from "$lib/fetchAppConfig";
+  import { GAS_API } from "$lib/GAS_API";
+  import { appConfiguration, isLoading, sessionUser, userIsAdmin, userIsSuperAdmin } from "$lib/stores";
+  import type { Toast } from "$types/index";
 
-  export let url = ""
+  export let url = "";
 
   export const handleNewToast = (event: CustomEvent<Toast>): void => {
-    console.info("toast launch")
-    console.info(event.detail)
-    toasts = [...toasts, event.detail]
+    console.info("toast launch");
+    console.info(event.detail);
+    toasts = [...toasts, event.detail];
     setTimeout(() => {
-      toasts = toasts.filter((toast) => toast.id !== event.detail.id)
-    }, event.detail.milliseconds)
-  }
+      toasts = toasts.filter((toast) => toast.id !== event.detail.id);
+    }, event.detail.milliseconds);
+  };
 
-  $: initialLoadComplete = $sessionUser && $appConfiguration
+  $: initialLoadComplete = $sessionUser && $appConfiguration;
 
-  let isDrawerOpen = false
+  let isDrawerOpen = false;
   const toggleDrawer = () => {
-    isDrawerOpen = !isDrawerOpen
-  }
+    isDrawerOpen = !isDrawerOpen;
+  };
 
-  let toasts: Toast[] = []
+  let toasts: Toast[] = [];
 
   onMount(() => {
-    fetchUser()
-    fetchAppConfiguration()
-  })
+    fetchUser();
+    fetchAppConfiguration();
+  });
 
   /**
    * Fetches the user from the server.
    */
   const fetchUser = async () => {
-    $isLoading = true
+    $isLoading = true;
 
-    console.info("fetching user...")
+    console.info("fetching user...");
 
     try {
-      const result = await GAS_API.getUser()
+      const result = await GAS_API.getUser();
 
-      $sessionUser = result
+      $sessionUser = result;
 
-      console.info("User:", result)
+      console.info("User:", result);
 
-      document.querySelector("html")?.setAttribute("data-theme", result.preferences.theme ?? "dark")
+      document.querySelector("html")?.setAttribute("data-theme", result.preferences.theme ?? "dark");
     } catch (err) {
-      console.error("Could not get user:", err) // TODO: dispatch toast
+      console.error("Could not get user:", err); // TODO: dispatch toast
     } finally {
-      console.info("User loaded.")
+      console.info("User loaded.");
 
-      $isLoading = false
+      $isLoading = false;
     }
-  }
+  };
 </script>
 
 <Router {url}>

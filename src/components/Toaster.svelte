@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Toast from "./Toast.svelte"
+  import Toast from "./Toast.svelte";
 
-  import type { Toast as ToastType } from "$types/index"
+  import type { Toast as ToastType } from "$types/index";
 
-  export let toasts: ToastType[] = []
+  export let toasts: ToastType[] = [];
 </script>
 
 <div id="toaster" class="fixed bottom-4 left-2 z-50 mx-0 my-auto">

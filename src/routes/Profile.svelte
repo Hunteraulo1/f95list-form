@@ -1,48 +1,48 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
-  import { Icon, PencilSquare, PlusCircle } from "svelte-hero-icons"
+  import { createEventDispatcher } from "svelte";
+  import { Icon, PencilSquare, PlusCircle } from "svelte-hero-icons";
 
-  import Panel from "$components/Panel.svelte"
-  import { GAS_API } from "$lib/GAS_API"
-  import { isLoading } from "$lib/stores"
-  import type { UserType } from "$types/schemas"
+  import Panel from "$components/Panel.svelte";
+  import { GAS_API } from "$lib/GAS_API";
+  import { isLoading } from "$lib/stores";
+  import type { UserType } from "$types/schemas";
 
-  export let email: string
+  export let email: string;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let loading = false
+  let loading = false;
 
-  let user: UserType | undefined = undefined
+  let user: UserType | undefined = undefined;
 
   // Fetch the user on mount
-  $: fetchUser(email)
+  $: fetchUser(email);
 
   const fetchUser = async (email: string) => {
-    $isLoading = true
+    $isLoading = true;
 
-    console.info("fetching user data for profile...")
+    console.info("fetching user data for profile...");
 
     try {
-      const result = await GAS_API.getUser({ email })
+      const result = await GAS_API.getUser({ email });
 
-      user = result
-      console.info("User data:", user)
+      user = result;
+      console.info("User data:", user);
     } catch (error) {
-      console.error("Could not get user data:", error)
+      console.error("Could not get user data:", error);
 
       dispatch("newToast", {
         id: Date.now(),
         alertType: "error",
         message: "Impossible de récupérer les information utilisateur",
         milliseconds: 3000,
-      })
+      });
     } finally {
-      console.info("User data loaded.")
+      console.info("User data loaded.");
 
-      $isLoading = false
+      $isLoading = false;
     }
-  }
+  };
 </script>
 
 {#if user && !loading}

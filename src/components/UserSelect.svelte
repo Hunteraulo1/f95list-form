@@ -1,72 +1,72 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
+  import { createEventDispatcher } from "svelte";
 
-  import LoadingSpinner from "./LoadingSpinner.svelte"
+  import LoadingSpinner from "./LoadingSpinner.svelte";
 
-  import { GAS_API } from "$lib/GAS_API"
-  import type { UserType } from "$types/schemas"
+  import { GAS_API } from "$lib/GAS_API";
+  import type { UserType } from "$types/schemas";
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  let searchQuery = ""
-  let searching = false
-  let searchCount = 0
-  let searchResults: UserType[] = []
-  let selectedUsers: UserType[] = []
+  let searchQuery = "";
+  let searching = false;
+  let searchCount = 0;
+  let searchResults: UserType[] = [];
+  let selectedUsers: UserType[] = [];
 
-  let debounceTimeout: ReturnType<typeof setTimeout>
+  let debounceTimeout: ReturnType<typeof setTimeout>;
 
   const fetchResults = (query: string) => {
-    selectedUsers = []
-    dispatch("update", selectedUsers)
+    selectedUsers = [];
+    dispatch("update", selectedUsers);
 
     // Simulating a server request
-    console.info(`Fetching results for query: ${query}`)
-    searching = true
+    console.info(`Fetching results for query: ${query}`);
+    searching = true;
 
     if (debounceTimeout) {
-      clearTimeout(debounceTimeout)
+      clearTimeout(debounceTimeout);
     }
 
     debounceTimeout = setTimeout(async () => {
       try {
-        const result = await GAS_API.getUser({ email: searchQuery })
+        const result = await GAS_API.getUser({ email: searchQuery });
 
-        console.info({ result })
+        console.info({ result });
 
         if (result) {
-          searchResults = [result]
+          searchResults = [result];
         } else {
-          searchResults = []
+          searchResults = [];
         }
       } catch (error) {
-        console.error("Error fetching user", error)
+        console.error("Error fetching user", error);
       } finally {
-        searchCount = searchCount + 1
-        searching = false
+        searchCount = searchCount + 1;
+        searching = false;
       }
-    }, 1000)
-  }
+    }, 1000);
+  };
 
   const toggleSelect = (user: UserType) => {
-    const index = selectedUsers.findIndex((selected) => selected.email === user.email)
+    const index = selectedUsers.findIndex((selected) => selected.email === user.email);
 
     if (index > -1) {
-      selectedUsers.splice(index, 1)
-      selectedUsers = [...selectedUsers]
+      selectedUsers.splice(index, 1);
+      selectedUsers = [...selectedUsers];
     } else {
-      selectedUsers.push(user)
-      selectedUsers = [...selectedUsers]
+      selectedUsers.push(user);
+      selectedUsers = [...selectedUsers];
     }
 
     // Notify the parent component
-    dispatch("update", selectedUsers)
-  }
+    dispatch("update", selectedUsers);
+  };
 
   const handleSearchInput = (event: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
-    searchQuery = event.currentTarget.value
-    fetchResults(searchQuery)
-  }
+    searchQuery = event.currentTarget.value;
+    fetchResults(searchQuery);
+  };
 </script>
 
 <div>
@@ -92,7 +92,7 @@
           on:click={() => toggleSelect(userResult)}
           on:keypress={(event) => {
             if (event.key === "Enter" || event.key === " ") {
-              toggleSelect(userResult)
+              toggleSelect(userResult);
             }
           }}
           role="button"

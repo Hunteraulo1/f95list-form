@@ -1,13 +1,13 @@
-import { GetUserArgs } from "../server/api/getUser"
-import { PutAppConfigArgs } from "../server/api/putAppConfiguration"
-import { PutUserArgs } from "../server/api/putUser"
+import { GetUserArgs } from "../server/api/getUser";
+import { PutAppConfigArgs } from "../server/api/putAppConfiguration";
+import { PutUserArgs } from "../server/api/putUser";
 
-import { DelGameArgs } from "./mocks/api/delGame"
-import { GetGameArgs } from "./mocks/api/getGame"
-import { GetScrapeArgs } from "./mocks/api/getScrape"
-import { PostGameArgs } from "./mocks/api/postGame"
-import { PutGameArgs } from "./mocks/api/putGame"
-import "./polyfillScriptRun.js"
+import { DelGameArgs } from "./mocks/api/delGame";
+import { GetGameArgs } from "./mocks/api/getGame";
+import { GetScrapeArgs } from "./mocks/api/getScrape";
+import { PostGameArgs } from "./mocks/api/postGame";
+import { PutGameArgs } from "./mocks/api/putGame";
+import "./polyfillScriptRun.js";
 
 import type {
   AppConfigurationType,
@@ -16,18 +16,18 @@ import type {
   ScrapeGameType,
   TraductorType,
   UserType,
-} from "$types/schemas"
+} from "$types/schemas";
 
 const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A) => {
-  console.info("calling api", functionName, args)
+  console.info("calling api", functionName, args);
 
   return new Promise<T>((resolve, reject) => {
     google.script.run
       .withSuccessHandler((result: T) => resolve(result))
       .withFailureHandler((error: unknown) => reject(error))
-      [functionName](...(Array.isArray(args) ? args : [args]))
-  })
-}
+      [functionName](...(Array.isArray(args) ? args : [args]));
+  });
+};
 
 export const GAS_API = {
   // AppConfiguration
@@ -58,4 +58,4 @@ export const GAS_API = {
 
   // Others
   getScrape: (args: GetScrapeArgs) => callAPI<ScrapeGameType, typeof args>("getScrape", args),
-}
+};

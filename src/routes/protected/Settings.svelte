@@ -1,54 +1,54 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
-  import { Link } from "svelte-routing"
+  import { createEventDispatcher } from "svelte";
+  import { Link } from "svelte-routing";
 
-  import AddAdminModal from "$components/AddAdminModal.svelte"
-  import Panel from "$components/Panel.svelte"
-  import RemoveAdminModal from "$components/RemoveAdminModal.svelte"
-  import { GAS_API } from "$lib/GAS_API"
-  import { appConfiguration, isLoading, sessionUser, userIsSuperAdmin } from "$lib/stores"
-  const dispatch = createEventDispatcher()
+  import AddAdminModal from "$components/AddAdminModal.svelte";
+  import Panel from "$components/Panel.svelte";
+  import RemoveAdminModal from "$components/RemoveAdminModal.svelte";
+  import { GAS_API } from "$lib/GAS_API";
+  import { appConfiguration, isLoading, sessionUser, userIsSuperAdmin } from "$lib/stores";
+  const dispatch = createEventDispatcher();
 
   const handleClick = async () => {
     if ($appConfiguration !== null) {
-      await updateAppConfiguration()
+      await updateAppConfiguration();
     } else {
-      console.error("App configuration is null.")
+      console.error("App configuration is null.");
     }
-  }
+  };
 
   const updateAppConfiguration = async () => {
-    $isLoading = true
+    $isLoading = true;
 
-    console.info("submitting app configuration update", $appConfiguration)
+    console.info("submitting app configuration update", $appConfiguration);
 
     try {
       const result = GAS_API.putAppConfiguration({
         appConfiguration: $appConfiguration,
-      })
+      });
 
-      console.info("result", result)
+      console.info("result", result);
       dispatch("newToast", {
         id: Date.now(),
         alertType: "success",
         message: "Configuration de l'application mise à jour !",
         milliseconds: 3000,
-      })
+      });
     } catch (error) {
-      console.error("Erreur de transmission des changements de l'utilisateur", error)
+      console.error("Erreur de transmission des changements de l'utilisateur", error);
       dispatch("newToast", {
         id: Date.now(),
         alertType: "error",
         message: "Vos modifications n'ont pas pu être enregistrées",
         milliseconds: 3000,
-      })
+      });
     } finally {
-      $isLoading = false
+      $isLoading = false;
     }
-  }
+  };
 
-  let dialogAdd: HTMLDialogElement
-  let dialogRemove: HTMLDialogElement[] = []
+  let dialogAdd: HTMLDialogElement;
+  let dialogRemove: HTMLDialogElement[] = [];
 </script>
 
 <div>

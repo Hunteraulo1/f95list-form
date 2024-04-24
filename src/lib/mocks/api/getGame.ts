@@ -1,15 +1,15 @@
-import { games } from "../data/game"
-import sleep from "../sleep"
+import { games } from "../data/game";
+import sleep from "../sleep";
 
 export interface GetGameArgs {
-  name: string | null
-  version: string | null
+  name: string | null;
+  version: string | null;
 }
 
 export const getGame = async ({ name, version }: GetGameArgs) => {
-  await sleep()
+  await sleep();
 
-  const mockResponse = games.find((game) => game.name === name && game.version === version)
+  const mockResponse = games.find((game) => game.name === name && game.version === version);
 
-  return JSON.parse(JSON.stringify(mockResponse))
-}
+  return JSON.parse(JSON.stringify(mockResponse));
+};
