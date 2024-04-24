@@ -1,34 +1,28 @@
-import { games } from "../data/game";
-import sleep from "../sleep";
-import { sendWebhookLogs, sendWebhookUpdate } from "../webhook";
+import { games } from "../data/game"
+import sleep from "../sleep"
+import { sendWebhookLogs, sendWebhookUpdate } from "../webhook"
 
 export interface DelGameArgs {
-  query: { name: string; version: string };
-  comment?: string;
-  silentMode: boolean;
+  query: { name: string; version: string }
+  comment?: string
+  silentMode: boolean
 }
 
-export const delGame = async ({
-  query,
-  comment,
-  silentMode,
-}: DelGameArgs): Promise<void> => {
-  await sleep();
+export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Promise<void> => {
+  await sleep()
 
-  const { name, version } = query;
+  const { name, version } = query
 
-  const game = games.find(
-    (game) => game.name === name && game.version === version
-  );
+  const game = games.find((game) => game.name === name && game.version === version)
 
-  if (!game) throw new Error("delGame game not found");
+  if (!game) throw new Error("delGame game not found")
 
-  console.info("mockResponse_delGame", { query, comment, silentMode, games });
+  console.info("mockResponse_delGame", { query, comment, silentMode, games })
 
-  let title = "Suppression du jeu:";
-  let color = 12256517;
+  const title = "Suppression du jeu:"
+  const color = 12256517
 
-  const { link, tversion, traductor, proofreader, image } = game;
+  const { link, tversion, traductor, proofreader, image } = game
 
   if (!silentMode) {
     sendWebhookUpdate({
@@ -41,12 +35,12 @@ export const delGame = async ({
       traductor,
       proofreader,
       image,
-    });
+    })
   }
 
   sendWebhookLogs({
     title,
     color,
     game,
-  });
-};
+  })
+}

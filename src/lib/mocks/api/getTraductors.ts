@@ -1,9 +1,10 @@
-import { TraductorType } from "$types/schemas";
-import { traductors } from "../data/game";
-import sleep from "../sleep";
+import { traductors } from "../data/game"
+import sleep from "../sleep"
+
+import { TraductorType } from "$types/schemas"
 
 export const getTraductors = async (): Promise<TraductorType[]> => {
-  await sleep();
+  await sleep()
 
-  return JSON.parse(JSON.stringify(traductors));
-};
+  return JSON.parse(JSON.stringify(traductors))
+}

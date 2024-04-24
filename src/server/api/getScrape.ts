@@ -1,34 +1,32 @@
-import { GameType, ScrapeGame } from "$types/schemas";
-import { getFetchF95z } from "./getFetchF95z";
+import { getFetchF95z } from "./getFetchF95z"
+
+import { GameType, ScrapeGame } from "$types/schemas"
 
 export type GetScrapeArgs = {
-  domain: Extract<GameType["domain"], "F95z">;
-  id: string;
-};
+  domain: Extract<GameType["domain"], "F95z">
+  id: string
+}
 
 interface GetScrape {
-  name: GameType["name"];
-  version: GameType["version"];
-  status: GameType["status"];
-  tags: GameType["tags"];
-  type: GameType["type"];
-  image: GameType["image"];
+  name: GameType["name"]
+  version: GameType["version"]
+  status: GameType["status"]
+  tags: GameType["tags"]
+  type: GameType["type"]
+  image: GameType["image"]
 }
-export const getScrape = async ({
-  domain,
-  id,
-}: GetScrapeArgs): Promise<GetScrape> => {
+export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
   // const domain = "F95z";
   // const id = "100";
 
   // Report request
-  console.info("getScrape called with args: " + { domain, id });
+  console.info("getScrape called with args: " + { domain, id })
 
-  if (domain !== "F95z") throw new Error("domaine incompatible");
+  if (domain !== "F95z") throw new Error("domaine incompatible")
 
-  let link = `https://f95zone.to/threads/${id}`;
-  let regName = /.*-\s(.*?)\s\[/i;
-  let regTitle = /([\w\\']+)(?=\s-)/gi;
+  const link = `https://f95zone.to/threads/${id}`
+  const regName = /.*-\s(.*?)\s\[/i
+  const regTitle = /([\w\\']+)(?=\s-)/gi
 
   // case "LewdCorner":
   //   link = `https://lewdcorner.com/threads/${id}`;
@@ -38,34 +36,34 @@ export const getScrape = async ({
 
   const response = UrlFetchApp.fetch(link, {
     muteHttpExceptions: true,
-  });
-  const $ = Cheerio.load(response.getContentText());
+  })
+  const $ = Cheerio.load(response.getContentText())
   const tags = $(".tagItem")
     .map((_, tag) => $(tag).text().trim())
     .get()
-    .join(", ");
-  const title = $("title").text();
-  const img = $("img.bbImage").attr("src");
+    .join(", ")
+  const title = $("title").text()
+  const img = $("img.bbImage").attr("src")
 
-  const image = img?.replace("thumb/", "") ?? "";
+  const image = img?.replace("thumb/", "") ?? ""
 
-  const titleMatch = title.match(regTitle) ?? [];
-  const nameMatch = title.match(regName) ?? [];
+  const titleMatch = title.match(regTitle) ?? []
+  const nameMatch = title.match(regName) ?? []
 
-  const name = nameMatch?.[1] ?? "";
-  const { status, type } = scrapeGetTitle(titleMatch);
+  const name = nameMatch?.[1] ?? ""
+  const { status, type } = scrapeGetTitle(titleMatch)
 
-  let version = "";
+  let version = ""
 
   try {
-    const result = await getFetchF95z(id);
+    const result = await getFetchF95z(id)
 
-    console.log({ result });
+    console.log({ result })
 
-    version = result ?? "";
+    version = result ?? ""
   } catch (error) {
-    console.error("Error getFetchF95z: ", error);
-    throw new Error("getFetchF95z no return");
+    console.error("Error getFetchF95z: ", error)
+    throw new Error("getFetchF95z no return")
   }
 
   console.log("scrapePage", {
@@ -76,7 +74,7 @@ export const getScrape = async ({
     type,
     image,
     domain,
-  });
+  })
 
   const validScrapeGame = ScrapeGame.parse({
     name,
@@ -85,54 +83,54 @@ export const getScrape = async ({
     tags,
     type,
     image,
-  });
+  })
 
-  return validScrapeGame;
-};
+  return validScrapeGame
+}
 
 const scrapeGetTitle = (data: string[]) => {
-  let status = "";
-  let type = "";
+  let status = ""
+  let type = ""
 
   data.forEach((e: string) => {
     switch (e) {
       case "Abandoned":
-        status = "ABANDONNÉ";
-        break;
+        status = "ABANDONNÉ"
+        break
       case "Completed":
-        status = "TERMINÉ";
-        break;
+        status = "TERMINÉ"
+        break
       default:
-        status = "EN COURS";
-        break;
+        status = "EN COURS"
+        break
     }
     switch (e) {
       case "Ren'Py":
-        type = "RenPy";
-        break;
+        type = "RenPy"
+        break
       case "RPGM":
-        type = "RPGM";
-        break;
+        type = "RPGM"
+        break
       case "Unity":
-        type = "Unity";
-        break;
+        type = "Unity"
+        break
       case "Unreal":
-        type = "Unreal";
-        break;
+        type = "Unreal"
+        break
       case "Flash":
-        type = "Flash";
-        break;
+        type = "Flash"
+        break
       case "HTML":
-        type = "HTML";
-        break;
+        type = "HTML"
+        break
       case "QSP":
-        type = "QSP";
-        break;
+        type = "QSP"
+        break
       case "Others":
-        type = "Autre";
-        break;
+        type = "Autre"
+        break
     }
-  });
+  })
 
-  return { status, type };
-};
+  return { status, type }
+}

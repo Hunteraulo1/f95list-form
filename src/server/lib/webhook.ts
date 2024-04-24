@@ -1,15 +1,15 @@
-import { GameType } from "$types/schemas";
+import { GameType } from "$types/schemas"
 
 interface SendWebhookUpdateArgs {
-  title: string;
-  url: string;
-  color: number;
-  comment?: string;
-  name: string;
-  tversion: string;
-  traductor: string;
-  proofreader: string;
-  image: string;
+  title: string
+  url: string
+  color: number
+  comment?: string
+  name: string
+  tversion: string
+  traductor: string
+  proofreader: string
+  image: string
 }
 
 export const sendWebhookUpdate = async ({
@@ -23,25 +23,25 @@ export const sendWebhookUpdate = async ({
   proofreader,
   image,
 }: SendWebhookUpdateArgs) => {
-  const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty("webhookUrl");
+  const env = PropertiesService.getScriptProperties()
+  const link = env.getProperty("webhookUrl")
 
-  if (!link || !tversion || !name) return null;
+  if (!link || !tversion || !name) return null
 
-  let fields = [];
+  const fields = []
 
   fields.push({
     name: "Version de la traduction:",
     value: tversion,
     inline: false,
-  });
+  })
 
   if (traductor) {
     fields.push({
       name: "Traducteur:",
       value: traductor,
       inline: true,
-    });
+    })
   }
 
   if (proofreader) {
@@ -49,7 +49,7 @@ export const sendWebhookUpdate = async ({
       name: "Relecteur:",
       value: proofreader,
       inline: true,
-    });
+    })
   }
 
   if (comment) {
@@ -57,13 +57,13 @@ export const sendWebhookUpdate = async ({
       name: "Raison de la suppression:",
       value: comment,
       inline: false,
-    });
+    })
   }
 
   if (fields.length === 0) {
-    console.error({ fields });
+    console.error({ fields })
 
-    return;
+    return
   }
 
   await UrlFetchApp.fetch(link, {
@@ -91,47 +91,38 @@ export const sendWebhookUpdate = async ({
       components: [],
       actions: {},
     }),
-  });
-};
-
-interface SendWebhookLogsArgs {
-  title: string;
-  color: number;
-  comment?: string;
-  oldGame?: GameType;
-  game: GameType;
+  })
 }
 
-export const sendWebhookLogs = async ({
-  title,
-  color,
-  oldGame,
-  game,
-  comment,
-}: SendWebhookLogsArgs) => {
-  const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty("logsUrl");
+interface SendWebhookLogsArgs {
+  title: string
+  color: number
+  comment?: string
+  oldGame?: GameType
+  game: GameType
+}
 
-  if (!link) return null;
+export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs) => {
+  const env = PropertiesService.getScriptProperties()
+  const link = env.getProperty("logsUrl")
 
-  let fields = [];
+  if (!link) return null
+
+  const fields = []
 
   for (const prop in game) {
-    if (prop === "trlink") continue;
+    if (prop === "trlink") continue
 
-    const key = prop as keyof Omit<GameType, "trlink">;
+    const key = prop as keyof Omit<GameType, "trlink">
 
-    const dataProp = game[key]?.toString();
-    const oldDataProp = oldGame ? oldGame[key]?.toString() : null;
+    const dataProp = game[key]?.toString()
+    const oldDataProp = oldGame ? oldGame[key]?.toString() : null
 
     fields.push({
       name: `${prop}:`,
-      value:
-        oldDataProp && dataProp !== oldDataProp
-          ? `${oldDataProp} **>** ${dataProp}`
-          : dataProp,
+      value: oldDataProp && dataProp !== oldDataProp ? `${oldDataProp} **>** ${dataProp}` : dataProp,
       inline: false,
-    });
+    })
   }
 
   if (comment) {
@@ -139,13 +130,13 @@ export const sendWebhookLogs = async ({
       name: "Raison de la suppression:",
       value: comment,
       inline: false,
-    });
+    })
   }
 
   if (fields.length === 0) {
-    console.error({ fields });
+    console.error({ fields })
 
-    return;
+    return
   }
 
   await UrlFetchApp.fetch(link, {
@@ -169,26 +160,26 @@ export const sendWebhookLogs = async ({
       components: [],
       actions: {},
     }),
-  });
-};
+  })
+}
 
 const getName = () => {
-  const user = Session.getActiveUser();
-  // @ts-ignore
-  const username = user.getUsername();
+  const user = Session.getActiveUser()
+  // @ts-expect-error - getUsername() is not in the types
+  const username = user.getUsername()
 
   switch (username) {
     case "a.fergani91":
-      return "Rory-Mercury91";
+      return "Rory-Mercury91"
     case "antoine.depadoux71":
-      return "frelon7144";
+      return "frelon7144"
     case "nougat71c2p":
-      return "Asterix71300";
+      return "Asterix71300"
     case "hunteraulo":
-      return "Hunteraulo";
+      return "Hunteraulo"
     case "larmeedesnoobs":
-      return "Hunteraulo";
+      return "Hunteraulo"
     default:
-      return username || user.getEmail();
+      return username || user.getEmail()
   }
-};
+}

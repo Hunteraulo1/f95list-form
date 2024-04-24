@@ -1,29 +1,27 @@
-import { Game, type GameType } from "$types/schemas";
-import { games } from "../data/game";
-import sleep from "../sleep";
-import { sendWebhookLogs, sendWebhookUpdate } from "../webhook";
+import { games } from "../data/game"
+import sleep from "../sleep"
+import { sendWebhookLogs, sendWebhookUpdate } from "../webhook"
+
+import { Game, type GameType } from "$types/schemas"
 
 export interface PostGameArgs {
-  game: GameType;
-  silentMode: boolean;
+  game: GameType
+  silentMode: boolean
 }
 
-export const postGame = async ({
-  game,
-  silentMode,
-}: PostGameArgs): Promise<void | string> => {
-  await sleep();
+export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void | string> => {
+  await sleep()
 
-  const validGame = Game.parse(game);
+  const validGame = Game.parse(game)
 
-  games.push(validGame);
+  games.push(validGame)
 
-  console.info("mockResponse_postGame", { validGame, games });
+  console.info("mockResponse_postGame", { validGame, games })
 
-  let title = "Suppression du jeu:";
-  let color = 12256517;
+  const title = "Suppression du jeu:"
+  const color = 12256517
 
-  const { link, name, tversion, traductor, proofreader, image } = validGame;
+  const { link, name, tversion, traductor, proofreader, image } = validGame
 
   if (!silentMode) {
     sendWebhookUpdate({
@@ -35,12 +33,12 @@ export const postGame = async ({
       traductor,
       proofreader,
       image,
-    });
+    })
   }
 
   sendWebhookLogs({
     title,
     color,
     game,
-  });
-};
+  })
+}

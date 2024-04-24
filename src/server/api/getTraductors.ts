@@ -1,18 +1,16 @@
-import type { TraductorType } from "$types/schemas";
+import type { TraductorType } from "$types/schemas"
 
 export const getTraductors = async (): Promise<TraductorType[]> => {
   // Report request
-  console.info("getTraductors called");
+  console.info("getTraductors called")
 
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(
-    "Traducteurs/Relecteurs"
-  );
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Traducteurs/Relecteurs")
 
-  if (!sheet) throw new Error("Sheet not found");
+  if (!sheet) throw new Error("Sheet not found")
 
-  const totalRow = sheet.getLastRow();
+  const totalRow = sheet.getLastRow()
 
-  const data = sheet.getRange(`A${2}:B${totalRow}`).getRichTextValues();
+  const data = sheet.getRange(`A${2}:B${totalRow}`).getRichTextValues()
 
   const result = data.map((tr) => {
     return {
@@ -24,8 +22,8 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
           name: trl.getText(),
           link: trl.getLinkUrl() || "",
         })),
-    };
-  });
+    }
+  })
 
-  return result;
-};
+  return result
+}

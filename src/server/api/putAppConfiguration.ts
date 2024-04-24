@@ -1,26 +1,21 @@
-import { AppConfiguration, type AppConfigurationType } from "$types/schemas";
+import { AppConfiguration, type AppConfigurationType } from "$types/schemas"
 
 export type PutAppConfigArgs = {
-  appConfiguration: AppConfigurationType;
-};
+  appConfiguration: AppConfigurationType
+}
 
 /**
  * **API Endpoint** | Updates the app configuration and returns it
  */
-export const putAppConfiguration = ({
-  appConfiguration,
-}: PutAppConfigArgs): AppConfigurationType => {
-  console.info("putAppConfiguration() called with: ", appConfiguration);
+export const putAppConfiguration = ({ appConfiguration }: PutAppConfigArgs): AppConfigurationType => {
+  console.info("putAppConfiguration() called with: ", appConfiguration)
 
-  const validAppConfiguration = AppConfiguration.parse(appConfiguration);
+  const validAppConfiguration = AppConfiguration.parse(appConfiguration)
 
-  const propertyKey = "appConfiguration";
-  const scriptPropertiesService = PropertiesService.getScriptProperties();
+  const propertyKey = "appConfiguration"
+  const scriptPropertiesService = PropertiesService.getScriptProperties()
 
-  scriptPropertiesService.setProperty(
-    propertyKey,
-    JSON.stringify(appConfiguration)
-  );
+  scriptPropertiesService.setProperty(propertyKey, JSON.stringify(appConfiguration))
 
-  return validAppConfiguration;
-};
+  return validAppConfiguration
+}

@@ -1,63 +1,59 @@
-import { GameType } from "$types/schemas";
-import { disableLock, enableLock } from "../lib/lockMode";
-import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook";
-import { getGame } from "./getGame";
-import { getQueryGames } from "./getQueryGames";
-import { getUser } from "./getUser";
-import { putUser } from "./putUser";
+import { disableLock, enableLock } from "../lib/lockMode"
+import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook"
+
+import { getGame } from "./getGame"
+import { getQueryGames } from "./getQueryGames"
+import { getUser } from "./getUser"
+import { putUser } from "./putUser"
+
+import { GameType } from "$types/schemas"
 
 export interface DelGameArgs {
-  query: { name: string; version: string };
-  comment: string;
-  silentMode: boolean;
+  query: { name: string; version: string }
+  comment: string
+  silentMode: boolean
 }
 
-export const delGame = async ({
-  query,
-  comment,
-  silentMode,
-}: DelGameArgs): Promise<void> => {
-  const { name, version } = query;
+export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Promise<void> => {
+  const { name, version } = query
   // Report request
-  console.info("delGame called with args:", { name, version, comment });
+  console.info("delGame called with args:", { name, version, comment })
 
-  await enableLock();
+  await enableLock()
 
   try {
-    const games = (await getQueryGames()) ?? [];
+    const games = (await getQueryGames()) ?? []
 
-    const gameIndex = games.findIndex(
-      (game) => game.name === name && game.version === version
-    );
+    const gameIndex = games.findIndex((game) => game.name === name && game.version === version)
 
     if (gameIndex === -1) {
-      console.error("No detected getGame with index:", { gameIndex });
+      console.error("No detected getGame with index:", { gameIndex })
 
-      throw new Error("No detected getGame");
+      throw new Error("No detected getGame")
     }
 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = SpreadsheetApp.getActiveSpreadsheet()
 
-    const game: GameType = await getGame({ name, version });
+    const game: GameType = await getGame({ name, version })
 
-    const gameSheet = sheet.getSheetByName("Jeux");
+    const gameSheet = sheet.getSheetByName("Jeux")
 
     if (!gameSheet) {
-      console.error("No gameSheet detected");
+      console.error("No gameSheet detected")
 
-      throw new Error("No gameSheet detected");
+      throw new Error("No gameSheet detected")
     }
 
-    await gameSheet.deleteRow(gameIndex + 2);
+    await gameSheet.deleteRow(gameIndex + 2)
 
-    const user = await getUser();
-    user.statistics.gameEdited++;
+    const user = await getUser()
+    user.statistics.gameEdited++
 
-    putUser({ user });
+    putUser({ user })
 
-    const { link, traductor, proofreader, image, tversion } = game;
-    let title = "Suppression du jeu:";
-    let color = 12256517;
+    const { link, traductor, proofreader, image, tversion } = game
+    const title = "Suppression du jeu:"
+    const color = 12256517
 
     if (!silentMode) {
       sendWebhookUpdate({
@@ -70,19 +66,19 @@ export const delGame = async ({
         traductor,
         proofreader,
         image,
-      });
+      })
     }
 
     sendWebhookLogs({
       title,
       color,
       game,
-    });
+    })
   } catch (error) {
-    console.error(error);
+    console.error(error)
 
-    throw new Error("Un problème est survenue lors de la suppression du jeu");
+    throw new Error("Un problème est survenue lors de la suppression du jeu")
   } finally {
-    await disableLock();
+    await disableLock()
   }
-};
+}

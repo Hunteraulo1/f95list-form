@@ -1,18 +1,18 @@
-import { User, type UserType } from "$types/schemas";
+import { User, type UserType } from "$types/schemas"
 
 export type PutUserArgs = {
-  user: UserType;
-};
+  user: UserType
+}
 
 /**
  * **API Endpoint** | Updates the app configuration and returns it
  */
 export const putUser = ({ user }: PutUserArgs): UserType => {
-  const invokingUserEmail = Session.getActiveUser().getEmail();
+  const invokingUserEmail = Session.getActiveUser().getEmail()
 
-  console.info("putUser() called with: ", user, "by: ", invokingUserEmail);
+  console.info("putUser() called with: ", user, "by: ", invokingUserEmail)
 
-  const validUser = User.parse(user);
+  const validUser = User.parse(user)
 
   // TODO: patch email check
   // if (
@@ -22,26 +22,21 @@ export const putUser = ({ user }: PutUserArgs): UserType => {
 
   // If the code reaches here, the user object is valid
   // and the invoking user is either the user or a superAdmin.
-  const scriptPropertiesService = PropertiesService.getScriptProperties();
-  const propertyKey = validUser.email;
+  const scriptPropertiesService = PropertiesService.getScriptProperties()
+  const propertyKey = validUser.email
 
-  const properties: UserType = JSON.parse(
-    scriptPropertiesService.getProperty(propertyKey ?? "") ?? ""
-  );
+  const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(propertyKey ?? "") ?? "")
 
   if (user.statistics === properties.statistics) {
     user.activity.push({
       value: new Date().toISOString(),
       label: "Utilisateur mis à jour",
-    });
+    })
   }
 
-  scriptPropertiesService.setProperty(
-    propertyKey ?? "",
-    JSON.stringify(validUser)
-  );
+  scriptPropertiesService.setProperty(propertyKey ?? "", JSON.stringify(validUser))
 
-  console.info("User successfully saved.");
+  console.info("User successfully saved.")
 
-  return validUser;
-};
+  return validUser
+}
