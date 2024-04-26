@@ -6,8 +6,6 @@
 
   const dispatch = createEventDispatcher();
 
-  let searchQuery = "";
-  let searching = false;
   let searchCount = 0;
   let searchResults: UserType[] = [];
   let selectedUsers: UserType[] = [];
@@ -20,7 +18,6 @@
 
     // Simulating a server request
     console.info(`Fetching results users`);
-    searching = true;
 
     if (debounceTimeout) {
       clearTimeout(debounceTimeout);
@@ -41,7 +38,6 @@
         console.error("Error fetching user", error);
       } finally {
         searchCount = searchCount + 1;
-        searching = false;
       }
     }, 1000);
   });
