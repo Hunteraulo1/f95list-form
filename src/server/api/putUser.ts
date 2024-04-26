@@ -24,9 +24,10 @@ export const putUser = ({ user }: PutUserArgs) => {
   if (validUser.email) {
     const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? "");
 
-    if (properties.activity !== validUser.activity) throw new Error("Not actual data user");
+    if (JSON.stringify(properties.activity) != JSON.stringify(validUser.activity))
+      throw new Error("Not actual data user");
 
-    if (user.statistics === properties.statistics) {
+    if (JSON.stringify(user.statistics) === JSON.stringify(properties.statistics)) {
       user.activity.push({
         value: new Date().toISOString(),
         label: "Utilisateur mis à jour",

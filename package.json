@@ -57,7 +57,6 @@
     "vite-tsconfig-paths": "^4.3.2"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "zod": "^3.23.3"
   }
 }
