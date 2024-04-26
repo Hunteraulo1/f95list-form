@@ -5,7 +5,7 @@
 
   import Panel from "$components/Panel.svelte";
   import { fetchQueryGames } from "$lib/queryGames";
-  import { queryGame, queryGames, userIsAdmin } from "$lib/stores";
+  import { queryGame, queryGames } from "$lib/stores";
   import type { QueryGameType } from "$types/schemas";
 
   export let edit = false;
@@ -79,7 +79,7 @@
       <div id="container-search" class="relative w-full">
         <label class="input input-bordered flex items-center gap-2">
           <input
-            disabled={$queryGames.length === 0 || !$userIsAdmin}
+            disabled={$queryGames.length === 0}
             type="text"
             placeholder="Rechercher un jeu"
             class="grow bg-transparent"
