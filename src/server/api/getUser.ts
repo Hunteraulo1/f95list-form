@@ -1,8 +1,8 @@
 import * as z from "zod";
 
-import { createUser } from "../lib/createUser";
+import { postUser } from "./postUser";
 
-import type { UserType } from "$types/schemas";
+import { User, type UserType } from "$types/schemas";
 
 export type GetUserArgs = {
   email: string | null;
@@ -16,21 +16,24 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   // Report request
   console.info("getUser called with args:", { email }, " | by: ", requestingUserEmail);
 
-  // Validate the arguments against the schema
-  const GetUserArgsSchema = z.object({
-    email: z.string().email().nullable().optional(),
-  });
-  const validArgs = GetUserArgsSchema.parse({ email });
+  let validArgs = null;
 
-  const EMAIL_FOR_RETRIEVAL = validArgs.email || requestingUserEmail;
+  if (email) {
+    // Validate the arguments against the schema
+    const GetUserArgsSchema = z.object({
+      email: User.shape.email,
+    });
+    validArgs = GetUserArgsSchema.parse({ email });
+  }
+
+  const EMAIL_FOR_RETRIEVAL = validArgs?.email ?? requestingUserEmail;
   console.log({ EMAIL_FOR_RETRIEVAL });
-
-  const isRequestForSelf = requestingUserEmail === EMAIL_FOR_RETRIEVAL;
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
   const userObjectString = scriptProperties[EMAIL_FOR_RETRIEVAL];
 
+  const isRequestForSelf = requestingUserEmail === EMAIL_FOR_RETRIEVAL;
   // If the requested user's object doesnt exist and the request is from
   // someone other than the requested user, return null.
   if (!userObjectString && !isRequestForSelf) {
@@ -40,7 +43,7 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   // Else if the the request user's object doesn't exist but it is a request
   // from the requested user, create the user object and return it. They
   // now exist in the system.
-  if (!userObjectString || !isRequestForSelf) return createUser(EMAIL_FOR_RETRIEVAL);
+  if (!userObjectString || !isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 
   console.log(userObjectString);
 

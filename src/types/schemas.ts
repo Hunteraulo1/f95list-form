@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const User = z.object({
-  email: z.string().email().optional(),
+  email: z.string().email().or(z.string().nullable()),
   roles: z.array(z.enum(["superAdmin", "admin"])),
   profile: z.object({
     pseudo: z.string(),

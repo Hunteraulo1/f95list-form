@@ -1,14 +1,14 @@
 const scriptPropertiesService = PropertiesService.getScriptProperties();
 let inProgress = false;
 
-const isLocked = (): boolean | string => {
+const isLocked = (): boolean | void => {
   const scriptProperties = scriptPropertiesService.getProperties();
 
   return scriptProperties["lockMode"] === "true";
 };
 
 export const enableLock = () => {
-  if (isLocked()) return "System is already locked";
+  if (isLocked()) throw new Error("Lock mode already enabled");
 
   scriptPropertiesService.setProperty("lockMode", "true");
   inProgress = true;

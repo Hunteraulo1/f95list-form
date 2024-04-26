@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { ChangeEventHandler } from "svelte/elements";
   import { Link, navigate } from "svelte-routing";
+  import type { ChangeEventHandler } from "svelte/elements";
 
   import Panel from "$components/Panel.svelte";
   import { fetchQueryGames } from "$lib/queryGames";
-  import { queryGame, queryGames } from "$lib/stores";
+  import { queryGame, queryGames, userIsAdmin } from "$lib/stores";
   import type { QueryGameType } from "$types/schemas";
 
   export let edit = false;
@@ -21,20 +21,20 @@
 
     const eventValue = event.currentTarget.value;
 
-    if (eventValue === "") {
-      filtered = [];
-
-      return;
-    }
-
     clearTimeout(timer);
 
     timer = setTimeout(() => {
+      if (eventValue === "") {
+        filtered = [];
+
+        return;
+      }
+
       filtered = $queryGames.filter((game) => {
         const value = eventValue.toLowerCase();
 
         const name = game.name.toLowerCase();
-        const id = game.id;
+        const id = game.id ? game.id.toString().toLowerCase() : "";
 
         if (name.includes(value) || id.includes(value)) return game;
       });
@@ -79,7 +79,7 @@
       <div id="container-search" class="relative w-full">
         <label class="input input-bordered flex items-center gap-2">
           <input
-            disabled={$queryGames.length === 0}
+            disabled={$queryGames.length === 0 || !$userIsAdmin}
             type="text"
             placeholder="Rechercher un jeu"
             class="grow bg-transparent"

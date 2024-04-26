@@ -39,6 +39,8 @@ export const GAS_API = {
   // User
   getUser: (args?: GetUserArgs) => callAPI<UserType, typeof args>("getUser", args),
 
+  getUsers: () => callAPI<UserType[]>("getUsers"),
+
   putUser: (args: PutUserArgs) => callAPI<UserType, typeof args>("putUser", args),
 
   // Game
@@ -54,6 +56,7 @@ export const GAS_API = {
 
   // Traducteurs
   getTraductors: () => callAPI<TraductorType[]>("getTraductors"),
+
   putTraductors: () => callAPI<void | string>("putTraductors"),
 
   // Others

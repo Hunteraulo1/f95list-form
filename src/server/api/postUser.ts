@@ -1,6 +1,6 @@
 import { User, type UserType } from "$types/schemas";
 
-export const createUser = (email: string, overrides = {}) => {
+export const postUser = (email: string, overrides = {}) => {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
   const userDefaults: UserType = {
@@ -11,7 +11,7 @@ export const createUser = (email: string, overrides = {}) => {
     },
     profile: {
       pseudo: "",
-      imageUrl: "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100",
+      imageUrl: "",
     },
     activity: [
       {

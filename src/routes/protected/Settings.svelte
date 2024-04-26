@@ -99,7 +99,10 @@
                       <div class="flex items-center space-x-3">
                         <div class="avatar">
                           <div class="mask mask-squircle h-12 w-12">
-                            <img src={admin.profile?.imageUrl} alt="Avatar Tailwind CSS Component" />
+                            <img
+                              src={admin.profile?.imageUrl ??
+                                "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
+                              alt="Avatar Tailwind CSS Component" />
                           </div>
                         </div>
                         <div>

@@ -40,7 +40,7 @@
       dispatch("newToast", {
         id: Date.now(),
         alertType: "error",
-        message: "Vos modifications n'ont pas pu être enregistrées",
+        message: "Erreur lors de la suppression de l'Admin",
         milliseconds: 3000,
       });
     } finally {
@@ -57,7 +57,10 @@
     <div class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200">
       <div class="flex items-center justify-center space-x-3">
         <div class="mask mask-squircle h-12 w-12">
-          <img src={user.profile.imageUrl} alt="User" />
+          <img
+            src={user.profile.imageUrl ??
+              "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
+            alt="User" />
         </div>
         <div>
           <div class="font-bold">{user.email}</div>

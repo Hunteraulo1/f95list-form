@@ -1,9 +1,9 @@
-const { FlatCompat } = require("@eslint/eslintrc")
-const tsEslint = require("typescript-eslint")
+const { FlatCompat } = require("@eslint/eslintrc");
+const tsEslint = require("typescript-eslint");
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-})
+});
 
 /** @type {import('eslint').Linter.FlatConfig} */
 module.exports = tsEslint.config(
@@ -30,4 +30,4 @@ module.exports = tsEslint.config(
       ],
     },
   },
-)
+);

@@ -1,4 +1,4 @@
-import { getAdmins } from "./getAdmins";
+import { getAdmins } from "../api/getAdmins";
 
 import { AppConfiguration, type AppConfigurationType } from "$types/schemas";
 

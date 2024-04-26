@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-
-  import LoadingSpinner from "./LoadingSpinner.svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   import { GAS_API } from "$lib/GAS_API";
   import type { UserType } from "$types/schemas";
@@ -16,12 +14,12 @@
 
   let debounceTimeout: ReturnType<typeof setTimeout>;
 
-  const fetchResults = (query: string) => {
+  onMount(() => {
     selectedUsers = [];
     dispatch("update", selectedUsers);
 
     // Simulating a server request
-    console.info(`Fetching results for query: ${query}`);
+    console.info(`Fetching results users`);
     searching = true;
 
     if (debounceTimeout) {
@@ -30,12 +28,12 @@
 
     debounceTimeout = setTimeout(async () => {
       try {
-        const result = await GAS_API.getUser({ email: searchQuery });
+        const result = await GAS_API.getUsers();
 
         console.info({ result });
 
         if (result) {
-          searchResults = [result];
+          searchResults = result;
         } else {
           searchResults = [];
         }
@@ -46,7 +44,7 @@
         searching = false;
       }
     }, 1000);
-  };
+  });
 
   const toggleSelect = (user: UserType) => {
     const index = selectedUsers.findIndex((selected) => selected.email === user.email);
@@ -62,60 +60,34 @@
     // Notify the parent component
     dispatch("update", selectedUsers);
   };
-
-  const handleSearchInput = (event: Event & { currentTarget: EventTarget & HTMLInputElement }) => {
-    searchQuery = event.currentTarget.value;
-    fetchResults(searchQuery);
-  };
 </script>
 
 <div>
-  <div class="flex">
-    <input
-      type="text"
-      placeholder="Search..."
-      bind:value={searchQuery}
-      on:input={handleSearchInput}
-      class="input input-bordered w-full max-w-xs" />
-    <div class="pl-2">
-      {#if searching}
-        <LoadingSpinner />
-      {/if}
-    </div>
-  </div>
-
   <div class="pt-4">
-    {#if searchResults.length > 0}
-      {#each searchResults as userResult}
-        <div
-          class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
-          on:click={() => toggleSelect(userResult)}
-          on:keypress={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              toggleSelect(userResult);
-            }
-          }}
-          role="button"
-          tabindex="0"
-          class:selected={selectedUsers.some((selected) => selected.email === userResult.email)}>
-          <div class="flex items-center justify-center space-x-3">
-            <div class="mask mask-squircle h-12 w-12">
-              <img src={userResult.profile?.imageUrl} alt="User" />
-            </div>
-            <div>
-              <div class="font-bold">{userResult.email}</div>
-            </div>
+    {#each searchResults as userResult}
+      <div
+        class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
+        on:click={(e) => toggleSelect(userResult)}
+        on:keypress={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            toggleSelect(userResult);
+          }
+        }}
+        role="button"
+        tabindex="0"
+        class:bg-base-200={selectedUsers.some((selected) => selected.email === userResult.email)}>
+        <div class="flex items-center justify-center space-x-3">
+          <div class="mask mask-squircle h-12 w-12">
+            <img
+              src={userResult.profile?.imageUrl ??
+                "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
+              alt="User" />
+          </div>
+          <div>
+            <div class="font-bold">{userResult.email}</div>
           </div>
         </div>
-      {/each}
-    {:else if searchCount > 0}
-      <div>No results</div>
-    {/if}
+      </div>
+    {/each}
   </div>
 </div>
-
-<style lang="postcss">
-  .selected {
-    background-color: hsl(var(--s));
-  }
-</style>

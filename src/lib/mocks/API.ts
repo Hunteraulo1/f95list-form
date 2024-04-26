@@ -5,6 +5,7 @@ import { getQueryGames } from "./api/getQueryGames";
 import { getScrape } from "./api/getScrape";
 import { getTraductors } from "./api/getTraductors";
 import { getUser } from "./api/getUser";
+import { getUsers } from "./api/getUsers";
 import { postGame } from "./api/postGame";
 import { putAppConfiguration } from "./api/putAppConfiguration";
 import { putGame } from "./api/putGame";
@@ -17,6 +18,7 @@ type MockEndpoints = {
 
   // User
   getUser: typeof getUser;
+  getUsers: typeof getUsers;
   putUser: typeof putUser;
 
   // Game
@@ -37,6 +39,7 @@ const getMockEndpoints = (): MockEndpoints => {
 
     // User
     getUser,
+    getUsers,
     putUser,
 
     // Game

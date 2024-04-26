@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import type { ChangeEventHandler, FormEventHandler } from "svelte/elements";
   import { navigate } from "svelte-routing";
+  import type { ChangeEventHandler, FormEventHandler } from "svelte/elements";
 
   import Modal from "$components/Modal.svelte";
   import Search from "$components/Search.svelte";
@@ -69,7 +69,7 @@
       dispatch("newToast", {
         id: Date.now(),
         alertType: "warning",
-        message: "Impossible de scraper les information du jeu",
+        message: "Impossible de récupérer les informations du jeu",
         milliseconds: 3000,
       });
     }
@@ -246,7 +246,7 @@
       dispatch("newToast", {
         id: Date.now(),
         alertType: "warning",
-        message: "Impossible de supprimer le jeu",
+        message: "Veuillez entrer une raison pour supprimer le jeu",
         milliseconds: 3000,
       });
 
@@ -295,252 +295,243 @@
         </label>
       </div>
       <div class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {#if step === 0 || step === 5}
-          <div>
-            <label for="domain">Platforme:</label>
-            <select
-              placeholder="Platforme du jeu"
-              class="select select-bordered w-full"
-              name="domain"
-              value={game.domain}
-              on:change={handleChange}
-              required>
-              <option>F95z</option>
-              <option>LewdCorner</option>
-              <option>Autre</option>
-            </select>
-          </div>
-        {/if}
+        <div class:hidden={step !== 0 && step !== 5}>
+          <label for="domain">Platforme:</label>
+          <select
+            placeholder="Platforme du jeu"
+            class="select select-bordered w-full"
+            name="domain"
+            value={game.domain}
+            on:change={handleChange}
+            required>
+            <option>F95z</option>
+            <option>LewdCorner</option>
+            <option>Autre</option>
+          </select>
+        </div>
 
-        {#if step === 1 || step === 5}
-          <div>
-            <label for="id">ID:</label>
-            <input
-              type="number"
-              placeholder="Id du jeu"
-              class="number-input input input-bordered w-full appearance-none"
-              pattern="[0-9]*"
-              inputmode="numeric"
-              name="id"
-              on:change={handleChange}
-              bind:value={game.id} />
-          </div>
-        {/if}
+        <div class:hidden={step !== 1 && step !== 5}>
+          <label for="id">ID:</label>
+          <input
+            type="number"
+            placeholder="Id du jeu"
+            class="number-input input input-bordered w-full appearance-none"
+            pattern="[0-9]*"
+            inputmode="numeric"
+            name="id"
+            on:change={handleChange}
+            bind:value={game.id} />
+        </div>
 
-        {#if step === 2 || step === 5}
-          <div>
-            <label for="name">Nom:</label>
-            <input
-              type="text"
-              placeholder="Nom du jeu"
-              class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== "F95z"}
-              name="name"
-              on:change={handleChange}
-              on:input={(e) => handleInput(e)}
-              on:invalid={handleInvalid}
-              required
-              value={game.name} />
-          </div>
+        <div class:hidden={step !== 2 && step !== 5}>
+          <label for="name">Nom:</label>
+          <input
+            type="text"
+            placeholder="Nom du jeu"
+            class="input input-bordered w-full"
+            class:input-error={!edit && game.domain !== "F95z"}
+            name="name"
+            on:change={handleChange}
+            on:input={(e) => handleInput(e)}
+            on:invalid={handleInvalid}
+            required
+            value={game.name} />
+        </div>
 
-          <div>
-            <label for="link">Lien:</label>
-            <input
-              type="text"
-              placeholder="Lien du jeu"
-              class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== "F95z"}
-              name="link"
-              on:change={handleChange}
-              on:input={(e) => handleInput(e)}
-              required
-              value={game.link} />
-          </div>
+        <div class:hidden={step !== 2 && step !== 5}>
+          <label for="link">Lien:</label>
+          <input
+            type="text"
+            placeholder="Lien du jeu"
+            class="input input-bordered w-full"
+            class:input-error={!edit && game.domain !== "F95z"}
+            name="link"
+            on:change={handleChange}
+            on:input={(e) => handleInput(e)}
+            required
+            value={game.link} />
+        </div>
 
-          <div>
-            <label for="status">Status:</label>
-            <select
-              placeholder="Status du jeu"
-              class="select select-bordered w-full"
-              name="status"
-              on:change={handleChange}
-              value={game.status}
-              required>
-              <option>EN COURS</option>
-              <option>TERMINÉ</option>
-              <option>ABANDONNÉ</option>
-            </select>
-          </div>
+        <div class:hidden={step !== 2 && step !== 5}>
+          <label for="status">Status:</label>
+          <select
+            placeholder="Status du jeu"
+            class="select select-bordered w-full"
+            name="status"
+            on:change={handleChange}
+            value={game.status}
+            required>
+            <option>EN COURS</option>
+            <option>TERMINÉ</option>
+            <option>ABANDONNÉ</option>
+          </select>
+        </div>
 
-          <div>
-            <label for="tags">Tags:</label>
-            <textarea
-              id="tags"
-              name="tags"
-              placeholder="Tags du jeu"
-              class="textarea textarea-bordered textarea-xs max-h-32 w-full"
-              on:change={handleChange}
-              value={game.tags}></textarea>
-          </div>
+        <div class:hidden={step !== 2 && step !== 5}>
+          <label for="tags">Tags:</label>
+          <textarea
+            id="tags"
+            name="tags"
+            placeholder="Tags du jeu"
+            class="textarea textarea-bordered textarea-xs max-h-32 w-full"
+            on:change={handleChange}
+            value={game.tags}></textarea>
+        </div>
 
-          <div>
-            <label for="type">Type:</label>
-            <select
-              placeholder="Type du jeu"
-              class="select select-bordered w-full"
-              name="type"
-              on:change={handleChange}
-              value={game.type}
-              required>
-              <option>RenPy</option>
-              <option>RPGM</option>
-              <option>Unity</option>
-              <option>Unreal</option>
-              <option>Flash</option>
-              <option>HTLM</option>
-              <option>QSP</option>
-              <option>Autre</option>
-              <option>RenPy/RPGM</option>
-              <option>RenPy/Unity</option>
-            </select>
-          </div>
+        <div class:hidden={step !== 2 && step !== 5}>
+          <label for="type">Type:</label>
+          <select
+            placeholder="Type du jeu"
+            class="select select-bordered w-full"
+            name="type"
+            on:change={handleChange}
+            value={game.type}
+            required>
+            <option>RenPy</option>
+            <option>RPGM</option>
+            <option>Unity</option>
+            <option>Unreal</option>
+            <option>Flash</option>
+            <option>HTLM</option>
+            <option>QSP</option>
+            <option>Autre</option>
+            <option>RenPy/RPGM</option>
+            <option>RenPy/Unity</option>
+          </select>
+        </div>
 
-          <div>
-            <label for="image">Lien de l'image:</label>
-            <input
-              type="text"
-              placeholder="Lien du jeu"
-              class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== "F95z"}
-              name="image"
-              on:change={handleChange}
-              on:input={(e) => handleInput(e)}
-              required
-              value={game.image} />
-          </div>
+        <div class:hidden={step !== 2 && step !== 5} class="imgHint relative">
+          <label for="image">Lien de l'image:</label>
+          <input
+            type="text"
+            placeholder="Lien du jeu"
+            class="input input-bordered w-full"
+            class:input-error={!edit && game.domain !== "F95z"}
+            name="image"
+            on:change={handleChange}
+            on:input={(e) => handleInput(e)}
+            on:focusin={(e) => e.currentTarget.nextElementSibling?.classList.remove("hidden")}
+            on:focusout={(e) => e.currentTarget.nextElementSibling?.classList.add("hidden")}
+            required
+            value={game.image} />
 
-          <div>
-            <label for="version">Version actuelle:</label>
-            <input
-              type="text"
-              placeholder="Version du jeu"
-              class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== "F95z"}
-              name="version"
-              on:change={handleChange}
-              on:input={(e) => handleInput(e)}
-              required
-              value={game.version} />
-          </div>
-        {/if}
-        {#if step === 3 || step === 5}
-          <div>
-            <label for="tversion">Version de la traduction:</label>
-            <input
-              type="text"
-              placeholder="Version de la traduction"
-              class="input input-bordered w-full"
-              class:input-error={!edit}
-              name="tversion"
-              on:change={handleChange}
-              on:input={(e) => handleInput(e)}
-              required
-              value={game.tversion} />
-          </div>
+          <img src={game.image} alt="bannière du jeu" class="absolute mt-1 hidden w-full rounded-md" />
+        </div>
 
-          <div>
-            <label for="tname">Status de la traduction:</label>
-            <select
-              placeholder="Status de la traduction"
-              class="select select-bordered w-full"
-              name="tname"
-              on:change={handleChange}
-              value={game.tname}
-              required>
-              <option>Traduction</option>
-              <option>Traduction (mod inclus)</option>
-              <option>Intégrée</option>
-              <option>Pas de traduction</option>
-            </select>
-          </div>
+        <div class:hidden={step !== 2 && step !== 5}>
+          <label for="version">Version actuelle:</label>
+          <input
+            type="text"
+            placeholder="Version du jeu"
+            class="input input-bordered w-full"
+            class:input-error={!edit && game.domain !== "F95z"}
+            name="version"
+            on:change={handleChange}
+            on:input={(e) => handleInput(e)}
+            required
+            value={game.version} />
+        </div>
 
-          <div>
-            <label for="tlink">Lien de la traduction:</label>
-            <input
-              type="text"
-              placeholder="Lien de la traduction"
-              class="input input-bordered w-full"
-              name="tlink"
-              on:change={handleChange}
-              value={game.tlink} />
-          </div>
+        <div class:hidden={step !== 3 && step !== 5}>
+          <label for="tversion">Version de la traduction:</label>
+          <input
+            type="text"
+            placeholder="Version de la traduction"
+            class="input input-bordered w-full"
+            class:input-error={!edit}
+            name="tversion"
+            on:change={handleChange}
+            on:input={(e) => handleInput(e)}
+            required
+            value={game.tversion} />
+        </div>
 
-          <div>
-            <label for="traductor">Traducteur:</label>
-            <input
-              placeholder="Nom du traducteur"
-              type="search"
-              id="traductor"
-              name="traductor"
-              class="input input-bordered w-full"
-              list="traductor-list"
-              on:change={handleChange}
-              value={game.traductor} />
-            <datalist id="traductor-list">
-              {#each traductors as traductor}
-                <option>{traductor.name}</option>
-              {/each}
-            </datalist>
-          </div>
+        <div class:hidden={step !== 3 && step !== 5}>
+          <label for="tname">Status de la traduction:</label>
+          <select
+            placeholder="Status de la traduction"
+            class="select select-bordered w-full"
+            name="tname"
+            on:change={handleChange}
+            value={game.tname}
+            required>
+            <option>Traduction</option>
+            <option>Traduction (mod inclus)</option>
+            <option>Intégrée</option>
+            <option>Pas de traduction</option>
+          </select>
+        </div>
 
-          <div>
-            <label for="proofreader">Relecteur:</label>
-            <input
-              placeholder="Nom du relecteur"
-              type="search"
-              id="proofreader"
-              name="proofreader"
-              class="input input-bordered w-full"
-              list="proofreader-list"
-              on:change={handleChange}
-              value={game.proofreader} />
-            <datalist id="proofreader-list">
-              {#each traductors as traductor}
-                <option>{traductor.name}</option>
-              {/each}
-            </datalist>
-          </div>
+        <div class:hidden={step !== 3 && step !== 5}>
+          <label for="tlink">Lien de la traduction:</label>
+          <input
+            type="text"
+            placeholder="Lien de la traduction"
+            class="input input-bordered w-full"
+            name="tlink"
+            on:change={handleChange}
+            value={game.tlink} />
+        </div>
 
-          <div>
-            <label for="ttype">Type de Traduction:</label>
-            <select
-              placeholder="Type de la traduction"
-              class="select select-bordered w-full"
-              name="ttype"
-              on:change={handleChange}
-              value={game.ttype}
-              required>
-              <option>Traduction Humaine</option>
-              <option>Traduction Automatique</option>
-              <option>Traduction Semi-Automatique</option>
-              <option>VO Française</option>
-              <option>À tester</option>
-            </select>
+        <div class:hidden={step !== 3 && step !== 5}>
+          <label for="traductor">Traducteur:</label>
+          <input
+            placeholder="Nom du traducteur"
+            type="search"
+            id="traductor"
+            name="traductor"
+            class="input input-bordered w-full"
+            list="traductor-list"
+            on:change={handleChange}
+            value={game.traductor} />
+          <datalist id="traductor-list">
+            {#each traductors as traductor}
+              <option>{traductor.name}</option>
+            {/each}
+          </datalist>
+        </div>
+
+        <div class:hidden={step !== 3 && step !== 5}>
+          <label for="proofreader">Relecteur:</label>
+          <input
+            placeholder="Nom du relecteur"
+            type="search"
+            id="proofreader"
+            name="proofreader"
+            class="input input-bordered w-full"
+            list="proofreader-list"
+            on:change={handleChange}
+            value={game.proofreader} />
+          <datalist id="proofreader-list">
+            {#each traductors as traductor}
+              <option>{traductor.name}</option>
+            {/each}
+          </datalist>
+        </div>
+
+        <div class:hidden={step !== 3 && step !== 5}>
+          <label for="ttype">Type de Traduction:</label>
+          <select
+            placeholder="Type de la traduction"
+            class="select select-bordered w-full"
+            name="ttype"
+            on:change={handleChange}
+            value={game.ttype}
+            required>
+            <option>Traduction Humaine</option>
+            <option>Traduction Automatique</option>
+            <option>Traduction Semi-Automatique</option>
+            <option>VO Française</option>
+            <option>À tester</option>
+          </select>
+        </div>
+
+        <div class="flex items-end" class:hidden={step !== 4 && step !== 5}>
+          <div class="flex h-12 w-full flex-col items-center justify-center gap-2">
+            <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
+            <input type="checkbox" name="ac" class="checkbox checkbox-lg" on:change={handleChange} checked={game.ac} />
           </div>
-        {/if}
-        {#if step === 4 || step === 5}
-          <div class="flex items-end">
-            <div class="flex h-12 w-full flex-col items-center justify-center gap-2">
-              <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
-              <input
-                type="checkbox"
-                name="ac"
-                class="checkbox checkbox-lg"
-                on:change={handleChange}
-                checked={game.ac} />
-            </div>
-          </div>
-        {/if}
+        </div>
       </div>
       <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">
         {#if step < 5}
@@ -584,7 +575,7 @@
                 proofreader: "Hunteraulo",
                 ttype: "À tester",
                 ac: false,
-                image: "",
+                image: "https://attachments.f95zone.to/2024/04/3572650_Remaster_HD.png",
               };
             }}>
             Dev button

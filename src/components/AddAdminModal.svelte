@@ -14,44 +14,49 @@
   let selectedUsersFromChild: UserType[] = [];
 
   const handleNewAdminSubmit = async () => {
-    let user = selectedUsersFromChild[0];
-    console.info("raising user to admin status", user);
+    let users = selectedUsersFromChild;
 
     $isLoading = true;
 
-    const roles = new Set(user.roles);
-    roles.add("admin");
+    users.forEach(async (user) => {
+      console.info("raising user to admin status", user);
 
-    user = {
-      ...user,
-      roles: [...roles],
-    };
+      const roles = new Set(user.roles);
+      roles.add("admin");
 
-    try {
-      const result = await GAS_API.putUser({ user });
+      user = {
+        ...user,
+        roles: [...roles],
+      };
 
-      if (typeof result === "string") throw new Error("putUser no return");
+      try {
+        const result = await GAS_API.putUser({ user });
 
-      console.info("New admin added:", result);
-      await fetchAppConfiguration();
+        if (typeof result === "string") throw new Error("putUser no return");
 
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "success",
-        message: "Admin ajouté!",
-        milliseconds: 3000,
-      });
-    } catch (error) {
-      console.error("Could not add new admin:", error);
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "error",
-        message: "Vos modifications n'ont pas pu être enregistrées",
-        milliseconds: 3000,
-      });
-    } finally {
-      $isLoading = false;
-    }
+        console.info("New admin added:", result);
+        await fetchAppConfiguration();
+
+        dispatch("newToast", {
+          id: Date.now(),
+          alertType: "success",
+          message: "Nouveau Admin ajouté!",
+          milliseconds: 3000,
+        });
+      } catch (error) {
+        console.error("Could not add new admin:", error);
+        dispatch("newToast", {
+          id: Date.now(),
+          alertType: "error",
+          message: "Erreur lors de l'ajout de l'Admin",
+          milliseconds: 3000,
+        });
+      } finally {
+        $isLoading = false;
+      }
+    });
+
+    $isLoading = false;
   };
 
   export let dialog: HTMLDialogElement;
@@ -71,6 +76,6 @@
     on:click={handleNewAdminSubmit}
     disabled={selectedUsersFromChild.length === 0}
     class="btn">
-    Envoyer
+    Ajouter
   </button>
 </Modal>
