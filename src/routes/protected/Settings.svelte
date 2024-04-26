@@ -85,7 +85,7 @@
             bind:value={webhookLogsUrl}
             disabled={$isLoading || !$userIsSuperAdmin}
             type="text"
-            placeholder="url du webhook des mise à jours"
+            placeholder="url du webhook"
             class="input input-bordered w-full"
             name="app-update" />
         </div>
@@ -97,7 +97,7 @@
             bind:value={webhookUpdateUrl}
             disabled={$isLoading || !$userIsSuperAdmin}
             type="text"
-            placeholder="url du webhook des logs"
+            placeholder="url du webhook"
             class="input input-bordered w-full"
             name="app-logs" />
         </div>
