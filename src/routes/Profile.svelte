@@ -51,7 +51,7 @@
       <div class="avatar mb-4">
         <div class="w-32 rounded-full ring ring-primary ring-offset-1 ring-offset-base-100">
           <img
-            src={user.profile.imageUrl ??
+            src={user.profile.imageUrl ||
               "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
             alt="The user" />
         </div>

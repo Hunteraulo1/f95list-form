@@ -5,7 +5,7 @@ const User = z.object({
   roles: z.array(z.enum(["superAdmin", "admin"])),
   profile: z.object({
     pseudo: z.string(),
-    imageUrl: z.string(),
+    imageUrl: z.string().url().or(z.literal("")),
   }),
   preferences: z.object({
     theme: z.enum(["light", "dark"]).optional(),
@@ -43,9 +43,9 @@ const Game = z.object({
     "Lien Trad HS",
   ]),
   ac: z.boolean(),
-  link: z.string(),
-  tlink: z.string().url().or(z.string().nullable()),
-  trlink: z.string().url().or(z.string().nullable()).optional(),
+  link: z.string().url(),
+  tlink: z.string().url().or(z.literal("")),
+  trlink: z.string().url().optional().or(z.literal("")),
   image: z.string(),
 });
 
@@ -75,7 +75,7 @@ const Traductor = z.object({
     .array(
       z.object({
         name: z.string(),
-        link: z.string(),
+        link: z.string().url().or(z.literal("")),
       }),
     )
     .optional(),
@@ -87,11 +87,16 @@ const AppConfiguration = z.object({
   admins: z.array(User),
 });
 
+const AppWebhooks = z.object({
+  update: z.string().url().or(z.literal("")),
+  logs: z.string().url().or(z.literal("")),
+});
+
 // You need to export in this format. See
 // https://stackoverflow.com/questions/48791868/use-typescript-with-google-apps-script
 // for more info.
 // export { AppConfiguration, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
-export { AppConfiguration, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
+export { AppConfiguration, AppWebhooks, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
 
 export type AppConfigurationType = z.infer<typeof AppConfiguration>;
 export type UserType = z.infer<typeof User>;
@@ -100,3 +105,4 @@ export type QueryGameType = z.infer<typeof QueryGame>;
 export type TraductorType = z.infer<typeof Traductor>;
 export type ScrapeGameType = z.infer<typeof ScrapeGame>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
+export type AppWebhooksType = z.infer<typeof AppWebhooks>;

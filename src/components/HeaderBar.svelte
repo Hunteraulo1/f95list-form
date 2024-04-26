@@ -28,7 +28,7 @@
     <img
       class="avatar w-10 rounded-full ring ring-primary ring-offset-1 ring-offset-base-100"
       alt={$sessionUser?.profile.pseudo ?? "The user"}
-      src={$sessionUser?.profile?.imageUrl ??
+      src={$sessionUser?.profile?.imageUrl ||
         "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"} />
   </button>
 </div>

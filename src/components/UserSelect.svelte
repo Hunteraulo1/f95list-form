@@ -75,7 +75,7 @@
         <div class="flex items-center justify-center space-x-3">
           <div class="mask mask-squircle h-12 w-12">
             <img
-              src={userResult.profile?.imageUrl ??
+              src={userResult.profile?.imageUrl ||
                 "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
               alt="User" />
           </div>

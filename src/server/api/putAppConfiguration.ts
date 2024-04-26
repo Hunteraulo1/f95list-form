@@ -1,21 +1,28 @@
-import { AppConfiguration, type AppConfigurationType } from "$types/schemas";
+import { AppConfiguration, AppWebhooks, type AppConfigurationType, type AppWebhooksType } from "$types/schemas";
 
 export type PutAppConfigArgs = {
   appConfiguration: AppConfigurationType;
+  webhooks: AppWebhooksType;
 };
 
 /**
  * **API Endpoint** | Updates the app configuration and returns it
  */
-export const putAppConfiguration = ({ appConfiguration }: PutAppConfigArgs): AppConfigurationType => {
-  console.info("putAppConfiguration() called with: ", appConfiguration);
+export const putAppConfiguration = ({ appConfiguration, webhooks }: PutAppConfigArgs): void => {
+  try {
+    console.log("🚀 ~ putAppConfiguration ~ webhooks:", webhooks);
 
-  const validAppConfiguration = AppConfiguration.parse(appConfiguration);
+    console.info("putAppConfiguration() called with: ", appConfiguration);
 
-  const propertyKey = "appConfiguration";
-  const scriptPropertiesService = PropertiesService.getScriptProperties();
+    AppConfiguration.parse(appConfiguration);
+    AppWebhooks.parse(webhooks);
 
-  scriptPropertiesService.setProperty(propertyKey, JSON.stringify(appConfiguration));
+    const scriptPropertiesService = PropertiesService.getScriptProperties();
 
-  return validAppConfiguration;
+    scriptPropertiesService.setProperty("appConfiguration", JSON.stringify(appConfiguration));
+    if (webhooks.update !== "") scriptPropertiesService.setProperty("webhookUrl", JSON.stringify(webhooks.update));
+    if (webhooks.logs !== "") scriptPropertiesService.setProperty("logsUrl", JSON.stringify(webhooks.logs));
+  } catch (error) {
+    throw new Error(`Error in putAppConfiguration: ${error}`);
+  }
 };

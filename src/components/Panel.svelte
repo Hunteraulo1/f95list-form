@@ -18,8 +18,6 @@
     {#if showDivider}
       <div class="divider"></div>
     {/if}
-    <div class="panel-content">
-      <slot name="panel-content" />
-    </div>
+    <slot name="panel-content" />
   </div>
 </div>

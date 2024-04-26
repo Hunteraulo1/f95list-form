@@ -33,8 +33,7 @@ export const GAS_API = {
   // AppConfiguration
   getAppConfiguration: (): Promise<AppConfigurationType> => callAPI<AppConfigurationType>("getAppConfiguration"),
 
-  putAppConfiguration: (args: PutAppConfigArgs): Promise<AppConfigurationType> =>
-    callAPI<AppConfigurationType, typeof args>("putAppConfiguration", args),
+  putAppConfiguration: (args: PutAppConfigArgs) => callAPI<void, typeof args>("putAppConfiguration", args),
 
   // User
   getUser: (args?: GetUserArgs) => callAPI<UserType, typeof args>("getUser", args),
