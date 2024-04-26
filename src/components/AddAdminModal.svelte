@@ -59,10 +59,10 @@
     $isLoading = false;
   };
 
-  export let dialog: HTMLDialogElement;
+  export let showModal: Boolean;
 </script>
 
-<Modal bind:dialog title="Add Admin">
+<Modal bind:showModal title="Ajouter un administrateur">
   <div slot="modal-content">
     <p class="py-4">Sélectionnez un utilisateur pour en faire un administrateur</p>
     <UserSelect

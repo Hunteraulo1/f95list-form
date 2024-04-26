@@ -47,8 +47,8 @@
     }
   };
 
-  let dialogAdd: HTMLDialogElement;
-  let dialogRemove: HTMLDialogElement[] = [];
+  let dialogAdd: Boolean;
+  let dialogRemove: Boolean[] = [];
 </script>
 
 <div>
@@ -75,7 +75,7 @@
     <Panel title="Admins">
       <button
         slot="button"
-        on:click={() => dialogAdd.showModal()}
+        on:click={() => (dialogAdd = true)}
         disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
         class="btn">
         Ajouter un administrateur
@@ -119,9 +119,9 @@
                     </Link>
                   </td>
                   <th>
-                    <button on:click={() => dialogRemove[index].showModal()} class="btn btn-ghost btn-xs"
+                    <button on:click={() => (dialogRemove[index] = true)} class="btn btn-ghost btn-xs"
                       >Supprimer</button>
-                    <RemoveAdminModal bind:dialog={dialogRemove[index]} on:newToast user={admin} />
+                    <RemoveAdminModal bind:showModal={dialogRemove[index]} on:newToast user={admin} />
                   </th>
                 </tr>
               {/each}
@@ -131,6 +131,6 @@
       </div>
     </Panel>
 
-    <AddAdminModal bind:dialog={dialogAdd} on:newToast />
+    <AddAdminModal bind:showModal={dialogAdd} on:newToast />
   {/if}
 </div>

@@ -36,7 +36,7 @@
 
   let savedId = "";
   let traductors: TraductorType[] = [];
-  let dialog: HTMLDialogElement;
+  let showModal: Boolean;
   let silentMode = false;
 
   onMount(async () => {
@@ -548,7 +548,7 @@
             {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => dialog.showModal()}>
+            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => (showModal = true)}>
               Supprimer le jeu
             </button>
           {/if}
@@ -586,7 +586,7 @@
   </div>
 {/if}
 
-<Modal bind:dialog title="Supprimer le jeu">
+<Modal bind:showModal title="Supprimer le jeu">
   <div slot="modal-content">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea

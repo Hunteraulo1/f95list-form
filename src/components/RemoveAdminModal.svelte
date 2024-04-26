@@ -48,10 +48,10 @@
     }
   };
 
-  export let dialog: HTMLDialogElement;
+  export let showModal: Boolean;
 </script>
 
-<Modal bind:dialog title="Remove Admin">
+<Modal bind:showModal title="Supprimer l'administrateur">
   <div slot="modal-content">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet utilisateur ?</p>
     <div class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200">

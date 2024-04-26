@@ -1,6 +1,10 @@
 <script lang="ts">
   export let title: string = "";
-  export let dialog: unknown;
+  export let showModal: Boolean;
+
+  let dialog: HTMLDialogElement;
+
+  $: if (dialog && showModal) dialog.showModal();
 </script>
 
 <dialog bind:this={dialog} class="modal modal-bottom sm:modal-middle">
