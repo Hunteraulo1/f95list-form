@@ -27,7 +27,7 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   }
 
   const EMAIL_FOR_RETRIEVAL = validArgs?.email ?? requestingUserEmail;
-  console.log({ EMAIL_FOR_RETRIEVAL });
+  console.info({ EMAIL_FOR_RETRIEVAL });
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
@@ -45,7 +45,7 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   // now exist in the system.
   if (!userObjectString || !isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 
-  console.log(userObjectString);
+  console.info(userObjectString);
 
   // Otherwise, the user object exists and we can return it.
   return JSON.parse(userObjectString) as UserType;

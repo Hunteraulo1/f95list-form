@@ -58,7 +58,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
   try {
     const result = await getFetchF95z(id);
 
-    console.log({ result });
+    console.info({ result });
 
     version = result ?? "";
   } catch (error) {
@@ -66,7 +66,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
     throw new Error("getFetchF95z no return");
   }
 
-  console.log("scrapePage", {
+  console.info("scrapePage", {
     name,
     version,
     status,

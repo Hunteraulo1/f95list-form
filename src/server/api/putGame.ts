@@ -26,14 +26,14 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
   console.info("putGame called with args:", { dataGame });
 
   try {
-    await enableLock();
+    enableLock();
 
-    const validGame = await Game.parse(dataGame);
+    const validGame = Game.parse(dataGame);
 
     const games = await getQueryGames();
 
     if (query.name !== dataGame.name || query.version !== dataGame.version) {
-      const duplicateGame = await games?.findIndex(
+      const duplicateGame = games?.findIndex(
         (oldGame) => oldGame.name === dataGame.name && oldGame.version === dataGame.version,
       );
 
@@ -42,9 +42,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
       }
     }
 
-    const gameIndex = await games?.findIndex(
-      (oldGame) => oldGame.name === query.name && oldGame.version === query.version,
-    );
+    const gameIndex = games?.findIndex((oldGame) => oldGame.name === query.name && oldGame.version === query.version);
 
     if (gameIndex === undefined || gameIndex === -1) {
       console.error("No detect game putGame with index:", { gameIndex });
@@ -85,7 +83,6 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
     const row = gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`);
     row.setValues([convertedGame]);
 
-    gameSheet.sort(3, true);
     await reloadFilter(gameSheet);
 
     if (validGame.tversion !== oldGame.tversion) {
@@ -129,7 +126,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
 
     throw new Error("Un problème est survenue lors de modification du jeu");
   } finally {
-    await disableLock();
+    disableLock();
   }
 };
 
@@ -145,8 +142,8 @@ const dataLink = async (data: string | null, domain: string) => {
 
   let result = data;
 
-  for (let i = 0; i < traductors.length; i++) {
-    const { name, links } = traductors[i];
+  for (const traductor of traductors) {
+    const { name, links } = traductor;
 
     if (name === data && links && links.length > 0) {
       result = links[0].name;

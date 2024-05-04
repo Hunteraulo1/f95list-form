@@ -22,7 +22,7 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void
   try {
     enableLock();
 
-    const validGame = await Game.parse(game);
+    const validGame = Game.parse(game);
     const games = await getQueryGames();
 
     const duplicate = games?.findIndex((game) => game.name === validGame.name && game.version === validGame.version);
@@ -80,20 +80,19 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void
       validGame.ac.toString(),
       validGame.image,
     ];
-    const totalRow = await sheet.getLastRow();
+    const totalRow = sheet.getLastRow();
 
     console.info("postGame convert:", { convertedGame });
 
-    await sheet.insertRowAfter(totalRow);
-    const row = await sheet.getRange(`A${totalRow + 1}:N${totalRow + 1}`);
-    await row.setValues([convertedGame]);
+    sheet.insertRowAfter(totalRow);
+    const row = sheet.getRange(`A${totalRow + 1}:N${totalRow + 1}`);
+    row.setValues([convertedGame]);
 
-    await sheet.sort(3, true);
-    reloadFilter(sheet);
+    await reloadFilter(sheet);
 
     changelog({ game: validGame.name, status: "AJOUT DE JEU" });
 
-    const user = await getUser();
+    const user = getUser();
     user.statistics.gameAdded++;
 
     putUser({ user });
