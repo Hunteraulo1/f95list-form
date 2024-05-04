@@ -96,7 +96,7 @@
           <ProtectedRoute path="settings">
             <Settings on:newToast={handleNewToast} />
           </ProtectedRoute>
-          <Route path="user-preferences">
+          <Route path="user-preferences" superAdmin>
             <UserPreferences on:newToast={handleNewToast} />
           </Route>
           <Route path="user/:email" let:params>

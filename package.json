@@ -8,7 +8,7 @@
     "rollup:npm": "rollup -c rollup.config.npm.js",
     "build": "vite build && npm run rollup:npm && node postBuildProcess.js",
     "build:push": "npm run build && clasp push",
-    "build:deploy": "pnpm run build:push && clasp deploy -i AKfycbxXI2VPp3Pzkwso2MbRgUCIJJkhiZ34fApqEiZyH6zl9aMTdeIQSt_mBWQZ0fLuUXvf9Q",
+    "build:deploy": "pnpm run build:push && clasp deploy -i AKfycbztpdKu2yZEwtsvjLUFKEpOiB6gGMP_qq65CJ-mlPXOw8DbJ7XX9UqP-5Ab7cMXCN7Otg",
     "preview": "vite preview",
     "lint": "npx eslint src",
     "lint:fix": "npm run lint -- --fix",
@@ -28,9 +28,9 @@
     "@types/eslint": "8.56.10",
     "@types/google-apps-script": "^1.0.83",
     "@types/jsdom": "^21.1.6",
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.8",
     "autoprefixer": "^10.4.19",
-    "daisyui": "^4.10.2",
+    "daisyui": "^4.10.5",
     "eslint": "9.1.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.29.1",
@@ -43,7 +43,7 @@
     "prettier-plugin-organize-imports": "3.2.4",
     "prettier-plugin-svelte": "3.2.3",
     "prettier-plugin-tailwindcss": "^0.5.14",
-    "rollup": "^4.16.4",
+    "rollup": "^4.17.2",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-delete": "^2.0.0",
     "svelte": "^4.2.15",
@@ -52,11 +52,11 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.5",
     "typescript-eslint": "7.7.1",
-    "vite": "^5.2.10",
+    "vite": "^5.2.11",
     "vite-plugin-singlefile": "^2.0.1",
     "vite-tsconfig-paths": "^4.3.2"
   },
   "dependencies": {
-    "zod": "^3.23.3"
+    "zod": "^3.23.6"
   }
 }

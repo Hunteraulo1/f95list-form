@@ -5,7 +5,7 @@ const User = z.object({
   roles: z.array(z.enum(["superAdmin", "admin"])),
   profile: z.object({
     pseudo: z.string(),
-    imageUrl: z.string().url().or(z.literal("")),
+    imageUrl: z.string().or(z.literal("")),
   }),
   preferences: z.object({
     theme: z.enum(["light", "dark"]).optional(),
@@ -75,7 +75,7 @@ const Traductor = z.object({
     .array(
       z.object({
         name: z.string(),
-        link: z.string().url().or(z.literal("")),
+        link: z.string().or(z.literal("")),
       }),
     )
     .optional(),
@@ -88,8 +88,8 @@ const AppConfiguration = z.object({
 });
 
 const AppWebhooks = z.object({
-  update: z.string().url().or(z.literal("")),
-  logs: z.string().url().or(z.literal("")),
+  update: z.string().or(z.literal("")),
+  logs: z.string().or(z.literal("")),
 });
 
 // You need to export in this format. See

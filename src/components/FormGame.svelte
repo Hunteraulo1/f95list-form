@@ -339,7 +339,7 @@
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
-          <label for="link">Lien:</label>
+          <label for="link">Lien du jeu:</label>
           <input
             type="text"
             placeholder="Lien du jeu"

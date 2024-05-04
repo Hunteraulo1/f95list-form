@@ -42,30 +42,30 @@ export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise
     let title = "Modification d'un jeu";
     let color = 5814783;
 
-    if (!silentMode) {
-      if (validGame.tlink !== oldGame.tlink && validGame.tlink === "n/a") {
-        title = "Traduction manquante";
-        color = 12256517;
-
-        webhookUpdate(oldGame, validGame, title, color);
-      } else if (validGame.tversion !== oldGame.tversion) {
-        title = "Traduction mise à jour:";
-
-        webhookUpdate(oldGame, validGame, title, color);
-      } else if (validGame.tlink !== oldGame.tlink) {
-        title = "Mise à jour d'un lien de traduction:";
-        color = 15122688;
-
-        webhookUpdate(oldGame, validGame, title, color);
-      }
-    }
-
     sendWebhookLogs({
       title,
       color,
       oldGame,
       game: validGame,
     });
+
+    if (silentMode) return;
+
+    if (validGame.tlink !== oldGame.tlink && validGame.tlink === "n/a") {
+      title = "Traduction manquante";
+      color = 12256517;
+
+      webhookUpdate(oldGame, validGame, title, color);
+    } else if (validGame.tversion !== oldGame.tversion) {
+      title = "Traduction mise à jour:";
+
+      webhookUpdate(oldGame, validGame, title, color);
+    } else if (validGame.tlink !== oldGame.tlink) {
+      title = "Mise à jour d'un lien de traduction:";
+      color = 15122688;
+
+      webhookUpdate(oldGame, validGame, title, color);
+    }
   } catch (error) {
     console.error("putGame: " + error);
   }
@@ -85,6 +85,6 @@ const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, co
       oldGame.proofreader !== validGame.proofreader
         ? `${oldGame.proofreader} > ${validGame.proofreader}`
         : validGame.proofreader,
-    image: oldGame.image,
+    image: validGame.image,
   });
 };
