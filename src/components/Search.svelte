@@ -1,118 +1,121 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import { Link, navigate } from 'svelte-routing'
-  import Panel from '../components/Panel.svelte'
-  import { fetchQueryGames } from '../lib/queryGames'
-  import { queryGame, queryGames } from '../stores'
-  import type { QueryGame } from '../types/types'
+  import { onMount } from "svelte";
+  import { Link, navigate } from "svelte-routing";
+  import type { ChangeEventHandler } from "svelte/elements";
 
-  export let edit = false
+  import Panel from "$components/Panel.svelte";
+  import { fetchQueryGames } from "$lib/queryGames";
+  import { queryGame, queryGames } from "$lib/stores";
+  import type { QueryGameType } from "$types/schemas";
 
-  let inputSearch = edit ? $queryGame.name : ''
-  let spanSearch = edit ? $queryGame.version : ''
-  onMount(() => {
-    fetchQueryGames()
-    if (false) {
-      const { name, version } = $queryGame
-      inputSearch = name
-      spanSearch = version
-    }
-  })
+  export let edit = false;
 
-  let filtered: QueryGame[] = []
-  const handleChange = (
-    event: Event & { currentTarget: EventTarget & HTMLInputElement }
-  ) => {
-    spanSearch = ''
+  let inputSearch = edit ? $queryGame.name : "";
+  let badgeSearch = edit ? $queryGame.version : "";
 
-    filtered = $queryGames?.filter((game, i) => {
-      const value = event.currentTarget.value
+  let filtered: QueryGameType[] = [];
+  let timer: ReturnType<typeof setTimeout>;
 
-      if (i <= 5 && value) {
-        return game.name.toLowerCase().includes(value.toLowerCase())
+  const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
+    badgeSearch = "";
+
+    const eventValue = event.currentTarget.value;
+
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      if (eventValue === "") {
+        filtered = [];
+
+        return;
       }
-      return false
-    })
-  }
-  const handleClick = (data: QueryGame) => {
-    spanSearch = data.version
-    inputSearch = data.name
-    filtered = []
-    queryGame.set(data)
-    navigate('/edit')
-  }
 
-  const handleKeyPress = (event: KeyboardEvent, item: QueryGame) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      handleClick(item)
-    }
-  }
+      filtered = $queryGames.filter((game) => {
+        const value = eventValue.toLowerCase();
+
+        const name = game.name.toLowerCase();
+        const id = game.id ? game.id.toString().toLowerCase() : "";
+
+        if (name.includes(value) || id.includes(value)) return game;
+      });
+    }, 200);
+  };
+
+  const handleClick = (data: QueryGameType) => {
+    inputSearch = data.name;
+    badgeSearch = data.version;
+    filtered = [];
+    $queryGame = data;
+
+    navigate("/edit");
+  };
 
   const handleFocus = () => {
-    if (spanSearch !== '') {
-      inputSearch = ''
-      spanSearch = ''
-    }
-  }
+    if (!badgeSearch) return;
+
+    inputSearch = "";
+    badgeSearch = "";
+  };
 
   const handleCtrlK = (event: KeyboardEvent) => {
-    if (event.ctrlKey && event.key === 'k') {
-      event.preventDefault()
-      const inputField = document.getElementById('searchField')
-      if (inputField) {
-        inputField.focus()
-      }
+    if (event.ctrlKey && event.key === "k") {
+      event.preventDefault();
+
+      const inputField = document.getElementById("searchField");
+      inputField?.focus();
     }
-  }
+  };
+
+  onMount(() => {
+    fetchQueryGames();
+  });
 </script>
 
 <svelte:window on:keydown={handleCtrlK} />
 
-<Panel title="Rechercher un jeu" description={false}>
+<Panel title="Rechercher un jeu" showDivider={false}>
   <div slot="panel-content">
-    <div class="flex gap-4">
+    <div class="flex flex-col gap-4 sm:flex-row">
       <div id="container-search" class="relative w-full">
         <label class="input input-bordered flex items-center gap-2">
           <input
-            disabled={$queryGames === undefined}
+            disabled={$queryGames.length === 0}
             type="text"
             placeholder="Rechercher un jeu"
-            class="bg-transparent grow"
+            class="grow bg-transparent"
             name="theme"
             id="searchField"
-            value={inputSearch}
-            on:input={handleChange}
-            on:focus={handleFocus}
-          />
-          {#if spanSearch}
-            <span class="badge badge-primary">{spanSearch}</span>
+            autocomplete="off"
+            bind:value={inputSearch}
+            on:input={handleInput}
+            on:focus={handleFocus} />
+
+          {#if badgeSearch}
+            <span class="badge badge-primary">{badgeSearch}</span>
           {/if}
+
           <kbd class="kbd kbd-sm">ctrl</kbd>
           <kbd class="kbd kbd-sm">K</kbd>
         </label>
 
         {#if filtered.length > 0}
-          <ul class="z-10 w-full menu bg-base-200 rounded-box absolute">
-            {#each filtered as item}
-              <li>
-                <button
-                  class="w-full"
-                  tabindex="0"
-                  on:click={() => handleClick(item)}
-                  on:keypress={e => handleKeyPress(e, item)}
-                >
-                  {item.name}
-                  <span class="badge badge-primary">{item.version}</span>
-                </button>
-              </li>
+          <ul class="menu absolute z-10 w-full rounded-box bg-base-200">
+            {#each filtered as item, index}
+              {#if index < 10}
+                <li>
+                  <button class="w-full" tabindex="0" on:click={() => handleClick(item)}>
+                    {item.name}
+                    <span class="badge badge-primary">{item.version}</span>
+                  </button>
+                </li>
+              {/if}
             {/each}
           </ul>
         {/if}
         <span id="span-search"></span>
       </div>
-      <Link to="/add">
-        <button class="btn btn-primary sm:w-40">AJOUTER UN JEU</button>
-      </Link>
+
+      <Link to="/add" class="btn btn-primary sm:w-40">AJOUTER UN JEU</Link>
     </div>
   </div>
 </Panel>

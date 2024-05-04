@@ -1,16 +1,12 @@
-import getMockEndpoints from "./mocks/_API";
+import getMockEndpoints from "./mocks/API";
 let polyfilled = false;
 
-export default async function polyfillScriptRun() {
+const polyfillScriptRun = async () => {
   if (polyfilled) return;
   polyfilled = true;
 
-  const _window =
-    typeof window !== "undefined"
-      ? window
-      : typeof globalThis !== "undefined"
-      ? globalThis
-      : {};
+  // eslint-disable-next-line no-undef
+  const _window = typeof window !== "undefined" ? window : typeof globalThis !== "undefined" ? globalThis : {};
 
   const google = _window.google || {};
   _window.google = google;
@@ -39,4 +35,6 @@ export default async function polyfillScriptRun() {
       },
     };
   }
-}
+};
+
+polyfillScriptRun();

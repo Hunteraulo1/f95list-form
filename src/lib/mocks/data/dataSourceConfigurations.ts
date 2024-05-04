@@ -1,7 +1,3 @@
-/**
- *
- * @type {DatasourceConfiguration[]}
- */
 export const dataSourceConfigurations = [
   {
     spreadsheetId: "1XD1RVZsXw6DLQv_ksIdzuYdHPcsbpXhml94nMAz5_vA",

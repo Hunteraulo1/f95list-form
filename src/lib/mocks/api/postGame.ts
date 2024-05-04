@@ -1,25 +1,44 @@
-import type { GameType } from "../../../types/schemas";
-import { Game } from "../../../types/schemas";
-import { Game as DataGame } from "../../../types/types";
 import { games } from "../data/game";
 import sleep from "../sleep";
+import { sendWebhookLogs, sendWebhookUpdate } from "../webhook";
 
-/**
- * **API Endpoint** | Updates the app configuration and returns it
- * @param {GameType} args
- * @returns {Promise<string>}
- */
-export async function postGame(game: DataGame) {
+import { Game, type GameType } from "$types/schemas";
+
+export interface PostGameArgs {
+  game: GameType;
+  silentMode: boolean;
+}
+
+export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void | string> => {
   await sleep();
 
-  let validGame = Game.parse({
-    ...game,
-    trlink: "",
-  });
+  const validGame = Game.parse(game);
 
   games.push(validGame);
 
-  console.log("mockResponse_game", { validGame, games });
+  console.info("mockResponse_postGame", { validGame, games });
 
-  return "success";
-}
+  const title = "Suppression du jeu:";
+  const color = 12256517;
+
+  const { link, name, tversion, traductor, proofreader, image } = validGame;
+
+  if (!silentMode) {
+    sendWebhookUpdate({
+      title,
+      url: link,
+      color,
+      name,
+      tversion,
+      traductor,
+      proofreader,
+      image,
+    });
+  }
+
+  sendWebhookLogs({
+    title,
+    color,
+    game,
+  });
+};

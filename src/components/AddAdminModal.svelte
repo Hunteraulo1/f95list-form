@@ -1,59 +1,81 @@
-<script>
-    import { isLoading } from "../stores";
-    import Modal from "./Modal.svelte";
-    import { GAS_API } from "../lib/GAS_API";
-    import { fetchAppConfiguration } from "../lib/fetchAppConfig";
-    import UserSelect from "./UserSelect.svelte";
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+<script lang="ts">
+  import { createEventDispatcher } from "svelte";
 
-    let selectedUsersFromChild = [];
+  import Modal from "./Modal.svelte";
+  import UserSelect from "./UserSelect.svelte";
 
-    function handleNewAdminSubmit() {
-        // TODO: validate input
-        let user = selectedUsersFromChild[0];
-        console.log("raising user to admin status", user);
+  import { fetchAppConfiguration } from "$lib/fetchAppConfig";
+  import { GAS_API } from "$lib/GAS_API";
+  import { isLoading } from "$lib/stores";
+  import type { UserType } from "$types/schemas";
 
-        isLoading.set(true);
+  const dispatch = createEventDispatcher();
 
-        user = { ...user, roles: [...user.roles, "admin"] };
+  let selectedUsersFromChild: UserType[] = [];
 
-        GAS_API.putUser({ user })
-            .then(async (result) => {
-                console.log("New admin added:", result);
-                await fetchAppConfiguration();
+  const handleNewAdminSubmit = async () => {
+    let users = selectedUsersFromChild;
 
-                dispatch("newToast", {
-                    id: Date.now(),
-                    alertType: "success",
-                    message: "Admin added!",
-                    milliseconds: 3000,
-                });
-            })
-            .catch((err) => {
-                console.error("Could not add new admin:", err);
-                dispatch("newToast", {
-                    id: Date.now(),
-                    alertType: "error",
-                    message: "Your changes could not be saved",
-                    milliseconds: 3000,
-                });
-            })
-            .finally(() => {
-                isLoading.set(false);
-            });
-    }
+    $isLoading = true;
+
+    users.forEach(async (user) => {
+      console.info("raising user to admin status", user);
+
+      const roles = new Set(user.roles);
+      roles.add("admin");
+
+      user = {
+        ...user,
+        roles: [...roles],
+      };
+
+      try {
+        const result = await GAS_API.putUser({ user });
+
+        if (typeof result === "string") throw new Error("putUser no return");
+
+        console.info("New admin added:", result);
+        await fetchAppConfiguration();
+
+        dispatch("newToast", {
+          id: Date.now(),
+          alertType: "success",
+          message: "Nouveau Admin ajouté!",
+          milliseconds: 3000,
+        });
+      } catch (error) {
+        console.error("Could not add new admin:", error);
+        dispatch("newToast", {
+          id: Date.now(),
+          alertType: "error",
+          message: "Erreur lors de l'ajout de l'Admin",
+          milliseconds: 3000,
+        });
+      } finally {
+        $isLoading = false;
+      }
+    });
+
+    $isLoading = false;
+  };
+
+  export let showModal: Boolean;
 </script>
 
-<Modal id="add_admin_modal" title="Add Admin">
-    <div slot="modal-content">
-        <p class="py-4">Select a user to make an admin</p>
-        <UserSelect on:update={(e) => (selectedUsersFromChild = e.detail)} />
-    </div>
-    <button
-        slot="modal-action"
-        on:click={handleNewAdminSubmit}
-        disabled={selectedUsersFromChild.length === 0}
-        class="btn">Submit</button
-    >
+<Modal bind:showModal title="Ajouter un administrateur">
+  <div slot="modal-content">
+    <p class="py-4">Sélectionnez un utilisateur pour en faire un administrateur</p>
+    <UserSelect
+      on:update={(e) => {
+        selectedUsersFromChild = e.detail;
+      }} />
+  </div>
+
+  <button
+    slot="modal-action"
+    on:click={handleNewAdminSubmit}
+    disabled={selectedUsersFromChild.length === 0}
+    class="btn">
+    Ajouter
+  </button>
 </Modal>

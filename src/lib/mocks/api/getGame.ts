@@ -1,35 +1,15 @@
-import { GameType } from "../../../types/schemas";
-import { game, games } from "../data/game";
+import { games } from "../data/game";
 import sleep from "../sleep";
 
-export type GetGameArgs = {
+export interface GetGameArgs {
   name: string | null;
   version: string | null;
-};
+}
 
-/**
- * @param {GetGameArgs} [optionalArgs] - Required parameter containing name and version of game
- * @returns {Promise<GameType>}
- */
-export async function getGame({
-  name,
-  version,
-}: GetGameArgs): Promise<GameType | null> {
+export const getGame = async ({ name, version }: GetGameArgs) => {
   await sleep();
 
-  /** @type {Game | undefined} */
-  let mockResponse = null;
-
-  if (!name && !version) {
-    mockResponse = game;
-  } else {
-    let game = games.find(
-      (game) => game.name === name && game.version === version
-    );
-    if (game) {
-      mockResponse = game;
-    }
-  }
+  const mockResponse = games.find((game) => game.name === name && game.version === version);
 
   return JSON.parse(JSON.stringify(mockResponse));
-}
+};

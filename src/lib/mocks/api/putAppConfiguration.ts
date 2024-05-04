@@ -1,21 +1,21 @@
 import sleep from "../sleep";
 
-import { PutAppConfigArgs } from "../../../server/api/putAppConfiguration";
-import { AppConfiguration, AppConfigurationType } from "../../../types/schemas";
+import { AppConfiguration, AppWebhooks, type AppConfigurationType, type AppWebhooksType } from "$types/schemas";
 
-/**
- * @param {PutAppConfigArgs} args
- * @returns {Promise<AppConfigurationType | null>}
- */
-export async function putAppConfiguration({
-  appConfiguration,
-}: PutAppConfigArgs): Promise<AppConfigurationType | null> {
+interface PutAppConfigArgs {
+  appConfiguration: AppConfigurationType;
+  webhooks: AppWebhooksType;
+}
+
+export const putAppConfiguration = async ({ appConfiguration, webhooks }: PutAppConfigArgs): Promise<void> => {
   await sleep();
 
-  let validAppConfig = AppConfiguration.parse(appConfiguration);
-
-  /** @type {AppConfiguration} */
-  let mockResponse = validAppConfig;
-
-  return JSON.parse(JSON.stringify(mockResponse));
-}
+  try {
+    const appConfigurationResult = AppConfiguration.parse(appConfiguration);
+    console.log("🚀 ~ putAppConfiguration ~ appConfigurationResult:", appConfigurationResult);
+    const appWebhooksResult = AppWebhooks.parse(webhooks);
+    console.log("🚀 ~ putAppConfiguration ~ appWebhooksResult:", appWebhooksResult);
+  } catch (error) {
+    throw new Error(`Error in putAppConfiguration: ${error}`);
+  }
+};

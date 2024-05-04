@@ -1,33 +1,20 @@
-import { QueryGames, QueryGamesType } from "../../types/schemas";
-import { createGames_ } from "../lib/createGame_";
+import type { QueryGameType } from "$types/schemas";
 
-/**
- * **API Endpoint** | Returns the accessing games array
- * @returns {Promise<QueryGames>}
- */
-export async function getQueryGames(): Promise<QueryGamesType[] | null> {
+export const getQueryGames = async (): Promise<QueryGameType[]> => {
   // Report request
-  console.log("getQueryGames called");
+  console.info("getQueryGames called");
 
-  //const sheet = SpreadsheetApp.getActiveSpreadsheet();
-  ///const gameSheet = sheet.getSheetByName("Jeux");
+  const sheet = SpreadsheetApp.getActiveSpreadsheet();
+  const gameSheet = sheet.getSheetByName("Jeux");
 
-  //const totalRow = gameSheet?.getLastRow();
-  //const data = gameSheet?.getRange(`A2:M${totalRow}`).getValues();
-  //const dataLink = gameSheet?.getRange(`C2:J${totalRow}`).getRichTextValues();
+  const totalRow = gameSheet?.getLastRow();
+  const data = gameSheet?.getRange(`A2:D${totalRow}`).getValues();
 
-  let queryGames; /*= data?.map((game: string[], i) => ({
-    name: game[2],
-    version: game[3],
-  }));*/
+  if (!data) throw new Error("getQueryGames no return");
 
-  if (!queryGames) {
-    let result = [];
-    for (let i = 0; i < 10; i++) {
-      result.push(createGames_(QueryGames.parse({})));
-    }
-    return result;
-  }
+  const queryGames = data.map(([id, , name, version]) => {
+    return { id, name, version };
+  });
 
   return queryGames;
-}
+};

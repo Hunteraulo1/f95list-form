@@ -1,73 +1,72 @@
-<script>
-    import { createEventDispatcher } from "svelte";
-    import { GAS_API } from "../lib/GAS_API";
-    import { fetchAppConfiguration } from "../lib/fetchAppConfig";
-    import { sanitizeEmail } from "../lib/sanitizeEmail";
-    import { isLoading } from "../stores";
-    import Modal from "./Modal.svelte";
-    const dispatch = createEventDispatcher();
+<script lang="ts">
+  import { createEventDispatcher } from "svelte";
 
-    export let user;
-    let userId = sanitizeEmail(user.email);
+  import Modal from "./Modal.svelte";
 
-    function handleAdminRemovalSubmit() {
-        // TODO: validate input
-        console.log("removing admin status from user", user);
+  import { fetchAppConfiguration } from "$lib/fetchAppConfig";
+  import { GAS_API } from "$lib/GAS_API";
+  import { isLoading } from "$lib/stores";
+  import type { UserType } from "$types/schemas";
 
-        isLoading.set(true);
+  const dispatch = createEventDispatcher();
 
-        // remove any instances of the admin role from users.roles
-        user.roles = user.roles.filter((role) => role !== "admin");
+  export let user: UserType;
 
-        GAS_API.putUser({ user })
-            .then(async (result) => {
-                console.log("Admin removed:", result);
-                await fetchAppConfiguration();
+  const handleAdminRemovalSubmit = async () => {
+    console.info("removing admin status from user", user);
 
-                dispatch("newToast", {
-                    id: Date.now(),
-                    alertType: "success",
-                    message: "Admin removed!",
-                    milliseconds: 3000,
-                });
-            })
-            .catch((err) => {
-                console.error("Could not remove admin:", err);
-                dispatch("newToast", {
-                    id: Date.now(),
-                    alertType: "error",
-                    message: "Your changes could not be saved",
-                    milliseconds: 3000,
-                });
-            })
-            .finally(() => {
-                isLoading.set(false);
-            });
+    $isLoading = true;
+
+    const roles: UserType["roles"] = ["admin"];
+    // remove any instances of the admin role from users.roles
+    user.roles = user.roles.filter((role) => !roles.includes(role));
+
+    try {
+      const result = await GAS_API.putUser({ user });
+
+      console.info("Admin removed:", result);
+
+      await fetchAppConfiguration();
+
+      dispatch("newToast", {
+        id: Date.now(),
+        alertType: "success",
+        message: "Admin supprimé!",
+        milliseconds: 3000,
+      });
+    } catch (error) {
+      console.error("Could not remove admin:", error);
+
+      dispatch("newToast", {
+        id: Date.now(),
+        alertType: "error",
+        message: "Erreur lors de la suppression de l'Admin",
+        milliseconds: 3000,
+      });
+    } finally {
+      $isLoading = false;
     }
+  };
+
+  export let showModal: Boolean;
 </script>
 
-<Modal id={`remove_admin_${userId}`} title="Remove Admin">
-    <div slot="modal-content">
-        <p class="py-4">
-            Are you sure you want to remove this user's admin privileges
-        </p>
-        <div
-            class="flex items-center space-x-3 p-2 my-2 hover:bg-base-200 hover:cursor-pointer"
-        >
-            <div class="flex justify-center items-center space-x-3">
-                <div class="mask mask-squircle w-12 h-12">
-                    <img src={user.profile.imageUrl} alt="User" />
-                </div>
-                <div>
-                    <div class="font-bold">{user.email}</div>
-                </div>
-            </div>
+<Modal bind:showModal title="Supprimer l'administrateur">
+  <div slot="modal-content">
+    <p class="py-4">Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet utilisateur ?</p>
+    <div class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200">
+      <div class="flex items-center justify-center space-x-3">
+        <div class="mask mask-squircle h-12 w-12">
+          <img
+            src={user.profile.imageUrl ||
+              "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
+            alt="User" />
         </div>
+        <div>
+          <div class="font-bold">{user.email}</div>
+        </div>
+      </div>
     </div>
-    <button
-        slot="modal-action"
-        on:click={handleAdminRemovalSubmit}
-        disabled={!user}
-        class="btn">Confirm</button
-    >
+  </div>
+  <button slot="modal-action" on:click={handleAdminRemovalSubmit} disabled={!user} class="btn">Confirmer</button>
 </Modal>
