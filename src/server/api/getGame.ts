@@ -50,8 +50,8 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
     ttype: data[11],
     ac: data[12],
     image: data[13], // TODO: ajouter les images
-    link: dataLink ? dataLink[0]?.getLinkUrl() : "",
-    tlink: dataLink ? dataLink[3]?.getLinkUrl() : "",
-    trlink: dataLink ? dataLink[7]?.getLinkUrl() : "",
+    link: dataLink[0]?.getLinkUrl() ?? "",
+    tlink: dataLink[3]?.getLinkUrl() ?? "",
+    trlink: dataLink[7]?.getLinkUrl() ?? "",
   });
 };

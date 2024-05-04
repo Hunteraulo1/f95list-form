@@ -404,7 +404,7 @@
           <label for="image">Lien de l'image:</label>
           <input
             type="text"
-            placeholder="Lien du jeu"
+            placeholder="Lien de l'image"
             class="input input-bordered w-full"
             class:input-error={!edit && game.domain !== "F95z"}
             name="image"

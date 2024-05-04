@@ -43,9 +43,9 @@ const Game = z.object({
     "Lien Trad HS",
   ]),
   ac: z.boolean(),
-  link: z.string().url(),
-  tlink: z.string().url().or(z.literal("")),
-  trlink: z.string().url().optional().or(z.literal("")),
+  link: z.string(),
+  tlink: z.string().or(z.literal("")),
+  trlink: z.string().optional().or(z.literal("")),
   image: z.string(),
 });
 
