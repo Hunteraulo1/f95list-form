@@ -25,6 +25,7 @@ dist-ssr
 
 # Clasp config
 **/.clasp.json
+**/.clasp.json.*
 
 # Environment variables
 .env
