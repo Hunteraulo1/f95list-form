@@ -9,7 +9,7 @@ import { getUsers } from "./api/getUsers";
 import { postGame } from "./api/postGame";
 import { putAppConfiguration } from "./api/putAppConfiguration";
 import { putGame } from "./api/putGame";
-import { putUser } from "./api/putUser";
+import { putUser, putUserRole } from "./api/putUser";
 
 type MockEndpoints = {
   // App Configuration
@@ -20,6 +20,7 @@ type MockEndpoints = {
   getUser: typeof getUser;
   getUsers: typeof getUsers;
   putUser: typeof putUser;
+  putUserRole: typeof putUserRole;
 
   // Game
   getGame: typeof getGame;
@@ -41,6 +42,7 @@ const getMockEndpoints = (): MockEndpoints => {
     getUser,
     getUsers,
     putUser,
+    putUserRole,
 
     // Game
     getGame,

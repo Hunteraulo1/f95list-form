@@ -11,6 +11,7 @@ export type PutAppConfigArgs = {
 export const putAppConfiguration = ({ appConfiguration, webhooks }: PutAppConfigArgs): void => {
   try {
     console.info("🚀 ~ putAppConfiguration ~ webhooks:", webhooks);
+
     console.info("putAppConfiguration() called with: ", appConfiguration);
 
     AppConfiguration.parse(appConfiguration);

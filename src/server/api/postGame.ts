@@ -6,7 +6,7 @@ import { sendWebhookLogs, sendWebhookUpdate } from "../lib/webhook";
 import { getQueryGames } from "./getQueryGames";
 import { getTraductors } from "./getTraductors";
 import { getUser } from "./getUser";
-import { putUser } from "./putUser";
+import { putStatistics, putUser } from "./putUser";
 
 import { Game, type GameType } from "$types/schemas";
 
@@ -93,7 +93,7 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void
     changelog({ game: validGame.name, status: "AJOUT DE JEU" });
 
     const user = getUser();
-    user.statistics.gameAdded++;
+    putStatistics("post");
 
     putUser({ user });
 

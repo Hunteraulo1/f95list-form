@@ -21,23 +21,66 @@ export const putUser = ({ user }: PutUserArgs) => {
   // and the invoking user is either the user or a superAdmin.
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
-  if (!validUser.email) {
-    return;
-  }
+  if (!validUser.email) throw new Error("No email found");
 
   const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? "");
 
-  if (JSON.stringify(properties.activity) != JSON.stringify(validUser.activity))
-    throw new Error("Not actual data user");
+  properties.profile = validUser.profile;
 
-  if (JSON.stringify(user.statistics) === JSON.stringify(properties.statistics)) {
+  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
     user.activity.push({
       value: new Date().toISOString(),
       label: "Utilisateur mis à jour",
     });
   }
 
-  scriptPropertiesService.setProperty(validUser.email ?? "", JSON.stringify(validUser));
+  scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
 
   console.info("User successfully saved.");
+};
+
+export const putUserRole = ({ user }: PutUserArgs) => {
+  const invokingUserEmail = Session.getActiveUser().getEmail();
+
+  console.info("putUser() called with: ", user, "by: ", invokingUserEmail);
+
+  const validUser = User.parse(user);
+
+  if (validUser.roles.includes("superAdmin") && invokingUserEmail !== Session.getEffectiveUser().getEmail())
+    throw new Error("A user resource can only be updated by themselves or the superAdmin.");
+
+  // If the code reaches here, the user object is valid
+  // and the invoking user is either the user or a superAdmin.
+  const scriptPropertiesService = PropertiesService.getScriptProperties();
+
+  if (!validUser.email) throw new Error("No email found");
+
+  const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? "");
+
+  properties.roles = validUser.roles;
+
+  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
+    user.activity.push({
+      value: new Date().toISOString(),
+      label: "Utilisateur mis à jour",
+    });
+  }
+
+  scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
+
+  console.info("User successfully saved.");
+};
+
+export const putStatistics = (type: "put" | "post"): void => {
+  const scriptPropertiesService = PropertiesService.getScriptProperties();
+
+  const result: UserType["statistics"] = JSON.parse(scriptPropertiesService.getProperty("statistics") ?? "");
+
+  switch (type) {
+    case "post":
+      scriptPropertiesService.setProperty("statistics", (result.gameAdded + 1).toString());
+      break;
+    case "put":
+      scriptPropertiesService.setProperty("statistics", (result.gameEdited + 1).toString());
+  }
 };

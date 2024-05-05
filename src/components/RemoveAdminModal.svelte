@@ -22,7 +22,7 @@
     user.roles = user.roles.filter((role) => !roles.includes(role));
 
     try {
-      const result = await GAS_API.putUser({ user });
+      const result = await GAS_API.putUserRole({ user });
 
       console.info("Admin removed:", result);
 
