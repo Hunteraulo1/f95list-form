@@ -1,4 +1,5 @@
 import { User, type UserType } from "$types/schemas";
+import { getUser } from "./getUser";
 
 export type PutUserArgs = {
   user: UserType;
@@ -55,7 +56,9 @@ export const putUserRole = ({ user }: PutUserArgs) => {
 
   if (!validUser.email) throw new Error("No email found");
 
-  const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? "");
+  const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? "{}");
+
+  if (!properties) throw new Error("No roles found");
 
   properties.roles = validUser.roles;
 
@@ -72,15 +75,22 @@ export const putUserRole = ({ user }: PutUserArgs) => {
 };
 
 export const putStatistics = (type: "put" | "post"): void => {
-  const scriptPropertiesService = PropertiesService.getScriptProperties();
+  const validUser = User.parse(getUser());
 
-  const result: UserType["statistics"] = JSON.parse(scriptPropertiesService.getProperty("statistics") ?? "");
+  if (!validUser.email) throw new Error("No email found");
+
+  const scriptPropertiesService = PropertiesService.getScriptProperties();
+  const userScriptPropertiesService = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? "{}");
+
+  const result: UserType["statistics"] = userScriptPropertiesService.statistics;
+
+  if (!result) throw new Error("No statistics found");
 
   switch (type) {
     case "post":
-      scriptPropertiesService.setProperty("statistics", (result.gameAdded + 1).toString());
+      scriptPropertiesService.setProperty("statistics", JSON.stringify(result.gameAdded + 1));
       break;
     case "put":
-      scriptPropertiesService.setProperty("statistics", (result.gameEdited + 1).toString());
+      scriptPropertiesService.setProperty("statistics", JSON.stringify(result.gameEdited + 1));
   }
 };

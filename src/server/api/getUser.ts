@@ -43,7 +43,7 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   // Else if the the request user's object doesn't exist but it is a request
   // from the requested user, create the user object and return it. They
   // now exist in the system.
-  if (!userObjectString || !isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
+  if (!userObjectString && isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 
   console.info(userObjectString);
 
