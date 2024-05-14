@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { navigate } from "svelte-routing";
   import type { ChangeEventHandler, FormEventHandler } from "svelte/elements";
+  import { navigate } from "svelte-routing";
 
   import Modal from "$components/Modal.svelte";
   import Search from "$components/Search.svelte";
@@ -36,7 +36,7 @@
 
   let savedId = "";
   let traductors: TraductorType[] = [];
-  let showModal: Boolean;
+  let showModal: boolean;
   let silentMode = false;
 
   onMount(async () => {

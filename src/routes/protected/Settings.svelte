@@ -53,8 +53,8 @@
     }
   };
 
-  let dialogAdd: Boolean;
-  let dialogRemove: Boolean[] = [];
+  let dialogAdd: boolean;
+  let dialogRemove: boolean[] = [];
 </script>
 
 <div>

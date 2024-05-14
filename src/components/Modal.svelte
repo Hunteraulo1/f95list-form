@@ -1,6 +1,6 @@
 <script lang="ts">
   export let title: string = "";
-  export let showModal: Boolean;
+  export let showModal: boolean;
 
   let dialog: HTMLDialogElement;
 

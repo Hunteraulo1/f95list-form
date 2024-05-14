@@ -1,9 +1,11 @@
 // let tempLogs = [];
 
-import type { GameACType } from "$types/schemas";
 import { getGames } from "../api/getGames";
 import { getScrape } from "../api/getScrape";
+
 import { sendWebhookAC } from "./webhook";
+
+import type { GameACType } from "$types/schemas";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const checkVersion = async () => {

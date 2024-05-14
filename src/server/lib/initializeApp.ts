@@ -1,4 +1,5 @@
 import { postUser } from "../api/postUser";
+
 import { loadAppConfiguration } from "./loadAppConfiguration";
 
 import type { AppConfigurationType } from "$types/schemas";

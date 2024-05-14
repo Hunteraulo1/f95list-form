@@ -48,7 +48,7 @@
     }
   };
 
-  export let showModal: Boolean;
+  export let showModal: boolean;
 </script>
 
 <Modal bind:showModal title="Supprimer l'administrateur">

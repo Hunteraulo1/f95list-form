@@ -59,7 +59,7 @@
     $isLoading = false;
   };
 
-  export let showModal: Boolean;
+  export let showModal: boolean;
 </script>
 
 <Modal bind:showModal title="Ajouter un administrateur">

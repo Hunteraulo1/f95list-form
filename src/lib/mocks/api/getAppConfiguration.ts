@@ -1,8 +1,9 @@
 import { appConfiguration } from "../data/appConfiguration";
 import sleep from "../sleep";
 
-import { type AppConfigurationType } from "$types/schemas";
 import { getAdmins } from "./getAdmins";
+
+import { type AppConfigurationType } from "$types/schemas";
 
 export const getAppConfiguration = async (): Promise<AppConfigurationType> => {
   await sleep();
