@@ -69,6 +69,12 @@ const CheckerF95z = z.object({
   msg: z.record(z.string()),
 });
 
+const GameAC = z.object({
+  id: Game.shape.id,
+  version: Game.shape.version,
+  newVersion: Game.shape.version,
+});
+
 const Traductor = z.object({
   name: z.string(),
   links: z
@@ -105,4 +111,5 @@ export type QueryGameType = z.infer<typeof QueryGame>;
 export type TraductorType = z.infer<typeof Traductor>;
 export type ScrapeGameType = z.infer<typeof ScrapeGame>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
+export type GameACType = z.infer<typeof GameAC>;
 export type AppWebhooksType = z.infer<typeof AppWebhooks>;

@@ -1,7 +1,9 @@
 // let tempLogs = [];
 
+import type { GameACType } from "$types/schemas";
 import { getGames } from "../api/getGames";
 import { getScrape } from "../api/getScrape";
+import { sendWebhookAC } from "./webhook";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const checkVersion = async () => {
@@ -11,6 +13,7 @@ const checkVersion = async () => {
   const games = await getGames();
   const checkedGames: { index: number; id: string; version: string }[] = [];
   let result: { [key: string]: string } = {};
+  const changed: GameACType[] = [];
 
   games.forEach((game, index) => {
     const { domain, id, ac, version } = game;
@@ -49,6 +52,8 @@ const checkVersion = async () => {
       if (row && row[0] == id) {
         sheet?.getRange(`D${index + 2}`).setValue(result[id]);
 
+        changed.push({ id, version, newVersion: result[id] });
+
         try {
           const result = await getScrape({ domain: "F95z", id });
 
@@ -65,6 +70,8 @@ const checkVersion = async () => {
       }
     }
   });
+
+  sendWebhookAC({ games: changed });
 };
 
 const f95Api = (ids: string | string[]) => {
