@@ -57,9 +57,9 @@
       });
     }
 
-    const { id, domain } = game;
+    const { id, domain, ac } = game;
 
-    if (step !== 5 || domain !== "F95z") return;
+    if (step !== 5 || domain !== "F95z" || !ac) return;
 
     try {
       await scrapeData({ id, domain });
@@ -107,6 +107,7 @@
 
       game.name = name ?? game.name;
       game.version = version ?? game.version;
+      game.tversion = game.tversion === "" ? version : game.tversion;
       game.status = status ?? game.status;
       game.tags = tags ?? game.tags;
       game.type = type ?? game.type;
