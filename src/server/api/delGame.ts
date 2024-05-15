@@ -73,6 +73,7 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
       title,
       color,
       game,
+      comment,
     });
   } catch (error) {
     console.error(error);
