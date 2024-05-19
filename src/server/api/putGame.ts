@@ -175,6 +175,6 @@ const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, co
       oldGame.proofreader !== validGame.proofreader
         ? `${oldGame.proofreader} > ${validGame.proofreader}`
         : validGame.proofreader,
-    image: oldGame.image,
+    image: validGame.image,
   });
 };
