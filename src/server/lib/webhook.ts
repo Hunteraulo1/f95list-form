@@ -1,4 +1,4 @@
-import { GameType } from "$types/schemas";
+import { GameType, type GameACType } from "$types/schemas";
 
 interface SendWebhookUpdateArgs {
   title: string;
@@ -154,6 +154,55 @@ export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: 
           fields,
           author: {
             name: getName(),
+          },
+        },
+      ],
+      components: [],
+      actions: {},
+    }),
+  });
+};
+
+interface SendWebhookACArgs {
+  games: GameACType[];
+}
+
+export const sendWebhookAC = async ({ games }: SendWebhookACArgs) => {
+  const env = PropertiesService.getScriptProperties();
+  const link = env.getProperty("logsUrl");
+
+  if (!link) return null;
+
+  const fields = [];
+
+  for (const game of games) {
+    fields.push({
+      name: `${game.id}:`,
+      value: `${game.version} **>** ${game.newVersion}`,
+      inline: false,
+    });
+  }
+
+  if (fields.length === 0) {
+    console.error({ fields });
+
+    return;
+  }
+
+  await UrlFetchApp.fetch(link, {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    payload: JSON.stringify({
+      content: "",
+      tts: false,
+      embeds: [
+        {
+          title: "Versions changées",
+          fields,
+          author: {
+            name: "Auto-Check",
           },
         },
       ],

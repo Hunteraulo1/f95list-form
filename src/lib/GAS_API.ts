@@ -40,7 +40,9 @@ export const GAS_API = {
 
   getUsers: () => callAPI<UserType[]>("getUsers"),
 
-  putUser: (args: PutUserArgs) => callAPI<UserType, typeof args>("putUser", args),
+  putUser: (args: PutUserArgs) => callAPI<void, typeof args>("putUser", args),
+
+  putUserRole: (args: PutUserArgs) => callAPI<void, typeof args>("putUserRole", args),
 
   // Game
   getGame: (args: GetGameArgs) => callAPI<GameType, typeof args>("getGame", args),

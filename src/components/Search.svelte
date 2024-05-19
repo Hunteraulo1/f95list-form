@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Link, navigate } from "svelte-routing";
   import type { ChangeEventHandler } from "svelte/elements";
+  import { Link, navigate } from "svelte-routing";
 
   import Panel from "$components/Panel.svelte";
   import { fetchQueryGames } from "$lib/queryGames";

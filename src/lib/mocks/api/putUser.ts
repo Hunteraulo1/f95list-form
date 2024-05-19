@@ -9,10 +9,18 @@ interface PutUserArgs {
 /**
  * **API Endpoint** | Updates the app configuration and returns it
  */
-export const putUser = async ({ user }: PutUserArgs): Promise<UserType> => {
+export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   await sleep();
 
-  const mockResponse = User.parse(user);
+  User.parse(user);
 
-  return JSON.parse(JSON.stringify(mockResponse));
+  console.info("putUser() called with: ", user);
+};
+
+export const putUserRole = async ({ user }: PutUserArgs): Promise<void> => {
+  await sleep();
+
+  User.parse(user);
+
+  console.info("putUserRole() called with: ", user);
 };

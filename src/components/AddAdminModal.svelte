@@ -30,9 +30,9 @@
       };
 
       try {
-        const result = await GAS_API.putUser({ user });
+        const result = await GAS_API.putUserRole({ user });
 
-        if (typeof result === "string") throw new Error("putUser no return");
+        if (typeof result === "string") throw new Error("putUserRole no return");
 
         console.info("New admin added:", result);
         await fetchAppConfiguration();
@@ -59,7 +59,7 @@
     $isLoading = false;
   };
 
-  export let showModal: Boolean;
+  export let showModal: boolean;
 </script>
 
 <Modal bind:showModal title="Ajouter un administrateur">

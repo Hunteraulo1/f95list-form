@@ -63,7 +63,7 @@
     {#each searchResults as userResult}
       <div
         class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
-        on:click={(e) => toggleSelect(userResult)}
+        on:click={() => toggleSelect(userResult)}
         on:keypress={(event) => {
           if (event.key === "Enter" || event.key === " ") {
             toggleSelect(userResult);

@@ -19,7 +19,7 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
   // Report request
   console.info("delGame called with args:", { name, version, comment });
 
-  await enableLock();
+  enableLock();
 
   try {
     const games = (await getQueryGames()) ?? [];
@@ -44,9 +44,9 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
       throw new Error("No gameSheet detected");
     }
 
-    await gameSheet.deleteRow(gameIndex + 2);
+    gameSheet.deleteRow(gameIndex + 2);
 
-    const user = await getUser();
+    const user = getUser();
     user.statistics.gameEdited++;
 
     putUser({ user });
@@ -73,12 +73,13 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
       title,
       color,
       game,
+      comment,
     });
   } catch (error) {
     console.error(error);
 
     throw new Error("Un problème est survenue lors de la suppression du jeu");
   } finally {
-    await disableLock();
+    disableLock();
   }
 };

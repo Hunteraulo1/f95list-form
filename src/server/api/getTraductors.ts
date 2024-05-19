@@ -12,7 +12,7 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
 
   const data = sheet.getRange(`A${2}:B${totalRow}`).getRichTextValues();
 
-  const result = data.map((tr) => {
+  return data.map((tr) => {
     return {
       name: tr[0]?.getText() || "",
       links: tr[1]
@@ -24,6 +24,4 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
         })),
     };
   });
-
-  return result;
 };

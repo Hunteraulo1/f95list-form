@@ -5,7 +5,7 @@ const User = z.object({
   roles: z.array(z.enum(["superAdmin", "admin"])),
   profile: z.object({
     pseudo: z.string(),
-    imageUrl: z.string().url().or(z.literal("")),
+    imageUrl: z.string().or(z.literal("")),
   }),
   preferences: z.object({
     theme: z.enum(["light", "dark"]).optional(),
@@ -69,13 +69,19 @@ const CheckerF95z = z.object({
   msg: z.record(z.string()),
 });
 
+const GameAC = z.object({
+  id: Game.shape.id,
+  version: Game.shape.version,
+  newVersion: Game.shape.version,
+});
+
 const Traductor = z.object({
   name: z.string(),
   links: z
     .array(
       z.object({
         name: z.string(),
-        link: z.string().url().or(z.literal("")),
+        link: z.string().or(z.literal("")),
       }),
     )
     .optional(),
@@ -88,8 +94,8 @@ const AppConfiguration = z.object({
 });
 
 const AppWebhooks = z.object({
-  update: z.string().url().or(z.literal("")),
-  logs: z.string().url().or(z.literal("")),
+  update: z.string().or(z.literal("")),
+  logs: z.string().or(z.literal("")),
 });
 
 // You need to export in this format. See
@@ -105,4 +111,5 @@ export type QueryGameType = z.infer<typeof QueryGame>;
 export type TraductorType = z.infer<typeof Traductor>;
 export type ScrapeGameType = z.infer<typeof ScrapeGame>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
+export type GameACType = z.infer<typeof GameAC>;
 export type AppWebhooksType = z.infer<typeof AppWebhooks>;

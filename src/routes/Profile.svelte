@@ -16,9 +16,9 @@
   let user: UserType | undefined = undefined;
 
   // Fetch the user on mount
-  $: fetchUser(email);
+  $: fetchUser();
 
-  const fetchUser = async (email: string) => {
+  const fetchUser = async () => {
     $isLoading = true;
 
     console.info("fetching user data for profile...");

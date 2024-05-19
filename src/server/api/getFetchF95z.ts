@@ -6,7 +6,7 @@ export const getFetchF95z = async (id: string): Promise<string> => {
 
   console.info("getFetchF95z called with args:", { id });
   try {
-    const response = await UrlFetchApp.fetch(url, {
+    const response = UrlFetchApp.fetch(url, {
       muteHttpExceptions: true,
     });
     const json: CheckerF95zType = await JSON.parse(response.getContentText());

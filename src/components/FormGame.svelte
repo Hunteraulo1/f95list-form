@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { navigate } from "svelte-routing";
   import type { ChangeEventHandler, FormEventHandler } from "svelte/elements";
+  import { navigate } from "svelte-routing";
 
   import Modal from "$components/Modal.svelte";
   import Search from "$components/Search.svelte";
@@ -36,7 +36,7 @@
 
   let savedId = "";
   let traductors: TraductorType[] = [];
-  let showModal: Boolean;
+  let showModal: boolean;
   let silentMode = false;
 
   onMount(async () => {
@@ -57,9 +57,9 @@
       });
     }
 
-    const { id, domain } = game;
+    const { id, domain, ac } = game;
 
-    if (step !== 5 || domain !== "F95z") return;
+    if (step !== 5 || domain !== "F95z" || !ac) return;
 
     try {
       await scrapeData({ id, domain });
@@ -107,6 +107,7 @@
 
       game.name = name ?? game.name;
       game.version = version ?? game.version;
+      game.tversion = game.tversion === "" ? version : game.tversion;
       game.status = status ?? game.status;
       game.tags = tags ?? game.tags;
       game.type = type ?? game.type;
@@ -339,7 +340,7 @@
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
-          <label for="link">Lien:</label>
+          <label for="link">Lien du jeu:</label>
           <input
             type="text"
             placeholder="Lien du jeu"
