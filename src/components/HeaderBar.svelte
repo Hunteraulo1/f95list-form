@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { Bars3, Icon } from "svelte-hero-icons";
-  import { Link, navigate } from "svelte-routing";
+import { Bars3, Icon } from 'svelte-hero-icons'
+import { Link, navigate } from 'svelte-routing'
 
-  import { appConfiguration, isLoading, sessionUser } from "$lib/stores";
+import { appConfiguration, isLoading, sessionUser } from '$lib/stores'
 
-  export let title = "";
+export let title = ''
 
-  console.log("sessionUser", $sessionUser);
-  console.log("appConfiguration", $appConfiguration.appName);
+console.log('sessionUser', $sessionUser)
+console.log('appConfiguration', $appConfiguration.appName)
 </script>
 
 <div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>

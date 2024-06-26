@@ -1,18 +1,18 @@
-import { Game, type GameType } from "$types/schemas";
+import { Game, type GameType } from '$types/schemas'
 
 export const getGames = async (): Promise<GameType[]> => {
   // Report request
-  console.info("getGames called");
+  console.info('getGames called')
 
-  const sheet = SpreadsheetApp.getActiveSpreadsheet();
-  const gameSheet = sheet.getSheetByName("Jeux");
-  const totalRow = gameSheet?.getLastRow();
+  const sheet = SpreadsheetApp.getActiveSpreadsheet()
+  const gameSheet = sheet.getSheetByName('Jeux')
+  const totalRow = gameSheet?.getLastRow()
 
   if (!gameSheet) {
-    throw new Error("No gameSheet detected");
+    throw new Error('No gameSheet detected')
   }
 
-  const data = gameSheet.getRange(`A2:N${totalRow}`).getValues();
+  const data = gameSheet.getRange(`A2:N${totalRow}`).getValues()
 
   return data.map((game) =>
     Game.parse({
@@ -30,9 +30,9 @@ export const getGames = async (): Promise<GameType[]> => {
       ttype: game[11],
       ac: game[12],
       image: game[13],
-      link: "",
-      tlink: "",
-      trlink: "",
+      link: '',
+      tlink: '',
+      trlink: '',
     }),
-  );
-};
+  )
+}

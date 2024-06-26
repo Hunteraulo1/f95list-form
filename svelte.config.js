@@ -1,4 +1,4 @@
-import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
 
 /** @type {import('@sveltejs/vite-plugin-svelte').SvelteOptions} */
 export default {
@@ -11,4 +11,4 @@ export default {
   vitePlugin: {
     inspector: true,
   },
-};
+}

@@ -1,4 +1,3 @@
-import root from "../root.svelte"
 import { set_building, set_prerendering } from "__sveltekit/environment"
 import { set_assets } from "__sveltekit/paths"
 import { set_manifest, set_read_implementation } from "__sveltekit/server"
@@ -7,6 +6,7 @@ import {
   set_public_env,
   set_safe_public_env,
 } from "../../../node_modules/.pnpm/@sveltejs+kit@2.5.5_@sveltejs+vite-plugin-svelte@3.0.2_svelte@4.2.12_vite@5.2.8/node_modules/@sveltejs/kit/src/runtime/shared-server.js"
+import root from "../root.svelte"
 
 export const options = {
   app_dir: "_app",

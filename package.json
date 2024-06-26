@@ -6,21 +6,20 @@
   "scripts": {
     "dev": "vite",
     "rollup:npm": "rollup -c rollup.config.npm.js",
-    "build": "vite build && npm run rollup:npm && node postBuildProcess.js",
-    "build:push": "npm run build && clasp push",
-    "build:deploy": "pnpm run build:push && clasp deploy -i AKfycbztpdKu2yZEwtsvjLUFKEpOiB6gGMP_qq65CJ-mlPXOw8DbJ7XX9UqP-5Ab7cMXCN7Otg",
+    "build": "vite build && bun run rollup:npm && node postBuildProcess.js",
+    "build:push": "bun run build && clasp push",
+    "build:deploy": "bun run build:push && clasp deploy -i AKfycbztpdKu2yZEwtsvjLUFKEpOiB6gGMP_qq65CJ-mlPXOw8DbJ7XX9UqP-5Ab7cMXCN7Otg",
     "preview": "vite preview",
-    "lint": "npx eslint src",
-    "lint:fix": "npm run lint -- --fix",
-    "prettier": "npx prettier src --check",
-    "prettier:fix": "npm run prettier -- --write",
-    "format": "npm run prettier:fix",
+    "lint": "bunx @biomejs/biome lint --write .",
+    "format": "bunx @biomejs/biome format --write .",
+    "check": "bunx @biomejs/biome check --write .",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "lint-staged": {
     "*.{js,ts,svelte,html,css}": "prettier --write"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.8.2",
     "@rollup/plugin-commonjs": "^25.0.8",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@sveltejs/vite-plugin-svelte": "^3.1.0",

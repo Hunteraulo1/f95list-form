@@ -1,15 +1,15 @@
-import { GameType } from "$types/schemas";
+import { GameType } from '$types/schemas'
 
 interface SendWebhookUpdateArgs {
-  title: string;
-  url: string;
-  color: number;
-  comment?: string;
-  name: string;
-  tversion: string;
-  traductor: string;
-  proofreader: string;
-  image: string;
+  title: string
+  url: string
+  color: number
+  comment?: string
+  name: string
+  tversion: string
+  traductor: string
+  proofreader: string
+  image: string
 }
 
 export const sendWebhookUpdate = async ({
@@ -23,53 +23,53 @@ export const sendWebhookUpdate = async ({
   proofreader,
   image,
 }: SendWebhookUpdateArgs) => {
-  if (!tversion || !name) return null;
+  if (!tversion || !name) return null
 
-  const fields = [];
+  const fields = []
 
   fields.push({
-    name: "Version de la traduction:",
+    name: 'Version de la traduction:',
     value: tversion,
     inline: false,
-  });
+  })
 
   if (traductor) {
     fields.push({
-      name: "Traducteur:",
+      name: 'Traducteur:',
       value: traductor,
       inline: true,
-    });
+    })
   }
 
   if (proofreader) {
     fields.push({
-      name: "Relecteur:",
+      name: 'Relecteur:',
       value: proofreader,
       inline: true,
-    });
+    })
   }
 
   if (comment) {
     fields.push({
-      name: "Raison de la suppression:",
+      name: 'Raison de la suppression:',
       value: comment,
       inline: false,
-    });
+    })
   }
 
   if (fields.length === 0) {
-    console.error({ fields });
+    console.error({ fields })
 
-    return;
+    return
   }
 
   console.info({
-    method: "post",
+    method: 'post',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     payload: JSON.stringify({
-      content: "",
+      content: '',
       tts: false,
       embeds: [
         {
@@ -88,56 +88,56 @@ export const sendWebhookUpdate = async ({
       components: [],
       actions: {},
     }),
-  });
-};
+  })
+}
 
 interface SendWebhookLogsArgs {
-  title: string;
-  color: number;
-  comment?: string;
-  oldGame?: GameType;
-  game: GameType;
+  title: string
+  color: number
+  comment?: string
+  oldGame?: GameType
+  game: GameType
 }
 
 export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs) => {
-  const fields = [];
+  const fields = []
 
   for (const prop in game) {
-    if (prop === "trlink") continue;
+    if (prop === 'trlink') continue
 
-    const key = prop as keyof Omit<GameType, "trlink">;
+    const key = prop as keyof Omit<GameType, 'trlink'>
 
-    const gameProp = game[key]?.toString();
-    const oldGameProp = oldGame ? oldGame[key]?.toString() : null;
+    const gameProp = game[key]?.toString()
+    const oldGameProp = oldGame ? oldGame[key]?.toString() : null
 
     fields.push({
       name: `${prop}:`,
       value: oldGameProp && gameProp !== oldGameProp ? `${oldGameProp} **>** ${gameProp}` : gameProp,
       inline: false,
-    });
+    })
   }
 
   if (comment) {
     fields.push({
-      name: "Raison de la suppression:",
+      name: 'Raison de la suppression:',
       value: comment,
       inline: false,
-    });
+    })
   }
 
   if (fields.length === 0) {
-    console.error({ fields });
+    console.error({ fields })
 
-    return;
+    return
   }
 
   console.info({
-    method: "post",
+    method: 'post',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     payload: JSON.stringify({
-      content: "",
+      content: '',
       tts: false,
       embeds: [
         {
@@ -145,12 +145,12 @@ export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: 
           color,
           fields,
           author: {
-            name: "mock",
+            name: 'mock',
           },
         },
       ],
       components: [],
       actions: {},
     }),
-  });
-};
+  })
+}
