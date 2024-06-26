@@ -1,6 +1,6 @@
-import { TraductorType } from '../../../types/schemas'
+import { TraductorType } from '../../../types/schemas';
 
-import type { GameType, QueryGameType } from '$types/schemas'
+import type { GameType, QueryGameType } from '$types/schemas';
 
 export const game: GameType = {
   domain: 'F95z',
@@ -19,7 +19,7 @@ export const game: GameType = {
   ttype: 'Traduction Humaine',
   ac: true,
   image: '',
-}
+};
 
 export const games: GameType[] = [
   game,
@@ -59,13 +59,13 @@ export const games: GameType[] = [
     ac: true,
     image: '',
   },
-]
+];
 
 export const queryGames: QueryGameType[] = games.map((game) => ({
   id: game.id,
   name: game.name,
   version: game.version,
-}))
+}));
 
 export const traductors: TraductorType[] = [
   {
@@ -90,7 +90,7 @@ export const traductors: TraductorType[] = [
       },
     ],
   },
-]
+];
 
 export const checkerF95z = (id: string) => {
   switch (id) {
@@ -98,24 +98,24 @@ export const checkerF95z = (id: string) => {
       return {
         status: 'ok',
         msg: { '100': 'v0.68' },
-      }
+      };
     case '110':
       return {
         status: 'ok',
         msg: { '110': 'v4.1' },
-      }
+      };
     case '150':
       return {
         status: 'ok',
         msg: { '150': 'v1.0' },
-      }
+      };
     default:
       return {
         status: 'error',
         msg: 'Thread not found',
-      }
+      };
   }
-}
+};
 
 export const scrape = (domain: 'F95z' | 'LewdCorner', id: string) => {
   switch (domain) {
@@ -129,7 +129,7 @@ export const scrape = (domain: 'F95z' | 'LewdCorner', id: string) => {
             type: 'RPGM',
             version: 'v0.68',
             image: 'https://attachments.f95zone.to/2017/07/23177_t.png',
-          }
+          };
         case '110':
           return {
             name: 'Dragon Throne',
@@ -138,7 +138,7 @@ export const scrape = (domain: 'F95z' | 'LewdCorner', id: string) => {
             type: 'RPGM',
             version: 'v4.1',
             image: '',
-          }
+          };
         case '150':
           return {
             name: 'Pokkaloh',
@@ -147,7 +147,7 @@ export const scrape = (domain: 'F95z' | 'LewdCorner', id: string) => {
             type: 'Flash',
             version: 'v1.0',
             image: '',
-          }
+          };
       }
   }
-}
+};

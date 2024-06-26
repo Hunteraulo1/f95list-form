@@ -1,31 +1,31 @@
 <script lang="ts">
-import { ExclamationCircle, ExclamationTriangle, HandThumbUp, Icon, InformationCircle, XMark } from 'svelte-hero-icons'
-import { fade } from 'svelte/transition'
+import { ExclamationCircle, ExclamationTriangle, HandThumbUp, Icon, InformationCircle, XMark } from 'svelte-hero-icons';
+import { fade } from 'svelte/transition';
 
-let nodeRef: HTMLElement
+let nodeRef: HTMLElement;
 
 const removeToast = () => {
-  nodeRef.parentNode?.removeChild(nodeRef)
-}
+  nodeRef.parentNode?.removeChild(nodeRef);
+};
 
-export let alertType = '' // info, warning, success, error
-export let message = ''
+export let alertType = ''; // info, warning, success, error
+export let message = '';
 
-let alert = ''
+let alert = '';
 
 switch (alertType) {
   case 'info':
-    alert = 'alert-info'
-    break
+    alert = 'alert-info';
+    break;
   case 'warning':
-    alert = 'alert-warning'
-    break
+    alert = 'alert-warning';
+    break;
   case 'success':
-    alert = 'alert-success'
-    break
+    alert = 'alert-success';
+    break;
   case 'error':
-    alert = 'alert-error'
-    break
+    alert = 'alert-error';
+    break;
 }
 </script>
 

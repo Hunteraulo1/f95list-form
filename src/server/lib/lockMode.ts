@@ -1,25 +1,25 @@
-const scriptPropertiesService = PropertiesService.getScriptProperties()
-let inProgress = false
+const scriptPropertiesService = PropertiesService.getScriptProperties();
+let inProgress = false;
 
 const isLocked = (): boolean | void => {
-  const scriptProperties = scriptPropertiesService.getProperties()
+  const scriptProperties = scriptPropertiesService.getProperties();
 
-  return scriptProperties['lockMode'] === 'true'
-}
+  return scriptProperties['lockMode'] === 'true';
+};
 
 export const enableLock = () => {
-  if (isLocked()) throw new Error('Lock mode already enabled')
+  if (isLocked()) throw new Error('Lock mode already enabled');
 
-  scriptPropertiesService.setProperty('lockMode', 'true')
-  inProgress = true
+  scriptPropertiesService.setProperty('lockMode', 'true');
+  inProgress = true;
 
-  console.log('lockMode: true')
-}
+  console.log('lockMode: true');
+};
 
 export const disableLock = () => {
-  if (!inProgress) return
+  if (!inProgress) return;
 
-  scriptPropertiesService.setProperty('lockMode', 'false')
+  scriptPropertiesService.setProperty('lockMode', 'false');
 
-  console.log('lockMode: false')
-}
+  console.log('lockMode: false');
+};
