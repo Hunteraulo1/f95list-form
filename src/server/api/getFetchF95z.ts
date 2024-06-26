@@ -1,28 +1,28 @@
-import { CheckerF95zType } from '$types/schemas'
+import { CheckerF95zType } from '$types/schemas';
 
 export const getFetchF95z = async (id: string): Promise<string> => {
-  const host = 'https://f95zone.to'
-  const url = `${host}/sam/checker.php?threads=${id}`
+  const host = 'https://f95zone.to';
+  const url = `${host}/sam/checker.php?threads=${id}`;
 
-  console.info('getFetchF95z called with args:', { id })
+  console.info('getFetchF95z called with args:', { id });
   try {
     const response = UrlFetchApp.fetch(url, {
       muteHttpExceptions: true,
-    })
-    const json: CheckerF95zType = await JSON.parse(response.getContentText())
+    });
+    const json: CheckerF95zType = await JSON.parse(response.getContentText());
 
     if (json.status === 'ok') {
-      return json.msg[id]
+      return json.msg[id];
     } else if (json.status === 'error') {
-      console.error(`${json.msg}`)
+      console.error(`${json.msg}`);
     } else {
-      console.error(`${json.status}`)
+      console.error(`${json.status}`);
     }
 
-    throw new Error('getFetchF95z no return')
+    throw new Error('getFetchF95z no return');
   } catch (error) {
-    console.error('Error fetching data:', error)
+    console.error('Error fetching data:', error);
 
-    throw new Error('Error fetching data')
+    throw new Error('Error fetching data');
   }
-}
+};

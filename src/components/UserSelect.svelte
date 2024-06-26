@@ -1,61 +1,61 @@
 <script lang="ts">
-import { createEventDispatcher, onMount } from 'svelte'
+import { createEventDispatcher, onMount } from 'svelte';
 
-import { GAS_API } from '$lib/GAS_API'
-import type { UserType } from '$types/schemas'
+import { GAS_API } from '$lib/GAS_API';
+import type { UserType } from '$types/schemas';
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher();
 
-let searchCount = 0
-let searchResults: UserType[] = []
-let selectedUsers: UserType[] = []
+let searchCount = 0;
+let searchResults: UserType[] = [];
+let selectedUsers: UserType[] = [];
 
-let debounceTimeout: ReturnType<typeof setTimeout>
+let debounceTimeout: ReturnType<typeof setTimeout>;
 
 onMount(() => {
-  selectedUsers = []
-  dispatch('update', selectedUsers)
+  selectedUsers = [];
+  dispatch('update', selectedUsers);
 
   // Simulating a server request
-  console.info(`Fetching results users`)
+  console.info(`Fetching results users`);
 
   if (debounceTimeout) {
-    clearTimeout(debounceTimeout)
+    clearTimeout(debounceTimeout);
   }
 
   debounceTimeout = setTimeout(async () => {
     try {
-      const result = await GAS_API.getUsers()
+      const result = await GAS_API.getUsers();
 
-      console.info({ result })
+      console.info({ result });
 
       if (result) {
-        searchResults = result
+        searchResults = result;
       } else {
-        searchResults = []
+        searchResults = [];
       }
     } catch (error) {
-      console.error('Error fetching user', error)
+      console.error('Error fetching user', error);
     } finally {
-      searchCount = searchCount + 1
+      searchCount = searchCount + 1;
     }
-  }, 1000)
-})
+  }, 1000);
+});
 
 const toggleSelect = (user: UserType) => {
-  const index = selectedUsers.findIndex((selected) => selected.email === user.email)
+  const index = selectedUsers.findIndex((selected) => selected.email === user.email);
 
   if (index > -1) {
-    selectedUsers.splice(index, 1)
-    selectedUsers = [...selectedUsers]
+    selectedUsers.splice(index, 1);
+    selectedUsers = [...selectedUsers];
   } else {
-    selectedUsers.push(user)
-    selectedUsers = [...selectedUsers]
+    selectedUsers.push(user);
+    selectedUsers = [...selectedUsers];
   }
 
   // Notify the parent component
-  dispatch('update', selectedUsers)
-}
+  dispatch('update', selectedUsers);
+};
 </script>
 
 <div>

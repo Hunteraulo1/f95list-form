@@ -1,15 +1,15 @@
-import { loadAppConfiguration } from '../lib/loadAppConfiguration'
+import { loadAppConfiguration } from '../lib/loadAppConfiguration';
 
-import type { AppConfigurationType } from '$types/schemas'
+import type { AppConfigurationType } from '$types/schemas';
 
 export const getAppConfiguration = (): AppConfigurationType | null => {
-  console.info('getting app configuration')
+  console.info('getting app configuration');
 
-  const appConfigurationObject = loadAppConfiguration()
+  const appConfigurationObject = loadAppConfiguration();
 
-  console.info(appConfigurationObject)
+  console.info(appConfigurationObject);
 
   // Do we want to filter the appConfig based on user?
 
-  return appConfigurationObject
-}
+  return appConfigurationObject;
+};

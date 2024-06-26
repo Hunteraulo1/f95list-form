@@ -38,7 +38,9 @@
       "**/dist-ssr"
     ]
   },
-  "organizeImports": { "enabled": true },
+  "organizeImports": {
+    "enabled": true
+  },
   "linter": {
     "enabled": true,
     "rules": {
@@ -133,10 +135,10 @@
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
       "trailingCommas": "all",
-      "semicolons": "asNeeded",
+      "semicolons": "always",
       "arrowParentheses": "always",
       "bracketSpacing": true,
-      "bracketSameLine": false,
+      "bracketSameLine": true,
       "quoteStyle": "single",
       "attributePosition": "auto"
     },
@@ -240,11 +242,30 @@
       "oninput",
       "onmessageerror",
       "onmousewheel",
-      "GoogleAppScript",
+      "GoogleAppsScript",
       "Cheerio",
       "UrlFetchApp",
-      "Session"
+      "Session",
+      "HtmlService",
+      "PropertiesService",
+      "SpreadsheetApp",
+      "google"
     ]
   },
-  "overrides": [{ "include": ["*.svelte"] }]
+  "overrides": [
+    {
+      "include": ["*.svelte"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useConst": "off"
+          },
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUndeclaredVariables": "off"
+          }
+        }
+      }
+    }
+  ]
 }

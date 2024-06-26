@@ -1,31 +1,31 @@
 <script lang="ts">
-import { createEventDispatcher, onMount } from 'svelte'
+import { createEventDispatcher, onMount } from 'svelte';
 
-import { GAS_API } from '$lib/GAS_API'
-import type { TraductorType } from '$types/schemas'
+import { GAS_API } from '$lib/GAS_API';
+import type { TraductorType } from '$types/schemas';
 
-const dispatch = createEventDispatcher()
+const dispatch = createEventDispatcher();
 
-let traductors: TraductorType[] = []
+let traductors: TraductorType[] = [];
 
 onMount(async () => {
   try {
-    traductors = await GAS_API.getTraductors()
+    traductors = await GAS_API.getTraductors();
 
     if (!Array.isArray(traductors)) {
-      throw new Error('getTraductor no result')
+      throw new Error('getTraductor no result');
     }
   } catch (error) {
-    console.error('Error deleting game', error)
+    console.error('Error deleting game', error);
 
     dispatch('newToast', {
       id: Date.now(),
       alertType: 'error',
       message: 'Impossible de récupérer la liste des traducteurs',
       milliseconds: 3000,
-    })
+    });
   }
-})
+});
 </script>
 
 <div class="overflow-x-auto">

@@ -1,12 +1,12 @@
 <script lang="ts">
-export let title: string = ''
-export let showModal: boolean
+export let title: string = '';
+export let showModal: boolean;
 
-let dialog: HTMLDialogElement
+let dialog: HTMLDialogElement;
 
 $: if (dialog && showModal) {
-  dialog.showModal()
-  console.log({ dialog })
+  dialog.showModal();
+  console.log({ dialog });
 }
 </script>
 

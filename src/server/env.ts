@@ -1,8 +1,8 @@
 interface EnvironmentDetails {
   domain: {
-    type: 'Personal' | 'Workspace'
-    name: string
-  }
+    type: 'Personal' | 'Workspace';
+    name: string;
+  };
 }
 
 const ENV: EnvironmentDetails = {
@@ -10,6 +10,6 @@ const ENV: EnvironmentDetails = {
     type: 'Personal',
     name: '',
   },
-}
+};
 
-export { ENV }
+export { ENV };

@@ -1,38 +1,38 @@
-import { getQueryGames } from './getQueryGames'
+import { getQueryGames } from './getQueryGames';
 
-import { Game, type GameType } from '$types/schemas'
+import { Game, type GameType } from '$types/schemas';
 
 export interface GetGameArgs {
-  name: string | null
-  version: string | null
+  name: string | null;
+  version: string | null;
 }
 
 export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType> => {
-  console.info('getGame called with args:', { name, version })
+  console.info('getGame called with args:', { name, version });
 
-  const games = await getQueryGames()
+  const games = await getQueryGames();
 
-  const gameIndex = games?.findIndex((game) => game.name === name && game.version === version)
+  const gameIndex = games?.findIndex((game) => game.name === name && game.version === version);
 
   if (gameIndex === undefined || gameIndex === -1) {
-    console.error('No detected getGame with index:', { gameIndex })
-    throw new Error('No detected getGame')
+    console.error('No detected getGame with index:', { gameIndex });
+    throw new Error('No detected getGame');
   }
 
-  const sheet = SpreadsheetApp.getActiveSpreadsheet()
-  const gameSheet = sheet.getSheetByName('Jeux')
+  const sheet = SpreadsheetApp.getActiveSpreadsheet();
+  const gameSheet = sheet.getSheetByName('Jeux');
 
   if (!gameSheet) {
-    console.error('No gameSheet detected')
-    throw new Error('No gameSheet detected')
+    console.error('No gameSheet detected');
+    throw new Error('No gameSheet detected');
   }
 
-  const data = gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`).getValues()[0]
-  const dataLink = gameSheet.getRange(`C${gameIndex + 2}:J${gameIndex + 2}`).getRichTextValues()[0]
+  const data = gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`).getValues()[0];
+  const dataLink = gameSheet.getRange(`C${gameIndex + 2}:J${gameIndex + 2}`).getRichTextValues()[0];
 
   if (data[2] !== name || data[3] !== version) {
-    console.error('No return getGame with args:', { name, version })
-    throw new Error('No return getGame')
+    console.error('No return getGame with args:', { name, version });
+    throw new Error('No return getGame');
   }
 
   return Game.parse({
@@ -53,5 +53,5 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
     link: dataLink[0]?.getLinkUrl() ?? '',
     tlink: dataLink[3]?.getLinkUrl() ?? '',
     trlink: dataLink[7]?.getLinkUrl() ?? '',
-  })
-}
+  });
+};

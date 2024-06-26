@@ -1,21 +1,21 @@
-import { appConfiguration } from '../data/appConfiguration'
-import sleep from '../sleep'
+import { appConfiguration } from '../data/appConfiguration';
+import sleep from '../sleep';
 
-import { getAdmins } from './getAdmins'
+import { getAdmins } from './getAdmins';
 
-import { type AppConfigurationType } from '$types/schemas'
+import { type AppConfigurationType } from '$types/schemas';
 
 export const getAppConfiguration = async (): Promise<AppConfigurationType> => {
-  await sleep()
+  await sleep();
 
   const appConfig = {
     ...appConfiguration,
     admins: getAdmins(),
-  }
+  };
 
-  const mockResponse = appConfig
+  const mockResponse = appConfig;
 
-  console.info('mockResponse', mockResponse)
+  console.info('mockResponse', mockResponse);
 
-  return JSON.parse(JSON.stringify(mockResponse))
-}
+  return JSON.parse(JSON.stringify(mockResponse));
+};
