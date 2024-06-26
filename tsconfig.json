@@ -17,6 +17,10 @@
       "$components/*": [
         "./src/components/*"
       ]
-    }
-  }
+    },
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
