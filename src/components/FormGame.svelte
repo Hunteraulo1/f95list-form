@@ -341,7 +341,9 @@ const handleClickDelete = async () => {
 
         <div class:hidden={step !== 2 && step !== 5}>
           <label for="link">Lien du jeu:</label>
-          <a href={game.link} target="_blank" class="ml-1 text-xs text-blue-500 hover:text-blue-600">Accèder</a>
+          {#if game.link}
+             <a href={game.link} target="_blank" class="ml-1 text-xs text-blue-500 hover:text-blue-600">Accèder</a>
+          {/if}
           <input
             type="text"
             placeholder="Lien du jeu"
