@@ -1,61 +1,61 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte";
+import { createEventDispatcher, onMount } from 'svelte'
 
-  import { GAS_API } from "$lib/GAS_API";
-  import type { UserType } from "$types/schemas";
+import { GAS_API } from '$lib/GAS_API'
+import type { UserType } from '$types/schemas'
 
-  const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher()
 
-  let searchCount = 0;
-  let searchResults: UserType[] = [];
-  let selectedUsers: UserType[] = [];
+let searchCount = 0
+let searchResults: UserType[] = []
+let selectedUsers: UserType[] = []
 
-  let debounceTimeout: ReturnType<typeof setTimeout>;
+let debounceTimeout: ReturnType<typeof setTimeout>
 
-  onMount(() => {
-    selectedUsers = [];
-    dispatch("update", selectedUsers);
+onMount(() => {
+  selectedUsers = []
+  dispatch('update', selectedUsers)
 
-    // Simulating a server request
-    console.info(`Fetching results users`);
+  // Simulating a server request
+  console.info(`Fetching results users`)
 
-    if (debounceTimeout) {
-      clearTimeout(debounceTimeout);
-    }
+  if (debounceTimeout) {
+    clearTimeout(debounceTimeout)
+  }
 
-    debounceTimeout = setTimeout(async () => {
-      try {
-        const result = await GAS_API.getUsers();
+  debounceTimeout = setTimeout(async () => {
+    try {
+      const result = await GAS_API.getUsers()
 
-        console.info({ result });
+      console.info({ result })
 
-        if (result) {
-          searchResults = result;
-        } else {
-          searchResults = [];
-        }
-      } catch (error) {
-        console.error("Error fetching user", error);
-      } finally {
-        searchCount = searchCount + 1;
+      if (result) {
+        searchResults = result
+      } else {
+        searchResults = []
       }
-    }, 1000);
-  });
-
-  const toggleSelect = (user: UserType) => {
-    const index = selectedUsers.findIndex((selected) => selected.email === user.email);
-
-    if (index > -1) {
-      selectedUsers.splice(index, 1);
-      selectedUsers = [...selectedUsers];
-    } else {
-      selectedUsers.push(user);
-      selectedUsers = [...selectedUsers];
+    } catch (error) {
+      console.error('Error fetching user', error)
+    } finally {
+      searchCount = searchCount + 1
     }
+  }, 1000)
+})
 
-    // Notify the parent component
-    dispatch("update", selectedUsers);
-  };
+const toggleSelect = (user: UserType) => {
+  const index = selectedUsers.findIndex((selected) => selected.email === user.email)
+
+  if (index > -1) {
+    selectedUsers.splice(index, 1)
+    selectedUsers = [...selectedUsers]
+  } else {
+    selectedUsers.push(user)
+    selectedUsers = [...selectedUsers]
+  }
+
+  // Notify the parent component
+  dispatch('update', selectedUsers)
+}
 </script>
 
 <div>

@@ -1,51 +1,51 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import { navigate } from "svelte-routing";
+import { createEventDispatcher } from 'svelte'
+import { navigate } from 'svelte-routing'
 
-  import Panel from "$components/Panel.svelte";
-  import { GAS_API } from "$lib/GAS_API";
-  import { isLoading, sessionUser } from "$lib/stores";
-  const dispatch = createEventDispatcher();
+import Panel from '$components/Panel.svelte'
+import { GAS_API } from '$lib/GAS_API'
+import { isLoading, sessionUser } from '$lib/stores'
+const dispatch = createEventDispatcher()
 
-  const handleClick = async () => {
-    console.info("Button clicked!");
+const handleClick = async () => {
+  console.info('Button clicked!')
 
-    if ($sessionUser) {
-      await submitUserUpdate();
-      $sessionUser.preferences?.theme &&
-        document.querySelector("html")?.setAttribute("data-theme", $sessionUser.preferences.theme);
-    }
-  };
+  if ($sessionUser) {
+    await submitUserUpdate()
+    $sessionUser.preferences?.theme &&
+      document.querySelector('html')?.setAttribute('data-theme', $sessionUser.preferences.theme)
+  }
+}
 
-  const submitUserUpdate = async () => {
-    $isLoading = true;
+const submitUserUpdate = async () => {
+  $isLoading = true
 
-    console.info("submitting user update", $sessionUser);
+  console.info('submitting user update', $sessionUser)
 
-    try {
-      if (!$sessionUser) return navigate("/");
+  try {
+    if (!$sessionUser) return navigate('/')
 
-      const result = await GAS_API.putUser({ user: $sessionUser });
+    const result = await GAS_API.putUser({ user: $sessionUser })
 
-      console.info("result", result);
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "success",
-        message: "Mise à jour de l'utilisateur!",
-        milliseconds: 3000,
-      });
-    } catch (error) {
-      console.error("Error submitting user change", error);
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "error",
-        message: "Vos modifications n'ont pas pu être enregistrées",
-        milliseconds: 3000,
-      });
-    } finally {
-      $isLoading = false;
-    }
-  };
+    console.info('result', result)
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'success',
+      message: "Mise à jour de l'utilisateur!",
+      milliseconds: 3000,
+    })
+  } catch (error) {
+    console.error('Error submitting user change', error)
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'error',
+      message: "Vos modifications n'ont pas pu être enregistrées",
+      milliseconds: 3000,
+    })
+  } finally {
+    $isLoading = false
+  }
+}
 </script>
 
 {#if $sessionUser}

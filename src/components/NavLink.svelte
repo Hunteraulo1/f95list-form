@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { navigate } from "svelte-routing";
+import { navigate } from 'svelte-routing'
 
-  export let to = "";
-  export let onClick = () => {};
+export let to = ''
+export let onClick = () => {}
 
-  const handleClick = () => {
-    navigate(to);
-    onClick();
-  };
+const handleClick = () => {
+  navigate(to)
+  onClick()
+}
 </script>
 
 <li>

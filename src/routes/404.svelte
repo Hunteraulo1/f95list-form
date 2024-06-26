@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { ExclamationTriangle, Icon } from "svelte-hero-icons";
-  import { Link } from "svelte-routing";
+import { ExclamationTriangle, Icon } from 'svelte-hero-icons'
+import { Link } from 'svelte-routing'
 </script>
 
 <div class="flex flex-col items-center justify-center py-20">

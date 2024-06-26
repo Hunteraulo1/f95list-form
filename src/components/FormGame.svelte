@@ -1,288 +1,288 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte";
-  import type { ChangeEventHandler, FormEventHandler } from "svelte/elements";
-  import { navigate } from "svelte-routing";
+import { createEventDispatcher, onMount } from 'svelte'
+import { navigate } from 'svelte-routing'
+import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements'
 
-  import Modal from "$components/Modal.svelte";
-  import Search from "$components/Search.svelte";
-  import { GAS_API } from "$lib/GAS_API";
-  import { isLoading, queryGame, userIsSuperAdmin } from "$lib/stores";
-  import type { GameType, TraductorType } from "$types/schemas";
+import Modal from '$components/Modal.svelte'
+import Search from '$components/Search.svelte'
+import { GAS_API } from '$lib/GAS_API'
+import { isLoading, queryGame, userIsSuperAdmin } from '$lib/stores'
+import type { GameType, TraductorType } from '$types/schemas'
 
-  const dispatch = createEventDispatcher();
+const dispatch = createEventDispatcher()
 
-  export let step = 0;
-  export let edit = false;
+export let step = 0
+export let edit = false
 
-  export let game: GameType = {
-    status: "EN COURS",
-    type: "RenPy",
-    tname: "Traduction",
-    ttype: "Traduction Humaine",
-    ac: false,
-    domain: "F95z",
-    id: "",
-    link: "",
-    name: "",
-    proofreader: "",
-    tags: "",
-    tlink: "",
-    traductor: "",
-    tversion: "",
-    version: "",
-    trlink: "",
-    image: "",
-  };
+export let game: GameType = {
+  status: 'EN COURS',
+  type: 'RenPy',
+  tname: 'Traduction',
+  ttype: 'Traduction Humaine',
+  ac: false,
+  domain: 'F95z',
+  id: '',
+  link: '',
+  name: '',
+  proofreader: '',
+  tags: '',
+  tlink: '',
+  traductor: '',
+  tversion: '',
+  version: '',
+  trlink: '',
+  image: '',
+}
 
-  let savedId = "";
-  let traductors: TraductorType[] = [];
-  let showModal: boolean;
-  let silentMode = false;
+let savedId = ''
+let traductors: TraductorType[] = []
+let showModal: boolean
+let silentMode = false
 
-  onMount(async () => {
-    try {
-      traductors = await GAS_API.getTraductors();
+onMount(async () => {
+  try {
+    traductors = await GAS_API.getTraductors()
 
-      if (!Array.isArray(traductors)) {
-        throw new Error("getTraductor no result");
-      }
-    } catch (error) {
-      console.error("getTradutor no return: ", error);
-
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "error",
-        message: "Impossible de récupérer la liste des traducteurs",
-        milliseconds: 3000,
-      });
+    if (!Array.isArray(traductors)) {
+      throw new Error('getTraductor no result')
     }
+  } catch (error) {
+    console.error('getTradutor no return: ', error)
 
-    const { id, domain, ac } = game;
-
-    if (step !== 5 || domain !== "F95z" || !ac) return;
-
-    try {
-      await scrapeData({ id, domain });
-    } catch (error) {
-      console.error("scrapeData no return: ", error);
-
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "warning",
-        message: "Impossible de récupérer les informations du jeu",
-        milliseconds: 3000,
-      });
-    }
-  });
-
-  const changeStep = async (amount: number) => {
-    if (step + amount >= 0 && step + amount <= 5) step += amount;
-    if (step === 1 && game.domain === "Autre") step += amount; // ID
-    if (step === 2 && game.domain === "F95z") step += amount; // Game informations
-    if (step === 4 && game.domain === "Autre") step += amount; // Auto-Check
-
-    const gameId = parseInt(game.id);
-
-    if (step === 3 && game.domain === "F95z" && game.id && gameId && savedId !== game.id) {
-      const { id, domain } = game;
-
-      savedId = game.id;
-
-      await scrapeData({ id, domain });
-    }
-  };
-
-  interface ScrapeDataArgs {
-    id: GameType["id"];
-    domain: Extract<GameType["domain"], "F95z">;
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'error',
+      message: 'Impossible de récupérer la liste des traducteurs',
+      milliseconds: 3000,
+    })
   }
 
-  const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
-    try {
-      const result = await GAS_API.getScrape({ id, domain });
+  const { id, domain, ac } = game
 
-      console.info({ result });
+  if (step !== 5 || domain !== 'F95z' || !ac) return
 
-      const { name, version, status, tags, type, image } = result;
+  try {
+    await scrapeData({ id, domain })
+  } catch (error) {
+    console.error('scrapeData no return: ', error)
 
-      game.name = name ?? game.name;
-      game.version = version ?? game.version;
-      game.tversion = game.tversion === "" ? version : game.tversion;
-      game.status = status ?? game.status;
-      game.tags = tags ?? game.tags;
-      game.type = type ?? game.type;
-      game.image = image ?? game.image;
-    } catch (error) {
-      console.error("Error scrapped game", error);
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "error",
-        message: "Impossible de récupérer les informations du jeu",
-        milliseconds: 3000,
-      });
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'warning',
+      message: 'Impossible de récupérer les informations du jeu',
+      milliseconds: 3000,
+    })
+  }
+})
+
+const changeStep = async (amount: number) => {
+  if (step + amount >= 0 && step + amount <= 5) step += amount
+  if (step === 1 && game.domain === 'Autre') step += amount // ID
+  if (step === 2 && game.domain === 'F95z') step += amount // Game informations
+  if (step === 4 && game.domain === 'Autre') step += amount // Auto-Check
+
+  const gameId = parseInt(game.id)
+
+  if (step === 3 && game.domain === 'F95z' && game.id && gameId && savedId !== game.id) {
+    const { id, domain } = game
+
+    savedId = game.id
+
+    await scrapeData({ id, domain })
+  }
+}
+
+interface ScrapeDataArgs {
+  id: GameType['id']
+  domain: Extract<GameType['domain'], 'F95z'>
+}
+
+const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
+  try {
+    const result = await GAS_API.getScrape({ id, domain })
+
+    console.info({ result })
+
+    const { name, version, status, tags, type, image } = result
+
+    game.name = name ?? game.name
+    game.version = version ?? game.version
+    game.tversion = game.tversion === '' ? version : game.tversion
+    game.status = status ?? game.status
+    game.tags = tags ?? game.tags
+    game.type = type ?? game.type
+    game.image = image ?? game.image
+  } catch (error) {
+    console.error('Error scrapped game', error)
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'error',
+      message: 'Impossible de récupérer les informations du jeu',
+      milliseconds: 3000,
+    })
+  }
+}
+
+const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = (event) => {
+  const { name, value } = event.currentTarget
+  const key = name as keyof Omit<GameType, 'trlink' | 'ac'>
+
+  const { domain, id } = game
+
+  if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
+    game['ac'] = event.currentTarget.checked
+    return
+  }
+
+  // @ts-expect-error - We know that key is a valid key of GameType
+  game[key] = value
+
+  console.log({ game })
+
+  if ((name === 'domain' || name === 'id') && id && id !== '0') {
+    console.log({ domain })
+
+    switch (domain) {
+      case 'F95z':
+        game.link = `https://f95zone.to/threads/${id}`
+        break
+      case 'LewdCorner':
+        game.link = `https://lewdcorner.com/threads/${id}`
     }
-  };
+  }
+}
 
-  const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = (event) => {
-    const { name, value } = event.currentTarget;
-    const key = name as keyof Omit<GameType, "trlink" | "ac">;
+const handleInput: FormEventHandler<HTMLInputElement> = (event) => {
+  const { value, classList } = event.currentTarget
 
-    const { domain, id } = game;
+  value === '' ? classList.add('input-error') : classList.remove('input-error')
+}
 
-    if (name === "ac" && event.currentTarget instanceof HTMLInputElement) {
-      game["ac"] = event.currentTarget.checked;
-      return;
-    }
+const handleSubmit = async () => {
+  $isLoading = true
 
-    // @ts-expect-error - We know that key is a valid key of GameType
-    game[key] = value;
-
-    console.log({ game });
-
-    if ((name === "domain" || name === "id") && id && id !== "0") {
-      console.log({ domain });
-
-      switch (domain) {
-        case "F95z":
-          game.link = `https://f95zone.to/threads/${id}`;
-          break;
-        case "LewdCorner":
-          game.link = `https://lewdcorner.com/threads/${id}`;
-      }
-    }
-  };
-
-  const handleInput: FormEventHandler<HTMLInputElement> = (event) => {
-    const { value, classList } = event.currentTarget;
-
-    value === "" ? classList.add("input-error") : classList.remove("input-error");
-  };
-
-  const handleSubmit = async () => {
-    $isLoading = true;
-
-    if (edit) {
-      const query = $queryGame;
-
-      try {
-        const result = await GAS_API.putGame({ game, query, silentMode });
-
-        if (result === "duplicate") {
-          dispatch("newToast", {
-            id: Date.now(),
-            alertType: "warning",
-            message: "Le jeu existe déjà dans la liste",
-            milliseconds: 3000,
-          });
-
-          return;
-        }
-
-        navigate("/");
-        dispatch("newToast", {
-          id: Date.now(),
-          alertType: "success",
-          message: "Le jeu a bien été modifié",
-          milliseconds: 3000,
-        });
-      } catch (error) {
-        console.error("Error fetching game", error);
-
-        dispatch("newToast", {
-          id: Date.now(),
-          alertType: "error",
-          message: "Impossible de modifier le jeu",
-          milliseconds: 3000,
-        });
-      } finally {
-        $isLoading = false;
-      }
-    } else {
-      try {
-        const result = await GAS_API.postGame({ game, silentMode });
-
-        if (result === "duplicate") {
-          dispatch("newToast", {
-            id: Date.now(),
-            alertType: "warning",
-            message: "Le jeu existe déjà dans la liste",
-            milliseconds: 3000,
-          });
-
-          return;
-        }
-
-        navigate("/");
-        dispatch("newToast", {
-          id: Date.now(),
-          alertType: "success",
-          message: "Le jeu a bien été ajouté",
-          milliseconds: 3000,
-        });
-      } catch (error) {
-        console.error("Error adding game", error);
-
-        dispatch("newToast", {
-          id: Date.now(),
-          alertType: "error",
-          message: "Impossible d'ajouter le jeu",
-          milliseconds: 3000,
-        });
-      } finally {
-        $isLoading = false;
-      }
-    }
-  };
-
-  const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
-    event.currentTarget.setCustomValidity("Veuillez remplir ce champ");
-  };
-
-  let comment = "";
-
-  const handleClickDelete = async () => {
-    if (!comment) {
-      console.log("no comment");
-
-      dispatch("newToast", {
-        id: Date.now(),
-        alertType: "warning",
-        message: "Veuillez entrer une raison pour supprimer le jeu",
-        milliseconds: 3000,
-      });
-
-      return null;
-    }
-    const query = $queryGame;
-    const { name, version } = query;
-
-    $isLoading = true;
+  if (edit) {
+    const query = $queryGame
 
     try {
-      const query = { name, version };
+      const result = await GAS_API.putGame({ game, query, silentMode })
 
-      await GAS_API.delGame({ query, comment, silentMode });
+      if (result === 'duplicate') {
+        dispatch('newToast', {
+          id: Date.now(),
+          alertType: 'warning',
+          message: 'Le jeu existe déjà dans la liste',
+          milliseconds: 3000,
+        })
 
-      navigate("/");
-      dispatch("newToast", {
+        return
+      }
+
+      navigate('/')
+      dispatch('newToast', {
         id: Date.now(),
-        alertType: "success",
-        message: "Le jeu a bien été supprimé",
+        alertType: 'success',
+        message: 'Le jeu a bien été modifié',
         milliseconds: 3000,
-      });
+      })
     } catch (error) {
-      console.error("Error deleting game", error);
+      console.error('Error fetching game', error)
 
-      dispatch("newToast", {
+      dispatch('newToast', {
         id: Date.now(),
-        alertType: "error",
-        message: "Impossible de supprimer le jeu",
+        alertType: 'error',
+        message: 'Impossible de modifier le jeu',
         milliseconds: 3000,
-      });
+      })
     } finally {
-      $isLoading = false;
+      $isLoading = false
     }
-  };
+  } else {
+    try {
+      const result = await GAS_API.postGame({ game, silentMode })
+
+      if (result === 'duplicate') {
+        dispatch('newToast', {
+          id: Date.now(),
+          alertType: 'warning',
+          message: 'Le jeu existe déjà dans la liste',
+          milliseconds: 3000,
+        })
+
+        return
+      }
+
+      navigate('/')
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'success',
+        message: 'Le jeu a bien été ajouté',
+        milliseconds: 3000,
+      })
+    } catch (error) {
+      console.error('Error adding game', error)
+
+      dispatch('newToast', {
+        id: Date.now(),
+        alertType: 'error',
+        message: "Impossible d'ajouter le jeu",
+        milliseconds: 3000,
+      })
+    } finally {
+      $isLoading = false
+    }
+  }
+}
+
+const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
+  event.currentTarget.setCustomValidity('Veuillez remplir ce champ')
+}
+
+let comment = ''
+
+const handleClickDelete = async () => {
+  if (!comment) {
+    console.log('no comment')
+
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'warning',
+      message: 'Veuillez entrer une raison pour supprimer le jeu',
+      milliseconds: 3000,
+    })
+
+    return null
+  }
+  const query = $queryGame
+  const { name, version } = query
+
+  $isLoading = true
+
+  try {
+    const query = { name, version }
+
+    await GAS_API.delGame({ query, comment, silentMode })
+
+    navigate('/')
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'success',
+      message: 'Le jeu a bien été supprimé',
+      milliseconds: 3000,
+    })
+  } catch (error) {
+    console.error('Error deleting game', error)
+
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'error',
+      message: 'Impossible de supprimer le jeu',
+      milliseconds: 3000,
+    })
+  } finally {
+    $isLoading = false
+  }
+}
 </script>
 
 {#if !$isLoading}

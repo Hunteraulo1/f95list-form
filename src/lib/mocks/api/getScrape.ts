@@ -1,26 +1,26 @@
-import { scrape } from "../data/game";
-import sleep from "../sleep";
+import { scrape } from '../data/game'
+import sleep from '../sleep'
 
 export type GetScrapeArgs = {
-  domain: "F95z" | "LewdCorner";
-  id: string;
-};
+  domain: 'F95z' | 'LewdCorner'
+  id: string
+}
 
 export const getScrape = async ({ domain, id }: GetScrapeArgs) => {
-  await sleep();
+  await sleep()
 
-  let mockResponse = await scrape(domain, id);
+  let mockResponse = await scrape(domain, id)
 
   if (!mockResponse) {
     mockResponse = {
-      name: "",
-      status: "",
-      tags: "",
-      type: "",
-      version: "",
-      image: "",
-    };
+      name: '',
+      status: '',
+      tags: '',
+      type: '',
+      version: '',
+      image: '',
+    }
   }
 
-  return JSON.parse(JSON.stringify(mockResponse));
-};
+  return JSON.parse(JSON.stringify(mockResponse))
+}
