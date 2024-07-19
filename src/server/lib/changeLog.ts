@@ -48,11 +48,11 @@ export const changelog = ({ game, status }: ChangeLogArgs) => {
 };
 
 const updateExistingRow = ({ sheet, rowIndex, newGame, existingGames }: UpdateExistingRowArgs) => {
-  const games = existingGames.split(', ');
+  const games = existingGames.split(',  ');
 
   if (games.includes(newGame)) return;
 
-  const updatedGames = `${existingGames}, ${newGame}`;
+  const updatedGames = `${existingGames},  ${newGame}`;
   sheet.getRange(`C${rowIndex + 2}`).setValue(updatedGames);
 
   console.log('updateExistingRow');
