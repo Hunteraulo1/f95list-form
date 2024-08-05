@@ -1,12 +1,14 @@
 <script lang="ts">
 import { createEventDispatcher, onMount } from 'svelte';
 
+import TraductorsModal from '$components/TraductorsModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import type { TraductorType } from '$types/schemas';
 
 const dispatch = createEventDispatcher();
 
 let traductors: TraductorType[] = [];
+let showModal: boolean[] = [];
 
 onMount(async () => {
   try {
@@ -45,22 +47,23 @@ onMount(async () => {
             <th>{index + 1}</th>
             <td class="font-bold text-primary">{traductor.name}</td>
             <td>
-              <ul>
+              <ul class="flex gap-2 justify-center">
                 {#if traductor.links && traductor.links.length > 0}
                   {#each traductor.links as link}
                     <li class="text-secondary">
                       <a href={link.link} target="_blank">{link.name}</a>
                     </li>
-                  {/each}
-                {:else}
-                  <li class="text-xs">Aucun lien disponible</li>
-                {/if}
-              </ul>
+                    {/each}
+                    {:else}
+                    <li class="text-xs">Aucun lien disponible</li>
+                    {/if}
+                  </ul>
             </td>
             <td>
-              <button class="btn btn-primary btn-xs"> Modifier </button>
+              <button class="btn btn-primary btn-xs" on:click={() => showModal[index] = true}>Modifier</button>
             </td>
           </tr>
+          <TraductorsModal bind:showModal={showModal[index]} bind:traductor on:newToast />
         {/each}
       </tbody>
     </table>
