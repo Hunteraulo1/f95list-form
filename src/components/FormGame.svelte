@@ -296,7 +296,7 @@ const handleClickDelete = async () => {
     <Search {edit} />
     <form class="relative flex w-full flex-col items-center" on:submit|preventDefault={handleSubmit} autocomplete="off">
       {#if scraping}
-        <div class="absolute flex items-center gap-1 left-0">
+        <div class="lg:absolute flex items-center gap-1 left-0">
           <LoadingSpinner />
           Chargement des données en cours
         </div>
