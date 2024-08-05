@@ -14,6 +14,7 @@ const fetchGame = async () => {
   console.info(`Fetching results for query: ${query.name} ${query.version}`);
 
   $isLoading = true;
+  game = null;
 
   if (!query) return navigate('/');
 

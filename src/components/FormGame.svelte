@@ -41,7 +41,6 @@ let showModal: boolean;
 let silentMode = false;
 let scraping = false;
 
-// BUG: Si le composent est déjà monté mais le jeu change, le code ne s'effectue pas.
 onMount(async () => {
   try {
     traductors = await GAS_API.getTraductors();
