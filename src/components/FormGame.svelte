@@ -8,6 +8,7 @@ import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, queryGame, userIsSuperAdmin } from '$lib/stores';
 import type { GameType, TraductorType } from '$types/schemas';
+import LoadingSpinner from './LoadingSpinner.svelte';
 
 const dispatch = createEventDispatcher();
 
@@ -38,7 +39,9 @@ let savedId = '';
 let traductors: TraductorType[] = [];
 let showModal: boolean;
 let silentMode = false;
+let scraping = false;
 
+// BUG: Si le composent est déjà monté mais le jeu change, le code ne s'effectue pas.
 onMount(async () => {
   try {
     traductors = await GAS_API.getTraductors();
@@ -99,6 +102,7 @@ interface ScrapeDataArgs {
 
 const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
   try {
+    scraping = true;
     const result = await GAS_API.getScrape({ id, domain });
 
     console.info({ result });
@@ -120,6 +124,8 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
       message: 'Impossible de récupérer les informations du jeu',
       milliseconds: 3000,
     });
+  } finally {
+    scraping = false;
   }
 };
 
@@ -289,6 +295,12 @@ const handleClickDelete = async () => {
   <div class="mt-0 flex flex-col items-center justify-center gap-4">
     <Search {edit} />
     <form class="relative flex w-full flex-col items-center" on:submit|preventDefault={handleSubmit} autocomplete="off">
+      {#if scraping}
+        <div class="lg:absolute flex items-center gap-1 left-0">
+          <LoadingSpinner />
+          Chargement des données en cours
+        </div>
+      {/if}
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text pr-2">Mode silencieux</span>

@@ -1,8 +1,8 @@
 <script lang="ts">
+import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
 import { Bars3, Icon } from 'svelte-hero-icons';
 import { Link, navigate } from 'svelte-routing';
-
-import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
+import packageJson from '../../package.json';
 
 export let title = '';
 
@@ -18,7 +18,7 @@ console.log('appConfiguration', $appConfiguration.appName);
   </div>
   <div class="flex-1">
     <div class="btn btn-ghost text-xl normal-case">
-      <Link to="/">{title}</Link>
+      <Link to="/">{title} <span class="badge">v{packageJson.version}</span></Link>
     </div>
   </div>
 
