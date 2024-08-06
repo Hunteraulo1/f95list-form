@@ -10,6 +10,7 @@ import { postGame } from './api/postGame';
 import { postTraductor } from './api/postTraductor';
 import { putAppConfiguration } from './api/putAppConfiguration';
 import { putGame } from './api/putGame';
+import { putTraductor } from './api/putTraductor';
 import { putUser, putUserRole } from './api/putUser';
 
 type MockEndpoints = {
@@ -29,9 +30,12 @@ type MockEndpoints = {
   putGame: typeof putGame;
   delGame: typeof delGame;
   getQueryGames: typeof getQueryGames;
+  getScrape: typeof getScrape;
+
+  // Traductor
   getTraductors: typeof getTraductors;
   postTraductor: typeof postTraductor;
-  getScrape: typeof getScrape;
+  putTraductor: typeof putTraductor;
 };
 
 const getMockEndpoints = (): MockEndpoints => {
@@ -57,6 +61,7 @@ const getMockEndpoints = (): MockEndpoints => {
     // Traductor
     getTraductors,
     postTraductor,
+    putTraductor,
   };
 };
 
