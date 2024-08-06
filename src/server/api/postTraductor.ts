@@ -1,8 +1,11 @@
 import { Traductor, type TraductorType } from '$types/schemas';
 import { disableLock, enableLock } from '../lib/lockMode';
 import { getTraductors } from './getTraductors';
+export interface PostTraductorArgs {
+  traductor: TraductorType;
+}
 
-export const postTraductor = async (traductor: TraductorType): Promise<void | string> => {
+export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<void | string> => {
   // Report request
   console.info('postTraductor called with args:', { dataTraductor: traductor });
 
@@ -12,7 +15,9 @@ export const postTraductor = async (traductor: TraductorType): Promise<void | st
     const validTraductor = Traductor.parse(traductor);
     const traductors = await getTraductors();
 
-    const duplicate = traductors?.findIndex((traductor) => traductor.name === validTraductor.name);
+    const duplicate = traductors?.findIndex(
+      (traductor) => traductor.name.toLowerCase() === validTraductor.name.toLowerCase(),
+    );
 
     if (duplicate !== -1) {
       return 'duplicate';

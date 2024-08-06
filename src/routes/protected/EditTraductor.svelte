@@ -34,8 +34,9 @@ onMount(async () => {
 </script>
 
 <button
-    class="btn mx-auto"
-     on:click={() => addModal = true}>
+  class="btn mx-auto"
+  on:click={() => addModal = true}
+  >
     Ajouter un traducteur
   </button>
 
@@ -90,4 +91,4 @@ onMount(async () => {
   </table>
 </div>
 
-<AddTraductorModal bind:showModal={addModal} on:newToast />
+<AddTraductorModal bind:showModal={addModal} name="" on:newToast />

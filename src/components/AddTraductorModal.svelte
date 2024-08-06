@@ -5,21 +5,35 @@ import { createEventDispatcher } from 'svelte';
 import Modal from './Modal.svelte';
 
 export let showModal: boolean;
+export let name: string = '';
 
 const dispatch = createEventDispatcher();
 
-let name = '';
-
 const handleSubmit = async () => {
-  $isLoading = true;
+  if (name === '') {
+    return dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'warning',
+      message: "Il est impossible de créer un traducteur qui n'a pas de nom",
+      milliseconds: 3000,
+    });
+  }
 
-  if ($traductors.find((traductor) => traductor.name === name)) return;
+  if ($traductors.find((traductor) => traductor.name.toLowerCase() === name.toLowerCase())) {
+    return dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'warning',
+      message: 'Le traducteur existe déjà',
+      milliseconds: 3000,
+    });
+  }
 
-  let newTraductor = { name, links: [] };
+  let newTraductor = { name: name ?? '', links: [] };
   let newTraductors = $traductors;
   newTraductors.push(newTraductor);
   $traductors = newTraductors;
 
+  $isLoading = true;
   try {
     const result = await GAS_API.postTraductor({ traductor: newTraductor });
 
@@ -47,7 +61,7 @@ const handleSubmit = async () => {
     dispatch('newToast', {
       id: Date.now(),
       alertType: 'error',
-      message: "Impossible d'ajouter le jeu",
+      message: "Impossible d'ajouter le traducteur",
       milliseconds: 3000,
     });
   } finally {
@@ -56,22 +70,23 @@ const handleSubmit = async () => {
 };
 </script>
 
-<Modal bind:showModal title="Ajouter un traducteur">
+<Modal bind:showModal title="Ajouter un traducteur/relecteur">
   <div slot="modal-content" class="mt-4">
     <input
       type="text"
-      placeholder="Nom du traducteur"
+      placeholder="Nom du traducteur/relecteur"
       class="input input-bordered w-full appearance-none"
-      on:input={e => name = e.currentTarget.value}
+      value={name}
+      on:input|preventDefault={e => name = e.currentTarget.value}
       />
   </div>
 
-  <button
-    slot="modal-action"
-    class="btn"
-    on:click|preventDefault={() => {
 
-    }}>
-    Valider
-  </button>
+  <div slot="modal-action" class="mt-4">
+    <button
+      class="btn"
+      on:click|preventDefault={() => handleSubmit()}>
+      Valider
+    </button>
+  </div>
 </Modal>

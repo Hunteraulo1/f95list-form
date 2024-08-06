@@ -6,8 +6,10 @@ import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements';
 import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading, queryGame, userIsSuperAdmin } from '$lib/stores';
-import type { GameType, TraductorType } from '$types/schemas';
+import { isLoading, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
+import type { GameType } from '$types/schemas';
+import { Icon, UserPlus } from 'svelte-hero-icons';
+import AddTraductorModal from './AddTraductorModal.svelte';
 import LoadingSpinner from './LoadingSpinner.svelte';
 
 const dispatch = createEventDispatcher();
@@ -36,18 +38,20 @@ export let game: GameType = {
 };
 
 let savedId = '';
-let traductors: TraductorType[] = [];
-let showModal: boolean;
+let deleteModal: boolean;
+let traductorModal: boolean[] = [false, false];
 let silentMode = false;
 let scraping = false;
 
 onMount(async () => {
   try {
-    traductors = await GAS_API.getTraductors();
+    let dataTraductors = await GAS_API.getTraductors();
 
-    if (!Array.isArray(traductors)) {
+    if (!Array.isArray(dataTraductors)) {
       throw new Error('getTraductor no result');
     }
+
+    $traductors = dataTraductors;
   } catch (error) {
     console.error('getTradutor no return: ', error);
 
@@ -490,38 +494,52 @@ const handleClickDelete = async () => {
 
         <div class:hidden={step !== 3 && step !== 5}>
           <label for="traductor">Traducteur:</label>
-          <input
-            placeholder="Nom du traducteur"
-            type="search"
-            id="traductor"
-            name="traductor"
-            class="input input-bordered w-full"
-            list="traductor-list"
-            on:change={handleChange}
-            value={game.traductor} />
-          <datalist id="traductor-list">
-            {#each traductors as traductor}
-              <option>{traductor.name}</option>
-            {/each}
-          </datalist>
+          <div class="flex gap-1">
+            <input
+              placeholder="Nom du traducteur"
+              type="search"
+              id="traductor"
+              name="traductor"
+              class="input input-bordered w-full"
+              list="traductor-list"
+              on:input={handleChange}
+              value={game.traductor} />
+            <datalist id="traductor-list">
+              {#each $traductors as traductor}
+                <option>{traductor.name}</option>
+              {/each}
+            </datalist>
+            <button
+              class="btn btn-primary w-min"
+              on:click|preventDefault={() => traductorModal[0] = true}>
+                <Icon src={UserPlus} size="1rem" />
+            </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 3 && step !== 5}>
           <label for="proofreader">Relecteur:</label>
-          <input
-            placeholder="Nom du relecteur"
-            type="search"
-            id="proofreader"
-            name="proofreader"
-            class="input input-bordered w-full"
-            list="proofreader-list"
-            on:change={handleChange}
-            value={game.proofreader} />
-          <datalist id="proofreader-list">
-            {#each traductors as traductor}
-              <option>{traductor.name}</option>
-            {/each}
-          </datalist>
+          <div class="flex gap-1">
+            <input
+              placeholder="Nom du relecteur"
+              type="search"
+              id="proofreader"
+              name="proofreader"
+              class="input input-bordered w-full"
+              list="proofreader-list"
+              on:input={handleChange}
+              value={game.proofreader} />
+            <datalist id="proofreader-list">
+              {#each $traductors as traductor}
+                <option>{traductor.name}</option>
+              {/each}
+            </datalist>
+            <button
+              class="btn btn-primary w-min"
+              on:click={() => traductorModal[1] = true}>
+                <Icon src={UserPlus} size="1rem" />
+            </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 3 && step !== 5}>
@@ -563,7 +581,7 @@ const handleClickDelete = async () => {
             {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => (showModal = true)}>
+            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => (deleteModal = true)}>
               Supprimer le jeu
             </button>
           {/if}
@@ -601,7 +619,7 @@ const handleClickDelete = async () => {
   </div>
 {/if}
 
-<Modal bind:showModal title="Supprimer le jeu">
+<Modal bind:showModal={deleteModal} title="Supprimer le jeu">
   <div slot="modal-content">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea
@@ -611,3 +629,6 @@ const handleClickDelete = async () => {
   </div>
   <button slot="modal-action" on:click={handleClickDelete} class="btn btn-error"> Supprimer définitivement </button>
 </Modal>
+
+<AddTraductorModal bind:showModal={traductorModal[0]} name={game.traductor} on:newToast />
+<AddTraductorModal bind:showModal={traductorModal[1]} name={game.proofreader} on:newToast />
