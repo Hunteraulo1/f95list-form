@@ -58,7 +58,9 @@ export const GAS_API = {
   // Traducteurs
   getTraductors: () => callAPI<TraductorType[]>('getTraductors'),
 
-  putTraductors: () => callAPI<void | string>('putTraductors'),
+  postTraductor: () => callAPI<TraductorType>('postTraductor'),
+
+  putTraductor: () => callAPI<void | string>('putTraductor'),
 
   // Others
   getScrape: (args: GetScrapeArgs) => callAPI<ScrapeGameType, typeof args>('getScrape', args),
