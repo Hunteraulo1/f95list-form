@@ -1,5 +1,3 @@
-import { TraductorType } from '../../../types/schemas';
-
 import type { GameType, QueryGameType } from '$types/schemas';
 
 export const game: GameType = {
@@ -66,31 +64,6 @@ export const queryGames: QueryGameType[] = games.map((game) => ({
   name: game.name,
   version: game.version,
 }));
-
-export const traductors: TraductorType[] = [
-  {
-    name: 'Franky28',
-    links: [
-      {
-        name: 'F95zone',
-        link: 'https://f95zone.to/threads/75444',
-      },
-    ],
-  },
-  {
-    name: 'Asterix71300',
-    links: [],
-  },
-  {
-    name: 'Frelon71',
-    links: [
-      {
-        name: 'F95zone',
-        link: 'https://f95zone.to/threads/145679',
-      },
-    ],
-  },
-];
 
 export const checkerF95z = (id: string) => {
   switch (id) {

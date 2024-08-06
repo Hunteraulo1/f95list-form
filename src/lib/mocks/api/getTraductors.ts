@@ -1,4 +1,4 @@
-import { traductors } from '../data/game';
+import { traductors } from '../data/traductor';
 import sleep from '../sleep';
 
 import { TraductorType } from '$types/schemas';

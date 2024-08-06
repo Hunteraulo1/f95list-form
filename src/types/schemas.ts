@@ -58,9 +58,9 @@ const QueryGame = z.object({
 const ScrapeGame = z.object({
   name: Game.shape.name,
   version: Game.shape.version,
-  status: Game.shape.status || '',
+  status: Game.shape.status,
   tags: Game.shape.tags,
-  type: Game.shape.type || '',
+  type: Game.shape.type,
   image: Game.shape.image,
 });
 
