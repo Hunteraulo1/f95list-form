@@ -17,6 +17,7 @@ import type {
   TraductorType,
   UserType,
 } from '$types/schemas';
+import type { PostTraductorArgs } from './mocks/api/postTraductor';
 
 const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A) => {
   console.info('calling api', functionName, args);
@@ -58,7 +59,9 @@ export const GAS_API = {
   // Traducteurs
   getTraductors: () => callAPI<TraductorType[]>('getTraductors'),
 
-  putTraductors: () => callAPI<void | string>('putTraductors'),
+  postTraductor: (args: PostTraductorArgs) => callAPI<void | string, typeof args>('postTraductor', args),
+
+  putTraductor: () => callAPI<void | string>('putTraductor'),
 
   // Others
   getScrape: (args: GetScrapeArgs) => callAPI<ScrapeGameType, typeof args>('getScrape', args),

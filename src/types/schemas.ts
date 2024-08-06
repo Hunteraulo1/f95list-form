@@ -58,9 +58,9 @@ const QueryGame = z.object({
 const ScrapeGame = z.object({
   name: Game.shape.name,
   version: Game.shape.version,
-  status: Game.shape.status || '',
+  status: Game.shape.status,
   tags: Game.shape.tags,
-  type: Game.shape.type || '',
+  type: Game.shape.type,
   image: Game.shape.image,
 });
 
@@ -77,14 +77,12 @@ const GameAC = z.object({
 
 const Traductor = z.object({
   name: z.string(),
-  links: z
-    .array(
-      z.object({
-        name: z.string(),
-        link: z.string().or(z.literal('')),
-      }),
-    )
-    .optional(),
+  links: z.array(
+    z.object({
+      name: z.string(),
+      link: z.string().or(z.literal('')),
+    }),
+  ),
 });
 
 const AppConfiguration = z.object({

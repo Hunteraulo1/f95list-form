@@ -15,13 +15,14 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
   return data.map((tr) => {
     return {
       name: tr[0]?.getText() || '',
-      links: tr[1]
-        ?.getRuns()
-        .filter((trl) => trl.getLinkUrl())
-        .map((trl) => ({
-          name: trl.getText(),
-          link: trl.getLinkUrl() || '',
-        })),
+      links:
+        tr[1]
+          ?.getRuns()
+          .filter((trl) => trl.getLinkUrl())
+          .map((trl) => ({
+            name: trl.getText(),
+            link: trl.getLinkUrl() || '',
+          })) ?? [],
     };
   });
 };
