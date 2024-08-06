@@ -1,6 +1,6 @@
 import { derived, writable } from 'svelte/store';
 
-import type { AppConfigurationType, QueryGameType, UserType } from '$types/schemas';
+import type { AppConfigurationType, QueryGameType, TraductorType, UserType } from '$types/schemas';
 
 export const sessionUser = writable<UserType | null>(null);
 export const userIsAdmin = derived(sessionUser, ($sessionUser) => {
@@ -13,5 +13,6 @@ export const userIsSuperAdmin = derived(sessionUser, ($sessionUser) => {
 export const isLoading = writable<boolean>(false);
 export const queryGame = writable<QueryGameType>();
 export const queryGames = writable<QueryGameType[]>([]);
+export const traductors = writable<TraductorType[]>([]);
 
 export const appConfiguration = writable<AppConfigurationType>();

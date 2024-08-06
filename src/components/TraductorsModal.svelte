@@ -1,45 +1,53 @@
 <script lang="ts">
+import { traductors } from '$lib/stores';
 import Modal from './Modal.svelte';
 
-import type { TraductorType } from '$types/schemas';
-
 export let showModal: boolean;
-export let traductor: TraductorType;
+export let index: number;
 
-let { name, links } = traductor;
+let traductor = $traductors[index]; // Obtenir une copie des traducteurs depuis le store
 </script>
 
 <Modal bind:showModal title="Modifier les liens du traducteur">
   <div slot="modal-content" class="mt-4">
-    {#if links && links?.length > 0}
-      <ul class="flex flex-col gap-2">
-        {#each links as { name, link }}
-          <li class="flex gap-2">
-            <input
-              type="text"
-              placeholder="Nom du lien"
-              class="number-input input input-xs input-bordered w-full appearance-none"
-              value={name}
-              />
-            <input
-              type="text"
-              placeholder="Lien"
-              class="number-input input input-xs input-bordered w-full appearance-none"
-              value={link}
-              />
-            <button class="btn btn-ghost btn-xs" on:click|preventDefault>X</button>
-          </li>
-        {/each}
-      </ul>
-    {:else}
-      Il n'y a actuellement aucun lien
-    {/if}
+    <ul class="flex flex-col gap-2">
+      {#each traductor.links || [] as { name, link }, linkIndex (name)}
+        <li class="flex gap-2">
+          <input
+            type="text"
+            placeholder="Nom du lien"
+            class="number-input input input-xs input-bordered w-full appearance-none"
+            bind:value={name}
+            />
+          <input
+            type="text"
+            placeholder="Lien"
+            class="number-input input input-xs input-bordered w-full appearance-none"
+            bind:value={link}
+            />
+          <button class="btn btn-ghost btn-xs" on:click|preventDefault={() => {
+          traductor.links.splice(linkIndex, 1);
+            console.log("🚀 ~ traductor:", traductor)
+            console.log("🚀 ~ linkIndex:", linkIndex)
+            $traductors[index] = traductor;
+          }}>X</button>
+        </li>
+      {:else}
+        <li>Il n'y a actuellement aucun lien</li>
+      {/each}
+    </ul>
   </div>
 
   <button
     slot="modal-action"
     class="btn"
-    on:click|preventDefault>
+    on:click|preventDefault={() => {
+      if (traductor.links.find((link) => link.name === '')) return
+      
+      traductor.links.push({ name: '', link: '' });
+      $traductors[index] = traductor;
+      console.log(traductor);
+    }}>
     Ajouter un lien
   </button>
 </Modal>

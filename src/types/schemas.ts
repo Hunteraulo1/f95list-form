@@ -77,14 +77,12 @@ const GameAC = z.object({
 
 const Traductor = z.object({
   name: z.string(),
-  links: z
-    .array(
-      z.object({
-        name: z.string(),
-        link: z.string().or(z.literal('')),
-      }),
-    )
-    .optional(),
+  links: z.array(
+    z.object({
+      name: z.string(),
+      link: z.string().or(z.literal('')),
+    }),
+  ),
 });
 
 const AppConfiguration = z.object({
