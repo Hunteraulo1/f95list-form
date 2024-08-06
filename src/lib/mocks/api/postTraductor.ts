@@ -7,7 +7,7 @@ export interface PostTraductorArgs {
   traductor: TraductorType;
 }
 
-export const postGame = async ({ traductor }: PostTraductorArgs): Promise<void | string> => {
+export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<void | string> => {
   await sleep();
 
   const validTraductor = Traductor.parse(traductor);
