@@ -1,13 +1,15 @@
 <script lang="ts">
 import { createEventDispatcher, onMount } from 'svelte';
 
-import TraductorsModal from '$components/TraductorsModal.svelte';
+import AddTraductorModal from '$components/AddTraductorModal.svelte';
+import EditTraductorModal from '$components/EditTraductorModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { traductors } from '$lib/stores';
+import { traductors, userIsSuperAdmin } from '$lib/stores';
 
 const dispatch = createEventDispatcher();
 
-let showModal: boolean[] = [];
+let editModal: boolean[] = [];
+let addModal: boolean;
 
 onMount(async () => {
   try {
@@ -30,6 +32,12 @@ onMount(async () => {
   }
 });
 </script>
+
+<button
+    class="btn mx-auto"
+     on:click={() => addModal = true}>
+    Ajouter un traducteur
+  </button>
 
 <div class="overflow-x-auto">
   <table class="table text-center">
@@ -60,13 +68,26 @@ onMount(async () => {
                 </ul>
           </td>
           <td>
-            <button class="btn btn-primary btn-xs" on:click={() => showModal[index] = true}>Modifier</button>
+            <button class="btn btn-primary btn-xs" on:click={() => {
+                if (userIsSuperAdmin) {
+                  return editModal[index] = true
+                }
+
+                dispatch('newToast', {
+                  id: Date.now(),
+                  alertType: 'warning',
+                  message: 'Fonctionnalité à venir',
+                  milliseconds: 3000,
+                });
+              }}>Modifier</button>
           </td>
         </tr>
-        <TraductorsModal bind:showModal={showModal[index]} {index} on:newToast />
+        <EditTraductorModal bind:showModal={editModal[index]} {index} on:newToast />
         {:else}
           <p class="fixed flex w-full justify-center">Aucun traducteur disponible</p>
       {/each}
     </tbody>
   </table>
 </div>
+
+<AddTraductorModal bind:showModal={addModal} on:newToast />

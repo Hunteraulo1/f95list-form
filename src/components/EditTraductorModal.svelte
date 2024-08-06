@@ -11,24 +11,22 @@ let traductor = $traductors[index]; // Obtenir une copie des traducteurs depuis 
 <Modal bind:showModal title="Modifier les liens du traducteur">
   <div slot="modal-content" class="mt-4">
     <ul class="flex flex-col gap-2">
-      {#each traductor.links || [] as { name, link }, linkIndex (name)}
+      {#each traductor.links || [] as {name, link}, linkIndex (name+link)}
         <li class="flex gap-2">
           <input
             type="text"
             placeholder="Nom du lien"
-            class="number-input input input-xs input-bordered w-full appearance-none"
+            class="input input-xs input-bordered w-full appearance-none"
             bind:value={name}
             />
           <input
             type="text"
             placeholder="Lien"
-            class="number-input input input-xs input-bordered w-full appearance-none"
+            class="input input-xs input-bordered w-full appearance-none"
             bind:value={link}
             />
           <button class="btn btn-ghost btn-xs" on:click|preventDefault={() => {
-          traductor.links.splice(linkIndex, 1);
-            console.log("🚀 ~ traductor:", traductor)
-            console.log("🚀 ~ linkIndex:", linkIndex)
+            traductor.links.splice(linkIndex, 1);
             $traductors[index] = traductor;
           }}>X</button>
         </li>
@@ -39,15 +37,25 @@ let traductor = $traductors[index]; // Obtenir une copie des traducteurs depuis 
   </div>
 
   <button
-    slot="modal-action"
     class="btn"
     on:click|preventDefault={() => {
       if (traductor.links.find((link) => link.name === '')) return
-      
+
       traductor.links.push({ name: '', link: '' });
       $traductors[index] = traductor;
       console.log(traductor);
     }}>
     Ajouter un lien
+  </button>
+
+  <button
+    slot="modal-action"
+    class="btn"
+    on:click={() => {
+      let newTraductors = $traductors
+      newTraductors.splice(index, 1)
+      $traductors = newTraductors
+    }}>
+    Supprimer le traducteur
   </button>
 </Modal>
