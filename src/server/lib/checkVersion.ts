@@ -49,26 +49,27 @@ const checkVersion = async () => {
     } else if (result[id] !== undefined) {
       console.info(`ID: ${id} | version: ${version} > newVersion: ${result[id]}`);
 
-      const row = sheet?.getRange(`A${index + 2}:M${index + 2}`).getValues()[0];
+      const rowId = sheet?.getRange(`A${index + 2}`)?.getValue();
+      sheet?.getRange(`D${index + 2}`).setValue(result[id]);
 
-      if (row && row[0] == id) {
-        sheet?.getRange(`D${index + 2}`).setValue(result[id]);
-
-        changed.push({ id, version, newVersion: result[id] });
-
+      if (rowId == id) {
         try {
-          const result = await getScrape({ domain: 'F95z', id });
+          const resultScrape = await getScrape({ domain: 'F95z', id });
+          console.log('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
 
-          console.log(`${id}: ${result?.image}`);
+          sheet
+            ?.getRange(`G${index + 2}:I${index + 2}`)
+            ?.setValues([[resultScrape.type, resultScrape.tags, resultScrape.type]]);
 
-          if (result?.image === '') return;
+          if (result?.image === '') throw new Error('no image scraped');
 
-          sheet?.getRange(`N${index + 2}`).setValue(result.image);
+          sheet?.getRange(`N${index + 2}`)?.setValue(resultScrape.image);
         } catch (error) {
           console.error('scrape image error: ', error);
         }
+        changed.push({ id, version, newVersion: result[id] });
       } else {
-        console.error({ row, id, version });
+        console.error({ rowId, id, version });
       }
     }
   });
