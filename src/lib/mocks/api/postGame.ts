@@ -3,6 +3,7 @@ import sleep from '../sleep';
 import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
 
 import { Game, type GameType } from '$types/schemas';
+import { parse } from 'valibot';
 
 export interface PostGameArgs {
   game: GameType;
@@ -12,7 +13,7 @@ export interface PostGameArgs {
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void | string> => {
   await sleep();
 
-  const validGame = Game.parse(game);
+  const validGame = parse(Game, game);
 
   games.push(validGame);
 

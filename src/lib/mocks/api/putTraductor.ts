@@ -1,6 +1,7 @@
 import { getTraductors } from './getTraductors';
 
 import { Traductor, type TraductorType } from '$types/schemas';
+import { parse } from 'valibot';
 
 interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
@@ -11,7 +12,7 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
   // Report request
   console.info('putTraductor called');
 
-  const validData = Traductor.parse(data);
+  const validData = parse(Traductor, data);
 
   try {
     const traductors = await getTraductors();

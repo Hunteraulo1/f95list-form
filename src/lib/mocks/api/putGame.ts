@@ -5,6 +5,7 @@ import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
 import { getGames } from './getGames';
 
 import { Game, GameType, QueryGameType } from '$types/schemas';
+import { parse } from 'valibot';
 
 export interface PutGameArgs {
   game: GameType;
@@ -36,7 +37,7 @@ export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise
       return 'duplicate';
     }
 
-    const validGame = Game.parse(game);
+    const validGame = parse(Game, game);
     console.info('mockResponse_putGame', { validGame, games });
 
     let title = "Modification d'un jeu";
