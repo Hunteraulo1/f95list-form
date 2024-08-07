@@ -59,7 +59,7 @@ const checkVersion = async () => {
 
           sheet
             ?.getRange(`G${index + 2}:I${index + 2}`)
-            ?.setValues([[resultScrape.type, resultScrape.tags, resultScrape.type]]);
+            ?.setValues([[resultScrape.status, resultScrape.tags, resultScrape.type]]);
 
           if (result?.image === '') throw new Error('no image scraped');
 
