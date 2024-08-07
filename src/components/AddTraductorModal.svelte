@@ -29,9 +29,6 @@ const handleSubmit = async () => {
   }
 
   let newTraductor = { name: name ?? '', links: [] };
-  let newTraductors = $traductors;
-  newTraductors.push(newTraductor);
-  $traductors = newTraductors;
 
   $isLoading = true;
   try {
@@ -48,7 +45,12 @@ const handleSubmit = async () => {
       return;
     }
 
+    let newTraductors = $traductors;
+    newTraductors.push(newTraductor);
+    $traductors = newTraductors;
+
     showModal = false;
+
     dispatch('newToast', {
       id: Date.now(),
       alertType: 'success',

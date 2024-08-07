@@ -4,7 +4,7 @@ import { createEventDispatcher, onMount } from 'svelte';
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import EditTraductorModal from '$components/EditTraductorModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { traductors, userIsSuperAdmin } from '$lib/stores';
+import { traductors } from '$lib/stores';
 
 const dispatch = createEventDispatcher();
 
@@ -69,18 +69,7 @@ onMount(async () => {
                 </ul>
           </td>
           <td>
-            <button class="btn btn-primary btn-xs" on:click={() => {
-                if (userIsSuperAdmin) {
-                  return editModal[index] = true
-                }
-
-                dispatch('newToast', {
-                  id: Date.now(),
-                  alertType: 'warning',
-                  message: 'Fonctionnalité à venir',
-                  milliseconds: 3000,
-                });
-              }}>Modifier</button>
+            <button class="btn btn-primary btn-xs" on:click={() => editModal[index] = true}>Modifier</button>
           </td>
         </tr>
         <EditTraductorModal bind:showModal={editModal[index]} {index} on:newToast />

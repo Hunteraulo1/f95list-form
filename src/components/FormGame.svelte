@@ -536,7 +536,7 @@ const handleClickDelete = async () => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click={() => traductorModal[1] = true}>
+              on:click|preventDefault={() => traductorModal[1] = true}>
                 <Icon src={UserPlus} size="1rem" />
             </button>
           </div>

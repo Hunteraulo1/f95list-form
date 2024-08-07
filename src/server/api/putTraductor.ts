@@ -4,14 +4,14 @@ import { getTraductors } from './getTraductors';
 
 import { Traductor, type TraductorType } from '$types/schemas';
 
-interface PutTraductorArgs {
+export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
   data: TraductorType;
 }
 
 export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<void | string> => {
   // Report request
-  console.info('putTraductor called');
+  console.info('putTraductor called with args:', { query, data });
 
   enableLock();
 
@@ -20,44 +20,37 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
   try {
     const traductors = await getTraductors();
 
-    const traductorIndex = traductors.findIndex((traductor) => {
-      traductor.name === query.name;
-    });
+    const traductorIndex = traductors.findIndex((traductor) => traductor.name === query.name);
 
     if (traductorIndex === -1) throw new Error('traductor not found');
 
-    const duplicate = traductors?.findIndex((traductor) => traductor.name === validData.name);
-
-    if (duplicate !== -1) {
-      return 'duplicate';
-    }
-
-    const linksText: string[] = [];
-
-    validData.links?.map((link) => {
-      linksText.push(link.name);
-    });
-
     const value = SpreadsheetApp.newRichTextValue();
 
-    value.setText(linksText.join(' '));
+    const linksText: string[] = validData.links?.map((link) => link.name);
+    value.setText(linksText.join(' - '));
+
+    const resetStyle = SpreadsheetApp.newTextStyle().setUnderline(false).build();
+    value.setTextStyle(resetStyle);
+
+    const linkStyle = SpreadsheetApp.newTextStyle().setBold(true).setUnderline(true).setFontFamily('Calibri').build();
 
     let step = 0;
     validData.links?.map((link) => {
       const start = step;
       const end = start + link.name.length;
 
-      step = end + 1;
+      step = end + 3;
 
-      value.setLinkUrl(start, end, link.name);
+      value.setTextStyle(start, end, linkStyle);
+      value.setLinkUrl(start, end, link.link);
     });
 
-    value.build();
-
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
-    const row = sheet?.getRange(`A${traductorIndex + 2}:B${traductorIndex + 2}`);
+    const row = sheet?.getRange(`A${traductorIndex + 2}`);
+    const richRow = sheet?.getRange(`B${traductorIndex + 2}`);
 
-    row?.setValue([query.name, value]);
+    row?.setValue(validData.name);
+    richRow?.setRichTextValue(value.build());
   } catch (error) {
     console.error(error);
 
