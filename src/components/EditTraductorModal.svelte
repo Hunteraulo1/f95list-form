@@ -2,26 +2,24 @@
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, traductors } from '$lib/stores';
 import { createEventDispatcher } from 'svelte';
+import { get } from 'svelte/store';
 import Modal from './Modal.svelte';
 
 export let showModal: boolean;
 export let index: number;
 
-const queryName: string = $traductors[index].name;
-console.log('🚀 ~ queryName:', queryName);
-
-let traductor = $traductors[index]; // Obtenir une copie des traducteurs depuis le store
-
 const dispatch = createEventDispatcher();
+
+let localTraductor = { ...get(traductors)[index] };
 
 const handleSubmit = async () => {
   $isLoading = true;
   try {
-    await GAS_API.putTraductor({ query: { name: queryName }, data: traductor });
+    await GAS_API.putTraductor({ query: { name: localTraductor.name }, data: localTraductor });
 
-    let newTraductors = $traductors;
-    newTraductors.push(traductor);
-    $traductors = newTraductors;
+    let newTraductors = get(traductors);
+    newTraductors[index] = localTraductor;
+    traductors.set(newTraductors);
 
     showModal = false;
 
@@ -44,27 +42,34 @@ const handleSubmit = async () => {
     $isLoading = false;
   }
 };
+
+const addLink = () => {
+  if (localTraductor.links.find((link) => link.name === '')) return;
+
+  localTraductor.links = [...localTraductor.links, { name: '', link: '' }];
+};
 </script>
 
 <Modal bind:showModal title="Modifier les liens du traducteur/relecteur">
   <div slot="modal-content" class="mt-4">
     <ul class="flex flex-col gap-2">
-      {#each traductor.links || [] as {name, link}, linkIndex (name+link)}
+      {#each localTraductor.links as {name, link}, linkIndex}
         <li class="flex gap-2">
           <input
             type="text"
             placeholder="Nom du lien"
             class="input input-xs input-bordered w-full appearance-none"
-            bind:value={name}
+            bind:value={localTraductor.links[linkIndex].name}
             />
           <input
             type="text"
             placeholder="Lien"
             class="input input-xs input-bordered w-full appearance-none"
-            bind:value={link}
+            bind:value={localTraductor.links[linkIndex].link}
             />
-            <button class="btn btn-ghost btn-xs" on:click|preventDefault={() => {
-            traductor.links.splice(linkIndex, 1);
+          <button class="btn btn-ghost btn-xs" on:click|preventDefault={() => {
+            localTraductor.links.splice(linkIndex, 1);
+            localTraductor = { ...localTraductor, links: [...localTraductor.links] };
           }}>X</button>
         </li>
       {:else}
@@ -72,34 +77,18 @@ const handleSubmit = async () => {
       {/each}
     </ul>
   </div>
-  
+
   <div slot="modal-action" class="mt-4">
-    <!-- TODO: implement delete traductor feature -->
-    <!-- <button
-      class="btn"
-      on:click|preventDefault={() => {
-        let newTraductors = $traductors
-        newTraductors.splice(index, 1)
-        $traductors = newTraductors
-      }}>
-      Supprimer le traducteur
-    </button> -->
-    
     <button
       class="btn"
-      on:click|preventDefault={() => {
-        if (traductor.links.find((link) => link.name === '')) return
-
-        traductor.links.push({ name: '', link: '' });
-      }}>
+      on:click|preventDefault={addLink}>
       Ajouter un lien
     </button>
     
     <button
       class="btn"
-      on:click|preventDefault={() => handleSubmit()}>
+      on:click|preventDefault={handleSubmit}>
       Valider
     </button>
-    
   </div>
 </Modal>
