@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "lint": "bunx @biomejs/biome lint --write .",
     "format": "bunx @biomejs/biome format --write .",
-    "check": "bunx @biomejs/biome check --write .",
+    "check": "bunx @biomejs/biome check --write . && svelte-check --tsconfig ./tsconfig.json",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
   "lint-staged": {
