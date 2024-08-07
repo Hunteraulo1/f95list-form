@@ -14,11 +14,11 @@ const baseConfig = {
 export default [
   {
     ...baseConfig,
-    input: 'node_modules/valibot/dist/index.js',
+    input: 'node_modules/zod/lib/index.js',
     output: {
-      file: 'dist/server/lib/valibot-bundle.js',
+      file: 'dist/server/lib/zod-bundle.js',
       format: 'iife',
-      name: 'v',
+      name: 'z',
     },
   },
 ];
