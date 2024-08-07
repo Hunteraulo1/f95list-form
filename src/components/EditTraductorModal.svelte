@@ -11,11 +11,12 @@ export let index: number;
 const dispatch = createEventDispatcher();
 
 let localTraductor = { ...get(traductors)[index] };
+const queryName = localTraductor.name;
 
 const handleSubmit = async () => {
   $isLoading = true;
   try {
-    await GAS_API.putTraductor({ query: { name: localTraductor.name }, data: localTraductor });
+    await GAS_API.putTraductor({ query: { name: queryName }, data: localTraductor });
 
     let newTraductors = get(traductors);
     newTraductors[index] = localTraductor;
@@ -50,8 +51,15 @@ const addLink = () => {
 };
 </script>
 
-<Modal bind:showModal title="Modifier les liens du traducteur/relecteur">
+<Modal bind:showModal title="Modifier traducteur/relecteur">
   <div slot="modal-content" class="mt-4">
+    <input
+      type="text"
+      placeholder="Nom du traducteur/relecteur"
+      class="input input-bordered w-full appearance-none"
+      bind:value={localTraductor.name}
+      />
+    <h2>Modifier les liens du traducteur/relecteur</h2>
     <ul class="flex flex-col gap-2">
       {#each localTraductor.links as {name, link}, linkIndex}
         <li class="flex gap-2">
