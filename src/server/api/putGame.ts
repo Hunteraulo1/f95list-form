@@ -11,7 +11,6 @@ import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 import { Game } from '$types/schemas';
-import { parse } from 'valibot';
 
 export interface PutGameArgs {
   game: GameType;
@@ -29,7 +28,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
   try {
     enableLock();
 
-    const validGame = parse(Game, dataGame);
+    const validGame = Game.parse(dataGame);
 
     const games = await getQueryGames();
 

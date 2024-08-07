@@ -1,7 +1,6 @@
 import { getUser } from './getUser';
 
 import { User, type UserType } from '$types/schemas';
-import { parse } from 'valibot';
 
 export type PutUserArgs = {
   user: UserType;
@@ -15,7 +14,7 @@ export const putUser = ({ user }: PutUserArgs) => {
 
   console.info('putUser() called with: ', user, 'by: ', invokingUserEmail);
 
-  const validUser = parse(User, user);
+  const validUser = User.parse(user);
 
   if (validUser.roles.includes('superAdmin') && invokingUserEmail !== Session.getEffectiveUser().getEmail())
     throw new Error('A user resource can only be updated by themselves or the superAdmin.');
@@ -47,7 +46,7 @@ export const putUserRole = ({ user }: PutUserArgs) => {
 
   console.info('putUserRole() called with: ', user, 'by: ', invokingUserEmail);
 
-  const validUser = parse(User, user);
+  const validUser = User.parse(user);
 
   if (validUser.roles.includes('superAdmin') && invokingUserEmail !== Session.getEffectiveUser().getEmail())
     throw new Error('A user resource can only be updated by themselves or the superAdmin.');
@@ -79,7 +78,7 @@ export const putUserRole = ({ user }: PutUserArgs) => {
 export const putStatistics = (type: 'put' | 'post'): void => {
   console.info('putUserRole() called with: ', type);
 
-  const validUser = parse(User, getUser());
+  const validUser = User.parse(getUser());
 
   if (!validUser.email) throw new Error('No email found');
 

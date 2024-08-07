@@ -9,7 +9,6 @@ import { getUser } from './getUser';
 import { putStatistics, putUser } from './putUser';
 
 import { Game, type GameType } from '$types/schemas';
-import { parse } from 'valibot';
 
 export interface PostGameArgs {
   game: GameType;
@@ -23,7 +22,7 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void
   try {
     enableLock();
 
-    const validGame = parse(Game, game);
+    const validGame = Game.parse(game);
     const games = await getQueryGames();
 
     const duplicate = games?.findIndex(

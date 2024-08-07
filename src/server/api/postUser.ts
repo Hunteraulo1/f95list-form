@@ -1,5 +1,4 @@
 import { User, type UserType } from '$types/schemas';
-import { parse } from 'valibot';
 
 export const postUser = (email: string, overrides = {}): UserType => {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
@@ -35,7 +34,7 @@ export const postUser = (email: string, overrides = {}): UserType => {
     ...overrides,
   };
 
-  const validUser = parse(User, user);
+  const validUser = User.parse(user);
   scriptPropertiesService.setProperty(email, JSON.stringify(validUser));
 
   return user;

@@ -1,40 +1,40 @@
-import * as v from 'valibot';
+import { z } from 'zod';
 
-const User = v.object({
-  email: v.union([v.pipe(v.string(), v.email()), v.nullable(v.string())]),
-  roles: v.array(v.picklist(['superAdmin', 'admin'])),
-  profile: v.object({
-    pseudo: v.string(),
-    imageUrl: v.string(),
+const User = z.object({
+  email: z.string().email().or(z.string().nullable()),
+  roles: z.array(z.enum(['superAdmin', 'admin'])),
+  profile: z.object({
+    pseudo: z.string(),
+    imageUrl: z.string().or(z.literal('')),
   }),
-  preferences: v.object({
-    theme: v.optional(v.picklist(['light', 'dark'])),
+  preferences: z.object({
+    theme: z.enum(['light', 'dark']).optional(),
   }),
-  activity: v.array(
-    v.object({
-      label: v.string(),
-      value: v.string(), // You can add custom validation to ensure it's an ISO string
+  activity: z.array(
+    z.object({
+      label: z.string(),
+      value: z.string(), // You can add custom validation to ensure it's an ISO string
     }),
   ),
-  statistics: v.object({
-    gameAdded: v.pipe(v.number(), v.minValue(0)),
-    gameEdited: v.pipe(v.number(), v.minValue(0)),
+  statistics: z.object({
+    gameAdded: z.number().min(0),
+    gameEdited: z.number().min(0),
   }),
 });
 
-const Game = v.object({
-  id: v.string(),
-  domain: v.picklist(['F95z', 'LewdCorner', 'Autre']),
-  name: v.string(),
-  version: v.string(),
-  tversion: v.string(),
-  tname: v.picklist(['Traduction', 'Traduction (mod inclus)', 'Intégrée', 'Pas de traduction']),
-  status: v.picklist(['EN COURS', 'TERMINÉ', 'ABANDONNÉ']),
-  tags: v.string(),
-  type: v.picklist(['RenPy', 'RPGM', 'Unity', 'Unreal', 'Flash', 'HTLM', 'QSP', 'Autre', 'RenPy/RPGM', 'RenPy/Unity']),
-  traductor: v.string(),
-  proofreader: v.string(),
-  ttype: v.picklist([
+const Game = z.object({
+  id: z.string(),
+  domain: z.enum(['F95z', 'LewdCorner', 'Autre']),
+  name: z.string().min(1),
+  version: z.string().min(1),
+  tversion: z.string().min(1),
+  tname: z.enum(['Traduction', 'Traduction (mod inclus)', 'Intégrée', 'Pas de traduction']),
+  status: z.enum(['EN COURS', 'TERMINÉ', 'ABANDONNÉ']),
+  tags: z.string(),
+  type: z.enum(['RenPy', 'RPGM', 'Unity', 'Unreal', 'Flash', 'HTLM', 'QSP', 'Autre', 'RenPy/RPGM', 'RenPy/Unity']),
+  traductor: z.string(),
+  proofreader: z.string(),
+  ttype: z.enum([
     'Traduction Humaine',
     'Traduction Automatique',
     'Traduction Semi-Automatique',
@@ -42,58 +42,58 @@ const Game = v.object({
     'À tester',
     'Lien Trad HS',
   ]),
-  ac: v.boolean(),
-  link: v.string(),
-  tlink: v.string(),
-  trlink: v.optional(v.string()),
-  image: v.string(),
+  ac: z.boolean(),
+  link: z.string(),
+  tlink: z.string().or(z.literal('')),
+  trlink: z.string().optional().or(z.literal('')),
+  image: z.string(),
 });
 
-const QueryGame = v.object({
-  id: Game.entries.version,
-  name: Game.entries.name,
-  version: Game.entries.version,
+const QueryGame = z.object({
+  id: Game.shape.version,
+  name: Game.shape.name,
+  version: Game.shape.version,
 });
 
-const ScrapeGame = v.object({
-  name: Game.entries.name,
-  version: Game.entries.version,
-  status: Game.entries.status,
-  tags: Game.entries.tags,
-  type: Game.entries.type,
-  image: Game.entries.image,
+const ScrapeGame = z.object({
+  name: Game.shape.name,
+  version: Game.shape.version,
+  status: Game.shape.status,
+  tags: Game.shape.tags,
+  type: Game.shape.type,
+  image: Game.shape.image,
 });
 
-const CheckerF95z = v.object({
-  status: v.string(),
-  msg: v.string(),
+const CheckerF95z = z.object({
+  status: z.string(),
+  msg: z.record(z.string()),
 });
 
-const GameAC = v.object({
-  id: Game.entries.id,
-  version: Game.entries.version,
-  newVersion: Game.entries.version,
+const GameAC = z.object({
+  id: Game.shape.id,
+  version: Game.shape.version,
+  newVersion: Game.shape.version,
 });
 
-const Traductor = v.object({
-  name: v.string(),
-  links: v.array(
-    v.object({
-      name: v.string(),
-      link: v.string(),
+const Traductor = z.object({
+  name: z.string(),
+  links: z.array(
+    z.object({
+      name: z.string(),
+      link: z.string().or(z.literal('')),
     }),
   ),
 });
 
-const AppConfiguration = v.object({
-  appName: v.string(),
-  deployingUserEmail: v.string(),
-  admins: v.array(User),
+const AppConfiguration = z.object({
+  appName: z.string(),
+  deployingUserEmail: z.string(),
+  admins: z.array(User),
 });
 
-const AppWebhooks = v.object({
-  update: v.string(),
-  logs: v.string(),
+const AppWebhooks = z.object({
+  update: z.string().or(z.literal('')),
+  logs: z.string().or(z.literal('')),
 });
 
 // You need to export in this format. See
@@ -102,12 +102,12 @@ const AppWebhooks = v.object({
 // export { AppConfiguration, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
 export { AppConfiguration, AppWebhooks, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
 
-export type AppConfigurationType = v.InferOutput<typeof AppConfiguration>;
-export type UserType = v.InferOutput<typeof User>;
-export type GameType = v.InferOutput<typeof Game>;
-export type QueryGameType = v.InferOutput<typeof QueryGame>;
-export type TraductorType = v.InferOutput<typeof Traductor>;
-export type ScrapeGameType = v.InferOutput<typeof ScrapeGame>;
-export type CheckerF95zType = v.InferOutput<typeof CheckerF95z>;
-export type GameACType = v.InferOutput<typeof GameAC>;
-export type AppWebhooksType = v.InferOutput<typeof AppWebhooks>;
+export type AppConfigurationType = z.infer<typeof AppConfiguration>;
+export type UserType = z.infer<typeof User>;
+export type GameType = z.infer<typeof Game>;
+export type QueryGameType = z.infer<typeof QueryGame>;
+export type TraductorType = z.infer<typeof Traductor>;
+export type ScrapeGameType = z.infer<typeof ScrapeGame>;
+export type CheckerF95zType = z.infer<typeof CheckerF95z>;
+export type GameACType = z.infer<typeof GameAC>;
+export type AppWebhooksType = z.infer<typeof AppWebhooks>;

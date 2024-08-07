@@ -1,7 +1,6 @@
 import { getAdmins } from '../api/getAdmins';
 
 import { AppConfiguration, type AppConfigurationType } from '$types/schemas';
-import { parse } from 'valibot';
 
 export const loadAppConfiguration = () => {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
@@ -15,7 +14,7 @@ export const loadAppConfiguration = () => {
     admins: getAdmins(),
   };
 
-  parse(AppConfiguration, appConfig);
+  AppConfiguration.parse(appConfig);
 
   return appConfig;
 };

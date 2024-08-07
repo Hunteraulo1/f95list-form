@@ -1,7 +1,6 @@
 import sleep from '../sleep';
 
 import { AppConfiguration, type AppConfigurationType, AppWebhooks, type AppWebhooksType } from '$types/schemas';
-import { parse } from 'valibot';
 
 interface PutAppConfigArgs {
   appConfiguration: AppConfigurationType;
@@ -12,9 +11,9 @@ export const putAppConfiguration = async ({ appConfiguration, webhooks }: PutApp
   await sleep();
 
   try {
-    const appConfigurationResult = parse(AppConfiguration, appConfiguration);
+    const appConfigurationResult = AppConfiguration.parse(appConfiguration);
     console.log('🚀 ~ putAppConfiguration ~ appConfigurationResult:', appConfigurationResult);
-    const appWebhooksResult = parse(AppWebhooks, webhooks);
+    const appWebhooksResult = AppWebhooks.parse(webhooks);
     console.log('🚀 ~ putAppConfiguration ~ appWebhooksResult:', appWebhooksResult);
   } catch (error) {
     throw new Error(`Error in putAppConfiguration: ${error}`);

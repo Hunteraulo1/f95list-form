@@ -1,7 +1,6 @@
 import { users } from '../data/user';
 
 import { User, type UserType } from '$types/schemas';
-import { parse } from 'valibot';
 
 export const getAdmins = (): UserType[] => {
   // Return variable
@@ -11,7 +10,7 @@ export const getAdmins = (): UserType[] => {
   for (const user of users) {
     try {
       // Weed out properties that do not reprsent users
-      const validUser = parse(User, user);
+      const validUser = User.parse(user);
 
       // If the user has an admin role, add them to our list
       if (validUser.roles.includes('admin')) {

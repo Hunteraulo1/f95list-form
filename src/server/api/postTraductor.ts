@@ -1,5 +1,4 @@
 import { Traductor, type TraductorType } from '$types/schemas';
-import { parse } from 'valibot';
 import { disableLock, enableLock } from '../lib/lockMode';
 import { getTraductors } from './getTraductors';
 export interface PostTraductorArgs {
@@ -13,7 +12,7 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<v
   try {
     enableLock();
 
-    const validTraductor = parse(Traductor, traductor);
+    const validTraductor = Traductor.parse(traductor);
     const traductors = await getTraductors();
 
     const duplicate = traductors?.findIndex(

@@ -1,7 +1,6 @@
 import { getQueryGames } from './getQueryGames';
 
 import { Game, type GameType } from '$types/schemas';
-import { parse } from 'valibot';
 
 export interface GetGameArgs {
   name: string | null;
@@ -36,7 +35,7 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
     throw new Error('No return getGame');
   }
 
-  return parse(Game, {
+  return Game.parse({
     id: data[0].toString(),
     domain: data[1],
     name: data[2],

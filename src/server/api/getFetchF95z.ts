@@ -12,7 +12,6 @@ export const getFetchF95z = async (id: string): Promise<string> => {
     const json: CheckerF95zType = await JSON.parse(response.getContentText());
 
     if (json.status === 'ok') {
-      // @ts-ignore
       return json.msg[id];
     } else if (json.status === 'error') {
       console.error(`${json.msg}`);

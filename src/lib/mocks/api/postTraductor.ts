@@ -1,7 +1,6 @@
 import sleep from '../sleep';
 
 import { Traductor, type TraductorType } from '$types/schemas';
-import { parse } from 'valibot';
 import { traductors } from '../data/traductor';
 
 export interface PostTraductorArgs {
@@ -11,7 +10,7 @@ export interface PostTraductorArgs {
 export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<void | string> => {
   await sleep();
 
-  const validTraductor = parse(Traductor, traductor);
+  const validTraductor = Traductor.parse(traductor);
 
   traductors.push(validTraductor);
 
