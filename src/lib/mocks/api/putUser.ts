@@ -1,7 +1,6 @@
 import sleep from '../sleep';
 
 import { User, UserType } from '$types/schemas';
-import { parse } from 'valibot';
 
 interface PutUserArgs {
   user: UserType;
@@ -13,7 +12,7 @@ interface PutUserArgs {
 export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   await sleep();
 
-  parse(User, user);
+  User.parse(user);
 
   console.info('putUser() called with: ', user);
 };
@@ -21,7 +20,7 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 export const putUserRole = async ({ user }: PutUserArgs): Promise<void> => {
   await sleep();
 
-  parse(User, user);
+  User.parse(user);
 
   console.info('putUserRole() called with: ', user);
 };
