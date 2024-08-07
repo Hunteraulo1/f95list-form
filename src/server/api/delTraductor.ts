@@ -1,7 +1,6 @@
 import type { TraductorType } from '$types/schemas';
 import { disableLock, enableLock } from '../lib/lockMode';
 
-
 import { getTraductors } from './getTraductors';
 
 export interface DelTraductorArgs {
