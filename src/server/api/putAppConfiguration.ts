@@ -1,4 +1,5 @@
 import { AppConfiguration, type AppConfigurationType, AppWebhooks, type AppWebhooksType } from '$types/schemas';
+import { parse } from 'valibot';
 
 export type PutAppConfigArgs = {
   appConfiguration: AppConfigurationType;
@@ -14,8 +15,8 @@ export const putAppConfiguration = ({ appConfiguration, webhooks }: PutAppConfig
 
     console.info('putAppConfiguration() called with: ', appConfiguration);
 
-    AppConfiguration.parse(appConfiguration);
-    AppWebhooks.parse(webhooks);
+    parse(AppConfiguration, appConfiguration);
+    parse(AppWebhooks, webhooks);
 
     const scriptPropertiesService = PropertiesService.getScriptProperties();
 

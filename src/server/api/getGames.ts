@@ -1,4 +1,5 @@
 import { Game, type GameType } from '$types/schemas';
+import { parse } from 'valibot';
 
 export const getGames = async (): Promise<GameType[]> => {
   // Report request
@@ -15,7 +16,7 @@ export const getGames = async (): Promise<GameType[]> => {
   const data = gameSheet.getRange(`A2:N${totalRow}`).getValues();
 
   return data.map((game) =>
-    Game.parse({
+    parse(Game, {
       id: game[0].toString(),
       domain: game[1],
       name: game[2],

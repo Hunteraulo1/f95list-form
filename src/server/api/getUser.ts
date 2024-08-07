@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import * as v from 'valibot';
 
 import { postUser } from './postUser';
 
@@ -20,10 +20,10 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
 
   if (email) {
     // Validate the arguments against the schema
-    const GetUserArgsSchema = z.object({
-      email: User.shape.email,
+    const GetUserArgsSchema = v.object({
+      email: User.entries.email,
     });
-    validArgs = GetUserArgsSchema.parse({ email });
+    validArgs = v.parse(GetUserArgsSchema, email);
   }
 
   const EMAIL_FOR_RETRIEVAL = validArgs?.email ?? requestingUserEmail;

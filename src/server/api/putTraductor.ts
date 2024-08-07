@@ -3,6 +3,7 @@ import { disableLock, enableLock } from '../lib/lockMode';
 import { getTraductors } from './getTraductors';
 
 import { Traductor, type TraductorType } from '$types/schemas';
+import { parse } from 'valibot';
 
 export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
@@ -15,7 +16,7 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
 
   enableLock();
 
-  const validData = Traductor.parse(data);
+  const validData = parse(Traductor, data);
 
   try {
     const traductors = await getTraductors();

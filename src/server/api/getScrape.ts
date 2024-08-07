@@ -1,6 +1,7 @@
 import { getFetchF95z } from './getFetchF95z';
 
 import { GameType, ScrapeGame } from '$types/schemas';
+import { parse } from 'valibot';
 
 export type GetScrapeArgs = {
   domain: Extract<GameType['domain'], 'F95z'>;
@@ -76,7 +77,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
     domain,
   });
 
-  const validScrapeGame = ScrapeGame.parse({
+  const validScrapeGame = parse(ScrapeGame, {
     name,
     version,
     status,
