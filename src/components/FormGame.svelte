@@ -8,7 +8,7 @@ import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
 import type { GameType } from '$types/schemas';
-import { Icon, UserPlus } from 'svelte-hero-icons';
+import { Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
 import AddTraductorModal from './AddTraductorModal.svelte';
 import LoadingSpinner from './LoadingSpinner.svelte';
 
@@ -356,19 +356,21 @@ const handleClickDelete = async () => {
 
         <div class:hidden={step !== 2 && step !== 5}>
           <label for="link">Lien du jeu:</label>
-          {#if game.link}
-             <a href={game.link} target="_blank" class="ml-1 text-xs text-blue-500 hover:text-blue-600">Accèder</a>
-          {/if}
-          <input
-            type="text"
-            placeholder="Lien du jeu"
-            class="input input-bordered w-full"
-            class:input-error={!edit && game.domain !== "F95z"}
-            name="link"
-            on:change={handleChange}
-            on:input={(e) => handleInput(e)}
-            required
-            value={game.link} />
+          <div class="flex gap-1">
+            <input
+              type="text"
+              placeholder="Lien du jeu"
+              class="input input-bordered w-full"
+              class:input-error={!edit && game.domain !== "F95z"}
+              name="link"
+              on:change={handleChange}
+              on:input={(e) => handleInput(e)}
+              required
+              value={game.link} />
+              <button class="btn {game.link ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => game.link && window.open(game.link, '_blank')}>
+                <Icon src={game.link ? Link : LinkSlash} size="1rem" />
+              </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
@@ -483,13 +485,18 @@ const handleClickDelete = async () => {
 
         <div class:hidden={step !== 3 && step !== 5}>
           <label for="tlink">Lien de la traduction:</label>
-          <input
-            type="text"
-            placeholder="Lien de la traduction"
-            class="input input-bordered w-full"
-            name="tlink"
-            on:change={handleChange}
-            value={game.tlink} />
+          <div class="flex gap-1">
+            <input
+              type="text"
+              placeholder="Lien de la traduction"
+              class="input input-bordered w-full"
+              name="tlink"
+              on:change={handleChange}
+              value={game.tlink} />
+              <button class="btn {game.tlink ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => game.tlink && window.open(game.tlink, '_blank')}>
+                <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
+              </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 3 && step !== 5}>
