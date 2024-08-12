@@ -8,7 +8,7 @@ import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
 import type { GameType } from '$types/schemas';
-import { Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
+import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
 import AddTraductorModal from './AddTraductorModal.svelte';
 import LoadingSpinner from './LoadingSpinner.svelte';
 
@@ -455,16 +455,21 @@ const handleClickDelete = async () => {
 
         <div class:hidden={step !== 3 && step !== 5}>
           <label for="tversion">Version de la traduction:</label>
-          <input
-            type="text"
-            placeholder="Version de la traduction"
-            class="input input-bordered w-full"
-            class:input-error={!edit}
-            name="tversion"
-            on:change={handleChange}
-            on:input={(e) => handleInput(e)}
-            required
-            value={game.tversion} />
+          <div class="flex gap-1">
+            <input
+              type="text"
+              placeholder="Version de la traduction"
+              class="input input-bordered w-full"
+              class:input-error={!edit}
+              name="tversion"
+              on:change={handleChange}
+              on:input={(e) => handleInput(e)}
+              required
+              value={game.tversion} />
+              <button class="btn {game.version ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => {if(game.version) game.tversion = game.version}}>
+                <Icon src={DocumentDuplicate} size="1rem" />
+              </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 3 && step !== 5}>
