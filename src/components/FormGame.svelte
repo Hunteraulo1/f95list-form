@@ -625,7 +625,8 @@ const handleClickDelete = async () => {
             }}>
             Dev data
           </button>
-          {#if game.domain === 'F95z'}
+          {/if}
+          {#if $userIsSuperAdmin && game.domain === 'F95z'}
              <button
              class="btn btn-info w-full sm:w-48"
              type="button"
@@ -633,7 +634,6 @@ const handleClickDelete = async () => {
              Force scrape
             </button>
           {/if}
-        {/if}
       </div>
     </form>
   </div>
