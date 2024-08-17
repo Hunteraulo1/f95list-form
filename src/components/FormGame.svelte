@@ -623,7 +623,7 @@ const handleClickDelete = async () => {
                 image: "https://attachments.f95zone.to/2024/04/3572650_Remaster_HD.png",
               };
             }}>
-            Dev button
+            Dev data
           </button>
         {/if}
       </div>
