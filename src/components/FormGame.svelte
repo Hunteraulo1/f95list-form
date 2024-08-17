@@ -112,8 +112,11 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
 
     const { name, version, status, tags, type, image } = result;
 
+    if (game.ac === true || !edit) {
+      game.version = version ?? game.version;
+    }
+
     game.name = name ?? game.name;
-    game.version = version ?? game.version;
     game.tversion = game.tversion === '' ? version : game.tversion;
     game.status = status ?? game.status;
     game.tags = tags ?? game.tags;
@@ -625,15 +628,15 @@ const handleClickDelete = async () => {
             }}>
             Dev data
           </button>
-          {/if}
-          {#if $userIsSuperAdmin && game.domain === 'F95z'}
-             <button
-             class="btn btn-info w-full sm:w-48"
-             type="button"
-             on:click={() => scrapeData({ id: game.id, domain: 'F95z' })}>
-             Force scrape
-            </button>
-          {/if}
+        {/if}
+        {#if $userIsSuperAdmin && game.domain === 'F95z'}
+            <button
+            class="btn btn-info w-full sm:w-48"
+            type="button"
+            on:click={() => scrapeData({ id: game.id, domain: 'F95z' })}>
+            Force scrape
+          </button>
+        {/if}
       </div>
     </form>
   </div>
