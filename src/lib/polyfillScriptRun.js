@@ -1,4 +1,4 @@
-import getMockEndpoints from './mocks/API';
+import getMockEndpoints from './mocks/Api';
 let polyfilled = false;
 
 const polyfillScriptRun = async () => {
