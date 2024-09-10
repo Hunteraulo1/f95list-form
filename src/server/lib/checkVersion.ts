@@ -32,11 +32,11 @@ const checkVersion = async () => {
     console.info({ data });
 
     if (data.status === 'ok') {
-      result = await Object.assign(result, data.msg);
+      result = Object.assign(result, data.msg);
     } else if (data.status === 'error') {
-      console.error(`${data.msg}`);
+      console.error(data.msg);
     } else {
-      console.error(`${data.status}`);
+      console.error(data.status);
     }
   }
 
@@ -55,7 +55,7 @@ const checkVersion = async () => {
       if (rowId == id) {
         try {
           const resultScrape = await getScrape({ domain: 'F95z', id });
-          console.log('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
+          console.info('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
 
           sheet
             ?.getRange(`G${index + 2}:I${index + 2}`)
@@ -77,9 +77,9 @@ const checkVersion = async () => {
   sendWebhookAC({ games: changed });
 };
 
-const f95Api = (ids: string | string[]) => {
+const f95Api = async (ids: string | string[]) => {
   interface Response {
-    status: 'ok';
+    status: string;
     msg: {
       [key: string]: string;
     };
@@ -87,7 +87,7 @@ const f95Api = (ids: string | string[]) => {
 
   const host = 'https://f95zone.to';
   const url = `${host}/sam/checker.php?threads=${ids}`;
-  const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  const response = await UrlFetchApp.fetch(url, { muteHttpExceptions: true });
 
   const json = response.getContentText();
 
