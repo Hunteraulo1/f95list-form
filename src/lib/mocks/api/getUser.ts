@@ -1,5 +1,5 @@
+import sleep from '$lib/sleep';
 import { user, users } from '../data/user';
-import sleep from '../sleep';
 
 import type { UserType } from '$types/schemas';
 

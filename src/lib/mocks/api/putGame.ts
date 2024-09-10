@@ -1,5 +1,5 @@
+import sleep from '$lib/sleep';
 import { games } from '../data/game';
-import sleep from '../sleep';
 import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
 
 import { getGames } from './getGames';

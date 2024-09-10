@@ -1,5 +1,5 @@
+import sleep from '$lib/sleep';
 import { appConfiguration } from '../data/appConfiguration';
-import sleep from '../sleep';
 
 import { getAdmins } from './getAdmins';
 

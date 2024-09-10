@@ -1,4 +1,4 @@
-import sleep from '../sleep';
+import sleep from '$lib/sleep';
 
 import { User, type UserType } from '$types/schemas';
 

@@ -1,5 +1,5 @@
+import sleep from '$lib/sleep';
 import { traductors } from '../data/traductor';
-import sleep from '../sleep';
 
 import type { TraductorType } from '$types/schemas';
 

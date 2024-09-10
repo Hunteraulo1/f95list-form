@@ -1,4 +1,4 @@
-import sleep from '../sleep';
+import sleep from '$lib/sleep';
 
 import { AppConfiguration, type AppConfigurationType, AppWebhooks, type AppWebhooksType } from '$types/schemas';
 
