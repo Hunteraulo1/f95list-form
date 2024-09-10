@@ -1,5 +1,3 @@
-// let tempLogs = [];
-
 import { getGames } from '../api/getGames';
 import { getScrape } from '../api/getScrape';
 
@@ -26,9 +24,9 @@ const checkVersion = async () => {
   });
 
   for (let index = 0; index <= ids.length / 100; index++) {
-    const data = await f95Api(ids.splice(0, 100).toString());
+    const data = await f95Api(ids.slice(index * 100, index * 100 + 100).toString());
 
-    console.info({ data });
+    console.info({ index, data });
 
     if (data.status === 'ok') {
       result = Object.assign(result, data.msg);
