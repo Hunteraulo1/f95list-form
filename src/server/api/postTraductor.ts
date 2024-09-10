@@ -5,7 +5,7 @@ export interface PostTraductorArgs {
   traductor: TraductorType;
 }
 
-export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<void | string> => {
+export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
   // Report request
   console.info('postTraductor called with args:', { dataTraductor: traductor });
 

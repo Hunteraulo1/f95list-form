@@ -1,7 +1,7 @@
 import { user, users } from '../data/user';
 import sleep from '../sleep';
 
-import { UserType } from '$types/schemas';
+import type { UserType } from '$types/schemas';
 
 interface GetUserArgs {
   email: UserType['email'] | null;

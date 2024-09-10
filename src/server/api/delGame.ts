@@ -6,7 +6,7 @@ import { getQueryGames } from './getQueryGames';
 import { getUser } from './getUser';
 import { putUser } from './putUser';
 
-import { GameType } from '$types/schemas';
+import type { GameType } from '$types/schemas';
 
 export interface DelGameArgs {
   query: { name: string; version: string };

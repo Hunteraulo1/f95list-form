@@ -3,14 +3,14 @@ import { createEventDispatcher, onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements';
 
+import AddTraductorModal from '$components/AddTraductorModal.svelte';
+import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
-import AddTraductorModal from './AddTraductorModal.svelte';
-import LoadingSpinner from './LoadingSpinner.svelte';
 
 const dispatch = createEventDispatcher();
 
@@ -87,7 +87,7 @@ const changeStep = async (amount: number) => {
   if (step === 2 && game.domain === 'F95z') step += amount; // Game informations
   if (step === 4 && game.domain === 'Autre') step += amount; // Auto-Check
 
-  const gameId = parseInt(game.id);
+  const gameId = Number.parseInt(game.id);
 
   if (step === 3 && game.domain === 'F95z' && game.id && gameId && savedId !== game.id) {
     const { id, domain } = game;
@@ -142,7 +142,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HT
   const { domain, id } = game;
 
   if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
-    game['ac'] = event.currentTarget.checked;
+    game.ac = event.currentTarget.checked;
     return;
   }
 

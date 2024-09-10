@@ -1,4 +1,4 @@
-import { QueryGameType } from '../../../types/schemas';
+import type { QueryGameType } from '../../../types/schemas';
 import { queryGames } from '../data/game';
 import sleep from '../sleep';
 

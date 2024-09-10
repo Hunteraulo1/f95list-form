@@ -21,7 +21,7 @@ export interface PutGameArgs {
   silentMode: boolean;
 }
 
-export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<void | string> => {
+export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
   // Report request
   console.info('putGame called with args:', { dataGame });
 

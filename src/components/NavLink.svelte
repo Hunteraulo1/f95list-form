@@ -2,7 +2,7 @@
 import { navigate } from 'svelte-routing';
 
 export let to = '';
-export let onClick;
+export let onClick: () => void;
 
 const handleClick = () => {
   navigate(to);

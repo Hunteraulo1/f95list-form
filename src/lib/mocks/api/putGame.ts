@@ -4,7 +4,7 @@ import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
 
 import { getGames } from './getGames';
 
-import { Game, GameType, QueryGameType } from '$types/schemas';
+import { Game, type GameType, type QueryGameType } from '$types/schemas';
 
 export interface PutGameArgs {
   game: GameType;
@@ -12,7 +12,7 @@ export interface PutGameArgs {
   silentMode: boolean;
 }
 
-export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise<void | string> => {
+export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
   await sleep();
 
   try {
@@ -67,7 +67,7 @@ export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise
       webhookUpdate(oldGame, validGame, title, color);
     }
   } catch (error) {
-    console.error('putGame: ' + error);
+    console.error(`putGame: ${error}`);
   }
 };
 

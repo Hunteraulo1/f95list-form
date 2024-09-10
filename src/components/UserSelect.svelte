@@ -17,7 +17,7 @@ onMount(() => {
   dispatch('update', selectedUsers);
 
   // Simulating a server request
-  console.info(`Fetching results users`);
+  console.info('Fetching results users');
 
   if (debounceTimeout) {
     clearTimeout(debounceTimeout);

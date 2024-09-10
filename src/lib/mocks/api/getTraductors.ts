@@ -1,7 +1,7 @@
 import { traductors } from '../data/traductor';
 import sleep from '../sleep';
 
-import { TraductorType } from '$types/schemas';
+import type { TraductorType } from '$types/schemas';
 
 export const getTraductors = async (): Promise<TraductorType[]> => {
   await sleep();

@@ -1,4 +1,4 @@
-import { GameType } from '../../../types/schemas';
+import type { GameType } from '../../../types/schemas';
 import { games } from '../data/game';
 import sleep from '../sleep';
 

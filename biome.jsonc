@@ -7,12 +7,7 @@
     "defaultBranch": "main"
   },
   "formatter": {
-    "ignore": [
-      "**/node_modules/*",
-      "**/dist/*",
-      "**/.svelte-kit/*",
-      "**/build/*"
-    ],
+    "ignore": ["**/node_modules/*", "**/dist/*", "**/.svelte-kit/*", "**/build/*"],
     "enabled": true,
     "formatWithErrors": true,
     "indentStyle": "space",
@@ -22,21 +17,11 @@
     "attributePosition": "auto"
   },
   "organizeImports": {
-    "ignore": [
-      "**/node_modules/*",
-      "**/dist/*",
-      "**/.svelte-kit/*",
-      "**/build/*"
-    ],
+    "ignore": ["**/node_modules/*", "**/dist/*", "**/.svelte-kit/*", "**/build/*"],
     "enabled": true
   },
   "linter": {
-    "ignore": [
-      "**/node_modules/*",
-      "**/dist/*",
-      "**/.svelte-kit/*",
-      "**/build/*"
-    ],
+    "ignore": ["**/node_modules/*", "**/dist/*", "**/.svelte-kit/*", "**/build/*"],
     "enabled": true,
     "rules": {
       "recommended": true,
@@ -50,11 +35,7 @@
         "useFilenamingConvention": {
           "level": "error",
           "options": {
-            "filenameCases": [
-              "PascalCase",
-              "camelCase",
-              "export"
-            ]
+            "filenameCases": ["PascalCase", "camelCase", "export"]
           }
         }
       }
@@ -62,8 +43,14 @@
   },
   "javascript": {
     "globals": [
-      "chrome",
-      "browser"
+      "google",
+      "GoogleAppsScript",
+      "Session",
+      "HtmlService",
+      "SpreadsheetApp",
+      "UrlFetchApp",
+      "PropertiesService",
+      "Cheerio"
     ],
     "formatter": {
       "quoteStyle": "single"
@@ -83,11 +70,7 @@
   },
   "overrides": [
     {
-      "include": [
-        "biome.jsonc",
-        "tsconfig.json",
-        ".vscode/*"
-      ],
+      "include": ["biome.jsonc", "tsconfig.json", ".vscode/*"],
       "json": {
         "parser": {
           "allowComments": true,
@@ -99,9 +82,7 @@
       }
     },
     {
-      "include": [
-        "*.svelte"
-      ],
+      "include": ["*.svelte"],
       "linter": {
         "rules": {
           "style": {

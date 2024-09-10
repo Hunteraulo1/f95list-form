@@ -7,7 +7,6 @@ import { sendWebhookAC } from './webhook';
 
 import type { GameACType } from '$types/schemas';
 
-// biome-ignore lint/correctness/noUnusedVariables: External function
 const checkVersion = async () => {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
 
@@ -40,7 +39,7 @@ const checkVersion = async () => {
     }
   }
 
-  checkedGames.forEach(async (game) => {
+  for (const game of checkedGames) {
     const { index, id, version } = game;
     if (version === result[id]) {
       // console.info(`ID: ${id} | version: ${version} / newVersion: ok`);
@@ -52,7 +51,7 @@ const checkVersion = async () => {
       const rowId = sheet?.getRange(`A${index + 2}`)?.getValue();
       sheet?.getRange(`D${index + 2}`).setValue(result[id]);
 
-      if (rowId == id) {
+      if (rowId === id) {
         try {
           const resultScrape = await getScrape({ domain: 'F95z', id });
           console.info('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
@@ -72,7 +71,7 @@ const checkVersion = async () => {
         console.error({ rowId, id, version });
       }
     }
-  });
+  }
 
   sendWebhookAC({ games: changed });
 };

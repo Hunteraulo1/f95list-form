@@ -5,7 +5,7 @@ import { createEventDispatcher } from 'svelte';
 import Modal from './Modal.svelte';
 
 export let showModal: boolean;
-export let name: string = '';
+export let name = '';
 
 const dispatch = createEventDispatcher();
 

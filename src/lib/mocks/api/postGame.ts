@@ -9,7 +9,7 @@ export interface PostGameArgs {
   silentMode: boolean;
 }
 
-export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void | string> => {
+export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void> => {
   await sleep();
 
   const validGame = Game.parse(game);

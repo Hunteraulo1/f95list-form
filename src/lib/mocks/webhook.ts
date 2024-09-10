@@ -1,4 +1,4 @@
-import { GameType } from '$types/schemas';
+import type { GameType } from '$types/schemas';
 
 interface SendWebhookUpdateArgs {
   title: string;

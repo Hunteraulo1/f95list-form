@@ -1,12 +1,12 @@
-import { GetUserArgs } from '../server/api/getUser';
-import { PutAppConfigArgs } from '../server/api/putAppConfiguration';
-import { PutUserArgs } from '../server/api/putUser';
+import type { GetUserArgs } from '../server/api/getUser';
+import type { PutAppConfigArgs } from '../server/api/putAppConfiguration';
+import type { PutUserArgs } from '../server/api/putUser';
 
-import { DelGameArgs } from './mocks/api/delGame';
-import { GetGameArgs } from './mocks/api/getGame';
-import { GetScrapeArgs } from './mocks/api/getScrape';
-import { PostGameArgs } from './mocks/api/postGame';
-import { PutGameArgs } from './mocks/api/putGame';
+import type { DelGameArgs } from './mocks/api/delGame';
+import type { GetGameArgs } from './mocks/api/getGame';
+import type { GetScrapeArgs } from './mocks/api/getScrape';
+import type { PostGameArgs } from './mocks/api/postGame';
+import type { PutGameArgs } from './mocks/api/putGame';
 import './polyfillScriptRun.js';
 
 import type {
@@ -50,9 +50,9 @@ export const GAS_API = {
   // Game
   getGame: (args: GetGameArgs) => callAPI<GameType, typeof args>('getGame', args),
 
-  postGame: (args: PostGameArgs) => callAPI<void | string, typeof args>('postGame', args),
+  postGame: (args: PostGameArgs) => callAPI<undefined | string, typeof args>('postGame', args),
 
-  putGame: (args: PutGameArgs) => callAPI<void | string, typeof args>('putGame', args),
+  putGame: (args: PutGameArgs) => callAPI<undefined | string, typeof args>('putGame', args),
 
   delGame: (args: DelGameArgs) => callAPI<void, typeof args>('delGame', args),
 
@@ -61,9 +61,9 @@ export const GAS_API = {
   // Traducteurs
   getTraductors: () => callAPI<TraductorType[]>('getTraductors'),
 
-  postTraductor: (args: PostTraductorArgs) => callAPI<void | string, typeof args>('postTraductor', args),
+  postTraductor: (args: PostTraductorArgs) => callAPI<undefined | string, typeof args>('postTraductor', args),
 
-  putTraductor: (args: PutTraductorArgs) => callAPI<void | string, typeof args>('putTraductor', args),
+  putTraductor: (args: PutTraductorArgs) => callAPI<undefined | string, typeof args>('putTraductor', args),
 
   delTraductor: (args: DelTraductorArgs) => callAPI<void, typeof args>('delTraductor', args),
 
