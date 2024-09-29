@@ -48,7 +48,13 @@
   "dependencies": {
     "zod": "^3.23.8"
   },
-  "trustedDependencies": [
-    "@biomejs/biome"
-  ]
+  "trustedDependencies": ["@biomejs/biome"],
+  "config": {
+    "commitizen": {
+      "path": "cz-emoji"
+    },
+    "cz-emoji": {
+      "skipQuestions": ["scope", "body", "issues", "breaking"]
+    }
+  }
 }
