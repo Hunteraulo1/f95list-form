@@ -5,6 +5,7 @@ import { sendWebhookAC } from './webhook';
 
 import type { GameACType } from '$types/schemas';
 
+//
 const checkVersion = async () => {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
 
@@ -49,7 +50,7 @@ const checkVersion = async () => {
       const rowId = sheet?.getRange(`A${index + 2}`)?.getValue();
       sheet?.getRange(`D${index + 2}`).setValue(result[id]);
 
-      if (rowId === id) {
+      if (rowId === Number.parseInt(id)) {
         try {
           const resultScrape = await getScrape({ domain: 'F95z', id });
           console.info('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
@@ -74,6 +75,8 @@ const checkVersion = async () => {
   sendWebhookAC({ games: changed });
 };
 
+const host = 'https://f95zone.to';
+
 const f95Api = async (ids: string | string[]) => {
   interface Response {
     status: string;
@@ -82,7 +85,6 @@ const f95Api = async (ids: string | string[]) => {
     };
   }
 
-  const host = 'https://f95zone.to';
   const url = `${host}/sam/checker.php?threads=${ids}`;
   const response = await UrlFetchApp.fetch(url, { muteHttpExceptions: true });
 
