@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
 import { Route } from 'svelte-routing';
 
-import PageNotFound from '../routes/404.svelte';
+import PageNotFound from '../routes/error404.svelte';
 
 import { userIsAdmin, userIsSuperAdmin } from '$lib/stores';
 
-export let path;
+export let path: string;
 export let superAdmin = false;
 
 console.log({ superAdmin });

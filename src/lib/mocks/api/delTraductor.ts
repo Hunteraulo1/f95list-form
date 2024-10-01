@@ -1,6 +1,6 @@
+import sleep from '$lib/sleep';
 import type { TraductorType } from '$types/schemas';
 import { traductors } from '../data/traductor';
-import sleep from '../sleep';
 
 export interface DelTraductorArgs {
   query: TraductorType['name'];

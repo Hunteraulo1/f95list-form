@@ -1,4 +1,4 @@
-import { type GameACType, GameType } from '$types/schemas';
+import type { GameACType, GameType } from '$types/schemas';
 
 interface SendWebhookUpdateArgs {
   title: string;

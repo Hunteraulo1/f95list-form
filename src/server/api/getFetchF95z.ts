@@ -1,4 +1,4 @@
-import { CheckerF95zType } from '$types/schemas';
+import type { CheckerF95zType } from '$types/schemas';
 
 export const getFetchF95z = async (id: string): Promise<string> => {
   const host = 'https://f95zone.to';
@@ -13,7 +13,8 @@ export const getFetchF95z = async (id: string): Promise<string> => {
 
     if (json.status === 'ok') {
       return json.msg[id];
-    } else if (json.status === 'error') {
+    }
+    if (json.status === 'error') {
       console.error(`${json.msg}`);
     } else {
       console.error(`${json.status}`);

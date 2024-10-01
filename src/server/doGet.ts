@@ -3,7 +3,6 @@
 import { initializeApp } from './lib/initializeApp';
 import { loadAppConfiguration } from './lib/loadAppConfiguration';
 
-// biome-ignore lint/correctness/noUnusedVariables: This is a Google Apps Script entrypoint
 const doGet = (_e: unknown) => {
   // We shouldn't load the application if we aren't able to get the user's
   // identity. In this case, we return the noAuth.html page.

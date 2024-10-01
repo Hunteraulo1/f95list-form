@@ -1,4 +1,4 @@
-import { TraductorType } from '../../../types/schemas';
+import type { TraductorType } from '../../../types/schemas';
 
 export const traductor: TraductorType = {
   name: 'Franky28',

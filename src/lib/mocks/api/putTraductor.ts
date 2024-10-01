@@ -7,7 +7,7 @@ interface PutTraductorArgs {
   data: TraductorType;
 }
 
-export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<void | string> => {
+export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<undefined | string> => {
   // Report request
   console.info('putTraductor called');
 

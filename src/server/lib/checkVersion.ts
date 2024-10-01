@@ -1,5 +1,3 @@
-// let tempLogs = [];
-
 import { getGames } from '../api/getGames';
 import { getScrape } from '../api/getScrape';
 
@@ -7,7 +5,7 @@ import { sendWebhookAC } from './webhook';
 
 import type { GameACType } from '$types/schemas';
 
-// biome-ignore lint/correctness/noUnusedVariables: External function
+//
 const checkVersion = async () => {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
 
@@ -27,20 +25,20 @@ const checkVersion = async () => {
   });
 
   for (let index = 0; index <= ids.length / 100; index++) {
-    const data = await f95Api(ids.splice(0, 100).toString());
+    const data = await f95Api(ids.slice(index * 100, index * 100 + 100).toString());
 
-    console.info({ data });
+    console.info({ index, data });
 
     if (data.status === 'ok') {
-      result = await Object.assign(result, data.msg);
+      result = Object.assign(result, data.msg);
     } else if (data.status === 'error') {
-      console.error(`${data.msg}`);
+      console.error(data.msg);
     } else {
-      console.error(`${data.status}`);
+      console.error(data.status);
     }
   }
 
-  checkedGames.forEach(async (game) => {
+  for (const game of checkedGames) {
     const { index, id, version } = game;
     if (version === result[id]) {
       // console.info(`ID: ${id} | version: ${version} / newVersion: ok`);
@@ -52,10 +50,10 @@ const checkVersion = async () => {
       const rowId = sheet?.getRange(`A${index + 2}`)?.getValue();
       sheet?.getRange(`D${index + 2}`).setValue(result[id]);
 
-      if (rowId == id) {
+      if (rowId === Number.parseInt(id)) {
         try {
           const resultScrape = await getScrape({ domain: 'F95z', id });
-          console.log('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
+          console.info('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
 
           sheet
             ?.getRange(`G${index + 2}:I${index + 2}`)
@@ -72,22 +70,23 @@ const checkVersion = async () => {
         console.error({ rowId, id, version });
       }
     }
-  });
+  }
 
   sendWebhookAC({ games: changed });
 };
 
-const f95Api = (ids: string | string[]) => {
+const host = 'https://f95zone.to';
+
+const f95Api = async (ids: string | string[]) => {
   interface Response {
-    status: 'ok';
+    status: string;
     msg: {
       [key: string]: string;
     };
   }
 
-  const host = 'https://f95zone.to';
   const url = `${host}/sam/checker.php?threads=${ids}`;
-  const response = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+  const response = await UrlFetchApp.fetch(url, { muteHttpExceptions: true });
 
   const json = response.getContentText();
 

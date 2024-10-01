@@ -18,7 +18,7 @@ const handleNewAdminSubmit = async () => {
 
   $isLoading = true;
 
-  users.forEach(async (user) => {
+  for (let user of users) {
     console.info('raising user to admin status', user);
 
     const roles = new Set(user.roles);
@@ -54,7 +54,7 @@ const handleNewAdminSubmit = async () => {
     } finally {
       $isLoading = false;
     }
-  });
+  }
 
   $isLoading = false;
 };

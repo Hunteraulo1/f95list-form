@@ -15,7 +15,7 @@ export interface PostGameArgs {
   silentMode: boolean;
 }
 
-export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void | string> => {
+export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
   // Report request
   console.info('postGame called with args:', { dataGame: game });
 

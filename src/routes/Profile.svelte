@@ -15,9 +15,6 @@ let loading = false;
 
 let user: UserType | undefined = undefined;
 
-// Fetch the user on mount
-$: fetchUser();
-
 const fetchUser = async () => {
   $isLoading = true;
 
@@ -43,6 +40,9 @@ const fetchUser = async () => {
     $isLoading = false;
   }
 };
+
+// Fetch the user on mount
+$: fetchUser();
 </script>
 
 {#if user && !loading}

@@ -1,6 +1,6 @@
 import { getFetchF95z } from './getFetchF95z';
 
-import { GameType, ScrapeGame } from '$types/schemas';
+import { type GameType, ScrapeGame } from '$types/schemas';
 
 export type GetScrapeArgs = {
   domain: Extract<GameType['domain'], 'F95z'>;
@@ -20,7 +20,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
   // const id = "100";
 
   // Report request
-  console.info('getScrape called with args: ' + { domain, id });
+  console.info(`getScrape called with args: ${{ domain, id }}`);
 
   if (domain !== 'F95z') throw new Error('domaine incompatible');
 
@@ -92,7 +92,7 @@ const scrapeGetTitle = (data: string[]) => {
   let status = '';
   let type = '';
 
-  data.forEach((e: string) => {
+  for (const e of data) {
     switch (e) {
       case 'Abandoned':
         status = 'ABANDONNÉ';
@@ -130,7 +130,7 @@ const scrapeGetTitle = (data: string[]) => {
         type = 'Autre';
         break;
     }
-  });
+  }
 
   return { status, type };
 };

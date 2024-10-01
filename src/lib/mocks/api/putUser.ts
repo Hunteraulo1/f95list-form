@@ -1,6 +1,6 @@
-import sleep from '../sleep';
+import sleep from '$lib/sleep';
 
-import { User, UserType } from '$types/schemas';
+import { User, type UserType } from '$types/schemas';
 
 interface PutUserArgs {
   user: UserType;

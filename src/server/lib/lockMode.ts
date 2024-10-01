@@ -1,10 +1,10 @@
 const scriptPropertiesService = PropertiesService.getScriptProperties();
 let inProgress = false;
 
-const isLocked = (): boolean | void => {
+const isLocked = (): boolean | undefined => {
   const scriptProperties = scriptPropertiesService.getProperties();
 
-  return scriptProperties['lockMode'] === 'true';
+  return scriptProperties.lockMode === 'true';
 };
 
 export const enableLock = () => {

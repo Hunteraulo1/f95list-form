@@ -1,5 +1,5 @@
+import sleep from '$lib/sleep';
 import { games } from '../data/game';
-import sleep from '../sleep';
 import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
 
 import { Game, type GameType } from '$types/schemas';
@@ -9,7 +9,7 @@ export interface PostGameArgs {
   silentMode: boolean;
 }
 
-export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void | string> => {
+export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void> => {
   await sleep();
 
   const validGame = Game.parse(game);

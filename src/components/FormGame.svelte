@@ -3,14 +3,14 @@ import { createEventDispatcher, onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements';
 
+import AddTraductorModal from '$components/AddTraductorModal.svelte';
+import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
 import type { GameType } from '$types/schemas';
-import { Icon, UserPlus } from 'svelte-hero-icons';
-import AddTraductorModal from './AddTraductorModal.svelte';
-import LoadingSpinner from './LoadingSpinner.svelte';
+import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
 
 const dispatch = createEventDispatcher();
 
@@ -39,6 +39,7 @@ export let game: GameType = {
 
 let savedId = '';
 let deleteModal: boolean;
+let insertModal: boolean;
 let traductorModal: boolean[] = [false, false];
 let silentMode = false;
 let scraping = false;
@@ -81,13 +82,26 @@ onMount(async () => {
   }
 });
 
+interface InsertObject {
+  id: string;
+  domain: string;
+  name: string;
+  version: string;
+  status: string;
+  tags: string;
+  type: string;
+  ac: boolean;
+  link: string;
+  image: string;
+}
+
 const changeStep = async (amount: number) => {
   if (step + amount >= 0 && step + amount <= 5) step += amount;
   if (step === 1 && game.domain === 'Autre') step += amount; // ID
   if (step === 2 && game.domain === 'F95z') step += amount; // Game informations
   if (step === 4 && game.domain === 'Autre') step += amount; // Auto-Check
 
-  const gameId = parseInt(game.id);
+  const gameId = Number.parseInt(game.id);
 
   if (step === 3 && game.domain === 'F95z' && game.id && gameId && savedId !== game.id) {
     const { id, domain } = game;
@@ -112,8 +126,11 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
 
     const { name, version, status, tags, type, image } = result;
 
+    if (game.ac === true || !edit) {
+      game.version = version ?? game.version;
+    }
+
     game.name = name ?? game.name;
-    game.version = version ?? game.version;
     game.tversion = game.tversion === '' ? version : game.tversion;
     game.status = status ?? game.status;
     game.tags = tags ?? game.tags;
@@ -139,7 +156,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HT
   const { domain, id } = game;
 
   if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
-    game['ac'] = event.currentTarget.checked;
+    game.ac = event.currentTarget.checked;
     return;
   }
 
@@ -248,6 +265,7 @@ const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
 };
 
 let comment = '';
+let insertObject: string;
 
 const handleClickDelete = async () => {
   if (!comment) {
@@ -291,6 +309,25 @@ const handleClickDelete = async () => {
   } finally {
     $isLoading = false;
   }
+};
+
+const handleClickInsert = () => {
+  if (!insertObject) {
+    console.log('no object');
+
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'warning',
+      message: 'Veuillez entrer les données de LC Extractor',
+      milliseconds: 3000,
+    });
+
+    return null;
+  }
+
+  Object.assign(game, JSON.parse(insertObject));
+
+  game.ac = false; // Reload view data
 };
 </script>
 
@@ -351,24 +388,26 @@ const handleClickDelete = async () => {
             on:input={(e) => handleInput(e)}
             on:invalid={handleInvalid}
             required
-            value={game.name} />
+            bind:value={game.name} />
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
           <label for="link">Lien du jeu:</label>
-          {#if game.link}
-             <a href={game.link} target="_blank" class="ml-1 text-xs text-blue-500 hover:text-blue-600">Accèder</a>
-          {/if}
-          <input
-            type="text"
-            placeholder="Lien du jeu"
-            class="input input-bordered w-full"
-            class:input-error={!edit && game.domain !== "F95z"}
-            name="link"
-            on:change={handleChange}
-            on:input={(e) => handleInput(e)}
-            required
-            value={game.link} />
+          <div class="flex gap-1">
+            <input
+              type="text"
+              placeholder="Lien du jeu"
+              class="input input-bordered w-full"
+              class:input-error={!edit && game.domain !== "F95z"}
+              name="link"
+              on:change={handleChange}
+              on:input={(e) => handleInput(e)}
+              required
+              value={game.link} />
+              <button class="btn {game.link ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => game.link && window.open(game.link, '_blank')}>
+                <Icon src={game.link ? Link : LinkSlash} size="1rem" />
+              </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
@@ -453,16 +492,21 @@ const handleClickDelete = async () => {
 
         <div class:hidden={step !== 3 && step !== 5}>
           <label for="tversion">Version de la traduction:</label>
-          <input
-            type="text"
-            placeholder="Version de la traduction"
-            class="input input-bordered w-full"
-            class:input-error={!edit}
-            name="tversion"
-            on:change={handleChange}
-            on:input={(e) => handleInput(e)}
-            required
-            value={game.tversion} />
+          <div class="flex gap-1">
+            <input
+              type="text"
+              placeholder="Version de la traduction"
+              class="input input-bordered w-full"
+              class:input-error={!edit}
+              name="tversion"
+              on:change={handleChange}
+              on:input={(e) => handleInput(e)}
+              required
+              value={game.tversion} />
+              <button class="btn {game.version ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => {if(game.version) game.tversion = game.version}}>
+                <Icon src={DocumentDuplicate} size="1rem" />
+              </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 3 && step !== 5}>
@@ -483,13 +527,18 @@ const handleClickDelete = async () => {
 
         <div class:hidden={step !== 3 && step !== 5}>
           <label for="tlink">Lien de la traduction:</label>
-          <input
-            type="text"
-            placeholder="Lien de la traduction"
-            class="input input-bordered w-full"
-            name="tlink"
-            on:change={handleChange}
-            value={game.tlink} />
+          <div class="flex gap-1">
+            <input
+              type="text"
+              placeholder="Lien de la traduction"
+              class="input input-bordered w-full"
+              name="tlink"
+              on:change={handleChange}
+              value={game.tlink} />
+              <button class="btn {game.tlink ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => game.tlink && window.open(game.tlink, '_blank')}>
+                <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
+              </button>
+          </div>
         </div>
 
         <div class:hidden={step !== 3 && step !== 5}>
@@ -511,7 +560,7 @@ const handleClickDelete = async () => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => traductorModal[0] = true}>
+              on:click|preventDefault={() => {traductorModal[0] = true}}>
                 <Icon src={UserPlus} size="1rem" />
             </button>
           </div>
@@ -536,7 +585,7 @@ const handleClickDelete = async () => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => traductorModal[1] = true}>
+              on:click|preventDefault={() => {traductorModal[1] = true}}>
                 <Icon src={UserPlus} size="1rem" />
             </button>
           </div>
@@ -581,7 +630,7 @@ const handleClickDelete = async () => {
             {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => (deleteModal = true)}>
+            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => {deleteModal = true}}>
               Supprimer le jeu
             </button>
           {/if}
@@ -611,7 +660,23 @@ const handleClickDelete = async () => {
                 image: "https://attachments.f95zone.to/2024/04/3572650_Remaster_HD.png",
               };
             }}>
-            Dev button
+            Dev data
+          </button>
+        {/if}
+        {#if $userIsSuperAdmin && game.domain === 'F95z'}
+            <button
+            class="btn btn-info w-full sm:w-48"
+            type="button"
+            on:click={() => scrapeData({ id: game.id, domain: 'F95z' })}>
+            Force scrape
+          </button>
+        {/if}
+        {#if game.domain === 'LewdCorner'}
+            <button
+            class="btn btn-info w-full sm:w-48"
+            type="button"
+            on:click={() => {insertModal = true}}>
+            Insert Data
           </button>
         {/if}
       </div>
@@ -628,6 +693,17 @@ const handleClickDelete = async () => {
       bind:value={comment}></textarea>
   </div>
   <button slot="modal-action" on:click={handleClickDelete} class="btn btn-error"> Supprimer définitivement </button>
+</Modal>
+
+<Modal bind:showModal={insertModal} title="Insérer les données du jeu">
+  <div slot="modal-content">
+    <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
+    <textarea
+      placeholder="Données de LC Extractor"
+      class="textarea textarea-bordered max-h-32 w-full"
+      bind:value={insertObject}></textarea>
+  </div>
+  <button slot="modal-action" on:click={handleClickInsert} class="btn btn-info"> Envoyer </button>
 </Modal>
 
 <AddTraductorModal bind:showModal={traductorModal[0]} name={game.traductor} on:newToast />

@@ -1,5 +1,5 @@
+import sleep from '$lib/sleep';
 import { scrape } from '../data/game';
-import sleep from '../sleep';
 
 export type GetScrapeArgs = {
   domain: 'F95z' | 'LewdCorner';
