@@ -39,6 +39,7 @@ export let game: GameType = {
 
 let savedId = '';
 let deleteModal: boolean;
+let insertModal: boolean;
 let traductorModal: boolean[] = [false, false];
 let silentMode = false;
 let scraping = false;
@@ -80,6 +81,19 @@ onMount(async () => {
     });
   }
 });
+
+interface InsertObject {
+  id: string;
+  domain: string;
+  name: string;
+  version: string;
+  status: string;
+  tags: string;
+  type: string;
+  ac: boolean;
+  link: string;
+  image: string;
+}
 
 const changeStep = async (amount: number) => {
   if (step + amount >= 0 && step + amount <= 5) step += amount;
@@ -251,6 +265,7 @@ const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
 };
 
 let comment = '';
+let insertObject: string;
 
 const handleClickDelete = async () => {
   if (!comment) {
@@ -294,6 +309,25 @@ const handleClickDelete = async () => {
   } finally {
     $isLoading = false;
   }
+};
+
+const handleClickInsert = () => {
+  if (!insertObject) {
+    console.log('no object');
+
+    dispatch('newToast', {
+      id: Date.now(),
+      alertType: 'warning',
+      message: 'Veuillez entrer les données de LC Extractor',
+      milliseconds: 3000,
+    });
+
+    return null;
+  }
+
+  Object.assign(game, JSON.parse(insertObject));
+
+  game.ac = false; // Reload view data
 };
 </script>
 
@@ -354,7 +388,7 @@ const handleClickDelete = async () => {
             on:input={(e) => handleInput(e)}
             on:invalid={handleInvalid}
             required
-            value={game.name} />
+            bind:value={game.name} />
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
@@ -526,7 +560,7 @@ const handleClickDelete = async () => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => traductorModal[0] = true}>
+              on:click|preventDefault={() => {traductorModal[0] = true}}>
                 <Icon src={UserPlus} size="1rem" />
             </button>
           </div>
@@ -551,7 +585,7 @@ const handleClickDelete = async () => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => traductorModal[1] = true}>
+              on:click|preventDefault={() => {traductorModal[1] = true}}>
                 <Icon src={UserPlus} size="1rem" />
             </button>
           </div>
@@ -596,7 +630,7 @@ const handleClickDelete = async () => {
             {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => (deleteModal = true)}>
+            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => {deleteModal = true}}>
               Supprimer le jeu
             </button>
           {/if}
@@ -637,6 +671,14 @@ const handleClickDelete = async () => {
             Force scrape
           </button>
         {/if}
+        {#if game.domain === 'LewdCorner'}
+            <button
+            class="btn btn-info w-full sm:w-48"
+            type="button"
+            on:click={() => {insertModal = true}}>
+            Insert Data
+          </button>
+        {/if}
       </div>
     </form>
   </div>
@@ -651,6 +693,17 @@ const handleClickDelete = async () => {
       bind:value={comment}></textarea>
   </div>
   <button slot="modal-action" on:click={handleClickDelete} class="btn btn-error"> Supprimer définitivement </button>
+</Modal>
+
+<Modal bind:showModal={insertModal} title="Insérer les données du jeu">
+  <div slot="modal-content">
+    <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
+    <textarea
+      placeholder="Données de LC Extractor"
+      class="textarea textarea-bordered max-h-32 w-full"
+      bind:value={insertObject}></textarea>
+  </div>
+  <button slot="modal-action" on:click={handleClickInsert} class="btn btn-info"> Envoyer </button>
 </Modal>
 
 <AddTraductorModal bind:showModal={traductorModal[0]} name={game.traductor} on:newToast />

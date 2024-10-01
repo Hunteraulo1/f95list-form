@@ -103,11 +103,11 @@ const AppWebhooks = z.object({
 export { AppConfiguration, AppWebhooks, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
 
 export type AppConfigurationType = z.infer<typeof AppConfiguration>;
-export type UserType = z.infer<typeof User>;
-export type GameType = z.infer<typeof Game>;
-export type QueryGameType = z.infer<typeof QueryGame>;
-export type TraductorType = z.infer<typeof Traductor>;
-export type ScrapeGameType = z.infer<typeof ScrapeGame>;
+export type AppWebhooksType = z.infer<typeof AppWebhooks>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
 export type GameACType = z.infer<typeof GameAC>;
-export type AppWebhooksType = z.infer<typeof AppWebhooks>;
+export type GameType = z.infer<typeof Game>;
+export type QueryGameType = z.infer<typeof QueryGame>;
+export type ScrapeGameType = z.infer<typeof ScrapeGame>;
+export type TraductorType = z.infer<typeof Traductor>;
+export type UserType = z.infer<typeof User>;
