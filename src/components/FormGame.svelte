@@ -163,11 +163,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HT
   // @ts-expect-error - We know that key is a valid key of GameType
   game[key] = value;
 
-  console.log({ game });
-
   if ((name === 'domain' || name === 'id') && id && id !== '0') {
-    console.log({ domain });
-
     switch (domain) {
       case 'F95z':
         game.link = `https://f95zone.to/threads/${id}`;
@@ -385,7 +381,7 @@ const handleClickInsert = () => {
             class:input-error={!edit && game.domain !== "F95z"}
             name="name"
             on:change={handleChange}
-            on:input={(e) => handleInput(e)}
+            on:input={handleInput}
             on:invalid={handleInvalid}
             required
             bind:value={game.name} />
@@ -401,12 +397,18 @@ const handleClickInsert = () => {
               class:input-error={!edit && game.domain !== "F95z"}
               name="link"
               on:change={handleChange}
-              on:input={(e) => handleInput(e)}
+              on:input={handleInput}
               required
               value={game.link} />
-              <button class="btn {game.link ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => game.link && window.open(game.link, '_blank')}>
+              <a
+                href={game.link}
+                target="_blank"
+                class="btn w-min"
+                class:btn-disable={!game.link}
+                class:btn-primary={game.link}
+                on:click={(e)=> !game.link && e.preventDefault()}>
                 <Icon src={game.link ? Link : LinkSlash} size="1rem" />
-              </button>
+              </a>
           </div>
         </div>
 
@@ -467,7 +469,7 @@ const handleClickInsert = () => {
             class:input-error={!edit && game.domain !== "F95z"}
             name="image"
             on:change={handleChange}
-            on:input={(e) => handleInput(e)}
+            on:input={handleInput}
             on:focusin={(e) => e.currentTarget.nextElementSibling?.classList.remove("hidden")}
             on:focusout={(e) => e.currentTarget.nextElementSibling?.classList.add("hidden")}
             required
@@ -485,7 +487,7 @@ const handleClickInsert = () => {
             class:input-error={!edit && game.domain !== "F95z"}
             name="version"
             on:change={handleChange}
-            on:input={(e) => handleInput(e)}
+            on:input={handleInput}
             required
             value={game.version} />
         </div>
@@ -503,7 +505,11 @@ const handleClickInsert = () => {
               on:input={(e) => handleInput(e)}
               required
               value={game.tversion} />
-              <button class="btn {game.version ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => {if(game.version) game.tversion = game.version}}>
+              <button
+                class="btn w-min"
+                class:btn-disable={!game.version}
+                class:btn-primary={game.version}
+                on:click|preventDefault={() => {if(game.version) game.tversion = game.version}}>
                 <Icon src={DocumentDuplicate} size="1rem" />
               </button>
           </div>
@@ -535,9 +541,15 @@ const handleClickInsert = () => {
               name="tlink"
               on:change={handleChange}
               value={game.tlink} />
-              <button class="btn {game.tlink ? 'btn-primary' : 'btn-disable'} w-min" on:click|preventDefault={() => game.tlink && window.open(game.tlink, '_blank')}>
+              <a
+                href={game.tlink} 
+                target="_blank"
+                class="btn w-min"
+                class:btn-disable={!game.tlink}
+                class:btn-primary={game.tlink}
+                on:click={(e)=> !game.tlink && e.preventDefault()}>
                 <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
-              </button>
+              </a>
           </div>
         </div>
 
