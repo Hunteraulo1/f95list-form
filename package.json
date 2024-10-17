@@ -19,7 +19,7 @@
     "*.{js,ts,svelte,html,css}": "bunx @biomejs/biome lint --write ."
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.3",
+    "@biomejs/biome": "1.9.4",
     "@rollup/plugin-commonjs": "^28.0.1",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@sveltejs/vite-plugin-svelte": "^3.1.2",
