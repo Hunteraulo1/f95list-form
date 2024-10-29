@@ -48,13 +48,21 @@
     "jest": "^29.7.0",
     "zod": "^3.23.8"
   },
-  "trustedDependencies": ["@biomejs/biome", "esbuild"],
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "esbuild"
+  ],
   "config": {
     "commitizen": {
       "path": "cz-emoji"
     },
     "cz-emoji": {
-      "skipQuestions": ["scope", "body", "issues", "breaking"]
+      "skipQuestions": [
+        "scope",
+        "body",
+        "issues",
+        "breaking"
+      ]
     }
   }
 }
