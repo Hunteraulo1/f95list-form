@@ -22,7 +22,7 @@ console.log('appConfiguration', $appConfiguration.appName);
   </div>
   <div class="flex-1">
     <div class="btn btn-ghost text-xl normal-case">
-      <Link to="/">{title} <span class="badge">v{packageJson.version}</span></Link>
+      <Link to="/">{title} <span class="badge">v{packageJson.version} - BETA</span></Link>
     </div>
   </div>
 
