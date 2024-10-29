@@ -5,13 +5,13 @@ import PageNotFound from '../routes/error404.svelte';
 
 import { userIsAdmin, userIsSuperAdmin } from '$lib/stores';
 
-  interface Props {
-    path: string;
-    superAdmin?: boolean;
-    children?: import('svelte').Snippet;
-  }
+interface Props {
+  path: string;
+  superAdmin?: boolean;
+  children?: import('svelte').Snippet;
+}
 
-  let { path, superAdmin = false, children }: Props = $props();
+let { path, superAdmin = false, children }: Props = $props();
 
 console.log({ superAdmin });
 </script>

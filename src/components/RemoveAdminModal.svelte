@@ -10,7 +10,6 @@ import type { UserType } from '$types/schemas';
 
 const dispatch = createEventDispatcher();
 
-
 const handleAdminRemovalSubmit = async () => {
   console.info('removing admin status from user', user);
 
@@ -47,12 +46,12 @@ const handleAdminRemovalSubmit = async () => {
   }
 };
 
-  interface Props {
-    user: UserType;
-    showModal: boolean;
-  }
+interface Props {
+  user: UserType;
+  showModal: boolean;
+}
 
-  let { user = $bindable(), showModal = $bindable() }: Props = $props();
+let { user = $bindable(), showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Supprimer l'administrateur">

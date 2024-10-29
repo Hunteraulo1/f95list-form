@@ -59,11 +59,11 @@ const handleNewAdminSubmit = async () => {
   $isLoading = false;
 };
 
-  interface Props {
-    showModal: boolean;
-  }
+interface Props {
+  showModal: boolean;
+}
 
-  let { showModal = $bindable() }: Props = $props();
+let { showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Ajouter un administrateur">

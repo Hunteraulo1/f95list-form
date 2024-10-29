@@ -4,11 +4,11 @@ import { Bars3, Icon } from 'svelte-hero-icons';
 import { Link, navigate } from 'svelte-routing';
 import packageJson from '../../package.json';
 
-  interface Props {
-    title?: string;
-  }
+interface Props {
+  title?: string;
+}
 
-  let { title = '' }: Props = $props();
+let { title = '' }: Props = $props();
 
 console.log('sessionUser', $sessionUser);
 console.log('appConfiguration', $appConfiguration.appName);

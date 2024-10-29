@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
+import { run } from 'svelte/legacy';
 
 import { createEventDispatcher } from 'svelte';
 import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
@@ -9,11 +9,11 @@ import { GAS_API } from '$lib/GAS_API';
 import { isLoading } from '$lib/stores';
 import type { UserType } from '$types/schemas';
 
-  interface Props {
-    email: string;
-  }
+interface Props {
+  email: string;
+}
 
-  let { email }: Props = $props();
+let { email }: Props = $props();
 
 const dispatch = createEventDispatcher();
 
@@ -49,8 +49,8 @@ const fetchUser = async () => {
 
 // Fetch the user on mount
 run(() => {
-    fetchUser();
-  });
+  fetchUser();
+});
 </script>
 
 {#if user && !loading}

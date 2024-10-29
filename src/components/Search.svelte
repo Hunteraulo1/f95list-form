@@ -8,11 +8,11 @@ import { fetchQueryGames } from '$lib/queryGames';
 import { queryGame, queryGames } from '$lib/stores';
 import type { QueryGameType } from '$types/schemas';
 
-  interface Props {
-    edit?: boolean;
-  }
+interface Props {
+  edit?: boolean;
+}
 
-  let { edit = false }: Props = $props();
+let { edit = false }: Props = $props();
 
 let inputSearch = $state(edit ? $queryGame.name : '');
 let badgeSearch = $state(edit ? $queryGame.version : '');

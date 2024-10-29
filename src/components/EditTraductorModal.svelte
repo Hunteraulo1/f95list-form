@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
+import { preventDefault } from 'svelte/legacy';
 
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, traductors } from '$lib/stores';
@@ -7,12 +7,12 @@ import { createEventDispatcher } from 'svelte';
 import { get } from 'svelte/store';
 import Modal from './Modal.svelte';
 
-  interface Props {
-    showModal: boolean;
-    index: number;
-  }
+interface Props {
+  showModal: boolean;
+  index: number;
+}
 
-  let { showModal = $bindable(), index }: Props = $props();
+let { showModal = $bindable(), index }: Props = $props();
 
 const dispatch = createEventDispatcher();
 

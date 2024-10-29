@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
+import { preventDefault } from 'svelte/legacy';
 
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, traductors } from '$lib/stores';
 import { createEventDispatcher } from 'svelte';
 import Modal from './Modal.svelte';
 
-  interface Props {
-    showModal: boolean;
-    name?: string;
-  }
+interface Props {
+  showModal: boolean;
+  name?: string;
+}
 
-  let { showModal = $bindable(), name = $bindable('') }: Props = $props();
+let { showModal = $bindable(), name = $bindable('') }: Props = $props();
 
 const dispatch = createEventDispatcher();
 

@@ -22,11 +22,11 @@ import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser, userIsAdmin, userIsSuperAdmin } from '$lib/stores';
 import type { Toast } from '$types/index';
 
-  interface Props {
-    url?: string;
-  }
+interface Props {
+  url?: string;
+}
 
-  let { url = '' }: Props = $props();
+let { url = '' }: Props = $props();
 
 export const handleNewToast = (event: CustomEvent<Toast>): void => {
   console.info('toast launch');

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { preventDefault } from 'svelte/legacy';
+import { preventDefault } from 'svelte/legacy';
 
 import { createEventDispatcher, onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
@@ -16,32 +16,35 @@ import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-
 
 const dispatch = createEventDispatcher();
 
+interface Props {
+  step?: number;
+  edit?: boolean;
+  game?: GameType;
+}
 
-  interface Props {
-    step?: number;
-    edit?: boolean;
-    game?: GameType;
-  }
-
-  let { step = $bindable(0), edit = false, game = $bindable({
-  status: 'EN COURS',
-  type: 'RenPy',
-  tname: 'Traduction',
-  ttype: 'Traduction Humaine',
-  ac: false,
-  domain: 'F95z',
-  id: '',
-  link: '',
-  name: '',
-  proofreader: '',
-  tags: '',
-  tlink: '',
-  traductor: '',
-  tversion: '',
-  version: '',
-  trlink: '',
-  image: '',
-}) }: Props = $props();
+let {
+  step = $bindable(0),
+  edit = false,
+  game = $bindable({
+    status: 'EN COURS',
+    type: 'RenPy',
+    tname: 'Traduction',
+    ttype: 'Traduction Humaine',
+    ac: false,
+    domain: 'F95z',
+    id: '',
+    link: '',
+    name: '',
+    proofreader: '',
+    tags: '',
+    tlink: '',
+    traductor: '',
+    tversion: '',
+    version: '',
+    trlink: '',
+    image: '',
+  }),
+}: Props = $props();
 
 let savedId = '';
 let deleteModal: boolean = $state();

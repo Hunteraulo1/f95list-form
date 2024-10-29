@@ -1,6 +1,6 @@
 import './app.pcss';
+import { mount } from 'svelte';
 import App from './App.svelte';
-import { mount } from "svelte";
 
 document.getElementById('app-title').innerHTML = 'Gestion des traductions';
 

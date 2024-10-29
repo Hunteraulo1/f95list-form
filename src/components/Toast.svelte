@@ -8,12 +8,12 @@ const removeToast = () => {
   nodeRef.parentNode?.removeChild(nodeRef);
 };
 
-  interface Props {
-    alertType?: string;
-    message?: string;
-  }
+interface Props {
+  alertType?: string;
+  message?: string;
+}
 
-  let { alertType = '', message = '' }: Props = $props();
+let { alertType = '', message = '' }: Props = $props();
 
 let alert = $state('');
 
