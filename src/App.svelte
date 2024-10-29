@@ -104,10 +104,10 @@ const fetchUser = async () => {
             <UserPreferences on:newToast={handleNewToast} />
           </Route>
           <Route path="user/:email" >
-            {#snippet children({ params })}
-                        <Profile email={params.email} />
-                                  {/snippet}
-                    </Route>
+            {#snippet children({ params }: { params: { email: string } })}
+              <Profile email={params.email} />
+            {/snippet}
+          </Route>
           <ProtectedRoute path="add">
             <AddGame on:newToast={handleNewToast} />
           </ProtectedRoute>

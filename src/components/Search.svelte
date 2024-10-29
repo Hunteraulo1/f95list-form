@@ -63,8 +63,6 @@ const handleFocus = () => {
 
 const handleCtrlK = (event: KeyboardEvent) => {
   if (event.ctrlKey && event.key === 'k') {
-    event.preventDefault();
-
     const inputField = document.getElementById('searchField');
     inputField?.focus();
   }
@@ -78,8 +76,7 @@ onMount(() => {
 <svelte:window onkeydown={handleCtrlK} />
 
 <Panel title="Rechercher un jeu" showDivider={false}>
-  <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
-  <div slot="panel-content">
+  <div slot="panelContent">
     <div class="flex flex-col gap-4 sm:flex-row">
       <div id="container-search" class="relative w-full">
         <label class="input input-bordered flex items-center gap-2">

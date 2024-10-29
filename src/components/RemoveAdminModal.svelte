@@ -55,8 +55,7 @@ let { user = $bindable(), showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Supprimer l'administrateur">
-  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
-  <div slot="modal-content">
+  <div slot="modalContent">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet utilisateur ?</p>
     <div class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200">
       <div class="flex items-center justify-center space-x-3">
@@ -72,6 +71,5 @@ let { user = $bindable(), showModal = $bindable() }: Props = $props();
       </div>
     </div>
   </div>
-  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
-  <button slot="modal-action" onclick={handleAdminRemovalSubmit} disabled={!user} class="btn">Confirmer</button>
+  <button slot="modalAction" onclick={handleAdminRemovalSubmit} disabled={!user} class="btn">Confirmer</button>
 </Modal>

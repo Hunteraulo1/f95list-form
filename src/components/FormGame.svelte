@@ -1,6 +1,4 @@
 <script lang="ts">
-import { preventDefault } from 'svelte/legacy';
-
 import { createEventDispatcher, onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements';
@@ -47,9 +45,9 @@ let {
 }: Props = $props();
 
 let savedId = '';
-let deleteModal: boolean = $state();
-let insertModal: boolean = $state();
-let traductorModal: boolean[] = $state([false, false]);
+let deleteModal = $state(false);
+let insertModal = $state(false);
+let traductorModal = $state([false, false]);
 let silentMode = $state(false);
 let scraping = $state(false);
 
@@ -270,7 +268,7 @@ const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
 };
 
 let comment = $state('');
-let insertObject: string = $state();
+let insertObject: string = $state('');
 
 const handleClickDelete = async () => {
   if (!comment) {
@@ -351,7 +349,7 @@ const handleImageError = (e: Event) => {
     <Search {edit} />
     <form
       class="relative flex w-full flex-col items-center"
-      onsubmit={preventDefault(handleSubmit)}
+      onsubmit={handleSubmit}
       autocomplete="off"
     >
       {#if scraping}
@@ -440,7 +438,7 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.link}
               class:btn-primary={game.link}
-              onclick={(e) => !game.link && e.preventDefault()}
+              onclick={(e) => !game.link}
             >
               <Icon src={game.link ? Link : LinkSlash} size="1rem" />
             </a>
@@ -558,9 +556,9 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.version}
               class:btn-primary={game.version}
-              onclick={preventDefault(() => {
+              onclick={() => {
                 if (game.version) game.tversion = game.version;
-              })}
+              }}
             >
               <Icon src={DocumentDuplicate} size="1rem" />
             </button>
@@ -601,7 +599,7 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.tlink}
               class:btn-primary={game.tlink}
-              onclick={(e) => !game.tlink && e.preventDefault()}
+              onclick={(e) => !game.tlink}
             >
               <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
             </a>
@@ -628,9 +626,9 @@ const handleImageError = (e: Event) => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              onclick={preventDefault(() => {
+              onclick={() => {
                 traductorModal[0] = true;
-              })}
+              }}
             >
               <Icon src={UserPlus} size="1rem" />
             </button>
@@ -657,9 +655,9 @@ const handleImageError = (e: Event) => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              onclick={preventDefault(() => {
+              onclick={() => {
                 traductorModal[1] = true;
-              })}
+              }}
             >
               <Icon src={UserPlus} size="1rem" />
             </button>
@@ -788,8 +786,7 @@ const handleImageError = (e: Event) => {
 {/if}
 
 <Modal bind:showModal={deleteModal} title="Supprimer le jeu">
-  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
-  <div slot="modal-content">
+  <div slot="modalContent">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea
       placeholder="Pourquoi voulez-vous supprimer le jeu ?"
@@ -797,9 +794,8 @@ const handleImageError = (e: Event) => {
       bind:value={comment}
     ></textarea>
   </div>
-  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
   <button
-    slot="modal-action"
+    slot="modalAction"
     onclick={handleClickDelete}
     class="btn btn-error"
   >
@@ -808,8 +804,7 @@ const handleImageError = (e: Event) => {
 </Modal>
 
 <Modal bind:showModal={insertModal} title="Insérer les données du jeu">
-  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
-  <div slot="modal-content">
+  <div slot="modalContent">
     <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
     <textarea
       placeholder="Données de LC Extractor"
@@ -817,8 +812,7 @@ const handleImageError = (e: Event) => {
       bind:value={insertObject}
     ></textarea>
   </div>
-  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
-  <button slot="modal-action" onclick={handleClickInsert} class="btn btn-info">
+  <button slot="modalAction" onclick={handleClickInsert} class="btn btn-info">
     Envoyer
   </button>
 </Modal>

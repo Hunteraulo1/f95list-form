@@ -99,8 +99,7 @@ run(() => {
         </div>
       </div>
       <Panel title="Activité récente" showDivider={false}>
-        <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
-  <div slot="panel-content" class="overflow-x-auto">
+  <div slot="panelContent" class="overflow-x-auto">
           <table class="table">
             <!-- head -->
             <thead>

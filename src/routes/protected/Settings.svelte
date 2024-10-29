@@ -53,7 +53,7 @@ const updateAppConfiguration = async () => {
   }
 };
 
-let dialogAdd: boolean = $state();
+let dialogAdd: boolean = $state(false);
 let dialogRemove: boolean[] = $state([]);
 </script>
 
@@ -68,8 +68,7 @@ let dialogRemove: boolean[] = $state([]);
           Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
         </p>
           {/snippet}
-      <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
-  <div slot="panel-content" class="flex w-full gap-8">
+  <div slot="panelContent" class="flex w-full gap-8">
         <div class="w-full max-w-xs">
           <label class="label" for="app-name">
             <span class="label-text">Nom de l'application</span>
@@ -111,19 +110,17 @@ let dialogRemove: boolean[] = $state([]);
 
     <Panel title="Admins">
       {#snippet button()}
-            <button
-          
+        <button
           onclick={() => (dialogAdd = true)}
           disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
           class="btn">
           Ajouter un administrateur
         </button>
-          {/snippet}
+      {/snippet}
       {#snippet description()}
-            <p class="text-gray-500" >Ajouter des administrateurs au formulaire !</p>
-          {/snippet}
-      <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
-  <div slot="panel-content">
+        <p class="text-gray-500" >Ajouter des administrateurs au formulaire !</p>
+      {/snippet}
+      <div slot="panelContent">
         <div class="overflow-x-auto">
           <table class="table">
             <!-- head -->

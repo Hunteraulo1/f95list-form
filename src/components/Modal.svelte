@@ -1,4 +1,4 @@
-<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
+
 <script lang="ts">
 export let title = '';
 export let showModal: boolean;
@@ -16,19 +16,19 @@ $: if (dialog && showModal) {
     <form method="dialog" class="modal-box">
       <button
         class="btn btn-circle btn-ghost btn-sm absolute right-2 top-2"
-        on:click|preventDefault={() => (showModal = false)}>
+        onclick={() => {showModal = false}}>
         ✕
       </button>
       <h3 class="text-lg font-bold">{title}</h3>
-      <slot name="modal-content" />
-      <div class="modal-action">
+      <slot name="modalContent" />
+      <div class="modalAction">
         <!-- if there is a button in form, it will close the modal -->
-        <slot name="modal-action" />
+        <slot name="modalAction" />
       </div>
     </form>
 
     <form method="dialog" class="modal-backdrop">
-      <button on:click|preventDefault={() => (showModal = false)}>Fermer</button>
+      <button onclick={() => {showModal = false}}>Fermer</button>
     </form>
   </dialog>
 {/if}

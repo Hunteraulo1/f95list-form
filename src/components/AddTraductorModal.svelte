@@ -1,6 +1,4 @@
 <script lang="ts">
-import { preventDefault } from 'svelte/legacy';
-
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, traductors } from '$lib/stores';
 import { createEventDispatcher } from 'svelte';
@@ -79,23 +77,21 @@ const handleSubmit = async () => {
 </script>
 
 <Modal bind:showModal title="Ajouter un traducteur/relecteur">
-  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
-  <div slot="modal-content" class="mt-4">
+  <div slot="modalContent" class="mt-4">
     <input
       type="text"
       placeholder="Nom du traducteur/relecteur"
       class="input input-bordered w-full appearance-none"
       value={name}
-      oninput={preventDefault(e => name = e.currentTarget.value)}
+      oninput={e => name = e.currentTarget.value}
       />
   </div>
 
 
-  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
-  <div slot="modal-action" class="mt-4">
+  <div slot="modalAction" class="mt-4">
     <button
       class="btn"
-      onclick={preventDefault(() => handleSubmit())}>
+      onclick={handleSubmit}>
       Valider
     </button>
   </div>

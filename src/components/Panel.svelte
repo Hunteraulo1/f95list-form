@@ -1,4 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot making the component unusable -->
 <script lang="ts">
 import { isLoading } from '$lib/stores';
 
@@ -23,6 +22,6 @@ export let showDivider = true;
     {#if showDivider}
       <div class="divider"></div>
     {/if}
-    <slot name="panel-content" />
+    <slot name="panelContent" />
   </div>
 </div>

@@ -67,8 +67,7 @@ let { showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Ajouter un administrateur">
-  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
-  <div slot="modal-content">
+  <div slot="modalContent">
     <p class="py-4">Sélectionnez un utilisateur pour en faire un administrateur</p>
     <UserSelect
       on:update={(e) => {
@@ -76,9 +75,8 @@ let { showModal = $bindable() }: Props = $props();
       }} />
   </div>
 
-  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
   <button
-    slot="modal-action"
+    slot="modalAction"
     onclick={handleNewAdminSubmit}
     disabled={selectedUsersFromChild.length === 0}
     class="btn">

@@ -1,8 +1,7 @@
 <script lang="ts">
-import { preventDefault } from 'svelte/legacy';
-
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, traductors } from '$lib/stores';
+import { TraductorType } from '$types/schemas';
 import { createEventDispatcher } from 'svelte';
 import { get } from 'svelte/store';
 import Modal from './Modal.svelte';
@@ -16,10 +15,16 @@ let { showModal = $bindable(), index }: Props = $props();
 
 const dispatch = createEventDispatcher();
 
-let localTraductor = $state({ ...get(traductors)[index] });
-const queryName = localTraductor.name;
+let localTraductor: TraductorType | undefined = $state();
+
+$effect(() => {
+  localTraductor = { ...get(traductors)[index] };
+});
+
+const queryName = $derived(localTraductor?.name);
 
 const handleSubmit = async () => {
+  if (!localTraductor || !queryName) return;
   $isLoading = true;
   try {
     await GAS_API.putTraductor({ query: { name: queryName }, data: localTraductor });
@@ -51,6 +56,8 @@ const handleSubmit = async () => {
 };
 
 const addLink = () => {
+  if (!localTraductor) return;
+
   if (localTraductor.links.find((link) => link.name === '')) return;
 
   localTraductor.links = [...localTraductor.links, { name: '', link: '' }];
@@ -58,53 +65,55 @@ const addLink = () => {
 </script>
 
 <Modal bind:showModal title="Modifier traducteur/relecteur">
-  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
-  <div slot="modal-content" class="mt-4">
+  <div slot="modalContent" class="mt-4">
+    {#if localTraductor}
     <input
-      type="text"
-      placeholder="Nom du traducteur/relecteur"
-      class="input input-bordered w-full appearance-none"
-      bind:value={localTraductor.name}
-      />
-    <h2>Modifier les liens du traducteur/relecteur</h2>
-    <ul class="flex flex-col gap-2">
-      {#each localTraductor.links as {name, link}, linkIndex}
-        <li class="flex gap-2">
-          <input
-            type="text"
-            placeholder="Nom du lien"
-            class="input input-xs input-bordered w-full appearance-none"
-            bind:value={localTraductor.links[linkIndex].name}
-            />
-          <input
-            type="text"
-            placeholder="Lien"
-            class="input input-xs input-bordered w-full appearance-none"
-            bind:value={localTraductor.links[linkIndex].link}
-            />
-          <button class="btn btn-ghost btn-xs" onclick={preventDefault(() => {
-            localTraductor.links.splice(linkIndex, 1);
-            localTraductor = { ...localTraductor, links: [...localTraductor.links] };
-          })}>X</button>
-        </li>
-      {:else}
-        <li>Il n'y a actuellement aucun lien</li>
-      {/each}
-    </ul>
-  </div>
+    type="text"
+    placeholder="Nom du traducteur/relecteur"
+    class="input input-bordered w-full appearance-none"
+    bind:value={localTraductor.name}
+    />
+      <h2>Modifier les liens du traducteur/relecteur</h2>
+      <ul class="flex flex-col gap-2">
+        {#each localTraductor.links as {name, link}, linkIndex}
+          <li class="flex gap-2">
+            <input
+              type="text"
+              placeholder="Nom du lien"
+              class="input input-xs input-bordered w-full appearance-none"
+              bind:value={localTraductor.links[linkIndex].name}
+              />
+            <input
+              type="text"
+              placeholder="Lien"
+              class="input input-xs input-bordered w-full appearance-none"
+              bind:value={localTraductor.links[linkIndex].link}
+              />
+            <button class="btn btn-ghost btn-xs" onclick={() => {
+              if (!localTraductor) return;
 
-  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
-  <div slot="modal-action" class="mt-4">
-    <button
-      class="btn"
-      onclick={preventDefault(addLink)}>
-      Ajouter un lien
-    </button>
-    
-    <button
-      class="btn"
-      onclick={preventDefault(handleSubmit)}>
-      Valider
-    </button>
-  </div>
+              localTraductor.links.splice(linkIndex, 1);
+              localTraductor = { ...localTraductor, links: [...localTraductor.links] };
+            }}>X</button>
+          </li>
+        {:else}
+          <li>Il n'y a actuellement aucun lien</li>
+        {/each}
+      </ul>
+      {/if}
+    </div>
+
+    <div slot="modalAction" class="mt-4">
+      <button
+        class="btn"
+        onclick={addLink}>
+        Ajouter un lien
+      </button>
+      
+      <button
+        class="btn"
+        onclick={handleSubmit}>
+        Valider
+      </button>
+    </div>
 </Modal>

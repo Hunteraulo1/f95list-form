@@ -2,10 +2,10 @@
 import { ExclamationCircle, ExclamationTriangle, HandThumbUp, Icon, InformationCircle, XMark } from 'svelte-hero-icons';
 import { fade } from 'svelte/transition';
 
-let nodeRef: HTMLElement = $state();
+let nodeRef: HTMLElement | undefined = $state();
 
 const removeToast = () => {
-  nodeRef.parentNode?.removeChild(nodeRef);
+  nodeRef?.parentNode?.removeChild(nodeRef);
 };
 
 interface Props {

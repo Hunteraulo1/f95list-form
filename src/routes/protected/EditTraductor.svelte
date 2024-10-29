@@ -7,9 +7,8 @@ import { GAS_API } from '$lib/GAS_API';
 import { traductors } from '$lib/stores';
 
 const dispatch = createEventDispatcher();
-
 let editModal: boolean[] = $state([]);
-let addModal: boolean = $state();
+let addModal: boolean = $state(false);
 
 onMount(async () => {
   try {
@@ -73,8 +72,12 @@ onMount(async () => {
           </td>
         </tr>
         <EditTraductorModal bind:showModal={editModal[index]} {index} on:newToast />
-        {:else}
-          <p class="fixed flex w-full justify-center">Aucun traducteur disponible</p>
+      {:else}
+        <tr>
+          <td>
+            <p class="fixed flex w-full justify-center">Aucun traducteur disponible</p>
+          </td>
+        </tr>
       {/each}
     </tbody>
   </table>
