@@ -325,12 +325,26 @@ const handleClickInsert = () => {
 
   game.ac = false; // Reload view data
 };
+
+const handleImageError = (e: Event) => {
+  const target = e.currentTarget as HTMLImageElement;
+
+  if (game.image.startsWith('https://attachments.f95zone.to/')) {
+    target.src = game.image.replace('attachments', 'preview');
+  } else {
+    target.classList.add('hidden');
+  }
+};
 </script>
 
 {#if !$isLoading}
   <div class="mt-0 flex flex-col items-center justify-center gap-4">
     <Search {edit} />
-    <form class="relative flex w-full flex-col items-center" on:submit|preventDefault={handleSubmit} autocomplete="off">
+    <form
+      class="relative flex w-full flex-col items-center"
+      on:submit|preventDefault={handleSubmit}
+      autocomplete="off"
+    >
       {#if scraping}
         <div class="lg:absolute flex items-center gap-1 left-0">
           <LoadingSpinner />
@@ -340,10 +354,17 @@ const handleClickInsert = () => {
       <div class="form-control">
         <label class="label cursor-pointer">
           <span class="label-text pr-2">Mode silencieux</span>
-          <input type="checkbox" class="toggle" checked={silentMode} on:change={() => (silentMode = !silentMode)} />
+          <input
+            type="checkbox"
+            class="toggle"
+            checked={silentMode}
+            on:change={() => (silentMode = !silentMode)}
+          />
         </label>
       </div>
-      <div class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div
+        class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      >
         <div class:hidden={step !== 0 && step !== 5}>
           <label for="domain">Platforme:</label>
           <select
@@ -352,7 +373,8 @@ const handleClickInsert = () => {
             name="domain"
             value={game.domain}
             on:change={handleChange}
-            required>
+            required
+          >
             <option>F95z</option>
             <option>LewdCorner</option>
             <option>Autre</option>
@@ -369,7 +391,8 @@ const handleClickInsert = () => {
             inputmode="numeric"
             name="id"
             on:change={handleChange}
-            bind:value={game.id} />
+            bind:value={game.id}
+          />
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
@@ -384,7 +407,8 @@ const handleClickInsert = () => {
             on:input={handleInput}
             on:invalid={handleInvalid}
             required
-            bind:value={game.name} />
+            bind:value={game.name}
+          />
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
@@ -399,16 +423,18 @@ const handleClickInsert = () => {
               on:change={handleChange}
               on:input={handleInput}
               required
-              value={game.link} />
-              <a
-                href={game.link}
-                target="_blank"
-                class="btn w-min"
-                class:btn-disable={!game.link}
-                class:btn-primary={game.link}
-                on:click={(e)=> !game.link && e.preventDefault()}>
-                <Icon src={game.link ? Link : LinkSlash} size="1rem" />
-              </a>
+              value={game.link}
+            />
+            <a
+              href={game.link}
+              target="_blank"
+              class="btn w-min"
+              class:btn-disable={!game.link}
+              class:btn-primary={game.link}
+              on:click={(e) => !game.link && e.preventDefault()}
+            >
+              <Icon src={game.link ? Link : LinkSlash} size="1rem" />
+            </a>
           </div>
         </div>
 
@@ -420,7 +446,8 @@ const handleClickInsert = () => {
             name="status"
             on:change={handleChange}
             value={game.status}
-            required>
+            required
+          >
             <option>EN COURS</option>
             <option>TERMINÉ</option>
             <option>ABANDONNÉ</option>
@@ -435,7 +462,8 @@ const handleClickInsert = () => {
             placeholder="Tags du jeu"
             class="textarea textarea-bordered textarea-xs max-h-32 w-full"
             on:change={handleChange}
-            value={game.tags}></textarea>
+            value={game.tags}
+          ></textarea>
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
@@ -446,7 +474,8 @@ const handleClickInsert = () => {
             name="type"
             on:change={handleChange}
             value={game.type}
-            required>
+            required
+          >
             <option>RenPy</option>
             <option>RPGM</option>
             <option>Unity</option>
@@ -470,12 +499,21 @@ const handleClickInsert = () => {
             name="image"
             on:change={handleChange}
             on:input={handleInput}
-            on:focusin={(e) => e.currentTarget.nextElementSibling?.classList.remove("hidden")}
-            on:focusout={(e) => e.currentTarget.nextElementSibling?.classList.add("hidden")}
+            on:focusin={(e) =>
+              e.currentTarget.nextElementSibling?.classList.remove("hidden")}
+            on:focusout={(e) =>
+              e.currentTarget.nextElementSibling?.classList.add("hidden")}
             required
-            value={game.image} />
+            value={game.image}
+          />
 
-          <img src={game.image} alt="bannière du jeu" class="absolute mt-1 hidden w-full rounded-md" />
+          <img
+            src={game.image}
+            alt="bannière du jeu 2"
+            class="absolute mt-1 hidden w-full max-w-md rounded-md"
+            loading="lazy"
+            on:error={handleImageError}
+          />
         </div>
 
         <div class:hidden={step !== 2 && step !== 5}>
@@ -489,7 +527,8 @@ const handleClickInsert = () => {
             on:change={handleChange}
             on:input={handleInput}
             required
-            value={game.version} />
+            value={game.version}
+          />
         </div>
 
         <div class:hidden={step !== 3 && step !== 5}>
@@ -504,14 +543,18 @@ const handleClickInsert = () => {
               on:change={handleChange}
               on:input={(e) => handleInput(e)}
               required
-              value={game.tversion} />
-              <button
-                class="btn w-min"
-                class:btn-disable={!game.version}
-                class:btn-primary={game.version}
-                on:click|preventDefault={() => {if(game.version) game.tversion = game.version}}>
-                <Icon src={DocumentDuplicate} size="1rem" />
-              </button>
+              value={game.tversion}
+            />
+            <button
+              class="btn w-min"
+              class:btn-disable={!game.version}
+              class:btn-primary={game.version}
+              on:click|preventDefault={() => {
+                if (game.version) game.tversion = game.version;
+              }}
+            >
+              <Icon src={DocumentDuplicate} size="1rem" />
+            </button>
           </div>
         </div>
 
@@ -523,7 +566,8 @@ const handleClickInsert = () => {
             name="tname"
             on:change={handleChange}
             value={game.tname}
-            required>
+            required
+          >
             <option>Traduction</option>
             <option>Traduction (mod inclus)</option>
             <option>Intégrée</option>
@@ -540,16 +584,18 @@ const handleClickInsert = () => {
               class="input input-bordered w-full"
               name="tlink"
               on:change={handleChange}
-              value={game.tlink} />
-              <a
-                href={game.tlink} 
-                target="_blank"
-                class="btn w-min"
-                class:btn-disable={!game.tlink}
-                class:btn-primary={game.tlink}
-                on:click={(e)=> !game.tlink && e.preventDefault()}>
-                <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
-              </a>
+              value={game.tlink}
+            />
+            <a
+              href={game.tlink}
+              target="_blank"
+              class="btn w-min"
+              class:btn-disable={!game.tlink}
+              class:btn-primary={game.tlink}
+              on:click={(e) => !game.tlink && e.preventDefault()}
+            >
+              <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
+            </a>
           </div>
         </div>
 
@@ -564,7 +610,8 @@ const handleClickInsert = () => {
               class="input input-bordered w-full"
               list="traductor-list"
               on:input={handleChange}
-              value={game.traductor} />
+              value={game.traductor}
+            />
             <datalist id="traductor-list">
               {#each $traductors as traductor}
                 <option>{traductor.name}</option>
@@ -572,8 +619,11 @@ const handleClickInsert = () => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => {traductorModal[0] = true}}>
-                <Icon src={UserPlus} size="1rem" />
+              on:click|preventDefault={() => {
+                traductorModal[0] = true;
+              }}
+            >
+              <Icon src={UserPlus} size="1rem" />
             </button>
           </div>
         </div>
@@ -589,7 +639,8 @@ const handleClickInsert = () => {
               class="input input-bordered w-full"
               list="proofreader-list"
               on:input={handleChange}
-              value={game.proofreader} />
+              value={game.proofreader}
+            />
             <datalist id="proofreader-list">
               {#each $traductors as traductor}
                 <option>{traductor.name}</option>
@@ -597,8 +648,11 @@ const handleClickInsert = () => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => {traductorModal[1] = true}}>
-                <Icon src={UserPlus} size="1rem" />
+              on:click|preventDefault={() => {
+                traductorModal[1] = true;
+              }}
+            >
+              <Icon src={UserPlus} size="1rem" />
             </button>
           </div>
         </div>
@@ -611,7 +665,8 @@ const handleClickInsert = () => {
             name="ttype"
             on:change={handleChange}
             value={game.ttype}
-            required>
+            required
+          >
             <option>Traduction Humaine</option>
             <option>Traduction Automatique</option>
             <option>Traduction Semi-Automatique</option>
@@ -621,9 +676,17 @@ const handleClickInsert = () => {
         </div>
 
         <div class="flex items-end" class:hidden={step !== 4 && step !== 5}>
-          <div class="flex h-12 w-full flex-col items-center justify-center gap-2">
+          <div
+            class="flex h-12 w-full flex-col items-center justify-center gap-2"
+          >
             <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
-            <input type="checkbox" name="ac" class="checkbox checkbox-lg" on:change={handleChange} checked={game.ac} />
+            <input
+              type="checkbox"
+              name="ac"
+              class="checkbox checkbox-lg"
+              on:change={handleChange}
+              checked={game.ac}
+            />
           </div>
         </div>
       </div>
@@ -633,16 +696,29 @@ const handleClickInsert = () => {
             class="btn btn-outline btn-primary w-full sm:w-48"
             type="button"
             on:click={() => changeStep(-1)}
-            disabled={step <= 0}>
+            disabled={step <= 0}
+          >
             Précédent
           </button>
-          <button class="btn btn-primary w-full sm:w-48" type="button" on:click={() => changeStep(1)}> Suivant </button>
+          <button
+            class="btn btn-primary w-full sm:w-48"
+            type="button"
+            on:click={() => changeStep(1)}
+          >
+            Suivant
+          </button>
         {:else}
           <button class="btn btn-primary w-full sm:w-48" type="submit">
             {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <button class="btn btn-error w-full sm:w-48" type="button" on:click={() => {deleteModal = true}}>
+            <button
+              class="btn btn-error w-full sm:w-48"
+              type="button"
+              on:click={() => {
+                deleteModal = true;
+              }}
+            >
               Supprimer le jeu
             </button>
           {/if}
@@ -669,25 +745,31 @@ const handleClickInsert = () => {
                 proofreader: "Hunteraulo",
                 ttype: "À tester",
                 ac: false,
-                image: "https://attachments.f95zone.to/2024/04/3572650_Remaster_HD.png",
+                image:
+                  "https://attachments.f95zone.to/2024/04/3572650_Remaster_HD.png",
               };
-            }}>
+            }}
+          >
             Dev data
           </button>
         {/if}
-        {#if $userIsSuperAdmin && game.domain === 'F95z'}
-            <button
+        {#if $userIsSuperAdmin && game.domain === "F95z"}
+          <button
             class="btn btn-info w-full sm:w-48"
             type="button"
-            on:click={() => scrapeData({ id: game.id, domain: 'F95z' })}>
+            on:click={() => scrapeData({ id: game.id, domain: "F95z" })}
+          >
             Force scrape
           </button>
         {/if}
-        {#if game.domain === 'LewdCorner'}
-            <button
+        {#if game.domain === "LewdCorner"}
+          <button
             class="btn btn-info w-full sm:w-48"
             type="button"
-            on:click={() => {insertModal = true}}>
+            on:click={() => {
+              insertModal = true;
+            }}
+          >
             Insert Data
           </button>
         {/if}
@@ -702,9 +784,16 @@ const handleClickInsert = () => {
     <textarea
       placeholder="Pourquoi voulez-vous supprimer le jeu ?"
       class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={comment}></textarea>
+      bind:value={comment}
+    ></textarea>
   </div>
-  <button slot="modal-action" on:click={handleClickDelete} class="btn btn-error"> Supprimer définitivement </button>
+  <button
+    slot="modal-action"
+    on:click={handleClickDelete}
+    class="btn btn-error"
+  >
+    Supprimer définitivement
+  </button>
 </Modal>
 
 <Modal bind:showModal={insertModal} title="Insérer les données du jeu">
@@ -713,10 +802,21 @@ const handleClickInsert = () => {
     <textarea
       placeholder="Données de LC Extractor"
       class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={insertObject}></textarea>
+      bind:value={insertObject}
+    ></textarea>
   </div>
-  <button slot="modal-action" on:click={handleClickInsert} class="btn btn-info"> Envoyer </button>
+  <button slot="modal-action" on:click={handleClickInsert} class="btn btn-info">
+    Envoyer
+  </button>
 </Modal>
 
-<AddTraductorModal bind:showModal={traductorModal[0]} name={game.traductor} on:newToast />
-<AddTraductorModal bind:showModal={traductorModal[1]} name={game.proofreader} on:newToast />
+<AddTraductorModal
+  bind:showModal={traductorModal[0]}
+  name={game.traductor}
+  on:newToast
+/>
+<AddTraductorModal
+  bind:showModal={traductorModal[1]}
+  name={game.proofreader}
+  on:newToast
+/>
