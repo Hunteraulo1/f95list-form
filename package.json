@@ -8,7 +8,7 @@
     "rollup:npm": "rollup -c rollup.config.npm.js",
     "build": "vite build && bun run rollup:npm && node postBuildProcess.js",
     "build:push": "bun run build && clasp push",
-    "build:deploy": "bun run build:push && clasp deploy -i AKfycbztpdKu2yZEwtsvjLUFKEpOiB6gGMP_qq65CJ-mlPXOw8DbJ7XX9UqP-5Ab7cMXCN7Otg",
+    "build:deploy": "bun run build:push && clasp deploy -i AKfycbyDkZ_xQfxT8JQNAGqMYqRBeKB0RXfpNufNzhMwPIzthmPszVPtZkWU7E8vRGS5lW7cEg",
     "preview": "vite preview",
     "lint": "bunx @biomejs/biome lint --write .",
     "format": "bunx @biomejs/biome format --write .",
@@ -48,13 +48,21 @@
     "jest": "^29.7.0",
     "zod": "^3.23.8"
   },
-  "trustedDependencies": ["@biomejs/biome", "esbuild"],
+  "trustedDependencies": [
+    "@biomejs/biome",
+    "esbuild"
+  ],
   "config": {
     "commitizen": {
       "path": "cz-emoji"
     },
     "cz-emoji": {
-      "skipQuestions": ["scope", "body", "issues", "breaking"]
+      "skipQuestions": [
+        "scope",
+        "body",
+        "issues",
+        "breaking"
+      ]
     }
   }
 }
