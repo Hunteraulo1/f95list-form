@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preventDefault } from 'svelte/legacy';
+
 import { createEventDispatcher, onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements';
@@ -14,10 +16,14 @@ import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-
 
 const dispatch = createEventDispatcher();
 
-export let step = 0;
-export let edit = false;
 
-export let game: GameType = {
+  interface Props {
+    step?: number;
+    edit?: boolean;
+    game?: GameType;
+  }
+
+  let { step = $bindable(0), edit = false, game = $bindable({
   status: 'EN COURS',
   type: 'RenPy',
   tname: 'Traduction',
@@ -35,14 +41,14 @@ export let game: GameType = {
   version: '',
   trlink: '',
   image: '',
-};
+}) }: Props = $props();
 
 let savedId = '';
-let deleteModal: boolean;
-let insertModal: boolean;
-let traductorModal: boolean[] = [false, false];
-let silentMode = false;
-let scraping = false;
+let deleteModal: boolean = $state();
+let insertModal: boolean = $state();
+let traductorModal: boolean[] = $state([false, false]);
+let silentMode = $state(false);
+let scraping = $state(false);
 
 onMount(async () => {
   try {
@@ -260,8 +266,8 @@ const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
   event.currentTarget.setCustomValidity('Veuillez remplir ce champ');
 };
 
-let comment = '';
-let insertObject: string;
+let comment = $state('');
+let insertObject: string = $state();
 
 const handleClickDelete = async () => {
   if (!comment) {
@@ -342,7 +348,7 @@ const handleImageError = (e: Event) => {
     <Search {edit} />
     <form
       class="relative flex w-full flex-col items-center"
-      on:submit|preventDefault={handleSubmit}
+      onsubmit={preventDefault(handleSubmit)}
       autocomplete="off"
     >
       {#if scraping}
@@ -358,7 +364,7 @@ const handleImageError = (e: Event) => {
             type="checkbox"
             class="toggle"
             checked={silentMode}
-            on:change={() => (silentMode = !silentMode)}
+            onchange={() => (silentMode = !silentMode)}
           />
         </label>
       </div>
@@ -372,7 +378,7 @@ const handleImageError = (e: Event) => {
             class="select select-bordered w-full"
             name="domain"
             value={game.domain}
-            on:change={handleChange}
+            onchange={handleChange}
             required
           >
             <option>F95z</option>
@@ -390,7 +396,7 @@ const handleImageError = (e: Event) => {
             pattern="[0-9]*"
             inputmode="numeric"
             name="id"
-            on:change={handleChange}
+            onchange={handleChange}
             bind:value={game.id}
           />
         </div>
@@ -403,9 +409,9 @@ const handleImageError = (e: Event) => {
             class="input input-bordered w-full"
             class:input-error={!edit && game.domain !== "F95z"}
             name="name"
-            on:change={handleChange}
-            on:input={handleInput}
-            on:invalid={handleInvalid}
+            onchange={handleChange}
+            oninput={handleInput}
+            oninvalid={handleInvalid}
             required
             bind:value={game.name}
           />
@@ -420,8 +426,8 @@ const handleImageError = (e: Event) => {
               class="input input-bordered w-full"
               class:input-error={!edit && game.domain !== "F95z"}
               name="link"
-              on:change={handleChange}
-              on:input={handleInput}
+              onchange={handleChange}
+              oninput={handleInput}
               required
               value={game.link}
             />
@@ -431,7 +437,7 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.link}
               class:btn-primary={game.link}
-              on:click={(e) => !game.link && e.preventDefault()}
+              onclick={(e) => !game.link && e.preventDefault()}
             >
               <Icon src={game.link ? Link : LinkSlash} size="1rem" />
             </a>
@@ -444,7 +450,7 @@ const handleImageError = (e: Event) => {
             placeholder="Status du jeu"
             class="select select-bordered w-full"
             name="status"
-            on:change={handleChange}
+            onchange={handleChange}
             value={game.status}
             required
           >
@@ -461,7 +467,7 @@ const handleImageError = (e: Event) => {
             name="tags"
             placeholder="Tags du jeu"
             class="textarea textarea-bordered textarea-xs max-h-32 w-full"
-            on:change={handleChange}
+            onchange={handleChange}
             value={game.tags}
           ></textarea>
         </div>
@@ -472,7 +478,7 @@ const handleImageError = (e: Event) => {
             placeholder="Type du jeu"
             class="select select-bordered w-full"
             name="type"
-            on:change={handleChange}
+            onchange={handleChange}
             value={game.type}
             required
           >
@@ -497,11 +503,11 @@ const handleImageError = (e: Event) => {
             class="input input-bordered w-full"
             class:input-error={!edit && game.domain !== "F95z"}
             name="image"
-            on:change={handleChange}
-            on:input={handleInput}
-            on:focusin={(e) =>
+            onchange={handleChange}
+            oninput={handleInput}
+            onfocusin={(e) =>
               e.currentTarget.nextElementSibling?.classList.remove("hidden")}
-            on:focusout={(e) =>
+            onfocusout={(e) =>
               e.currentTarget.nextElementSibling?.classList.add("hidden")}
             required
             value={game.image}
@@ -512,7 +518,7 @@ const handleImageError = (e: Event) => {
             alt="bannière du jeu 2"
             class="absolute mt-1 hidden w-full max-w-md rounded-md"
             loading="lazy"
-            on:error={handleImageError}
+            onerror={handleImageError}
           />
         </div>
 
@@ -524,8 +530,8 @@ const handleImageError = (e: Event) => {
             class="input input-bordered w-full"
             class:input-error={!edit && game.domain !== "F95z"}
             name="version"
-            on:change={handleChange}
-            on:input={handleInput}
+            onchange={handleChange}
+            oninput={handleInput}
             required
             value={game.version}
           />
@@ -540,8 +546,8 @@ const handleImageError = (e: Event) => {
               class="input input-bordered w-full"
               class:input-error={!edit}
               name="tversion"
-              on:change={handleChange}
-              on:input={(e) => handleInput(e)}
+              onchange={handleChange}
+              oninput={(e) => handleInput(e)}
               required
               value={game.tversion}
             />
@@ -549,9 +555,9 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.version}
               class:btn-primary={game.version}
-              on:click|preventDefault={() => {
+              onclick={preventDefault(() => {
                 if (game.version) game.tversion = game.version;
-              }}
+              })}
             >
               <Icon src={DocumentDuplicate} size="1rem" />
             </button>
@@ -564,7 +570,7 @@ const handleImageError = (e: Event) => {
             placeholder="Status de la traduction"
             class="select select-bordered w-full"
             name="tname"
-            on:change={handleChange}
+            onchange={handleChange}
             value={game.tname}
             required
           >
@@ -583,7 +589,7 @@ const handleImageError = (e: Event) => {
               placeholder="Lien de la traduction"
               class="input input-bordered w-full"
               name="tlink"
-              on:change={handleChange}
+              onchange={handleChange}
               value={game.tlink}
             />
             <a
@@ -592,7 +598,7 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.tlink}
               class:btn-primary={game.tlink}
-              on:click={(e) => !game.tlink && e.preventDefault()}
+              onclick={(e) => !game.tlink && e.preventDefault()}
             >
               <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
             </a>
@@ -609,7 +615,7 @@ const handleImageError = (e: Event) => {
               name="traductor"
               class="input input-bordered w-full"
               list="traductor-list"
-              on:input={handleChange}
+              oninput={handleChange}
               value={game.traductor}
             />
             <datalist id="traductor-list">
@@ -619,9 +625,9 @@ const handleImageError = (e: Event) => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => {
+              onclick={preventDefault(() => {
                 traductorModal[0] = true;
-              }}
+              })}
             >
               <Icon src={UserPlus} size="1rem" />
             </button>
@@ -638,7 +644,7 @@ const handleImageError = (e: Event) => {
               name="proofreader"
               class="input input-bordered w-full"
               list="proofreader-list"
-              on:input={handleChange}
+              oninput={handleChange}
               value={game.proofreader}
             />
             <datalist id="proofreader-list">
@@ -648,9 +654,9 @@ const handleImageError = (e: Event) => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              on:click|preventDefault={() => {
+              onclick={preventDefault(() => {
                 traductorModal[1] = true;
-              }}
+              })}
             >
               <Icon src={UserPlus} size="1rem" />
             </button>
@@ -663,7 +669,7 @@ const handleImageError = (e: Event) => {
             placeholder="Type de la traduction"
             class="select select-bordered w-full"
             name="ttype"
-            on:change={handleChange}
+            onchange={handleChange}
             value={game.ttype}
             required
           >
@@ -684,7 +690,7 @@ const handleImageError = (e: Event) => {
               type="checkbox"
               name="ac"
               class="checkbox checkbox-lg"
-              on:change={handleChange}
+              onchange={handleChange}
               checked={game.ac}
             />
           </div>
@@ -695,7 +701,7 @@ const handleImageError = (e: Event) => {
           <button
             class="btn btn-outline btn-primary w-full sm:w-48"
             type="button"
-            on:click={() => changeStep(-1)}
+            onclick={() => changeStep(-1)}
             disabled={step <= 0}
           >
             Précédent
@@ -703,7 +709,7 @@ const handleImageError = (e: Event) => {
           <button
             class="btn btn-primary w-full sm:w-48"
             type="button"
-            on:click={() => changeStep(1)}
+            onclick={() => changeStep(1)}
           >
             Suivant
           </button>
@@ -715,7 +721,7 @@ const handleImageError = (e: Event) => {
             <button
               class="btn btn-error w-full sm:w-48"
               type="button"
-              on:click={() => {
+              onclick={() => {
                 deleteModal = true;
               }}
             >
@@ -727,7 +733,7 @@ const handleImageError = (e: Event) => {
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
-            on:click={() => {
+            onclick={() => {
               step = 5;
               game = {
                 domain: "Autre",
@@ -757,7 +763,7 @@ const handleImageError = (e: Event) => {
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
-            on:click={() => scrapeData({ id: game.id, domain: "F95z" })}
+            onclick={() => scrapeData({ id: game.id, domain: "F95z" })}
           >
             Force scrape
           </button>
@@ -766,7 +772,7 @@ const handleImageError = (e: Event) => {
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
-            on:click={() => {
+            onclick={() => {
               insertModal = true;
             }}
           >
@@ -779,6 +785,7 @@ const handleImageError = (e: Event) => {
 {/if}
 
 <Modal bind:showModal={deleteModal} title="Supprimer le jeu">
+  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
   <div slot="modal-content">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea
@@ -787,9 +794,10 @@ const handleImageError = (e: Event) => {
       bind:value={comment}
     ></textarea>
   </div>
+  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
   <button
     slot="modal-action"
-    on:click={handleClickDelete}
+    onclick={handleClickDelete}
     class="btn btn-error"
   >
     Supprimer définitivement
@@ -797,6 +805,7 @@ const handleImageError = (e: Event) => {
 </Modal>
 
 <Modal bind:showModal={insertModal} title="Insérer les données du jeu">
+  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
   <div slot="modal-content">
     <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
     <textarea
@@ -805,7 +814,8 @@ const handleImageError = (e: Event) => {
       bind:value={insertObject}
     ></textarea>
   </div>
-  <button slot="modal-action" on:click={handleClickInsert} class="btn btn-info">
+  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
+  <button slot="modal-action" onclick={handleClickInsert} class="btn btn-info">
     Envoyer
   </button>
 </Modal>

@@ -7,8 +7,8 @@ import type { UserType } from '$types/schemas';
 const dispatch = createEventDispatcher();
 
 let searchCount = 0;
-let searchResults: UserType[] = [];
-let selectedUsers: UserType[] = [];
+let searchResults: UserType[] = $state([]);
+let selectedUsers: UserType[] = $state([]);
 
 let debounceTimeout: ReturnType<typeof setTimeout>;
 
@@ -63,8 +63,8 @@ const toggleSelect = (user: UserType) => {
     {#each searchResults as userResult}
       <div
         class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200"
-        on:click={() => toggleSelect(userResult)}
-        on:keypress={(event) => {
+        onclick={() => toggleSelect(userResult)}
+        onkeypress={(event) => {
           if (event.key === "Enter" || event.key === " ") {
             toggleSelect(userResult);
           }

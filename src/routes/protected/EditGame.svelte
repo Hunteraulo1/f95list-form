@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 
@@ -7,7 +9,7 @@ import { GAS_API } from '$lib/GAS_API';
 import { isLoading, queryGame } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 
-let game: GameType | null = null;
+let game: GameType | null = $state(null);
 
 const fetchGame = async () => {
   const query = $queryGame;
@@ -31,12 +33,12 @@ const fetchGame = async () => {
   }
 };
 
-$: {
+run(() => {
   // queryGame is a dependency and will trigger this code on change
   $queryGame;
 
   fetchGame();
-}
+});
 
 onMount(() => {
   fetchGame();

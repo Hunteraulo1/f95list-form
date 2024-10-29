@@ -8,12 +8,16 @@ import { fetchQueryGames } from '$lib/queryGames';
 import { queryGame, queryGames } from '$lib/stores';
 import type { QueryGameType } from '$types/schemas';
 
-export let edit = false;
+  interface Props {
+    edit?: boolean;
+  }
 
-let inputSearch = edit ? $queryGame.name : '';
-let badgeSearch = edit ? $queryGame.version : '';
+  let { edit = false }: Props = $props();
 
-let filtered: QueryGameType[] = [];
+let inputSearch = $state(edit ? $queryGame.name : '');
+let badgeSearch = $state(edit ? $queryGame.version : '');
+
+let filtered: QueryGameType[] = $state([]);
 let timer: ReturnType<typeof setTimeout>;
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -71,9 +75,10 @@ onMount(() => {
 });
 </script>
 
-<svelte:window on:keydown={handleCtrlK} />
+<svelte:window onkeydown={handleCtrlK} />
 
 <Panel title="Rechercher un jeu" showDivider={false}>
+  <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
   <div slot="panel-content">
     <div class="flex flex-col gap-4 sm:flex-row">
       <div id="container-search" class="relative w-full">
@@ -87,8 +92,8 @@ onMount(() => {
             id="searchField"
             autocomplete="off"
             bind:value={inputSearch}
-            on:input={handleInput}
-            on:focus={handleFocus} />
+            oninput={handleInput}
+            onfocus={handleFocus} />
 
           {#if badgeSearch}
             <span class="badge badge-primary">{badgeSearch}</span>
@@ -103,7 +108,7 @@ onMount(() => {
             {#each filtered as item, index}
               {#if index < 10}
                 <li>
-                  <button class="w-full" tabindex="0" on:click={() => handleClick(item)}>
+                  <button class="w-full" tabindex="0" onclick={() => handleClick(item)}>
                     {item.name}
                     <span class="badge badge-primary">{item.version}</span>
                   </button>

@@ -1,8 +1,13 @@
 <script lang="ts">
 import { navigate } from 'svelte-routing';
 
-export let to = '';
-export let onClick: () => void;
+  interface Props {
+    to?: string;
+    onClick: () => void;
+    children?: import('svelte').Snippet;
+  }
+
+  let { to = '', onClick, children }: Props = $props();
 
 const handleClick = () => {
   navigate(to);
@@ -11,7 +16,7 @@ const handleClick = () => {
 </script>
 
 <li>
-  <button on:click={handleClick}>
-    <slot />
+  <button onclick={handleClick}>
+    {@render children?.()}
   </button>
 </li>

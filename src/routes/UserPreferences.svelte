@@ -51,11 +51,16 @@ const submitUserUpdate = async () => {
 {#if $sessionUser}
   <div>
     <Panel title="Informations de profil">
-      <button on:click={handleClick} slot="button" class="btn btn-primary">Sauvegarder</button>
-      <p class="text-gray-500" slot="description">
-        Les informations contenues dans cette section sont affichées sur votre page de profil.
-      </p>
-      <div slot="panel-content" class="flex gap-8">
+      {#snippet button()}
+            <button onclick={handleClick}  class="btn btn-primary">Sauvegarder</button>
+          {/snippet}
+      {#snippet description()}
+            <p class="text-gray-500" >
+          Les informations contenues dans cette section sont affichées sur votre page de profil.
+        </p>
+          {/snippet}
+      <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
+  <div slot="panel-content" class="flex gap-8">
         <div class="form-control w-full max-w-xs">
           <label class="label" for="first-name">
             <span class="label-text">Pseudo</span>
@@ -83,11 +88,16 @@ const submitUserUpdate = async () => {
       </div>
     </Panel>
     <Panel title="Préférences utilisateur">
-      <button on:click={handleClick} slot="button" class="btn btn-primary">Sauvegarder</button>
-      <p class="text-gray-500" slot="description">
-        Modifiez vos préférences d'utilisateur. N'oubliez pas de sauvegarder !
-      </p>
-      <div slot="panel-content">
+      {#snippet button()}
+            <button onclick={handleClick}  class="btn btn-primary">Sauvegarder</button>
+          {/snippet}
+      {#snippet description()}
+            <p class="text-gray-500" >
+          Modifiez vos préférences d'utilisateur. N'oubliez pas de sauvegarder !
+        </p>
+          {/snippet}
+      <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
+  <div slot="panel-content">
         <div class="form-control w-full max-w-xs">
           <label class="label" for="theme">
             <span class="label-text">Thème</span>

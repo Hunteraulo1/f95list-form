@@ -2,16 +2,20 @@
 import { ExclamationCircle, ExclamationTriangle, HandThumbUp, Icon, InformationCircle, XMark } from 'svelte-hero-icons';
 import { fade } from 'svelte/transition';
 
-let nodeRef: HTMLElement;
+let nodeRef: HTMLElement = $state();
 
 const removeToast = () => {
   nodeRef.parentNode?.removeChild(nodeRef);
 };
 
-export let alertType = ''; // info, warning, success, error
-export let message = '';
+  interface Props {
+    alertType?: string;
+    message?: string;
+  }
 
-let alert = '';
+  let { alertType = '', message = '' }: Props = $props();
+
+let alert = $state('');
 
 switch (alertType) {
   case 'info':
@@ -50,7 +54,7 @@ switch (alertType) {
       <div>{message}</div>
     </div>
     <div>
-      <button class="btn btn-circle btn-neutral btn-sm opacity-60" on:click={removeToast}>
+      <button class="btn btn-circle btn-neutral btn-sm opacity-60" onclick={removeToast}>
         <Icon src={XMark} />
       </button>
     </div>

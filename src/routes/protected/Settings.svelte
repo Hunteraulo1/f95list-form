@@ -9,8 +9,8 @@ import { GAS_API } from '$lib/GAS_API';
 import { appConfiguration, isLoading, sessionUser, userIsSuperAdmin } from '$lib/stores';
 const dispatch = createEventDispatcher();
 
-let webhookUpdateUrl = '';
-let webhookLogsUrl = '';
+let webhookUpdateUrl = $state('');
+let webhookLogsUrl = $state('');
 
 const handleClick = async () => {
   if ($appConfiguration !== null) {
@@ -53,18 +53,23 @@ const updateAppConfiguration = async () => {
   }
 };
 
-let dialogAdd: boolean;
-let dialogRemove: boolean[] = [];
+let dialogAdd: boolean = $state();
+let dialogRemove: boolean[] = $state([]);
 </script>
 
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      <button slot="button" class="btn" on:click={handleClick} disabled={!$userIsSuperAdmin}>Sauvegarder</button>
-      <p class="text-gray-500" slot="description">
-        Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
-      </p>
-      <div slot="panel-content" class="flex w-full gap-8">
+      {#snippet button()}
+            <button  class="btn" onclick={handleClick} disabled={!$userIsSuperAdmin}>Sauvegarder</button>
+          {/snippet}
+      {#snippet description()}
+            <p class="text-gray-500" >
+          Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
+        </p>
+          {/snippet}
+      <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
+  <div slot="panel-content" class="flex w-full gap-8">
         <div class="w-full max-w-xs">
           <label class="label" for="app-name">
             <span class="label-text">Nom de l'application</span>
@@ -105,15 +110,20 @@ let dialogRemove: boolean[] = [];
     </Panel>
 
     <Panel title="Admins">
-      <button
-        slot="button"
-        on:click={() => (dialogAdd = true)}
-        disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
-        class="btn">
-        Ajouter un administrateur
-      </button>
-      <p class="text-gray-500" slot="description">Ajouter des administrateurs au formulaire !</p>
-      <div slot="panel-content">
+      {#snippet button()}
+            <button
+          
+          onclick={() => (dialogAdd = true)}
+          disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
+          class="btn">
+          Ajouter un administrateur
+        </button>
+          {/snippet}
+      {#snippet description()}
+            <p class="text-gray-500" >Ajouter des administrateurs au formulaire !</p>
+          {/snippet}
+      <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
+  <div slot="panel-content">
         <div class="overflow-x-auto">
           <table class="table">
             <!-- head -->
@@ -151,7 +161,7 @@ let dialogRemove: boolean[] = [];
                     </Link>
                   </td>
                   <th>
-                    <button on:click={() => (dialogRemove[index] = true)} class="btn btn-ghost btn-xs"
+                    <button onclick={() => (dialogRemove[index] = true)} class="btn btn-ghost btn-xs"
                       >Supprimer</button>
                     <RemoveAdminModal bind:showModal={dialogRemove[index]} on:newToast user={admin} />
                   </th>

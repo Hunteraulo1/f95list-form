@@ -22,7 +22,11 @@ import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser, userIsAdmin, userIsSuperAdmin } from '$lib/stores';
 import type { Toast } from '$types/index';
 
-export let url = '';
+  interface Props {
+    url?: string;
+  }
+
+  let { url = '' }: Props = $props();
 
 export const handleNewToast = (event: CustomEvent<Toast>): void => {
   console.info('toast launch');
@@ -33,14 +37,14 @@ export const handleNewToast = (event: CustomEvent<Toast>): void => {
   }, event.detail.milliseconds);
 };
 
-$: initialLoadComplete = $sessionUser && $appConfiguration;
+let initialLoadComplete = $derived($sessionUser && $appConfiguration);
 
-let isDrawerOpen = false;
+let isDrawerOpen = $state(false);
 const toggleDrawer = () => {
   isDrawerOpen = !isDrawerOpen;
 };
 
-let toasts: Toast[] = [];
+let toasts: Toast[] = $state([]);
 
 onMount(() => {
   fetchUser();
@@ -83,7 +87,7 @@ const fetchUser = async () => {
         type="checkbox"
         class="drawer-toggle"
         checked={isDrawerOpen}
-        on:change={toggleDrawer} />
+        onchange={toggleDrawer} />
 
       <div class="drawer-content bg-base-200">
         <!-- Page content here -->
@@ -99,9 +103,11 @@ const fetchUser = async () => {
           <Route path="user-preferences">
             <UserPreferences on:newToast={handleNewToast} />
           </Route>
-          <Route path="user/:email" let:params>
-            <Profile email={params.email} />
-          </Route>
+          <Route path="user/:email" >
+            {#snippet children({ params })}
+                        <Profile email={params.email} />
+                                  {/snippet}
+                    </Route>
           <ProtectedRoute path="add">
             <AddGame on:newToast={handleNewToast} />
           </ProtectedRoute>

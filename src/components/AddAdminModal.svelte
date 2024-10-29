@@ -11,7 +11,7 @@ import type { UserType } from '$types/schemas';
 
 const dispatch = createEventDispatcher();
 
-let selectedUsersFromChild: UserType[] = [];
+let selectedUsersFromChild: UserType[] = $state([]);
 
 const handleNewAdminSubmit = async () => {
   let users = selectedUsersFromChild;
@@ -59,10 +59,15 @@ const handleNewAdminSubmit = async () => {
   $isLoading = false;
 };
 
-export let showModal: boolean;
+  interface Props {
+    showModal: boolean;
+  }
+
+  let { showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Ajouter un administrateur">
+  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
   <div slot="modal-content">
     <p class="py-4">Sélectionnez un utilisateur pour en faire un administrateur</p>
     <UserSelect
@@ -71,9 +76,10 @@ export let showModal: boolean;
       }} />
   </div>
 
+  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
   <button
     slot="modal-action"
-    on:click={handleNewAdminSubmit}
+    onclick={handleNewAdminSubmit}
     disabled={selectedUsersFromChild.length === 0}
     class="btn">
     Ajouter

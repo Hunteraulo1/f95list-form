@@ -4,7 +4,11 @@ import { Bars3, Icon } from 'svelte-hero-icons';
 import { Link, navigate } from 'svelte-routing';
 import packageJson from '../../package.json';
 
-export let title = '';
+  interface Props {
+    title?: string;
+  }
+
+  let { title = '' }: Props = $props();
 
 console.log('sessionUser', $sessionUser);
 console.log('appConfiguration', $appConfiguration.appName);
@@ -24,7 +28,7 @@ console.log('appConfiguration', $appConfiguration.appName);
 
   <button
     class="btn btn-circle btn-ghost flex-none hover:scale-105"
-    on:click={() => navigate(`/user/${$sessionUser?.email}`)}>
+    onclick={() => navigate(`/user/${$sessionUser?.email}`)}>
     <img
       class="avatar w-10 rounded-full ring ring-primary ring-offset-1 ring-offset-base-100"
       alt={$sessionUser?.profile.pseudo ?? "The user"}

@@ -5,15 +5,20 @@ import PageNotFound from '../routes/error404.svelte';
 
 import { userIsAdmin, userIsSuperAdmin } from '$lib/stores';
 
-export let path: string;
-export let superAdmin = false;
+  interface Props {
+    path: string;
+    superAdmin?: boolean;
+    children?: import('svelte').Snippet;
+  }
+
+  let { path, superAdmin = false, children }: Props = $props();
 
 console.log({ superAdmin });
 </script>
 
 {#if ($userIsAdmin && !superAdmin) || $userIsSuperAdmin}
   <Route {path}>
-    <slot />
+    {@render children?.()}
   </Route>
 {:else}
   <Route {path}>

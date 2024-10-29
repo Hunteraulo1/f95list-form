@@ -10,7 +10,6 @@ import type { UserType } from '$types/schemas';
 
 const dispatch = createEventDispatcher();
 
-export let user: UserType;
 
 const handleAdminRemovalSubmit = async () => {
   console.info('removing admin status from user', user);
@@ -48,10 +47,16 @@ const handleAdminRemovalSubmit = async () => {
   }
 };
 
-export let showModal: boolean;
+  interface Props {
+    user: UserType;
+    showModal: boolean;
+  }
+
+  let { user = $bindable(), showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Supprimer l'administrateur">
+  <!-- @migration-task: migrate this slot by hand, `modal-content` is an invalid identifier -->
   <div slot="modal-content">
     <p class="py-4">Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet utilisateur ?</p>
     <div class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200">
@@ -68,5 +73,6 @@ export let showModal: boolean;
       </div>
     </div>
   </div>
-  <button slot="modal-action" on:click={handleAdminRemovalSubmit} disabled={!user} class="btn">Confirmer</button>
+  <!-- @migration-task: migrate this slot by hand, `modal-action` is an invalid identifier -->
+  <button slot="modal-action" onclick={handleAdminRemovalSubmit} disabled={!user} class="btn">Confirmer</button>
 </Modal>

@@ -8,8 +8,8 @@ import { traductors } from '$lib/stores';
 
 const dispatch = createEventDispatcher();
 
-let editModal: boolean[] = [];
-let addModal: boolean;
+let editModal: boolean[] = $state([]);
+let addModal: boolean = $state();
 
 onMount(async () => {
   try {
@@ -35,7 +35,7 @@ onMount(async () => {
 
 <button
   class="btn mx-auto"
-  on:click={() => addModal = true}
+  onclick={() => addModal = true}
   >
     Ajouter un traducteur
   </button>
@@ -44,7 +44,7 @@ onMount(async () => {
   <table class="table text-center">
     <thead>
       <tr>
-        <th class="w-0" />
+        <th class="w-0"></th>
         <th class="w-1/4">Traducteur/Relecteur</th>
         <th>Pages</th>
         <th class="w-0">Action</th>
@@ -69,7 +69,7 @@ onMount(async () => {
                 </ul>
           </td>
           <td>
-            <button class="btn btn-primary btn-xs" on:click={() => editModal[index] = true}>Modifier</button>
+            <button class="btn btn-primary btn-xs" onclick={() => editModal[index] = true}>Modifier</button>
           </td>
         </tr>
         <EditTraductorModal bind:showModal={editModal[index]} {index} on:newToast />

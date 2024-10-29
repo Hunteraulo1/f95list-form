@@ -3,7 +3,11 @@ import Toast from './Toast.svelte';
 
 import type { Toast as ToastType } from '$types/index';
 
-export let toasts: ToastType[] = [];
+  interface Props {
+    toasts?: ToastType[];
+  }
+
+  let { toasts = [] }: Props = $props();
 </script>
 
 <div id="toaster" class="fixed bottom-4 left-2 z-50 mx-0 my-auto">

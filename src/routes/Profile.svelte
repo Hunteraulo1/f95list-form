@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
 import { createEventDispatcher } from 'svelte';
 import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
 
@@ -7,13 +9,17 @@ import { GAS_API } from '$lib/GAS_API';
 import { isLoading } from '$lib/stores';
 import type { UserType } from '$types/schemas';
 
-export let email: string;
+  interface Props {
+    email: string;
+  }
+
+  let { email }: Props = $props();
 
 const dispatch = createEventDispatcher();
 
 let loading = false;
 
-let user: UserType | undefined = undefined;
+let user: UserType | undefined = $state(undefined);
 
 const fetchUser = async () => {
   $isLoading = true;
@@ -42,7 +48,9 @@ const fetchUser = async () => {
 };
 
 // Fetch the user on mount
-$: fetchUser();
+run(() => {
+    fetchUser();
+  });
 </script>
 
 {#if user && !loading}
@@ -91,7 +99,8 @@ $: fetchUser();
         </div>
       </div>
       <Panel title="Activité récente" showDivider={false}>
-        <div slot="panel-content" class="overflow-x-auto">
+        <!-- @migration-task: migrate this slot by hand, `panel-content` is an invalid identifier -->
+  <div slot="panel-content" class="overflow-x-auto">
           <table class="table">
             <!-- head -->
             <thead>
