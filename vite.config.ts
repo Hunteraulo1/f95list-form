@@ -1,5 +1,5 @@
-import { resolve } from 'node:path';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { resolve } from 'node:path';
 import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
 import { defineConfig } from 'vite';
@@ -34,6 +34,7 @@ export default defineConfig({
     alias: {
       $lib: resolve(__dirname, 'src/lib'),
       $components: resolve(__dirname, 'src/components'),
+      $types: resolve(__dirname, 'src/types'),
     },
   },
 });
