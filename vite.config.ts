@@ -1,5 +1,5 @@
-import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { resolve } from 'node:path';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
 import { defineConfig } from 'vite';
