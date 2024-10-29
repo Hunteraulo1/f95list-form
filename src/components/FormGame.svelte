@@ -346,6 +346,16 @@
 
     game.ac = false; // Reload view data
   };
+
+  const handleImageError = (e: Event) => {
+    const target = e.currentTarget as HTMLImageElement;
+
+    if (game.image.startsWith("https://attachments.f95zone.to/")) {
+      target.src = game.image.replace("attachments", "preview");
+    } else {
+      target.classList.add("hidden");
+    }
+  };
 </script>
 
 {#if !$isLoading}
@@ -523,13 +533,7 @@
             alt="bannière du jeu 2"
             class="absolute mt-1 hidden w-full max-w-md rounded-md"
             loading="lazy"
-            on:error={(e) => {
-              if (game.image.startsWith("https://attachments.f95zone.to/")) {
-                game.image = game.image.replace("attachments", "preview");
-              } else {
-                e.currentTarget.classList.add("hidden");
-              }
-            }}
+            on:error={handleImageError}
           />
         </div>
 
