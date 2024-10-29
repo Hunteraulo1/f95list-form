@@ -26,21 +26,21 @@
     "@types/cheerio": "^0.22.35",
     "@types/google-apps-script": "^1.0.84",
     "@types/jsdom": "^21.1.7",
-    "@types/node": "22.7.6",
+    "@types/node": "22.8.2",
     "autoprefixer": "^10.4.20",
-    "daisyui": "^4.12.13",
+    "daisyui": "^4.12.14",
     "lint-staged": "^15.2.10",
     "postcss": "^8.4.47",
-    "rollup": "^4.24.0",
+    "rollup": "^4.24.3",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-delete": "^2.1.0",
-    "svelte": "^4.2.19",
+    "svelte": "~4.2.19",
     "svelte-check": "4.0.5",
     "svelte-hero-icons": "^5.2.0",
     "svelte-routing": "^2.13.0",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3",
-    "vite": "^5.4.9",
+    "vite": "^5.4.10",
     "vite-plugin-singlefile": "^2.0.2",
     "vite-tsconfig-paths": "5.0.1"
   },
@@ -52,6 +52,10 @@
     "@biomejs/biome",
     "esbuild"
   ],
+  "overrides": {
+    "svelte": ">=4.0.0 <5.0.0",
+    "@sveltejs/vite-plugin-svelte": ">=3.0.0 <4.0.0"
+  },
   "config": {
     "commitizen": {
       "path": "cz-emoji"
