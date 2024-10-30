@@ -436,7 +436,6 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.link}
               class:btn-primary={game.link}
-              onclick={(e) => !game.link}
             >
               <Icon src={game.link ? Link : LinkSlash} size="1rem" />
             </a>
@@ -552,7 +551,8 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.version}
               class:btn-primary={game.version}
-              onclick={() => {
+              onclick={(e) => {
+                e.preventDefault();
                 if (game.version) game.tversion = game.version;
               }}
             >
@@ -595,7 +595,6 @@ const handleImageError = (e: Event) => {
               class="btn w-min"
               class:btn-disable={!game.tlink}
               class:btn-primary={game.tlink}
-              onclick={(e) => !game.tlink}
             >
               <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
             </a>
@@ -622,7 +621,8 @@ const handleImageError = (e: Event) => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              onclick={() => {
+              onclick={(e) => {
+                e.preventDefault();
                 traductorModal[0] = true;
               }}
             >
@@ -651,7 +651,8 @@ const handleImageError = (e: Event) => {
             </datalist>
             <button
               class="btn btn-primary w-min"
-              onclick={() => {
+              onclick={(e) => {
+                e.preventDefault();
                 traductorModal[1] = true;
               }}
             >
