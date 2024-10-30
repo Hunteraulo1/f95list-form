@@ -380,7 +380,6 @@ const handleImageError = (e: Event) => {
             name="domain"
             value={game.domain}
             onchange={handleChange}
-            required
           >
             <option>F95z</option>
             <option>LewdCorner</option>
@@ -413,7 +412,6 @@ const handleImageError = (e: Event) => {
             onchange={handleChange}
             oninput={handleInput}
             oninvalid={handleInvalid}
-            required
             bind:value={game.name}
           />
         </div>
@@ -453,7 +451,6 @@ const handleImageError = (e: Event) => {
             name="status"
             onchange={handleChange}
             value={game.status}
-            required
           >
             <option>EN COURS</option>
             <option>TERMINÉ</option>
@@ -481,7 +478,6 @@ const handleImageError = (e: Event) => {
             name="type"
             onchange={handleChange}
             value={game.type}
-            required
           >
             <option>RenPy</option>
             <option>RPGM</option>
@@ -672,7 +668,6 @@ const handleImageError = (e: Event) => {
             name="ttype"
             onchange={handleChange}
             value={game.ttype}
-            required
           >
             <option>Traduction Humaine</option>
             <option>Traduction Automatique</option>

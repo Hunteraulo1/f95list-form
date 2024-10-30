@@ -1,6 +1,4 @@
 <script lang="ts">
-import { run } from 'svelte/legacy';
-
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 
@@ -32,13 +30,6 @@ const fetchGame = async () => {
     $isLoading = false;
   }
 };
-
-run(() => {
-  // queryGame is a dependency and will trigger this code on change
-  $queryGame;
-
-  fetchGame();
-});
 
 onMount(() => {
   fetchGame();
