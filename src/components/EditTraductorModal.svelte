@@ -1,7 +1,7 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, traductors } from '$lib/stores';
-import { TraductorType } from '$types/schemas';
+import type { TraductorType } from '$types/schemas';
 import { createEventDispatcher } from 'svelte';
 import { get } from 'svelte/store';
 import Modal from './Modal.svelte';

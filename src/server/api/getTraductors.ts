@@ -10,19 +10,18 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
 
   const totalRow = sheet.getLastRow();
 
-  const data = sheet.getRange(`A${2}:B${totalRow}`).getRichTextValues();
+  const data = sheet.getRange(`A${2}:C${totalRow}`).getRichTextValues();
 
-  return data.map((tr) => {
-    return {
-      name: tr[0]?.getText() || '',
-      links:
-        tr[1]
-          ?.getRuns()
-          .filter((trl) => trl.getLinkUrl())
-          .map((trl) => ({
-            name: trl.getText(),
-            link: trl.getLinkUrl() || '',
-          })) ?? [],
-    };
-  });
+  return data.map((tr) => ({
+    name: tr[0]?.getText() || '',
+    links:
+      tr[1]
+        ?.getRuns()
+        .filter((trl) => trl.getLinkUrl())
+        .map((trl) => ({
+          name: trl.getText(),
+          link: trl.getLinkUrl() || '',
+        })) ?? [],
+    discordID: tr[2]?.getText() || '',
+  }));
 };

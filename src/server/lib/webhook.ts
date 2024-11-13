@@ -1,4 +1,5 @@
 import type { GameACType, GameType } from '$types/schemas';
+import { getTraductors } from '../api/getTraductors';
 
 interface SendWebhookUpdateArgs {
   title: string;
@@ -200,6 +201,69 @@ export const sendWebhookAC = async ({ games }: SendWebhookACArgs) => {
       embeds: [
         {
           title: 'Versions changées',
+          fields,
+          author: {
+            name: 'Auto-Check',
+          },
+        },
+      ],
+      components: [],
+      actions: {},
+    }),
+  });
+};
+
+export interface SendTraductorWebhookArgs {
+  games: GameACType[];
+}
+
+export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs) => {
+  const env = PropertiesService.getScriptProperties();
+  const link = env.getProperty('callTraductorUrl');
+
+  if (!link) return null;
+
+  const traductors = await getTraductors();
+
+  if (!traductors) return null;
+
+  const fields = [];
+
+  for (const game of games) {
+    const index = traductors.findIndex((t) => t.name === game.traductor);
+
+    if (!index) continue;
+    console.log('🚀 ~ sendTraductorWebhook ~ index:', index);
+
+    const discordID = traductors[index]?.discordID;
+
+    if (!discordID) continue;
+    console.log('🚀 ~ sendTraductorWebhook ~ discordID:', discordID);
+
+    fields.push({
+      name: `${game.id}: ${game.version} **>** ${game.newVersion}`,
+      value: ` <@${discordID}>`,
+      inline: true,
+    });
+  }
+
+  if (fields.length === 0) {
+    console.error({ fields });
+
+    return;
+  }
+
+  await UrlFetchApp.fetch(link, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    payload: JSON.stringify({
+      content: '',
+      tts: false,
+      embeds: [
+        {
+          title: 'Jeux mises à jour',
           fields,
           author: {
             name: 'Auto-Check',

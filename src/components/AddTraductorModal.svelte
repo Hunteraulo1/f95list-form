@@ -32,7 +32,7 @@ const handleSubmit = async () => {
     });
   }
 
-  let newTraductor = { name: name ?? '', links: [] };
+  let newTraductor = { name: name ?? '', links: [], discordID: '' };
 
   $isLoading = true;
   try {

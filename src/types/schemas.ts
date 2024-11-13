@@ -73,6 +73,7 @@ const GameAC = z.object({
   id: Game.shape.id,
   version: Game.shape.version,
   newVersion: Game.shape.version,
+  traductor: Game.shape.traductor,
 });
 
 const Traductor = z.object({
@@ -83,6 +84,7 @@ const Traductor = z.object({
       link: z.string().or(z.literal('')),
     }),
   ),
+  discordID: z.string().or(z.literal('')),
 });
 
 const AppConfiguration = z.object({

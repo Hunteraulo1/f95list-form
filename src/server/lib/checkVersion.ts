@@ -1,26 +1,25 @@
 import { getGames } from '../api/getGames';
 import { getScrape } from '../api/getScrape';
 
-import { sendWebhookAC } from './webhook';
+import { sendTraductorWebhook, sendWebhookAC } from './webhook';
 
 import type { GameACType } from '$types/schemas';
 
-//
 const checkVersion = async () => {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
 
   const ids: string[] = [];
   const games = await getGames();
-  const checkedGames: { index: number; id: string; version: string }[] = [];
+  const checkedGames: { index: number; id: string; version: string; traductor: string }[] = [];
   let result: { [key: string]: string } = {};
   const changed: GameACType[] = [];
 
   games.forEach((game, index) => {
-    const { domain, id, ac, version } = game;
+    const { domain, id, ac, version, traductor } = game;
 
     if (domain === 'F95z' && id && ac) {
       ids.push(game.id);
-      checkedGames.push({ index, id, version });
+      checkedGames.push({ index, id, version, traductor });
     }
   });
 
@@ -39,7 +38,7 @@ const checkVersion = async () => {
   }
 
   for (const game of checkedGames) {
-    const { index, id, version } = game;
+    const { index, id, version, traductor } = game;
     if (version === result[id]) {
       // console.info(`ID: ${id} | version: ${version} / newVersion: ok`);
     } else if (result[id] === 'Unknown') {
@@ -65,7 +64,7 @@ const checkVersion = async () => {
         } catch (error) {
           console.error('scrape image error: ', error);
         }
-        changed.push({ id, version, newVersion: result[id] });
+        changed.push({ id, version, newVersion: result[id], traductor });
       } else {
         console.error({ rowId, id, version });
       }
@@ -73,6 +72,8 @@ const checkVersion = async () => {
   }
 
   sendWebhookAC({ games: changed });
+
+  sendTraductorWebhook({ games: changed });
 };
 
 const host = 'https://f95zone.to';
