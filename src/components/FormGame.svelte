@@ -43,7 +43,7 @@ let {
     image: '',
   }),
 }: Props = $props();
-console.log("🚀 ~ game:", game)
+console.log('🚀 ~ game:', game);
 
 let savedId = '';
 let deleteModal = $state(false);
@@ -145,7 +145,7 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
       status: status ?? game.status,
       tags: tags ?? game.tags,
       type: type ?? game.type,
-      image: image ?? game.image
+      image: image ?? game.image,
     };
   } catch (error) {
     console.error('Error scrapped game', error);
@@ -168,7 +168,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HT
 
   if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
     game.ac = event.currentTarget.checked;
-    
+
     return;
   }
 
