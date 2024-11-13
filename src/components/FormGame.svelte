@@ -168,10 +168,16 @@ const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HT
 
   if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
     game.ac = event.currentTarget.checked;
+    
     return;
   }
 
-  // @ts-expect-error - We know that key is a valid key of GameType
+  if (name === 'tname' && value === 'Intégrée') {
+    game.tversion = 'Intégrée';
+
+    return;
+  }
+
   game[key] = value;
 
   if ((name === 'domain' || name === 'id') && id && id !== '0') {
