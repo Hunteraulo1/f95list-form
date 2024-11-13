@@ -43,6 +43,7 @@ let {
     image: '',
   }),
 }: Props = $props();
+console.log("🚀 ~ game:", game)
 
 let savedId = '';
 let deleteModal = $state(false);
@@ -137,12 +138,15 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
       game.version = version ?? game.version;
     }
 
-    game.name = name ?? game.name;
-    game.tversion = game.tversion === '' ? version : game.tversion;
-    game.status = status ?? game.status;
-    game.tags = tags ?? game.tags;
-    game.type = type ?? game.type;
-    game.image = image ?? game.image;
+    game = {
+      ...game,
+      name: name ?? game.name,
+      tversion: game.tversion === '' ? version : game.tversion,
+      status: status ?? game.status,
+      tags: tags ?? game.tags,
+      type: type ?? game.type,
+      image: image ?? game.image
+    };
   } catch (error) {
     console.error('Error scrapped game', error);
     dispatch('newToast', {
@@ -569,7 +573,6 @@ const handleImageError = (e: Event) => {
             name="tname"
             onchange={handleChange}
             value={game.tname}
-            required
           >
             <option>Traduction</option>
             <option>Traduction (mod inclus)</option>
