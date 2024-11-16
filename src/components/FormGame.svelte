@@ -178,7 +178,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HT
     return;
   }
 
-  game[key] = value;
+  (game[key] as string) = value;
 
   if ((name === 'domain' || name === 'id') && id && id !== '0') {
     switch (domain) {
