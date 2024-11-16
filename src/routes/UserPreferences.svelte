@@ -51,51 +51,48 @@ const submitUserUpdate = async () => {
 {#if $sessionUser}
   <div>
     <Panel title="Informations de profil">
-      {#snippet button()}
-        <button onclick={handleClick}  class="btn btn-primary">Sauvegarder</button>
-      {/snippet}
-      {#snippet description()}
-        <p class="text-gray-500" >
+      <div slot="panelContent">
+        <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
+        
+        <p class="text-gray-500">
           Les informations contenues dans cette section sont affichées sur votre page de profil.
         </p>
-      {/snippet}
-      <div slot="panelContent" class="flex gap-8">
-        <div class="form-control w-full max-w-xs">
-          <label class="label" for="first-name">
-            <span class="label-text">Pseudo</span>
-          </label>
-          <input
-            bind:value={$sessionUser.profile.pseudo}
-            disabled={$isLoading}
-            type="text"
-            placeholder="Tapez ici"
-            class="input input-bordered w-full max-w-xs"
-            name="first-name" />
-        </div>
-        <div class="form-control w-full max-w-xs">
-          <label class="label" for="imageUrl">
-            <span class="label-text">Photo de profil</span>
-          </label>
-          <input
-            bind:value={$sessionUser.profile.imageUrl}
-            disabled={$isLoading}
-            type="text"
-            placeholder="Tapez ici"
-            class="input input-bordered w-full max-w-xs"
-            name="first-name" />
+        <div class="flex gap-8">
+          <div class="form-control w-full max-w-xs">
+            <label class="label" for="first-name">
+              <span class="label-text">Pseudo</span>
+            </label>
+            <input
+              bind:value={$sessionUser.profile.pseudo}
+              disabled={$isLoading}
+              type="text"
+              placeholder="Tapez ici"
+              class="input input-bordered w-full max-w-xs"
+              name="first-name" />
+          </div>
+          <div class="form-control w-full max-w-xs">
+            <label class="label" for="imageUrl">
+              <span class="label-text">Photo de profil</span>
+            </label>
+            <input
+              bind:value={$sessionUser.profile.imageUrl}
+              disabled={$isLoading}
+              type="text"
+              placeholder="Tapez ici"
+              class="input input-bordered w-full max-w-xs"
+              name="first-name" />
+          </div>
         </div>
       </div>
     </Panel>
     <Panel title="Préférences utilisateur">
-      {#snippet button()}
+      <div slot="panelContent">
         <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
-      {/snippet}
-      {#snippet description()}
-        <p class="text-gray-500" >
+        
+        <p class="text-gray-500">
           Modifiez vos préférences d'utilisateur. N'oubliez pas de sauvegarder !
         </p>
-      {/snippet}
-      <div slot="panelContent">
+        
         <div class="form-control w-full max-w-xs">
           <label class="label" for="theme">
             <span class="label-text">Thème</span>
@@ -110,7 +107,6 @@ const submitUserUpdate = async () => {
           </select>
         </div>
       </div>
-      <div class="card-actions justify-end"></div>
     </Panel>
   </div>
 {/if}

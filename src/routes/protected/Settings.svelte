@@ -60,15 +60,13 @@ let dialogRemove: boolean[] = $state([]);
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      {#snippet button()}
-            <button  class="btn" onclick={handleClick} disabled={!$userIsSuperAdmin}>Sauvegarder</button>
-          {/snippet}
-      {#snippet description()}
-            <p class="text-gray-500" >
-          Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
-        </p>
-          {/snippet}
-  <div slot="panelContent" class="flex w-full gap-8">
+      <button slot="button" class="btn" onclick={handleClick} disabled={!$userIsSuperAdmin}>
+        Sauvegarder
+      </button>
+      <p slot="description" class="text-gray-500">
+        Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
+      </p>
+      <div slot="panelContent" class="flex w-full gap-8">
         <div class="w-full max-w-xs">
           <label class="label" for="app-name">
             <span class="label-text">Nom de l'application</span>
@@ -109,17 +107,15 @@ let dialogRemove: boolean[] = $state([]);
     </Panel>
 
     <Panel title="Admins">
-      {#snippet button()}
         <button
           onclick={() => (dialogAdd = true)}
+          slot="button"
           disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
           class="btn">
           Ajouter un administrateur
         </button>
-      {/snippet}
-      {#snippet description()}
-        <p class="text-gray-500" >Ajouter des administrateurs au formulaire !</p>
-      {/snippet}
+        
+        <p class="text-gray-500" slot="description" >Ajouter des administrateurs au formulaire !</p>
       <div slot="panelContent">
         <div class="overflow-x-auto">
           <table class="table">
