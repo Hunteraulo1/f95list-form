@@ -74,6 +74,7 @@ const GameAC = z.object({
   version: Game.shape.version,
   newVersion: Game.shape.version,
   traductor: Game.shape.traductor,
+  name: Game.shape.name,
 });
 
 const Traductor = z.object({

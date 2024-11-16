@@ -10,16 +10,16 @@ const checkVersion = async () => {
 
   const ids: string[] = [];
   const games = await getGames();
-  const checkedGames: { index: number; id: string; version: string; traductor: string }[] = [];
+  const checkedGames: { index: number; id: string; version: string; traductor: string; name: string }[] = [];
   let result: { [key: string]: string } = {};
   const changed: GameACType[] = [];
 
   games.forEach((game, index) => {
-    const { domain, id, ac, version, traductor } = game;
+    const { domain, id, ac, version, traductor, name } = game;
 
     if (domain === 'F95z' && id && ac) {
       ids.push(game.id);
-      checkedGames.push({ index, id, version, traductor });
+      checkedGames.push({ index, id, version, traductor, name });
     }
   });
 
@@ -38,7 +38,7 @@ const checkVersion = async () => {
   }
 
   for (const game of checkedGames) {
-    const { index, id, version, traductor } = game;
+    const { index, id, version, traductor, name } = game;
     if (version === result[id]) {
       // console.info(`ID: ${id} | version: ${version} / newVersion: ok`);
     } else if (result[id] === 'Unknown') {
@@ -64,7 +64,7 @@ const checkVersion = async () => {
         } catch (error) {
           console.error('scrape image error: ', error);
         }
-        changed.push({ id, version, newVersion: result[id], traductor });
+        changed.push({ id, version, newVersion: result[id], traductor, name });
       } else {
         console.error({ rowId, id, version });
       }

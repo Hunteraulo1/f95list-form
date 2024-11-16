@@ -241,7 +241,7 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs) 
     console.log('🚀 ~ sendTraductorWebhook ~ discordID:', discordID);
 
     fields.push({
-      name: `${game.id}: ${game.version} **>** ${game.newVersion}`,
+      name: `${game.name} (${game.id}): ${game.version} **>** ${game.newVersion}`,
       value: ` <@${discordID}>`,
       inline: true,
     });
