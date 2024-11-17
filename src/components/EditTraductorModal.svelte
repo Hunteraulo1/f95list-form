@@ -62,8 +62,10 @@ const addLink = () => {
 </script>
 
 <Modal bind:showModal title="Modifier traducteur/relecteur">
-  <div slot="modalContent" class="mt-4">
+  <div slot="modalContent" class="mt-4 flex flex-col gap-2">
     {#if localTraductor}
+
+      <label for="name" class="label">Nom du traducteur/relecteur</label>
       <input
       type="text"
       placeholder="Nom du traducteur/relecteur"
@@ -71,6 +73,7 @@ const addLink = () => {
       bind:value={localTraductor.name}
       />
 
+      <label for="discordID" class="label">ID Discord</label>
       <input
       type="text"
       placeholder="ID Discord"
@@ -79,7 +82,7 @@ const addLink = () => {
       />
 
 
-      <h2>Modifier les liens du traducteur/relecteur</h2>
+      <h2 class="label mt-4">Modifier les liens du traducteur/relecteur</h2>
 
       <ul class="flex flex-col gap-2">
         {#each localTraductor.links as {name, link}, linkIndex}
