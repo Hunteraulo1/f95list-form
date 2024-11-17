@@ -48,9 +48,11 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
     const row = sheet?.getRange(`A${traductorIndex + 2}`);
     const richRow = sheet?.getRange(`B${traductorIndex + 2}`);
+    const rowDiscordID = sheet?.getRange(`C${traductorIndex + 2}`);
 
     row?.setValue(validData.name);
     richRow?.setRichTextValue(value.build());
+    rowDiscordID?.setValue(validData.discordID);
   } catch (error) {
     console.error(error);
 
