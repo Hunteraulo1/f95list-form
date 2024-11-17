@@ -1,15 +1,17 @@
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
-
 import Modal from './Modal.svelte';
 import UserSelect from './UserSelect.svelte';
 
 import { GAS_API } from '$lib/GAS_API';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
-import { isLoading } from '$lib/stores';
+import { isLoading, newToast } from '$lib/stores';
 import type { UserType } from '$types/schemas';
 
-const dispatch = createEventDispatcher();
+interface Props {
+  showModal: boolean;
+}
+
+let { showModal = $bindable() }: Props = $props();
 
 let selectedUsersFromChild: UserType[] = $state([]);
 
@@ -37,16 +39,16 @@ const handleNewAdminSubmit = async () => {
       console.info('New admin added:', result);
       await fetchAppConfiguration();
 
-      dispatch('newToast', {
-        id: Date.now(),
+      newToast({
+        id: Date.now().toString(),
         alertType: 'success',
         message: 'Nouveau Admin ajouté!',
         milliseconds: 3000,
       });
     } catch (error) {
       console.error('Could not add new admin:', error);
-      dispatch('newToast', {
-        id: Date.now(),
+      newToast({
+        id: Date.now().toString(),
         alertType: 'error',
         message: "Erreur lors de l'ajout de l'Admin",
         milliseconds: 3000,
@@ -58,12 +60,6 @@ const handleNewAdminSubmit = async () => {
 
   $isLoading = false;
 };
-
-interface Props {
-  showModal: boolean;
-}
-
-let { showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Ajouter un administrateur">

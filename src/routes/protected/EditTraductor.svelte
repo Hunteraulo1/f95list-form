@@ -1,12 +1,11 @@
 <script lang="ts">
-import { createEventDispatcher, onMount } from 'svelte';
+import { onMount } from 'svelte';
 
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import EditTraductorModal from '$components/EditTraductorModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { traductors } from '$lib/stores';
+import { newToast, traductors } from '$lib/stores';
 
-const dispatch = createEventDispatcher();
 let editModal: boolean[] = $state([]);
 let addModal: boolean = $state(false);
 
@@ -22,8 +21,8 @@ onMount(async () => {
   } catch (error) {
     console.error('Error deleting game', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer la liste des traducteurs',
       milliseconds: 3000,
@@ -45,6 +44,7 @@ onMount(async () => {
       <tr>
         <th class="w-0"></th>
         <th class="w-1/4">Traducteur/Relecteur</th>
+        <th class="w-1/4">ID Discord</th>
         <th>Pages</th>
         <th class="w-0">Action</th>
       </tr>
@@ -54,6 +54,7 @@ onMount(async () => {
         <tr>
           <th>{index + 1}</th>
           <td class="font-bold text-primary">{traductor.name}</td>
+          <td class="font-bold text-secondary">{traductor.discordID}</td>
           <td>
             <ul class="flex gap-2 justify-center">
               {#if traductor.links && traductor.links.length > 0}
@@ -71,7 +72,7 @@ onMount(async () => {
             <button class="btn btn-primary btn-xs" onclick={() => editModal[index] = true}>Modifier</button>
           </td>
         </tr>
-        <EditTraductorModal bind:showModal={editModal[index]} {index} on:newToast />
+        <EditTraductorModal bind:showModal={editModal[index]} {index} />
       {:else}
         <tr>
           <td>
@@ -83,4 +84,4 @@ onMount(async () => {
   </table>
 </div>
 
-<AddTraductorModal bind:showModal={addModal} name="" on:newToast />
+<AddTraductorModal bind:showModal={addModal} name="" />

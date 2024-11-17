@@ -1,17 +1,14 @@
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
-
+import { newToast } from '$lib/stores';
 import type { Toast } from '$types/index';
 
-const dispatch = createEventDispatcher();
-
-let selectToastValue: typeof alertTypes | string = $state('warning');
+let selectToastValue = $state<Toast['alertType']>('warning');
 
 const alertTypes: Toast['alertType'][] = ['error', 'info', 'success', 'warning'];
 </script>
 
 <div class="flex flex-col gap-2">
-  <select class="select select-bordered sm:w-40" onchange={(e) => (selectToastValue = e.currentTarget.value)}>
+  <select class="select select-bordered sm:w-40" onchange={(e) => (selectToastValue = e.currentTarget.value as Toast['alertType'])}>
     {#each alertTypes as alertType}
       <option value={alertType}>{alertType}</option>
     {/each}
@@ -20,8 +17,8 @@ const alertTypes: Toast['alertType'][] = ['error', 'info', 'success', 'warning']
   <button
     class="btn btn-primary sm:w-40"
     onclick={() =>
-      dispatch("newToast", {
-        id: Date.now(),
+      newToast({
+        id: Date.now().toString(),
         alertType: selectToastValue,
         message: "Test du Dispatch",
         milliseconds: 60000,

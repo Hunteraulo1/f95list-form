@@ -1,11 +1,9 @@
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
 import { navigate } from 'svelte-routing';
 
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading, sessionUser } from '$lib/stores';
-const dispatch = createEventDispatcher();
+import { isLoading, newToast, sessionUser } from '$lib/stores';
 
 const handleClick = async () => {
   console.info('Button clicked!');
@@ -28,16 +26,16 @@ const submitUserUpdate = async () => {
     const result = await GAS_API.putUser({ user: $sessionUser });
 
     console.info('result', result);
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'success',
       message: "Mise à jour de l'utilisateur!",
       milliseconds: 3000,
     });
   } catch (error) {
     console.error('Error submitting user change', error);
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: "Vos modifications n'ont pas pu être enregistrées",
       milliseconds: 3000,

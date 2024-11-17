@@ -37,5 +37,5 @@ onMount(() => {
 </script>
 
 {#if game}
-  <FormGame {game} step={5} edit on:newToast />
+  <FormGame {game} step={5} edit />
 {/if}

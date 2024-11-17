@@ -2,43 +2,26 @@
 import { ExclamationCircle, ExclamationTriangle, HandThumbUp, Icon, InformationCircle, XMark } from 'svelte-hero-icons';
 import { fade } from 'svelte/transition';
 
-let nodeRef: HTMLElement | undefined = $state();
-
-const removeToast = () => {
-  nodeRef?.parentNode?.removeChild(nodeRef);
-};
+import { toasts } from '$lib/stores';
+import type { Toast } from '$types/index';
 
 interface Props {
-  alertType?: string;
-  message?: string;
+  toast: Toast;
 }
 
-let { alertType = '', message = '' }: Props = $props();
+let { toast }: Props = $props();
+const { alertType, message, id, milliseconds } = toast;
 
-let alert = $state('');
-
-switch (alertType) {
-  case 'info':
-    alert = 'alert-info';
-    break;
-  case 'warning':
-    alert = 'alert-warning';
-    break;
-  case 'success':
-    alert = 'alert-success';
-    break;
-  case 'error':
-    alert = 'alert-error';
-    break;
-}
+const handleRemove = () => {
+  toasts.update((currentToasts) => currentToasts.filter((t) => t.id !== id));
+};
 </script>
 
 <div
-  bind:this={nodeRef}
   in:fade={{ delay: 100, duration: 100 }}
   out:fade={{ duration: 100 }}
-  class="block min-w-[200px] scale-100 transform px-3 py-2 transition-all duration-150 ease-out">
-  <div class="alert {alert} bg-base shadow-lg">
+  class="block min-w-[200px] scale-100 transform px-3 py-2 transition-all duration-[{milliseconds}ms] ease-out">
+  <div class="alert alert-{alertType} bg-base shadow-lg">
     <div class="flex flex-row items-center">
       {#if alertType == "info"}
         <Icon src={InformationCircle} size="1.5rem" />
@@ -54,7 +37,7 @@ switch (alertType) {
       <div>{message}</div>
     </div>
     <div>
-      <button class="btn btn-circle btn-neutral btn-sm opacity-60" onclick={removeToast}>
+      <button class="btn btn-circle btn-neutral btn-sm opacity-60" onclick={handleRemove}>
         <Icon src={XMark} />
       </button>
     </div>

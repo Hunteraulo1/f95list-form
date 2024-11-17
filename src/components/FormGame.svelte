@@ -1,5 +1,5 @@
 <script lang="ts">
-import { createEventDispatcher, onMount } from 'svelte';
+import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements';
 
@@ -8,11 +8,9 @@ import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
+import { isLoading, newToast, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
-
-const dispatch = createEventDispatcher();
 
 interface Props {
   step?: number;
@@ -43,7 +41,6 @@ let {
     image: '',
   }),
 }: Props = $props();
-console.log('🚀 ~ game:', game);
 
 let savedId = '';
 let deleteModal = $state(false);
@@ -64,8 +61,8 @@ onMount(async () => {
   } catch (error) {
     console.error('getTradutor no return: ', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer la liste des traducteurs',
       milliseconds: 3000,
@@ -81,8 +78,8 @@ onMount(async () => {
   } catch (error) {
     console.error('scrapeData no return: ', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'warning',
       message: 'Impossible de récupérer les informations du jeu',
       milliseconds: 3000,
@@ -149,8 +146,8 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
     };
   } catch (error) {
     console.error('Error scrapped game', error);
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer les informations du jeu',
       milliseconds: 3000,
@@ -207,8 +204,8 @@ const handleSubmit = async () => {
       const result = await GAS_API.putGame({ game, query, silentMode });
 
       if (result === 'duplicate') {
-        dispatch('newToast', {
-          id: Date.now(),
+        newToast({
+          id: Date.now().toString(),
           alertType: 'warning',
           message: 'Le jeu existe déjà dans la liste',
           milliseconds: 3000,
@@ -218,8 +215,8 @@ const handleSubmit = async () => {
       }
 
       navigate('/');
-      dispatch('newToast', {
-        id: Date.now(),
+      newToast({
+        id: Date.now().toString(),
         alertType: 'success',
         message: 'Le jeu a bien été modifié',
         milliseconds: 3000,
@@ -227,8 +224,8 @@ const handleSubmit = async () => {
     } catch (error) {
       console.error('Error fetching game', error);
 
-      dispatch('newToast', {
-        id: Date.now(),
+      newToast({
+        id: Date.now().toString(),
         alertType: 'error',
         message: 'Impossible de modifier le jeu',
         milliseconds: 3000,
@@ -241,8 +238,8 @@ const handleSubmit = async () => {
       const result = await GAS_API.postGame({ game, silentMode });
 
       if (result === 'duplicate') {
-        dispatch('newToast', {
-          id: Date.now(),
+        newToast({
+          id: Date.now().toString(),
           alertType: 'warning',
           message: 'Le jeu existe déjà dans la liste',
           milliseconds: 3000,
@@ -252,8 +249,8 @@ const handleSubmit = async () => {
       }
 
       navigate('/');
-      dispatch('newToast', {
-        id: Date.now(),
+      newToast({
+        id: Date.now().toString(),
         alertType: 'success',
         message: 'Le jeu a bien été ajouté',
         milliseconds: 3000,
@@ -261,8 +258,8 @@ const handleSubmit = async () => {
     } catch (error) {
       console.error('Error adding game', error);
 
-      dispatch('newToast', {
-        id: Date.now(),
+      newToast({
+        id: Date.now().toString(),
         alertType: 'error',
         message: "Impossible d'ajouter le jeu",
         milliseconds: 3000,
@@ -284,8 +281,8 @@ const handleClickDelete = async () => {
   if (!comment) {
     console.log('no comment');
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'warning',
       message: 'Veuillez entrer une raison pour supprimer le jeu',
       milliseconds: 3000,
@@ -304,8 +301,8 @@ const handleClickDelete = async () => {
     await GAS_API.delGame({ query, comment, silentMode });
 
     navigate('/');
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'success',
       message: 'Le jeu a bien été supprimé',
       milliseconds: 3000,
@@ -313,8 +310,8 @@ const handleClickDelete = async () => {
   } catch (error) {
     console.error('Error deleting game', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de supprimer le jeu',
       milliseconds: 3000,
@@ -328,8 +325,8 @@ const handleClickInsert = () => {
   if (!insertObject) {
     console.log('no object');
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'warning',
       message: 'Veuillez entrer les données de LC Extractor',
       milliseconds: 3000,
@@ -825,10 +822,8 @@ const handleImageError = (e: Event) => {
 <AddTraductorModal
   bind:showModal={traductorModal[0]}
   name={game.traductor}
-  on:newToast
 />
 <AddTraductorModal
   bind:showModal={traductorModal[1]}
   name={game.proofreader}
-  on:newToast
 />

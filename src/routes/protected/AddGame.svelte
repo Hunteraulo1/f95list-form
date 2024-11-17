@@ -2,4 +2,4 @@
 import FormGame from '$components/FormGame.svelte';
 </script>
 
-<FormGame on:newToast />
+<FormGame />

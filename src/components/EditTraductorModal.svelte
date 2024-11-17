@@ -1,8 +1,7 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading, traductors } from '$lib/stores';
+import { isLoading, newToast, traductors } from '$lib/stores';
 import type { TraductorType } from '$types/schemas';
-import { createEventDispatcher } from 'svelte';
 import { get } from 'svelte/store';
 import Modal from './Modal.svelte';
 
@@ -12,8 +11,6 @@ interface Props {
 }
 
 let { showModal = $bindable(), index }: Props = $props();
-
-const dispatch = createEventDispatcher();
 
 let localTraductor: TraductorType | undefined = $state();
 
@@ -35,8 +32,8 @@ const handleSubmit = async () => {
 
     showModal = false;
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'success',
       message: 'Le traducteur a bien été modifié',
       milliseconds: 3000,
@@ -44,8 +41,8 @@ const handleSubmit = async () => {
   } catch (error) {
     console.error('Error adding game', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de modifier le traducteur',
       milliseconds: 3000,
@@ -67,13 +64,23 @@ const addLink = () => {
 <Modal bind:showModal title="Modifier traducteur/relecteur">
   <div slot="modalContent" class="mt-4">
     {#if localTraductor}
-    <input
-    type="text"
-    placeholder="Nom du traducteur/relecteur"
-    class="input input-bordered w-full appearance-none"
-    bind:value={localTraductor.name}
-    />
+      <input
+      type="text"
+      placeholder="Nom du traducteur/relecteur"
+      class="input input-bordered w-full appearance-none"
+      bind:value={localTraductor.name}
+      />
+
+      <input
+      type="text"
+      placeholder="ID Discord"
+      class="input input-bordered w-full appearance-none"
+      bind:value={localTraductor.discordID}
+      />
+
+
       <h2>Modifier les liens du traducteur/relecteur</h2>
+
       <ul class="flex flex-col gap-2">
         {#each localTraductor.links as {name, link}, linkIndex}
           <li class="flex gap-2">

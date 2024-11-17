@@ -1,14 +1,10 @@
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
-
 import Modal from './Modal.svelte';
 
 import { GAS_API } from '$lib/GAS_API';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
-import { isLoading } from '$lib/stores';
+import { isLoading, newToast } from '$lib/stores';
 import type { UserType } from '$types/schemas';
-
-const dispatch = createEventDispatcher();
 
 const handleAdminRemovalSubmit = async () => {
   console.info('removing admin status from user', user);
@@ -26,8 +22,8 @@ const handleAdminRemovalSubmit = async () => {
 
     await fetchAppConfiguration();
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'success',
       message: 'Admin supprimé!',
       milliseconds: 3000,
@@ -35,8 +31,8 @@ const handleAdminRemovalSubmit = async () => {
   } catch (error) {
     console.error('Could not remove admin:', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: "Erreur lors de la suppression de l'Admin",
       milliseconds: 3000,

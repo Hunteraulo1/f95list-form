@@ -1,12 +1,11 @@
 <script lang="ts">
 import { run } from 'svelte/legacy';
 
-import { createEventDispatcher } from 'svelte';
 import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
 
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading } from '$lib/stores';
+import { isLoading, newToast } from '$lib/stores';
 import type { UserType } from '$types/schemas';
 
 interface Props {
@@ -14,8 +13,6 @@ interface Props {
 }
 
 let { email }: Props = $props();
-
-const dispatch = createEventDispatcher();
 
 let loading = false;
 
@@ -34,8 +31,8 @@ const fetchUser = async () => {
   } catch (error) {
     console.error('Could not get user data:', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer les information utilisateur',
       milliseconds: 3000,

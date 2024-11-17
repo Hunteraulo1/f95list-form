@@ -1,13 +1,11 @@
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
 import { Link } from 'svelte-routing';
 
 import AddAdminModal from '$components/AddAdminModal.svelte';
 import Panel from '$components/Panel.svelte';
 import RemoveAdminModal from '$components/RemoveAdminModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { appConfiguration, isLoading, sessionUser, userIsSuperAdmin } from '$lib/stores';
-const dispatch = createEventDispatcher();
+import { appConfiguration, isLoading, newToast, sessionUser, userIsSuperAdmin } from '$lib/stores';
 
 let webhookUpdateUrl = $state('');
 let webhookLogsUrl = $state('');
@@ -34,16 +32,16 @@ const updateAppConfiguration = async () => {
       },
     });
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'success',
       message: "Configuration de l'application mise à jour !",
       milliseconds: 3000,
     });
   } catch (error) {
     console.error("Erreur de transmission des changements de l'utilisateur", error);
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
+      id: Date.now().toString(),
       alertType: 'error',
       message: "Vos modifications n'ont pas pu être enregistrées",
       milliseconds: 3000,
@@ -156,7 +154,7 @@ let dialogRemove: boolean[] = $state([]);
                   <th>
                     <button onclick={() => (dialogRemove[index] = true)} class="btn btn-ghost btn-xs"
                       >Supprimer</button>
-                    <RemoveAdminModal bind:showModal={dialogRemove[index]} on:newToast user={admin} />
+                    <RemoveAdminModal bind:showModal={dialogRemove[index]} user={admin} />
                   </th>
                 </tr>
               {/each}
@@ -166,6 +164,6 @@ let dialogRemove: boolean[] = $state([]);
       </div>
     </Panel>
 
-    <AddAdminModal bind:showModal={dialogAdd} on:newToast />
+    <AddAdminModal bind:showModal={dialogAdd} />
   {/if}
 </div>

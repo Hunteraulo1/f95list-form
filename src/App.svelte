@@ -20,7 +20,6 @@ import Toaster from '$components/Toaster.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser, userIsAdmin, userIsSuperAdmin } from '$lib/stores';
-import type { Toast } from '$types/index';
 
 interface Props {
   url?: string;
@@ -28,23 +27,12 @@ interface Props {
 
 let { url = '' }: Props = $props();
 
-export const handleNewToast = (event: CustomEvent<Toast>): void => {
-  console.info('toast launch');
-  console.info(event.detail);
-  toasts = [...toasts, event.detail];
-  setTimeout(() => {
-    toasts = toasts.filter((toast) => toast.id !== event.detail.id);
-  }, event.detail.milliseconds);
-};
-
 let initialLoadComplete = $derived($sessionUser && $appConfiguration);
 
 let isDrawerOpen = $state(false);
 const toggleDrawer = () => {
   isDrawerOpen = !isDrawerOpen;
 };
-
-let toasts: Toast[] = $state([]);
 
 onMount(() => {
   fetchUser();
@@ -95,13 +83,13 @@ const fetchUser = async () => {
 
         <div class="container mx-auto pb-8">
           <Route path="*">
-            <Home on:newToast={handleNewToast} />
+            <Home />
           </Route>
           <ProtectedRoute path="settings">
-            <Settings on:newToast={handleNewToast} />
+            <Settings />
           </ProtectedRoute>
           <Route path="user-preferences">
-            <UserPreferences on:newToast={handleNewToast} />
+            <UserPreferences />
           </Route>
           <Route path="user/:email" >
             {#snippet children({ params }: { params: { email: string } })}
@@ -109,16 +97,16 @@ const fetchUser = async () => {
             {/snippet}
           </Route>
           <ProtectedRoute path="add">
-            <AddGame on:newToast={handleNewToast} />
+            <AddGame />
           </ProtectedRoute>
           <ProtectedRoute path="edit">
-            <EditGame on:newToast={handleNewToast} />
+            <EditGame />
           </ProtectedRoute>
           <ProtectedRoute path="traductor">
-            <EditTraductor on:newToast={handleNewToast} />
+            <EditTraductor />
           </ProtectedRoute>
           <ProtectedRoute path="dev" superAdmin>
-            <Developper on:newToast={handleNewToast} />
+            <Developper />
           </ProtectedRoute>
         </div>
       </div>
@@ -159,5 +147,5 @@ const fetchUser = async () => {
     </div>
   {/if}
 
-  <Toaster {toasts} />
+  <Toaster />
 </Router>
