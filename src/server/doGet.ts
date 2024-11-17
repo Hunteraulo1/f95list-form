@@ -6,11 +6,13 @@ import { loadAppConfiguration } from './lib/loadAppConfiguration';
 const doGet = (_e: unknown) => {
   // We shouldn't load the application if we aren't able to get the user's
   // identity. In this case, we return the noAuth.html page.
+
   const activeUserEmail = Session.getActiveUser().getEmail();
 
   if (activeUserEmail === '') {
     return HtmlService.createTemplateFromFile('server/noAuth')
       .evaluate()
+      .setTitle('Gestion des traductions')
       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
 
@@ -21,7 +23,7 @@ const doGet = (_e: unknown) => {
 
   // At this point we should
 
-  return HtmlService.createHtmlOutputFromFile('client/index.html').setXFrameOptionsMode(
-    HtmlService.XFrameOptionsMode.ALLOWALL,
-  );
+  return HtmlService.createHtmlOutputFromFile('client/index.html')
+    .setTitle('Gestion des traductions')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 };
