@@ -10,15 +10,16 @@ export type PutUserArgs = {
  * **API Endpoint** | Updates the app configuration and returns it
  */
 export const putUser = ({ user }: PutUserArgs) => {
-  const invokingUserEmail = Session.getActiveUser().getEmail();
+  const activeUserEmail = Session.getActiveUser().getEmail();
+  const effectiveUserEmail = Session.getEffectiveUser().getEmail();
 
-  console.info('putUser() called with: ', user, 'by: ', invokingUserEmail);
+  console.info('putUser() called with: ', user, 'by: ', activeUserEmail);
 
   const validUser = User.parse(user);
 
   if (!validUser.email) throw new Error('No email found');
 
-  if (validUser.roles.includes('superAdmin') && invokingUserEmail !== Session.getEffectiveUser().getEmail())
+  if (validUser.roles.includes('superAdmin') && activeUserEmail !== effectiveUserEmail)
     throw new Error('A user resource can only be updated by themselves or the superAdmin.');
   
   const scriptPropertiesService = PropertiesService.getScriptProperties();
