@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const User = z.object({
   email: z.string().email().or(z.string().nullable()),
-  roles: z.array(z.enum(['superAdmin', 'admin'])),
+  roles: z.array(z.enum(['superAdmin', 'admin', 'traductor'])),
   profile: z.object({
     pseudo: z.string(),
     imageUrl: z.string().or(z.literal('')),

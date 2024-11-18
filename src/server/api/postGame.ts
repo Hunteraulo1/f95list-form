@@ -15,6 +15,10 @@ export interface PostGameArgs {
   silentMode: boolean;
 }
 
+const title = 'Nouveau jeu ajouté:';
+
+const color = 115201;
+
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
   // Report request
   console.info('postGame called with args:', { dataGame: game });
@@ -98,9 +102,6 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
     putStatistics('post');
 
     putUser({ user });
-
-    const title = 'Nouveau jeu ajouté:';
-    const color = 115201;
 
     if (!silentMode) {
       sendWebhookUpdate({
