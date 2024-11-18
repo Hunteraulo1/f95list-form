@@ -1,4 +1,3 @@
-import { getQueryGames } from './getQueryGames';
 import { getTraductors } from './getTraductors';
 
 import { Game, type GameType } from '$types/schemas';
@@ -8,7 +7,7 @@ export interface PostGameArgs {
   game: GameType;
 }
 
-export const postSubmit = async ({ game }: PostGameArgs): Promise<undefined | string> => {
+export const postSubmit = async ({ game }: PostGameArgs): Promise<undefined> => {
   // Report request
   console.info('postSubmit called with args:', { dataGame: game });
 
@@ -16,15 +15,6 @@ export const postSubmit = async ({ game }: PostGameArgs): Promise<undefined | st
 
   try {
     const validGame = Game.parse(game);
-    const games = await getQueryGames();
-
-    const duplicate = games?.findIndex(
-      (game) => game.name.toLowerCase() === validGame.name.toLowerCase() && game.version === validGame.version,
-    );
-
-    if (duplicate !== -1) {
-      return 'duplicate';
-    }
 
     const dataLink = async (data: string | null, domain: string) => {
       let result = '';
