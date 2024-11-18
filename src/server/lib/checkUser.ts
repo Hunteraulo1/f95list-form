@@ -8,9 +8,9 @@ const checkUser = (rank: UserType['roles'][0]): boolean => {
 
   const validUser = User.parse(user);
 
-  if (!validUser.email || (!validUser.roles.includes(rank) && !validUser.roles.includes('superAdmin'))) return false;
+  if (validUser.roles.includes(rank) || validUser.roles.includes('superAdmin')) return true;
 
-  return true;
+  return false;
 };
 
 export default checkUser;
