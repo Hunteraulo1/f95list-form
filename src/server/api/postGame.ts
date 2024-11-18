@@ -23,6 +23,8 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
   // Report request
   console.info('postGame called with args:', { dataGame: game });
 
+  checkUser('admin');
+
   try {
     enableLock();
 

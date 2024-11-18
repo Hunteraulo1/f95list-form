@@ -1,4 +1,5 @@
 import type { UserType } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 
 /**
  * **API Endpoint** | Returns the accessing user object
@@ -7,6 +8,8 @@ export const getUsers = (): UserType[] | undefined => {
   const requestingUserEmail = Session.getActiveUser().getEmail();
   // Report request
   console.info('getUsers called by: ', requestingUserEmail);
+
+  checkUser('admin');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();

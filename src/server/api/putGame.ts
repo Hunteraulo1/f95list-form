@@ -11,6 +11,7 @@ import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 import { Game } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 
 export interface PutGameArgs {
   game: GameType;
@@ -24,6 +25,8 @@ export interface PutGameArgs {
 export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
   // Report request
   console.info('putGame called with args:', { dataGame });
+
+  checkUser('admin');
 
   try {
     enableLock();

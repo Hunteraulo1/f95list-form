@@ -1,4 +1,5 @@
 import { AppConfiguration, type AppConfigurationType, AppWebhooks, type AppWebhooksType } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 
 export type PutAppConfigArgs = {
   appConfiguration: AppConfigurationType;
@@ -11,6 +12,8 @@ export type PutAppConfigArgs = {
 export const putAppConfiguration = ({ appConfiguration, webhooks }: PutAppConfigArgs): void => {
   try {
     console.info('🚀 ~ putAppConfiguration ~ webhooks:', webhooks);
+
+    checkUser('superAdmin');
 
     console.info('putAppConfiguration() called with: ', appConfiguration);
 

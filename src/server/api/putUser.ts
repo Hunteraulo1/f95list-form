@@ -16,14 +16,12 @@ export const putUser = ({ user }: PutUserArgs) => {
 
   const validUser = User.parse(user);
 
+  if (!validUser.email) throw new Error('No email found');
+
   if (validUser.roles.includes('superAdmin') && invokingUserEmail !== Session.getEffectiveUser().getEmail())
     throw new Error('A user resource can only be updated by themselves or the superAdmin.');
-
-  // If the code reaches here, the user object is valid
-  // and the invoking user is either the user or a superAdmin.
+  
   const scriptPropertiesService = PropertiesService.getScriptProperties();
-
-  if (!validUser.email) throw new Error('No email found');
 
   const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? '');
 

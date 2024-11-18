@@ -1,4 +1,5 @@
 import { Traductor, type TraductorType } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 import { disableLock, enableLock } from '../lib/lockMode';
 import { getTraductors } from './getTraductors';
 export interface PostTraductorArgs {
@@ -8,6 +9,8 @@ export interface PostTraductorArgs {
 export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
   // Report request
   console.info('postTraductor called with args:', { dataTraductor: traductor });
+
+  checkUser('admin');
 
   try {
     enableLock();

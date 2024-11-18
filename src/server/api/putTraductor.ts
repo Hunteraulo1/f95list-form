@@ -3,6 +3,7 @@ import { disableLock, enableLock } from '../lib/lockMode';
 import { getTraductors } from './getTraductors';
 
 import { Traductor, type TraductorType } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 
 export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
@@ -12,6 +13,8 @@ export interface PutTraductorArgs {
 export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<void> => {
   // Report request
   console.info('putTraductor called with args:', { query, data });
+
+  checkUser('admin');
 
   enableLock();
 

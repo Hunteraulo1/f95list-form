@@ -7,6 +7,7 @@ import { getUser } from './getUser';
 import { putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 
 export interface DelGameArgs {
   query: { name: string; version: string };
@@ -18,6 +19,8 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
   const { name, version } = query;
   // Report request
   console.info('delGame called with args:', { name, version, comment });
+
+  checkUser('admin');
 
   enableLock();
 
