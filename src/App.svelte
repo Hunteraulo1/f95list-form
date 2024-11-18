@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMount } from 'svelte';
 import { AdjustmentsVertical, Cog6Tooth, Home as HomeIcon, Icon, Language, UserCircle } from 'svelte-hero-icons';
-import { Route, Router } from 'svelte-routing';
+import { Route as RoutePrimitive, Router } from 'svelte-routing';
 
 import Home from './routes/Home.svelte';
 import Profile from './routes/Profile.svelte';
@@ -15,7 +15,7 @@ import Settings from './routes/protected/Settings.svelte';
 import HeaderBar from '$components/HeaderBar.svelte';
 import InitialLoad from '$components/InitialLoad.svelte';
 import NavLink from '$components/NavLink.svelte';
-import ProtectedRoute from '$components/ProtectedRoute.svelte';
+import Route from '$components/Route.svelte';
 import Toaster from '$components/Toaster.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
@@ -85,29 +85,29 @@ const fetchUser = async () => {
           <Route path="*">
             <Home />
           </Route>
-          <ProtectedRoute path="settings">
+          <Route path="settings" rank="admin">
             <Settings />
-          </ProtectedRoute>
+          </Route>
           <Route path="user-preferences">
             <UserPreferences />
           </Route>
-          <Route path="user/:email" >
+          <RoutePrimitive path="user/:email" >
             {#snippet children({ params }: { params: { email: string } })}
               <Profile email={params.email} />
             {/snippet}
-          </Route>
-          <ProtectedRoute path="add">
+          </RoutePrimitive>
+          <Route path="add" rank="admin">
             <AddGame />
-          </ProtectedRoute>
-          <ProtectedRoute path="edit">
+          </Route>
+          <Route path="edit" rank="admin">
             <EditGame />
-          </ProtectedRoute>
-          <ProtectedRoute path="traductor">
+          </Route>
+          <Route path="traductor" rank="admin">
             <EditTraductor />
-          </ProtectedRoute>
-          <ProtectedRoute path="dev" superAdmin>
+          </Route>
+          <Route path="dev" rank="superAdmin">
             <Developper />
-          </ProtectedRoute>
+          </Route>
         </div>
       </div>
       <div class="drawer-side">
