@@ -4,7 +4,6 @@ import { Link, navigate } from 'svelte-routing';
 import type { ChangeEventHandler } from 'svelte/elements';
 
 import Panel from '$components/Panel.svelte';
-import checkUser from '$lib/checkUser';
 import { fetchQueryGames } from '$lib/queryGames';
 import { queryGame, queryGames } from '$lib/stores';
 import type { QueryGameType } from '$types/schemas';
@@ -20,8 +19,6 @@ let badgeSearch = $state(edit ? $queryGame.version : '');
 
 let filtered: QueryGameType[] = $state([]);
 let timer: ReturnType<typeof setTimeout>;
-
-const isAdmin = checkUser(['admin']);
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
   badgeSearch = '';
@@ -54,8 +51,7 @@ const handleClick = (data: QueryGameType) => {
   filtered = [];
   $queryGame = data;
 
-  if (isAdmin) navigate('/edit');
-  else navigate('/submit-edit');
+  navigate('/edit');
 };
 
 const handleFocus = () => {
@@ -121,7 +117,7 @@ onMount(() => {
         <span id="span-search"></span>
       </div>
 
-      <Link to={isAdmin ? "/add" : "submit-add"} class="btn btn-primary sm:w-40">AJOUTER UN JEU</Link>
+      <Link to="/add" class="btn btn-primary sm:w-40">AJOUTER UN JEU</Link>
     </div>
   </div>
 </Panel>

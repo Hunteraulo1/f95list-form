@@ -17,6 +17,7 @@ interface Props {
   step?: number;
   edit?: boolean;
   game?: GameType;
+  isAdmin: boolean;
 }
 
 let {

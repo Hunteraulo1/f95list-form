@@ -86,7 +86,7 @@ const fetchUser = async () => {
           <Route path="*">
             <Home />
           </Route>
-          <Route path="settings" rank="admin">
+          <Route path="settings" ranks={["admin"]}>
             <Settings />
           </Route>
           <Route path="user-preferences">
@@ -97,16 +97,16 @@ const fetchUser = async () => {
               <Profile email={params.email} />
             {/snippet}
           </RoutePrimitive>
-          <Route path="add" rank="admin">
+          <Route path="add" ranks={["traductor", "admin"]}>
             <AddGame />
           </Route>
-          <Route path="edit" rank="admin">
+          <Route path="edit" ranks={["traductor", "admin"]}>
             <EditGame />
           </Route>
-          <Route path="traductor" rank="admin">
+          <Route path="traductor" ranks={["admin"]}>
             <EditTraductor />
           </Route>
-          <Route path="dev" rank="superAdmin">
+          <Route path="dev" ranks={["superAdmin"]}>
             <Developper />
           </Route>
         </div>

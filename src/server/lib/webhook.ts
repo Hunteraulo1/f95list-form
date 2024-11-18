@@ -233,12 +233,10 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs) 
     const index = traductors.findIndex((t) => t.name === game.traductor);
 
     if (!index) continue;
-    console.log('🚀 ~ sendTraductorWebhook ~ index:', index);
 
     const discordID = traductors[index]?.discordID;
 
     if (!discordID) continue;
-    console.log('🚀 ~ sendTraductorWebhook ~ discordID:', discordID);
 
     fields.push({
       name: `${game.name} (${game.id}): ${game.version} **>** ${game.newVersion}`,
@@ -263,7 +261,7 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs) 
       tts: false,
       embeds: [
         {
-          title: 'Jeux mises à jour',
+          title: 'Jeux mis à jour',
           fields,
           author: {
             name: 'Auto-Check',
