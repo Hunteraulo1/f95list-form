@@ -5,7 +5,7 @@ import checkUser from '../server/lib/checkUser';
 </script>
 
 <div class="mt-0 flex flex-col items-center justify-center gap-4">
-  {#if checkUser('admin')}
+  {#if checkUser('admin') || checkUser('traductor')}
     <Search />
   {:else}
     <div class="h-screen">

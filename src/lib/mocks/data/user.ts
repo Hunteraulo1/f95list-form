@@ -2,7 +2,7 @@ import type { UserType } from '$types/schemas';
 
 export const user: UserType = {
   email: 'mock_mockerson@test.com',
-  roles: ['superAdmin', 'admin'],
+  roles: ['traductor'],
   profile: {
     pseudo: 'Mock',
     imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',
