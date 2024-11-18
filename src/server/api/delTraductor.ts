@@ -1,4 +1,5 @@
 import type { TraductorType } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 import { disableLock, enableLock } from '../lib/lockMode';
 
 import { getTraductors } from './getTraductors';
@@ -10,6 +11,8 @@ export interface DelTraductorArgs {
 export const delTraductor = async ({ query }: DelTraductorArgs): Promise<void> => {
   // Report request
   console.info('delTraductor called with args:', { query });
+
+  checkUser('admin');
 
   enableLock();
 

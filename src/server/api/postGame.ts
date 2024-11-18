@@ -9,6 +9,7 @@ import { getUser } from './getUser';
 import { putStatistics, putUser } from './putUser';
 
 import { Game, type GameType } from '$types/schemas';
+import checkUser from '../lib/checkUser';
 
 export interface PostGameArgs {
   game: GameType;
