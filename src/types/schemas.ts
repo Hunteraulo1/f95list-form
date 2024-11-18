@@ -13,7 +13,7 @@ const User = z.object({
   activity: z.array(
     z.object({
       label: z.string(),
-      value: z.string(), // You can add custom validation to ensure it's an ISO string
+      value: z.string(),
     }),
   ),
   statistics: z.object({
@@ -99,18 +99,31 @@ const AppWebhooks = z.object({
   logs: z.string().or(z.literal('')),
 });
 
-// You need to export in this format. See
-// https://stackoverflow.com/questions/48791868/use-typescript-with-google-apps-script
-// for more info.
-// export { AppConfiguration, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
-export { AppConfiguration, AppWebhooks, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
+const Submit = z.object({
+  email: User.shape.email,
+  date: z.string(),
+  status: z.enum(['wait', 'validated', 'rejected']),
+  type: z.enum(['add', 'edit', 'delete']),
+  comment: z.string().or(z.literal('')),
+  game: Game,
+});
+
+const PostSubmit = z.object({
+  game: Submit.shape.game,
+  type: Submit.shape.type,
+  comment: Submit.shape.comment,
+});
+
+export { AppConfiguration, AppWebhooks, CheckerF95z, Game, PostSubmit, QueryGame, ScrapeGame, Submit, Traductor, User };
 
 export type AppConfigurationType = z.infer<typeof AppConfiguration>;
 export type AppWebhooksType = z.infer<typeof AppWebhooks>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
 export type GameACType = z.infer<typeof GameAC>;
 export type GameType = z.infer<typeof Game>;
+export type PostSubmitType = z.infer<typeof PostSubmit>;
 export type QueryGameType = z.infer<typeof QueryGame>;
 export type ScrapeGameType = z.infer<typeof ScrapeGame>;
+export type SubmitType = z.infer<typeof Submit>;
 export type TraductorType = z.infer<typeof Traductor>;
 export type UserType = z.infer<typeof User>;

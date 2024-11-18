@@ -7,8 +7,8 @@ import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
-import checkUser from '$lib/checkUser';
 import { GAS_API } from '$lib/GAS_API';
+import checkUser from '$lib/checkUser';
 import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
@@ -89,24 +89,14 @@ onMount(async () => {
   }
 });
 
-interface InsertObject {
-  id: string;
-  domain: string;
-  name: string;
-  version: string;
-  status: string;
-  tags: string;
-  type: string;
-  ac: boolean;
-  link: string;
-  image: string;
-}
-
 const changeStep = async (amount: number) => {
   if (step + amount >= 0 && step + amount <= 5) step += amount;
   if (step === 1 && game.domain === 'Autre') step += amount; // ID
   if (step === 2 && game.domain === 'F95z') step += amount; // Game informations
-  if (step === 4 && game.domain === 'Autre') step += amount; // Auto-Check
+  if (step === 4 && game.domain === 'Autre' && checkUser(['admin'])) {
+    step += amount; // Auto-Check
+  }
+  if (step === 4 && !checkUser(['admin'])) step += amount; // Auto-Check
 
   const gameId = Number.parseInt(game.id);
 
@@ -198,6 +188,35 @@ const handleInput: FormEventHandler<HTMLInputElement> = (event) => {
 
 const handleSubmit = async () => {
   $isLoading = true;
+
+  if (checkUser(['traductor'])) {
+    try {
+      await GAS_API.postSubmit({
+        game,
+        type: edit ? 'edit' : 'add',
+        comment: '',
+      });
+
+      navigate('/');
+      newToast({
+        id: Date.now().toString(),
+        alertType: 'success',
+        message: 'Le jeu a bien été soumis',
+        milliseconds: 3000,
+      });
+    } catch (error) {
+      console.error('Error fetching game', error);
+
+      newToast({
+        id: Date.now().toString(),
+        alertType: 'error',
+        message: 'Impossible de soumettre le jeu',
+        milliseconds: 3000,
+      });
+    }
+
+    return;
+  }
 
   if (edit) {
     const query = $queryGame;
@@ -292,11 +311,34 @@ const handleClickDelete = async () => {
 
     return null;
   }
-  const query = $queryGame;
-  const { name, version } = query;
-
   $isLoading = true;
 
+  if (checkUser(['traductor'])) {
+    try {
+      await GAS_API.postSubmit({ game, type: 'delete', comment });
+
+      navigate('/');
+      newToast({
+        id: Date.now().toString(),
+        alertType: 'success',
+        message: 'La suppression du jeu a bien été soumise',
+        milliseconds: 3000,
+      });
+    } catch (error) {
+      console.error('Error fetching game', error);
+
+      newToast({
+        id: Date.now().toString(),
+        alertType: 'error',
+        message: 'Impossible de soumettre la suppression du jeu',
+        milliseconds: 3000,
+      });
+    }
+
+    return;
+  }
+
+  const { name, version } = $queryGame;
   try {
     const query = { name, version };
 
@@ -686,20 +728,22 @@ const handleImageError = (e: Event) => {
           </select>
         </div>
 
-        <div class="flex items-end" class:hidden={step !== 4 && step !== 5}>
-          <div
-            class="flex h-12 w-full flex-col items-center justify-center gap-2"
-          >
-            <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
-            <input
-              type="checkbox"
-              name="ac"
-              class="checkbox checkbox-lg"
-              onchange={handleChange}
-              checked={game.ac}
-            />
+        {#if checkUser(['admin'])}
+          <div class="flex items-end" class:hidden={step !== 4 && step !== 5}>
+            <div
+              class="flex h-12 w-full flex-col items-center justify-center gap-2"
+            >
+              <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
+              <input
+                type="checkbox"
+                name="ac"
+                class="checkbox checkbox-lg"
+                onchange={handleChange}
+                checked={game.ac}
+              />
+            </div>
           </div>
-        </div>
+        {/if}
       </div>
       <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">
         {#if step < 5}
@@ -763,15 +807,15 @@ const handleImageError = (e: Event) => {
           >
             Dev data
           </button>
-        {/if}
-        {#if checkUser(['superAdmin']) && game.domain === "F95z"}
-          <button
-            class="btn btn-info w-full sm:w-48"
-            type="button"
-            onclick={() => scrapeData({ id: game.id, domain: "F95z" })}
-          >
-            Force scrape
-          </button>
+          {#if game.domain === "F95z"}
+            <button
+              class="btn btn-info w-full sm:w-48"
+              type="button"
+              onclick={() => scrapeData({ id: game.id, domain: "F95z" })}
+            >
+              Force scrape
+            </button>
+          {/if}
         {/if}
         {#if game.domain === "LewdCorner"}
           <button

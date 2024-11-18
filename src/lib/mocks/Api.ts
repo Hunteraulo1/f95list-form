@@ -3,10 +3,12 @@ import { getAppConfiguration } from './api/getAppConfiguration';
 import { getGame } from './api/getGame';
 import { getQueryGames } from './api/getQueryGames';
 import { getScrape } from './api/getScrape';
+import { getSubmits } from './api/getSubmits';
 import { getTraductors } from './api/getTraductors';
 import { getUser } from './api/getUser';
 import { getUsers } from './api/getUsers';
 import { postGame } from './api/postGame';
+import { postSubmit } from './api/postSubmit';
 import { postTraductor } from './api/postTraductor';
 import { putAppConfiguration } from './api/putAppConfiguration';
 import { putGame } from './api/putGame';
@@ -36,33 +38,39 @@ type MockEndpoints = {
   getTraductors: typeof getTraductors;
   postTraductor: typeof postTraductor;
   putTraductor: typeof putTraductor;
+
+  // Submit
+  getSubmits: typeof getSubmits;
+  postSubmit: typeof postSubmit;
 };
 
-const getMockEndpoints = (): MockEndpoints => {
-  return {
-    // App Configuration
-    getAppConfiguration,
-    putAppConfiguration,
+const getMockEndpoints = (): MockEndpoints => ({
+  // App Configuration
+  getAppConfiguration,
+  putAppConfiguration,
 
-    // User
-    getUser,
-    getUsers,
-    putUser,
-    putUserRole,
+  // User
+  getUser,
+  getUsers,
+  putUser,
+  putUserRole,
 
-    // Game
-    getGame,
-    postGame,
-    putGame,
-    delGame,
-    getQueryGames,
-    getScrape,
+  // Game
+  getGame,
+  postGame,
+  putGame,
+  delGame,
+  getQueryGames,
+  getScrape,
 
-    // Traductor
-    getTraductors,
-    postTraductor,
-    putTraductor,
-  };
-};
+  // Traductor
+  getTraductors,
+  postTraductor,
+  putTraductor,
+
+  // Submit
+  getSubmits,
+  postSubmit,
+});
 
 export default getMockEndpoints;
