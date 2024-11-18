@@ -5,7 +5,8 @@ import AddAdminModal from '$components/AddAdminModal.svelte';
 import Panel from '$components/Panel.svelte';
 import RemoveAdminModal from '$components/RemoveAdminModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { appConfiguration, isLoading, newToast, sessionUser, userIsSuperAdmin } from '$lib/stores';
+import { appConfiguration, isLoading, newToast } from '$lib/stores';
+import checkUser from '../../server/lib/checkUser';
 
 let webhookUpdateUrl = $state('');
 let webhookLogsUrl = $state('');
@@ -58,7 +59,7 @@ let dialogRemove: boolean[] = $state([]);
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      <button slot="button" class="btn" onclick={handleClick} disabled={!$userIsSuperAdmin}>
+      <button slot="button" class="btn" onclick={handleClick} disabled={!checkUser('superAdmin')}>
         Sauvegarder
       </button>
       <p slot="description" class="text-gray-500">
@@ -71,7 +72,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={$appConfiguration.appName}
-            disabled={$isLoading || !$userIsSuperAdmin}
+            disabled={$isLoading || !checkUser('superAdmin')}
             type="text"
             placeholder="Nom de l'application"
             class="input input-bordered w-full"
@@ -83,7 +84,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookLogsUrl}
-            disabled={$isLoading || !$userIsSuperAdmin}
+            disabled={$isLoading || !checkUser('superAdmin')}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -95,7 +96,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookUpdateUrl}
-            disabled={$isLoading || !$userIsSuperAdmin}
+            disabled={$isLoading || !checkUser('superAdmin')}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -105,15 +106,15 @@ let dialogRemove: boolean[] = $state([]);
     </Panel>
 
     <Panel title="Admins">
-        <button
-          onclick={() => (dialogAdd = true)}
-          slot="button"
-          disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
-          class="btn">
-          Ajouter un administrateur
-        </button>
-        
-        <p class="text-gray-500" slot="description" >Ajouter des administrateurs au formulaire !</p>
+      <button
+        onclick={() => (dialogAdd = true)}
+        slot="button"
+        disabled={!checkUser('admin')}
+        class="btn">
+        Ajouter un administrateur
+      </button>
+      
+      <p class="text-gray-500" slot="description" >Ajouter des administrateurs au formulaire !</p>
       <div slot="panelContent">
         <div class="overflow-x-auto">
           <table class="table">

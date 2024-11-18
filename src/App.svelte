@@ -20,7 +20,8 @@ import Route from '$components/Route.svelte';
 import Toaster from '$components/Toaster.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
-import { appConfiguration, isLoading, sessionUser, userIsAdmin, userIsSuperAdmin } from '$lib/stores';
+import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
+import checkUser from './server/lib/checkUser';
 
 interface Props {
   url?: string;
@@ -123,7 +124,7 @@ const fetchUser = async () => {
             Accueil
           </NavLink>
 
-          {#if $userIsAdmin}
+          {#if checkUser('admin')}
             <NavLink to="/settings" onClick={toggleDrawer}>
               <Icon src={Cog6Tooth} size="1rem" />
               Paramètres
@@ -140,7 +141,7 @@ const fetchUser = async () => {
           </NavLink>
           <div class="divider"></div>
 
-          {#if $userIsSuperAdmin}
+          {#if checkUser('superAdmin')}
             <NavLink to="/dev" onClick={toggleDrawer}>
               <Icon src={AdjustmentsVertical} size="1rem" />
               Panel développeur

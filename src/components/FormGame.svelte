@@ -8,9 +8,10 @@ import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading, newToast, queryGame, traductors, userIsSuperAdmin } from '$lib/stores';
+import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
+import checkUser from '../server/lib/checkUser';
 
 interface Props {
   step?: number;
@@ -732,7 +733,7 @@ const handleImageError = (e: Event) => {
             </button>
           {/if}
         {/if}
-        {#if !edit && $userIsSuperAdmin}
+        {#if !edit && checkUser('superAdmin')}
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
@@ -762,7 +763,7 @@ const handleImageError = (e: Event) => {
             Dev data
           </button>
         {/if}
-        {#if $userIsSuperAdmin && game.domain === "F95z"}
+        {#if checkUser('superAdmin') && game.domain === "F95z"}
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
