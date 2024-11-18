@@ -59,7 +59,7 @@ let dialogRemove: boolean[] = $state([]);
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      <button slot="button" class="btn" onclick={handleClick} disabled={!checkUser('superAdmin')}>
+      <button slot="button" class="btn" onclick={handleClick} disabled={!checkUser(['superAdmin'])}>
         Sauvegarder
       </button>
       <p slot="description" class="text-gray-500">
@@ -72,7 +72,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={$appConfiguration.appName}
-            disabled={$isLoading || !checkUser('superAdmin')}
+            disabled={$isLoading || !checkUser(['superAdmin'])}
             type="text"
             placeholder="Nom de l'application"
             class="input input-bordered w-full"
@@ -84,7 +84,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookLogsUrl}
-            disabled={$isLoading || !checkUser('superAdmin')}
+            disabled={$isLoading || !checkUser(['superAdmin'])}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -96,7 +96,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookUpdateUrl}
-            disabled={$isLoading || !checkUser('superAdmin')}
+            disabled={$isLoading || !checkUser(['superAdmin'])}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -109,7 +109,7 @@ let dialogRemove: boolean[] = $state([]);
       <button
         onclick={() => (dialogAdd = true)}
         slot="button"
-        disabled={!checkUser('admin')}
+        disabled={!checkUser(['admin'])}
         class="btn">
         Ajouter un administrateur
       </button>

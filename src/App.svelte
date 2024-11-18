@@ -11,7 +11,6 @@ import Developper from './routes/protected/Developper.svelte';
 import EditGame from './routes/protected/EditGame.svelte';
 import EditTraductor from './routes/protected/EditTraductor.svelte';
 import Settings from './routes/protected/Settings.svelte';
-import Submit from './routes/protected/Submit.svelte';
 
 import HeaderBar from '$components/HeaderBar.svelte';
 import InitialLoad from '$components/InitialLoad.svelte';
@@ -107,9 +106,6 @@ const fetchUser = async () => {
           <Route path="traductor" rank="admin">
             <EditTraductor />
           </Route>
-          <Route path="submit" rank="traductor">
-            <Submit />
-          </Route>
           <Route path="dev" rank="superAdmin">
             <Developper />
           </Route>
@@ -124,7 +120,7 @@ const fetchUser = async () => {
             Accueil
           </NavLink>
 
-          {#if checkUser('admin')}
+          {#if checkUser(['admin'])}
             <NavLink to="/settings" onClick={toggleDrawer}>
               <Icon src={Cog6Tooth} size="1rem" />
               Paramètres
@@ -141,7 +137,7 @@ const fetchUser = async () => {
           </NavLink>
           <div class="divider"></div>
 
-          {#if checkUser('superAdmin')}
+          {#if checkUser(['superAdmin'])}
             <NavLink to="/dev" onClick={toggleDrawer}>
               <Icon src={AdjustmentsVertical} size="1rem" />
               Panel développeur

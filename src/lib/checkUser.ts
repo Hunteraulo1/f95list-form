@@ -1,7 +1,7 @@
 import { User, type UserType } from '$types/schemas';
 import { sessionUser } from './stores';
 
-const checkUser = (rank: UserType['roles'][0]): boolean => {
+const checkUser = (ranks: UserType['roles']): boolean => {
   let user: UserType | null = null;
 
   sessionUser.subscribe((u) => {
@@ -14,7 +14,11 @@ const checkUser = (rank: UserType['roles'][0]): boolean => {
 
   console.info('checkUser() called with: ', validUser, 'by: ', validUser.email);
 
-  if (validUser.roles.includes(rank) || validUser.roles.includes('superAdmin')) return true;
+  if (validUser.roles.includes('superAdmin')) return true;
+
+  for (const rank of ranks) {
+    if (validUser.roles.includes(rank)) return true;
+  }
 
   return false;
 };

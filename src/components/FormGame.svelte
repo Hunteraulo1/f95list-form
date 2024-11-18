@@ -733,7 +733,7 @@ const handleImageError = (e: Event) => {
             </button>
           {/if}
         {/if}
-        {#if !edit && checkUser('superAdmin')}
+        {#if !edit && checkUser(['superAdmin'])}
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
@@ -763,7 +763,7 @@ const handleImageError = (e: Event) => {
             Dev data
           </button>
         {/if}
-        {#if checkUser('superAdmin') && game.domain === "F95z"}
+        {#if checkUser(['superAdmin']) && game.domain === "F95z"}
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
