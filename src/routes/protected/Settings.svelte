@@ -4,9 +4,9 @@ import { Link } from 'svelte-routing';
 import AddAdminModal from '$components/AddAdminModal.svelte';
 import Panel from '$components/Panel.svelte';
 import RemoveAdminModal from '$components/RemoveAdminModal.svelte';
+import checkUser from '$lib/checkUser';
 import { GAS_API } from '$lib/GAS_API';
 import { appConfiguration, isLoading, newToast } from '$lib/stores';
-import checkUser from '../../server/lib/checkUser';
 
 let webhookUpdateUrl = $state('');
 let webhookLogsUrl = $state('');

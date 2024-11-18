@@ -19,9 +19,9 @@ import NavLink from '$components/NavLink.svelte';
 import Route from '$components/Route.svelte';
 import Toaster from '$components/Toaster.svelte';
 import { GAS_API } from '$lib/GAS_API';
+import checkUser from '$lib/checkUser';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
-import checkUser from './server/lib/checkUser';
 
 interface Props {
   url?: string;

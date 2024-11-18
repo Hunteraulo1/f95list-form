@@ -1,7 +1,7 @@
 <script lang="ts">
 import Search from '../components/Search.svelte';
 
-import checkUser from '../server/lib/checkUser';
+import checkUser from '$lib/checkUser';
 </script>
 
 <div class="mt-0 flex flex-col items-center justify-center gap-4">

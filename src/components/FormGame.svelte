@@ -7,11 +7,11 @@ import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
+import checkUser from '$lib/checkUser';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
-import checkUser from '../server/lib/checkUser';
 
 interface Props {
   step?: number;

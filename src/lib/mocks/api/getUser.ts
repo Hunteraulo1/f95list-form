@@ -14,13 +14,13 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
 
   console.info({ email });
 
-  if (!email) {
-    mockResponse = user;
-  } else {
+  if (email) {
     const user = users.find((user) => user.email === email);
     if (user) {
       mockResponse = user;
     }
+  } else {
+    mockResponse = user;
   }
 
   console.info('mockResponse', mockResponse);
