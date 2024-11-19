@@ -21,7 +21,7 @@ export const putUser = ({ user }: PutUserArgs) => {
 
   if (validUser.roles.includes('superAdmin') && activeUserEmail !== effectiveUserEmail)
     throw new Error('A user resource can only be updated by themselves or the superAdmin.');
-  
+
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
   const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? '');

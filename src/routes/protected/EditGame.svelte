@@ -3,8 +3,8 @@ import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 
 import FormGame from '$components/FormGame.svelte';
-import checkUser from '$lib/checkUser';
 import { GAS_API } from '$lib/GAS_API';
+import checkUser from '$lib/checkUser';
 import { isLoading, queryGame } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 

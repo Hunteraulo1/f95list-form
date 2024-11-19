@@ -10,8 +10,12 @@ import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import checkUser from '$lib/checkUser';
 import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
-import type { GameType } from '$types/schemas';
-import { DocumentDuplicate, Icon, Link, LinkSlash, UserPlus } from 'svelte-hero-icons';
+import { Game, type GameType } from '$types/schemas';
+import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
+import FormGameDatalist from './FormGameDatalist.svelte';
+import FormGameInput from './FormGameInput.svelte';
+import FormGameSelect from './FormGameSelect.svelte';
+import FormGameTextarea from './FormGameTextarea.svelte';
 
 interface Props {
   step?: number;
@@ -423,326 +427,90 @@ const handleImageError = (e: Event) => {
       <div
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        <div class:hidden={step !== 0 && step !== 5}>
-          <label for="domain">Platforme:</label>
-          <select
-            placeholder="Platforme du jeu"
-            class="select select-bordered w-full"
-            name="domain"
-            value={game.domain}
-            onchange={handleChange}
-          >
-            <option>F95z</option>
-            <option>LewdCorner</option>
-            <option>Autre</option>
-          </select>
-        </div>
 
-        <div class:hidden={step !== 1 && step !== 5}>
-          <label for="id">ID:</label>
-          <input
-            type="number"
-            placeholder="Id du jeu"
-            class="number-input input input-bordered w-full appearance-none"
-            pattern="[0-9]*"
-            inputmode="numeric"
-            name="id"
-            onchange={handleChange}
-            bind:value={game.id}
-          />
-        </div>
+        <FormGameSelect value={game.domain} {game} active={[0, 5]} {step} title="Platforme" name="domain" values={Game.shape.domain.options} />
+      
+        <FormGameInput value={game.id} {game} active={[1, 5]} {step} title="ID du jeu" name="id" type="number" pattern="[0-9]" inputmode="numeric" />
 
-        <div class:hidden={step !== 2 && step !== 5}>
-          <label for="name">Nom:</label>
-          <input
-            type="text"
-            placeholder="Nom du jeu"
-            class="input input-bordered w-full"
-            class:input-error={!edit && game.domain !== "F95z"}
-            name="name"
-            onchange={handleChange}
-            oninput={handleInput}
-            oninvalid={handleInvalid}
-            bind:value={game.name}
-          />
-        </div>
+        <FormGameInput value={game.name} {game} active={[2, 5]} {step} title="Nom du jeu" name="name" type="text" />
 
-        <div class:hidden={step !== 2 && step !== 5}>
-          <label for="link">Lien du jeu:</label>
-          <div class="flex gap-1">
-            <input
-              type="text"
-              placeholder="Lien du jeu"
-              class="input input-bordered w-full"
-              class:input-error={!edit && game.domain !== "F95z"}
-              name="link"
-              onchange={handleChange}
-              oninput={handleInput}
-              required
-              value={game.link}
-            />
-            <a
-              href={game.link}
-              target="_blank"
-              class="btn w-min"
-              class:btn-disable={!game.link}
-              class:btn-primary={game.link}
-            >
-              <Icon src={game.link ? Link : LinkSlash} size="1rem" />
-            </a>
-          </div>
-        </div>
+        <FormGameInput value={game.link} {game} active={[3, 5]} {step} title="Lien du jeu" name="link" type="text">
+          <a
+            href={game.link}
+            target="_blank"
+            class="btn w-min"
+            class:btn-disable={!game.link}
+            class:btn-primary={game.link}>
+            <Icon src={game.link ? Link : LinkSlash} size="1rem" />
+          </a>
+        </FormGameInput>
 
-        <div class:hidden={step !== 2 && step !== 5}>
-          <label for="status">Status:</label>
-          <select
-            placeholder="Status du jeu"
-            class="select select-bordered w-full"
-            name="status"
-            onchange={handleChange}
-            value={game.status}
-          >
-            <option>EN COURS</option>
-            <option>TERMINÉ</option>
-            <option>ABANDONNÉ</option>
-          </select>
-        </div>
+        <FormGameSelect value={game.status} {game} active={[4, 5]} {step} title="Status du jeu" name="status" values={Game.shape.status.options} />
 
-        <div class:hidden={step !== 2 && step !== 5}>
-          <label for="tags">Tags:</label>
-          <textarea
-            id="tags"
-            name="tags"
-            placeholder="Tags du jeu"
-            class="textarea textarea-bordered textarea-xs max-h-32 w-full"
-            onchange={handleChange}
-            value={game.tags}
-          ></textarea>
-        </div>
+        <FormGameTextarea value={game.tags} {game} name="tags" active={[2,5]} {step} title="Tags du jeu" />
 
-        <div class:hidden={step !== 2 && step !== 5}>
-          <label for="type">Type:</label>
-          <select
-            placeholder="Type du jeu"
-            class="select select-bordered w-full"
-            name="type"
-            onchange={handleChange}
-            value={game.type}
-          >
-            <option>RenPy</option>
-            <option>RPGM</option>
-            <option>Unity</option>
-            <option>Unreal</option>
-            <option>Flash</option>
-            <option>HTLM</option>
-            <option>QSP</option>
-            <option>Autre</option>
-            <option>RenPy/RPGM</option>
-            <option>RenPy/Unity</option>
-          </select>
-        </div>
+        <FormGameSelect value={game.type} {game} active={[5]} {step} title="Type du jeu" name="type" values={Game.shape.type.options} />
 
-        <div class:hidden={step !== 2 && step !== 5} class="imgHint relative">
-          <label for="image">Lien de l'image:</label>
-          <input
-            type="text"
-            placeholder="Lien de l'image"
-            class="input input-bordered w-full"
-            class:input-error={!edit && game.domain !== "F95z"}
-            name="image"
-            onchange={handleChange}
-            oninput={handleInput}
-            onfocusin={(e) =>
-              e.currentTarget.nextElementSibling?.classList.remove("hidden")}
-            onfocusout={(e) =>
-              e.currentTarget.nextElementSibling?.classList.add("hidden")}
-            required
-            value={game.image}
-          />
-
+        <FormGameInput 
+          value={game.image}
+          {game}
+          active={[6, 5]}
+          {step}
+          className="imgHint relative"
+          title="Lien de l'image"
+          name="image"
+          type="text"
+          oninput={handleInput}
+          onfocusin={(e) =>
+            e.currentTarget.nextElementSibling?.classList.remove("hidden")}
+          onfocusout={(e) =>
+            e.currentTarget.nextElementSibling?.classList.add("hidden")}
+          required>
           <img
             src={game.image}
             alt="bannière du jeu 2"
-            class="absolute mt-1 hidden w-full max-w-md rounded-md"
+            class="absolute top-20 hidden w-full max-w-md rounded-md"
             loading="lazy"
             onerror={handleImageError}
           />
-        </div>
+        </FormGameInput>
 
-        <div class:hidden={step !== 2 && step !== 5}>
-          <label for="version">Version actuelle:</label>
-          <input
-            type="text"
-            placeholder="Version du jeu"
-            class="input input-bordered w-full"
-            class:input-error={!edit && game.domain !== "F95z"}
-            name="version"
-            onchange={handleChange}
-            oninput={handleInput}
-            required
-            value={game.version}
-          />
-        </div>
+        <FormGameInput value={game.version} {game} active={[7, 5]} {step} title="Version du jeu" name="version" type="text" />
 
-        <div class:hidden={step !== 3 && step !== 5}>
-          <label for="tversion">Version de la traduction:</label>
-          <div class="flex gap-1">
-            <input
-              type="text"
-              placeholder="Version de la traduction"
-              class="input input-bordered w-full"
-              class:input-error={!edit}
-              name="tversion"
-              onchange={handleChange}
-              oninput={(e) => handleInput(e)}
-              required
-              value={game.tversion}
-            />
-            <button
-              class="btn w-min"
-              class:btn-disable={!game.version}
-              class:btn-primary={game.version}
-              onclick={(e) => {
-                e.preventDefault();
-                if (game.version) game.tversion = game.version;
-              }}
-            >
-              <Icon src={DocumentDuplicate} size="1rem" />
-            </button>
-          </div>
-        </div>
+        <FormGameInput value={game.tversion} {game} active={[8, 5]} {step} title="Version de la traduction" name="tversion" type="text">
+          <button
+            class="btn w-min"
+            class:btn-disable={!game.version}
+            class:btn-primary={game.version}
+            onclick={(e) => {
+              e.preventDefault();
+              if (game.version) game.tversion = game.version;
+            }}>
+            <Icon src={DocumentDuplicate} size="1rem" />
+          </button>
+        </FormGameInput>
 
-        <div class:hidden={step !== 3 && step !== 5}>
-          <label for="tname">Status de la traduction:</label>
-          <select
-            placeholder="Status de la traduction"
-            class="select select-bordered w-full"
-            name="tname"
-            onchange={handleChange}
-            value={game.tname}
-          >
-            <option>Traduction</option>
-            <option>Traduction (mod inclus)</option>
-            <option>Intégrée</option>
-            <option>Pas de traduction</option>
-          </select>
-        </div>
+        <FormGameSelect value={game.tname} {game} active={[9, 5]} {step} title="Status de la traduction" name="tname" values={Game.shape.tname.options} />
 
-        <div class:hidden={step !== 3 && step !== 5}>
-          <label for="tlink">Lien de la traduction:</label>
-          <div class="flex gap-1">
-            <input
-              type="text"
-              placeholder="Lien de la traduction"
-              class="input input-bordered w-full"
-              name="tlink"
-              onchange={handleChange}
-              value={game.tlink}
-            />
-            <a
-              href={game.tlink}
-              target="_blank"
-              class="btn w-min"
-              class:btn-disable={!game.tlink}
-              class:btn-primary={game.tlink}
-            >
-              <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
-            </a>
-          </div>
-        </div>
+        <FormGameInput value={game.tlink} {game} active={[10, 5]} {step} title="Lien de la traduction" name="tlink" type="text">
+          <a
+            href={game.tlink}
+            target="_blank"
+            class="btn w-min"
+            class:btn-disable={!game.tlink}
+            class:btn-primary={game.tlink}>
+            <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
+          </a>
+        </FormGameInput>
 
-        <div class:hidden={step !== 3 && step !== 5}>
-          <label for="traductor">Traducteur:</label>
-          <div class="flex gap-1">
-            <input
-              placeholder="Nom du traducteur"
-              type="search"
-              id="traductor"
-              name="traductor"
-              class="input input-bordered w-full"
-              list="traductor-list"
-              oninput={handleChange}
-              value={game.traductor}
-            />
-            <datalist id="traductor-list">
-              {#each $traductors as traductor}
-                <option>{traductor.name}</option>
-              {/each}
-            </datalist>
-            <button
-              class="btn btn-primary w-min"
-              onclick={(e) => {
-                e.preventDefault();
-                traductorModal[0] = true;
-              }}
-            >
-              <Icon src={UserPlus} size="1rem" />
-            </button>
-          </div>
-        </div>
+        <FormGameDatalist value={game.traductor} {game} active={[11, 5]} {step} title="Traducteur" name="traductor" values={$traductors} modal={traductorModal[0]} />
 
-        <div class:hidden={step !== 3 && step !== 5}>
-          <label for="proofreader">Relecteur:</label>
-          <div class="flex gap-1">
-            <input
-              placeholder="Nom du relecteur"
-              type="search"
-              id="proofreader"
-              name="proofreader"
-              class="input input-bordered w-full"
-              list="proofreader-list"
-              oninput={handleChange}
-              value={game.proofreader}
-            />
-            <datalist id="proofreader-list">
-              {#each $traductors as traductor}
-                <option>{traductor.name}</option>
-              {/each}
-            </datalist>
-            <button
-              class="btn btn-primary w-min"
-              onclick={(e) => {
-                e.preventDefault();
-                traductorModal[1] = true;
-              }}
-            >
-              <Icon src={UserPlus} size="1rem" />
-            </button>
-          </div>
-        </div>
+        <FormGameDatalist value={game.proofreader} {game} active={[12, 5]} {step} title="Relecteur" name="proofreader" values={$traductors} modal={traductorModal[1]} />
 
-        <div class:hidden={step !== 3 && step !== 5}>
-          <label for="ttype">Type de Traduction:</label>
-          <select
-            placeholder="Type de la traduction"
-            class="select select-bordered w-full"
-            name="ttype"
-            onchange={handleChange}
-            value={game.ttype}
-          >
-            <option>Traduction Humaine</option>
-            <option>Traduction Automatique</option>
-            <option>Traduction Semi-Automatique</option>
-            <option>VO Française</option>
-            <option>À tester</option>
-          </select>
-        </div>
+        <FormGameSelect value={game.ttype} {game} active={[13, 5]} {step} title="Type de Traduction" name="ttype" values={Game.shape.ttype.options} />
 
         {#if checkUser(['admin'])}
-          <div class="flex items-end" class:hidden={step !== 4 && step !== 5}>
-            <div
-              class="flex h-12 w-full flex-col items-center justify-center gap-2"
-            >
-              <label for="ac">Voulez-vous activer l'Auto-Check ?</label>
-              <input
-                type="checkbox"
-                name="ac"
-                class="checkbox checkbox-lg"
-                onchange={handleChange}
-                checked={game.ac}
-              />
-            </div>
-          </div>
+          <FormGameInput value={game.ac} {game} checked={game.ac} active={[14, 5]} {step} title="Auto-Check" name="ac" type="checkbox" />
         {/if}
       </div>
       <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">
@@ -751,15 +519,13 @@ const handleImageError = (e: Event) => {
             class="btn btn-outline btn-primary w-full sm:w-48"
             type="button"
             onclick={() => changeStep(-1)}
-            disabled={step <= 0}
-          >
+            disabled={step <= 0}>
             Précédent
           </button>
           <button
             class="btn btn-primary w-full sm:w-48"
             type="button"
-            onclick={() => changeStep(1)}
-          >
+            onclick={() => changeStep(1)}>
             Suivant
           </button>
         {:else}
@@ -772,8 +538,7 @@ const handleImageError = (e: Event) => {
               type="button"
               onclick={() => {
                 deleteModal = true;
-              }}
-            >
+              }}>
               Supprimer le jeu
             </button>
           {/if}
@@ -803,16 +568,14 @@ const handleImageError = (e: Event) => {
                 image:
                   "https://attachments.f95zone.to/2024/04/3572650_Remaster_HD.png",
               };
-            }}
-          >
+            }}>
             Dev data
           </button>
           {#if game.domain === "F95z"}
             <button
               class="btn btn-info w-full sm:w-48"
               type="button"
-              onclick={() => scrapeData({ id: game.id, domain: "F95z" })}
-            >
+              onclick={() => scrapeData({ id: game.id, domain: "F95z" })}>
               Force scrape
             </button>
           {/if}
@@ -821,10 +584,7 @@ const handleImageError = (e: Event) => {
           <button
             class="btn btn-info w-full sm:w-48"
             type="button"
-            onclick={() => {
-              insertModal = true;
-            }}
-          >
+            onclick={() => { insertModal = true }}>
             Insert Data
           </button>
         {/if}
