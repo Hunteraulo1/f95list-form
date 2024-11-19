@@ -26,9 +26,9 @@ const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     <textarea
     placeholder={title}
     id={name}
-    class="textarea textarea-bordered textarea-xs max-h-32 w-full"
     onchange={handleChange}
     {...rest}
+    class="textarea textarea-bordered textarea-xs max-h-32 w-full {rest.class}"
     ></textarea>
     {@render children?.()}
   </div>

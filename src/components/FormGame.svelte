@@ -1,11 +1,9 @@
 <script lang="ts">
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
-import type { FormEventHandler } from 'svelte/elements';
 
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import LoadingSpinner from '$components/LoadingSpinner.svelte';
-import Modal from '$components/Modal.svelte';
 import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import checkUser from '$lib/checkUser';
@@ -13,7 +11,11 @@ import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import { Game, type GameType } from '$types/schemas';
 import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
 import FormGameDatalist from './FormGameDatalist.svelte';
+import FormGameDev from './FormGameDev.svelte';
 import FormGameInput from './FormGameInput.svelte';
+import FormGameInputImage from './FormGameInputImage.svelte';
+import FormGameInsert from './FormGameInsert.svelte';
+import FormGameRemove from './FormGameRemove.svelte';
 import FormGameSelect from './FormGameSelect.svelte';
 import FormGameTextarea from './FormGameTextarea.svelte';
 
@@ -49,8 +51,6 @@ let {
 }: Props = $props();
 
 let savedId = '';
-let deleteModal = $state(false);
-let insertModal = $state(false);
 let traductorModal = $state([false, false]);
 let silentMode = $state(false);
 let scraping = $state(false);
@@ -97,10 +97,9 @@ const changeStep = async (amount: number) => {
   if (step + amount >= 0 && step + amount <= 5) step += amount;
   if (step === 1 && game.domain === 'Autre') step += amount; // ID
   if (step === 2 && game.domain === 'F95z') step += amount; // Game informations
-  if (step === 4 && game.domain === 'Autre' && checkUser(['admin'])) {
+  if ((step === 4 && game.domain === 'Autre' && checkUser(['admin'])) || (step === 4 && !checkUser(['admin']))) {
     step += amount; // Auto-Check
   }
-  if (step === 4 && !checkUser(['admin'])) step += amount; // Auto-Check
 
   const gameId = Number.parseInt(game.id);
 
@@ -151,12 +150,6 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
   } finally {
     scraping = false;
   }
-};
-
-const handleInput: FormEventHandler<HTMLInputElement> = (event) => {
-  const { value, classList } = event.currentTarget;
-
-  value === '' ? classList.add('input-error') : classList.remove('input-error');
 };
 
 const handleSubmit = async () => {
@@ -265,103 +258,6 @@ const handleSubmit = async () => {
 };
 
 let comment = $state('');
-let insertObject: string = $state('');
-
-const handleClickDelete = async () => {
-  if (!comment) {
-    console.log('no comment');
-
-    newToast({
-      id: Date.now().toString(),
-      alertType: 'warning',
-      message: 'Veuillez entrer une raison pour supprimer le jeu',
-      milliseconds: 3000,
-    });
-
-    return null;
-  }
-  $isLoading = true;
-
-  if (checkUser(['traductor'])) {
-    try {
-      await GAS_API.postSubmit({ game, type: 'delete', comment });
-
-      navigate('/');
-      newToast({
-        id: Date.now().toString(),
-        alertType: 'success',
-        message: 'La suppression du jeu a bien été soumise',
-        milliseconds: 3000,
-      });
-    } catch (error) {
-      console.error('Error fetching game', error);
-
-      newToast({
-        id: Date.now().toString(),
-        alertType: 'error',
-        message: 'Impossible de soumettre la suppression du jeu',
-        milliseconds: 3000,
-      });
-    }
-
-    return;
-  }
-
-  const { name, version } = $queryGame;
-  try {
-    const query = { name, version };
-
-    await GAS_API.delGame({ query, comment, silentMode });
-
-    navigate('/');
-    newToast({
-      id: Date.now().toString(),
-      alertType: 'success',
-      message: 'Le jeu a bien été supprimé',
-      milliseconds: 3000,
-    });
-  } catch (error) {
-    console.error('Error deleting game', error);
-
-    newToast({
-      id: Date.now().toString(),
-      alertType: 'error',
-      message: 'Impossible de supprimer le jeu',
-      milliseconds: 3000,
-    });
-  } finally {
-    $isLoading = false;
-  }
-};
-
-const handleClickInsert = () => {
-  if (!insertObject) {
-    console.log('no object');
-
-    newToast({
-      id: Date.now().toString(),
-      alertType: 'warning',
-      message: 'Veuillez entrer les données de LC Extractor',
-      milliseconds: 3000,
-    });
-
-    return null;
-  }
-
-  Object.assign(game, JSON.parse(insertObject));
-
-  game.ac = false; // Reload view data
-};
-
-const handleImageError = (e: Event) => {
-  const target = e.currentTarget as HTMLImageElement;
-
-  if (game.image.startsWith('https://attachments.f95zone.to/')) {
-    target.src = game.image.replace('attachments', 'preview');
-  } else {
-    target.classList.add('hidden');
-  }
-};
 </script>
 
 {#if !$isLoading}
@@ -416,29 +312,7 @@ const handleImageError = (e: Event) => {
 
         <FormGameSelect value={game.type} {game} active={[5]} {step} title="Type du jeu" name="type" values={Game.shape.type.options} />
 
-        <FormGameInput 
-          value={game.image}
-          {game}
-          active={[6, 5]}
-          {step}
-          className="imgHint relative"
-          title="Lien de l'image"
-          name="image"
-          type="text"
-          oninput={handleInput}
-          onfocusin={(e) =>
-            e.currentTarget.nextElementSibling?.classList.remove("hidden")}
-          onfocusout={(e) =>
-            e.currentTarget.nextElementSibling?.classList.add("hidden")}
-          required>
-          <img
-            src={game.image}
-            alt="bannière du jeu 2"
-            class="absolute top-20 hidden w-full max-w-md rounded-md"
-            loading="lazy"
-            onerror={handleImageError}
-          />
-        </FormGameInput>
+        <FormGameInputImage {game} {step} />
 
         <FormGameInput value={game.version} {game} active={[7, 5]} {step} title="Version du jeu" name="version" type="text" />
 
@@ -475,7 +349,7 @@ const handleImageError = (e: Event) => {
         <FormGameSelect value={game.ttype} {game} active={[13, 5]} {step} title="Type de Traduction" name="ttype" values={Game.shape.ttype.options} />
 
         {#if checkUser(['admin'])}
-          <FormGameInput value={game.ac} {game} checked={game.ac} active={[14, 5]} {step} title="Auto-Check" name="ac" type="checkbox" />
+          <FormGameInput value={game.ac} {game} checked={game.ac} active={[14, 5]} {step} title="Auto-Check" name="ac" type="checkbox" className="flex h-full w-full flex-col justify-center" />
         {/if}
       </div>
       <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">
@@ -498,97 +372,19 @@ const handleImageError = (e: Event) => {
             {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <button
-              class="btn btn-error w-full sm:w-48"
-              type="button"
-              onclick={() => {
-                deleteModal = true;
-              }}>
-              Supprimer le jeu
-            </button>
+            <FormGameRemove {game} silentMode={silentMode} comment={comment} />
           {/if}
         {/if}
         {#if !edit && checkUser(['superAdmin'])}
-          <button
-            class="btn btn-info w-full sm:w-48"
-            type="button"
-            onclick={() => {
-              step = 5;
-              game = {
-                domain: "Autre",
-                id: "666",
-                name: "TEST GAME FOR DEV",
-                link: "https://testgame.dev",
-                status: "ABANDONNÉ",
-                tags: "TEST, DEV, NE PAS TOUCHER",
-                type: "Autre",
-                version: "v666",
-                tversion: "n/a",
-                tname: "Pas de traduction",
-                tlink: "https://traduction.dev",
-                traductor: "Hunteraulo",
-                proofreader: "Hunteraulo",
-                ttype: "À tester",
-                ac: false,
-                image:
-                  "https://attachments.f95zone.to/2024/04/3572650_Remaster_HD.png",
-              };
-            }}>
-            Dev data
-          </button>
-          {#if game.domain === "F95z"}
-            <button
-              class="btn btn-info w-full sm:w-48"
-              type="button"
-              onclick={() => scrapeData({ id: game.id, domain: "F95z" })}>
-              Force scrape
-            </button>
-          {/if}
+          <FormGameDev {game} {step} {scrapeData} />
         {/if}
         {#if game.domain === "LewdCorner"}
-          <button
-            class="btn btn-info w-full sm:w-48"
-            type="button"
-            onclick={() => { insertModal = true }}>
-            Insert Data
-          </button>
+          <FormGameInsert {game} />
         {/if}
       </div>
     </form>
   </div>
 {/if}
-
-<Modal bind:showModal={deleteModal} title="Supprimer le jeu">
-  <div slot="modalContent">
-    <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
-    <textarea
-      placeholder="Pourquoi voulez-vous supprimer le jeu ?"
-      class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={comment}
-    ></textarea>
-  </div>
-  <button
-    slot="modalAction"
-    onclick={handleClickDelete}
-    class="btn btn-error"
-  >
-    Supprimer définitivement
-  </button>
-</Modal>
-
-<Modal bind:showModal={insertModal} title="Insérer les données du jeu">
-  <div slot="modalContent">
-    <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
-    <textarea
-      placeholder="Données de LC Extractor"
-      class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={insertObject}
-    ></textarea>
-  </div>
-  <button slot="modalAction" onclick={handleClickInsert} class="btn btn-info">
-    Envoyer
-  </button>
-</Modal>
 
 <AddTraductorModal
   bind:showModal={traductorModal[0]}

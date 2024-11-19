@@ -41,10 +41,10 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   <select
     placeholder={title}
     id={name}
-    class="select select-bordered w-full"
     onchange={handleChange}
     {...rest}
-  >
+    class="select select-bordered w-full {rest.class}"
+    >
     <option>Traduction Humaine</option>
     {#each Object.values(values) as value}
       <option>{value}</option>

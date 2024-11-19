@@ -28,9 +28,10 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
       placeholder={title}
       type="search"
       id={name}
-      class="input input-bordered w-full"
       list="traductor-list"
       onchange={handleChange}
+      {...rest}
+      class="input input-bordered w-full {rest.class}"
     />
     <datalist id="traductor-list">
       {#each values as item}

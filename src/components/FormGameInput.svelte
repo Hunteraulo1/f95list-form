@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { GameType } from '$types/schemas';
+import { Game, type GameType } from '$types/schemas';
 import type { Snippet } from 'svelte';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
@@ -14,6 +14,8 @@ interface Props extends HTMLInputAttributes {
 }
 
 let { title, children, className, active, step, game, name, ...rest }: Props = $props();
+
+let error = $state(false);
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
   (game[name] as string) = event.currentTarget.value;
@@ -37,17 +39,25 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     }
   }
 };
+
+const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const { success } = Game.shape[name].safeParse(event.currentTarget.value);
+
+  error = !success;
+};
 </script>
 
 <div class={className} class:hidden={!step || !active?.includes(step)}>
   <label for={name}>{title}:</label>
   <div class="flex gap-1">
     <input
-    placeholder={title}
-    id={name}
-    class="input input-bordered w-full"
-    onchange={handleChange}
-    {...rest}
+      placeholder={title}
+      id={name}
+      onchange={handleChange}
+      oninput={handleInput}
+      {...rest}
+      class="{rest.type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"} {rest.class}"
+      class:border-error={error}
     />
     {@render children?.()}
   </div>
