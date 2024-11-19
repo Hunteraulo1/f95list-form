@@ -25,6 +25,7 @@ export const submits: SubmitType[] = [
     date: '2024-01-01',
     type: 'add',
     reason: '',
+    comment: '',
   },
   {
     email: 'mock_mockerson@test.com',
@@ -50,6 +51,7 @@ export const submits: SubmitType[] = [
     date: '2024-01-01',
     type: 'edit',
     reason: '',
+    comment: '',
   },
   {
     email: 'johndoe@test.com',
@@ -75,5 +77,6 @@ export const submits: SubmitType[] = [
     date: '2024-01-01',
     type: 'delete',
     reason: 'yolo',
+    comment: '',
   },
 ];

@@ -1,6 +1,14 @@
 <script lang="ts">
 import { onMount } from 'svelte';
-import { AdjustmentsVertical, Cog6Tooth, Home as HomeIcon, Icon, Language, UserCircle } from 'svelte-hero-icons';
+import {
+  AdjustmentsVertical,
+  Cog6Tooth,
+  Home as HomeIcon,
+  Icon,
+  InboxArrowDown,
+  Language,
+  UserCircle,
+} from 'svelte-hero-icons';
 import { Route as RoutePrimitive, Router } from 'svelte-routing';
 
 import Home from './routes/Home.svelte';
@@ -21,6 +29,7 @@ import { GAS_API } from '$lib/GAS_API';
 import checkUser from '$lib/checkUser';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
+import Submits from './routes/protected/Submits.svelte';
 
 interface Props {
   url?: string;
@@ -106,6 +115,9 @@ const fetchUser = async () => {
           <Route path="traductor" ranks={["admin"]}>
             <EditTraductor />
           </Route>
+          <Route path="submits" ranks={["admin"]}>
+            <Submits />
+          </Route>
           <Route path="dev" ranks={["superAdmin"]}>
             <Developper />
           </Route>
@@ -128,6 +140,10 @@ const fetchUser = async () => {
             <NavLink to="/traductor" onClick={toggleDrawer}>
               <Icon src={Language} size="1rem" />
               Traducteurs
+            </NavLink>
+            <NavLink to="/submits" onClick={toggleDrawer}>
+              <Icon src={InboxArrowDown} size="1rem" />
+              Soumissions
             </NavLink>
           {/if}
 
