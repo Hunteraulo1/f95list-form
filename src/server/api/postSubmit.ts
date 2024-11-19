@@ -16,12 +16,12 @@ export const postSubmit = async ({ game, type, comment }: PostSubmitType): Promi
       email: requestingUserEmail,
       date: new Date().toISOString(),
       status: 'wait',
+      reason: '',
       ...validSubmit,
     };
 
     const scriptPropertiesService = PropertiesService.getScriptProperties();
-    const scriptProperties = scriptPropertiesService.getProperties();
-    const submits = JSON.parse(scriptProperties.submits);
+    const submits = JSON.parse(scriptPropertiesService.getProperty('submits') ?? '[]');
 
     submits.push(submit);
 

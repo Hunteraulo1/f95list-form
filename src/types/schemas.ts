@@ -106,6 +106,7 @@ const Submit = z.object({
   type: z.enum(['add', 'edit', 'delete']),
   comment: z.string().or(z.literal('')),
   game: Game,
+  reason: z.string().or(z.literal('')),
 });
 
 const PostSubmit = z.object({
