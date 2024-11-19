@@ -1,14 +1,26 @@
 import sleep from '$lib/sleep';
-import { games } from '../data/game';
 
-import { Game, type PostSubmitType } from '$types/schemas';
+import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas';
+import { getUser } from './getUser';
 
-export const postSubmit = async ({ game }: PostSubmitType): Promise<void> => {
+export const postSubmit = async ({ game, type, comment }: PostSubmitType): Promise<void> => {
+  console.info('postSubmit called with args:', { dataSubmit: { game, type, comment } });
+
   await sleep();
 
-  const validGame = Game.parse(game);
+  const validSubmit = PostSubmit.parse({ game, type, comment });
 
-  games.push(validGame);
+  const requestingUser = await getUser();
 
-  console.info('mockResponse_postSubmit', { validGame, games });
+  if (!requestingUser) throw new Error('user not found');
+
+  const submit: SubmitType = {
+    email: requestingUser.email,
+    date: new Date().toISOString(),
+    status: 'wait',
+    reason: '',
+    ...validSubmit,
+  };
+
+  console.info('mockResponse_postSubmit', { submit });
 };
