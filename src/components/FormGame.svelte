@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
-import type { ChangeEventHandler, FormEventHandler } from 'svelte/elements';
+import type { FormEventHandler } from 'svelte/elements';
 
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import LoadingSpinner from '$components/LoadingSpinner.svelte';
@@ -153,37 +153,6 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
   }
 };
 
-const handleChange: ChangeEventHandler<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> = (event) => {
-  const { name, value } = event.currentTarget;
-  const key = name as keyof Omit<GameType, 'trlink' | 'ac'>;
-
-  const { domain, id } = game;
-
-  if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
-    game.ac = event.currentTarget.checked;
-
-    return;
-  }
-
-  if (name === 'tname' && value === 'Intégrée') {
-    game.tversion = 'Intégrée';
-
-    return;
-  }
-
-  (game[key] as string) = value;
-
-  if ((name === 'domain' || name === 'id') && id && id !== '0') {
-    switch (domain) {
-      case 'F95z':
-        game.link = `https://f95zone.to/threads/${id}`;
-        break;
-      case 'LewdCorner':
-        game.link = `https://lewdcorner.com/threads/${id}`;
-    }
-  }
-};
-
 const handleInput: FormEventHandler<HTMLInputElement> = (event) => {
   const { value, classList } = event.currentTarget;
 
@@ -293,10 +262,6 @@ const handleSubmit = async () => {
       $isLoading = false;
     }
   }
-};
-
-const handleInvalid: FormEventHandler<HTMLInputElement> = (event) => {
-  event.currentTarget.setCustomValidity('Veuillez remplir ce champ');
 };
 
 let comment = $state('');
