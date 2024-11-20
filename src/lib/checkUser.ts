@@ -12,8 +12,6 @@ const checkUser = (ranks: UserType['roles']): boolean => {
 
   const validUser = User.parse(user);
 
-  console.info('checkUser() called with: ', validUser, 'by: ', validUser.email);
-
   if (validUser.roles.includes('superAdmin')) return true;
 
   for (const rank of ranks) {

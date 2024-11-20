@@ -22,11 +22,11 @@ const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
   <label for={name}>{title}:</label>
   <div class="flex gap-1">
     <textarea
-    placeholder={title}
-    id={name}
-    onchange={handleChange}
-    {...rest}
-    class="textarea textarea-bordered textarea-xs max-h-32 w-full {rest.class}"
-    ></textarea>
+      placeholder={title}
+      id={name}
+      onchange={handleChange}
+      {...rest}
+      class="textarea textarea-bordered textarea-xs max-h-32 w-full {rest.class}"
+    >{game[name]}</textarea>
   </div>
 </div>

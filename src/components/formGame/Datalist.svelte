@@ -32,6 +32,7 @@ let modal = $state(false);
       id={name}
       list="traductor-list"
       onchange={handleChange}
+      value={game[name]}
       {...rest}
       class="input input-bordered w-full {rest.class}"
     />

@@ -8,6 +8,7 @@ import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import { Game, type GameType } from '$types/schemas';
 import LoadingSpinner from './LoadingSpinner.svelte';
 import Search from './Search.svelte';
+import Checkbox from './formGame/Checkbox.svelte';
 import Datalist from './formGame/Datalist.svelte';
 import Dev from './formGame/Dev.svelte';
 import Input from './formGame/Input.svelte';
@@ -253,20 +254,20 @@ const handleSubmit = async () => {
   }
 };
 
-type Element = Partial<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> & {
+type Element = {
   Component: typeof Select | typeof Input | typeof Textarea | typeof Datalist | typeof InputImage;
-  value?: GameType[keyof GameType];
+  type?: HTMLInputElement['type'];
   values?: any[];
   title: string;
   className?: string;
   active?: number[];
+  checked?: boolean;
   name: keyof GameType;
 };
 
 const elements: Element[] = [
   {
     Component: Select,
-    value: game.domain,
     active: [0, 5],
     title: 'Platforme',
     name: 'domain',
@@ -278,7 +279,6 @@ const elements: Element[] = [
     title: 'ID du jeu',
     name: 'id',
     type: 'number',
-    pattern: '[0-9]',
   },
   {
     Component: Input,
@@ -296,7 +296,6 @@ const elements: Element[] = [
   },
   {
     Component: Select,
-    value: game.status,
     active: [2, 5],
     title: 'Status du jeu',
     name: 'status',
@@ -304,14 +303,12 @@ const elements: Element[] = [
   },
   {
     Component: Textarea,
-    value: game.tags,
     active: [2, 5],
     title: 'Tags du jeu',
     name: 'tags',
   },
   {
     Component: Select,
-    value: game.type,
     active: [2, 5],
     title: 'Type du jeu',
     name: 'type',
@@ -322,7 +319,6 @@ const elements: Element[] = [
     active: [2, 5],
     title: "Lien de l'image du jeu",
     name: 'image',
-    className: 'imgHint relative',
   },
   {
     Component: Input,
@@ -340,7 +336,6 @@ const elements: Element[] = [
   },
   {
     Component: Select,
-    value: game.tname,
     active: [3, 5],
     title: 'Status de la traduction',
     name: 'tname',
@@ -355,7 +350,6 @@ const elements: Element[] = [
   },
   {
     Component: Datalist,
-    value: game.traductor,
     active: [3, 5],
     title: 'Traducteur',
     name: 'traductor',
@@ -363,7 +357,6 @@ const elements: Element[] = [
   },
   {
     Component: Datalist,
-    value: game.proofreader,
     active: [3, 5],
     title: 'Relecteur',
     name: 'proofreader',
@@ -371,20 +364,17 @@ const elements: Element[] = [
   },
   {
     Component: Select,
-    value: game.ttype,
     active: [3, 5],
     title: 'Type de Traduction',
     name: 'ttype',
     values: Game.shape.ttype.options,
   },
   {
-    Component: Input,
-    checked: game.ac,
+    Component: Checkbox,
     active: [4, 5],
     title: 'Auto-Check',
     name: 'ac',
-    type: 'checkbox',
-    className: 'flex h-full w-full flex-col justify-center',
+    checked: game.ac,
   },
 ];
 </script>
@@ -417,8 +407,8 @@ const elements: Element[] = [
       <div
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        {#each elements as {Component, value, active, title, name, values}}
-          <Component {value} {game} {active} {step} {title} {name} {values} />
+        {#each elements as { Component, name, title, active, className, checked, values, type }}
+          <Component {game} {step} {name} {title} {active} {className} {checked} {values} {type} />
         {/each}
       </div>
       <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">

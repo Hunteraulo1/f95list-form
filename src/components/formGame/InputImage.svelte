@@ -1,17 +1,18 @@
 <script lang="ts">
 import type { GameType } from '$types/schemas';
+import type { HTMLInputAttributes } from 'svelte/elements';
 import FormGameInput from './Input.svelte';
 
 interface Props {
   title: string;
-  className?: string;
   active?: number[];
   step?: number;
   game: GameType;
   name: keyof GameType;
+  type?: HTMLInputElement['type'];
 }
 
-let { game, step, title, className, active, name }: Props = $props();
+let { game, step, title, active, name }: Props = $props();
 
 const handleImageError = (e: Event) => {
   const target = e.currentTarget as HTMLImageElement;
@@ -22,22 +23,23 @@ const handleImageError = (e: Event) => {
     target.classList.add('hidden');
   }
 };
+
+const attributes: HTMLInputAttributes = {
+  onfocusin: (e: FocusEvent) => (e.currentTarget as HTMLInputElement).nextElementSibling?.classList.remove('hidden'),
+  onfocusout: (e: FocusEvent) => (e.currentTarget as HTMLInputElement).nextElementSibling?.classList.add('hidden'),
+  required: true,
+};
 </script>
 
 <FormGameInput
-  value={game.image}
   {game}
   {active}
   {step}
-  {className}
+  className="imgHint relative"
   {title}
   {name}
   type="text"
-  onfocusin={(e) =>
-    e.currentTarget.nextElementSibling?.classList.remove("hidden")}
-  onfocusout={(e) =>
-    e.currentTarget.nextElementSibling?.classList.add("hidden")}
-  required>
+  {attributes}>
   <img
     src={game.image}
     alt="bannière du jeu 2"

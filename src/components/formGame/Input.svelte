@@ -1,25 +1,25 @@
 <script lang="ts">
 import checkUser from '$lib/checkUser';
 import { Game, type GameType } from '$types/schemas';
+import type { Snippet } from 'svelte';
 import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
-interface Props extends HTMLInputAttributes {
+interface Props {
   title: string;
   className?: string;
   active?: number[];
   step?: number;
   game: GameType;
   name: keyof GameType;
+  type?: HTMLInputElement['type'];
+  attributes?: HTMLInputAttributes;
+  children?: Snippet;
 }
 
-let { title, children, className, active, step, game, name, ...rest }: Props = $props();
+let { title, className, active, step, game, name, type, attributes, children }: Props = $props();
 
 let error = $state(false);
-
-if (name === 'ac' && !checkUser(['admin'])) {
-  rest.disabled = true;
-}
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
   (game[name] as string) = event.currentTarget.value;
@@ -45,13 +45,15 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
 };
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
+  if (name === 'ac') return;
+
   const { success } = Game.shape[name].safeParse(event.currentTarget.value);
 
   error = !success;
 };
 </script>
 
-<div class={className} class:hidden={!step || !active?.includes(step)}>
+<div class={className} class:hidden={!step || !active?.includes(step) || !checkUser(['admin'])}>
   <label for={name}>{title}:</label>
   <div class="flex gap-1">
     <input
@@ -59,8 +61,10 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
       id={name}
       onchange={handleChange}
       oninput={handleInput}
-      {...rest}
-      class="{rest.type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"} {rest.class}"
+      disabled={(name === 'ac' && game.domain !== 'F95z') || (name === 'id' && game.domain === 'Autre')}
+      value={game[name]}
+      {...attributes}
+      class="{type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"} {attributes?.class}"
       class:border-error={error}
     />
     {#if name === 'link'}
@@ -93,5 +97,6 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
         <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
       </a>
     {/if}
+    {@render children?.()}
   </div>
 </div>

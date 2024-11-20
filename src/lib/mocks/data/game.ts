@@ -54,7 +54,7 @@ export const games: GameType[] = [
     traductor: '✞ 𝕹𝖊𝖒𝖊𝖗𝖔𝖋 ✞',
     proofreader: 'ⱤØⱤɎ ₥ɆⱤ₵ɄⱤɎ',
     ttype: 'Traduction Humaine',
-    ac: true,
+    ac: false,
     image: '',
   },
 ];
