@@ -1,11 +1,9 @@
 <script lang="ts">
 import type { GameType } from '$types/schemas';
-import type { Snippet } from 'svelte';
 import type { ChangeEventHandler, HTMLTextareaAttributes } from 'svelte/elements';
 
 interface Props extends HTMLTextareaAttributes {
   title: string;
-  children?: Snippet;
   className?: string;
   active?: number[];
   step?: number;
@@ -30,6 +28,5 @@ const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
     {...rest}
     class="textarea textarea-bordered textarea-xs max-h-32 w-full {rest.class}"
     ></textarea>
-    {@render children?.()}
   </div>
 </div>

@@ -1,13 +1,17 @@
 <script lang="ts">
 import type { GameType } from '$types/schemas';
-import FormGameInput from './FormGameInput.svelte';
+import FormGameInput from './Input.svelte';
 
 interface Props {
+  title: string;
+  className?: string;
+  active?: number[];
+  step?: number;
   game: GameType;
-  step: number;
+  name: keyof GameType;
 }
 
-let { game, step }: Props = $props();
+let { game, step, title, className, active, name }: Props = $props();
 
 const handleImageError = (e: Event) => {
   const target = e.currentTarget as HTMLImageElement;
@@ -23,11 +27,11 @@ const handleImageError = (e: Event) => {
 <FormGameInput
   value={game.image}
   {game}
-  active={[6, 5]}
+  {active}
   {step}
-  className="imgHint relative"
-  title="Lien de l'image"
-  name="image"
+  {className}
+  {title}
+  {name}
   type="text"
   onfocusin={(e) =>
     e.currentTarget.nextElementSibling?.classList.remove("hidden")}

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { newToast } from '$lib/stores';
 import type { GameType } from '$types/schemas';
-import Modal from './Modal.svelte';
+import Modal from '../Modal.svelte';
 
 interface Props {
   game: GameType;

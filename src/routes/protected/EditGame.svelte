@@ -4,7 +4,6 @@ import { navigate } from 'svelte-routing';
 
 import FormGame from '$components/FormGame.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import checkUser from '$lib/checkUser';
 import { isLoading, queryGame } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 
@@ -12,6 +11,9 @@ let game: GameType | null = $state(null);
 
 const fetchGame = async () => {
   const query = $queryGame;
+
+  if (!query) return navigate('/');
+
   console.info(`Fetching results for query: ${query.name} ${query.version}`);
 
   $isLoading = true;
@@ -38,5 +40,5 @@ onMount(() => {
 </script>
 
 {#if game}
-  <FormGame {game} step={5} edit isAdmin={checkUser(['admin'])} />
+  <FormGame {game} step={5} edit />
 {/if}

@@ -2,28 +2,25 @@
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 
-import AddTraductorModal from '$components/AddTraductorModal.svelte';
-import LoadingSpinner from '$components/LoadingSpinner.svelte';
-import Search from '$components/Search.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import checkUser from '$lib/checkUser';
 import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import { Game, type GameType } from '$types/schemas';
-import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
-import FormGameDatalist from './FormGameDatalist.svelte';
-import FormGameDev from './FormGameDev.svelte';
-import FormGameInput from './FormGameInput.svelte';
-import FormGameInputImage from './FormGameInputImage.svelte';
-import FormGameInsert from './FormGameInsert.svelte';
-import FormGameRemove from './FormGameRemove.svelte';
-import FormGameSelect from './FormGameSelect.svelte';
-import FormGameTextarea from './FormGameTextarea.svelte';
+import LoadingSpinner from './LoadingSpinner.svelte';
+import Search from './Search.svelte';
+import Datalist from './formGame/Datalist.svelte';
+import Dev from './formGame/Dev.svelte';
+import Input from './formGame/Input.svelte';
+import InputImage from './formGame/InputImage.svelte';
+import Insert from './formGame/Insert.svelte';
+import Remove from './formGame/Remove.svelte';
+import Select from './formGame/Select.svelte';
+import Textarea from './formGame/Textarea.svelte';
 
 interface Props {
   step?: number;
   edit?: boolean;
   game?: GameType;
-  isAdmin: boolean;
 }
 
 let {
@@ -51,7 +48,6 @@ let {
 }: Props = $props();
 
 let savedId = '';
-let traductorModal = $state([false, false]);
 let silentMode = $state(false);
 let scraping = $state(false);
 
@@ -257,7 +253,140 @@ const handleSubmit = async () => {
   }
 };
 
-let comment = $state('');
+type Element = Partial<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> & {
+  Component: typeof Select | typeof Input | typeof Textarea | typeof Datalist | typeof InputImage;
+  value?: GameType[keyof GameType];
+  values?: any[];
+  title: string;
+  className?: string;
+  active?: number[];
+  name: keyof GameType;
+};
+
+const elements: Element[] = [
+  {
+    Component: Select,
+    value: game.domain,
+    active: [0, 5],
+    title: 'Platforme',
+    name: 'domain',
+    values: Game.shape.domain.options,
+  },
+  {
+    Component: Input,
+    active: [1, 5],
+    title: 'ID du jeu',
+    name: 'id',
+    type: 'number',
+    pattern: '[0-9]',
+  },
+  {
+    Component: Input,
+    active: [2, 5],
+    title: 'Nom du jeu',
+    name: 'name',
+    type: 'text',
+  },
+  {
+    Component: Input,
+    active: [2, 5],
+    title: 'Lien du jeu',
+    name: 'link',
+    type: 'text',
+  },
+  {
+    Component: Select,
+    value: game.status,
+    active: [2, 5],
+    title: 'Status du jeu',
+    name: 'status',
+    values: Game.shape.status.options,
+  },
+  {
+    Component: Textarea,
+    value: game.tags,
+    active: [2, 5],
+    title: 'Tags du jeu',
+    name: 'tags',
+  },
+  {
+    Component: Select,
+    value: game.type,
+    active: [2, 5],
+    title: 'Type du jeu',
+    name: 'type',
+    values: Game.shape.type.options,
+  },
+  {
+    Component: InputImage,
+    active: [2, 5],
+    title: "Lien de l'image du jeu",
+    name: 'image',
+    className: 'imgHint relative',
+  },
+  {
+    Component: Input,
+    active: [2, 5],
+    title: 'Version du jeu',
+    name: 'version',
+    type: 'text',
+  },
+  {
+    Component: Input,
+    active: [3, 5],
+    title: 'Version de la traduction',
+    name: 'tversion',
+    type: 'text',
+  },
+  {
+    Component: Select,
+    value: game.tname,
+    active: [3, 5],
+    title: 'Status de la traduction',
+    name: 'tname',
+    values: Game.shape.tname.options,
+  },
+  {
+    Component: Input,
+    active: [3, 5],
+    title: 'Lien de la traduction',
+    name: 'tlink',
+    type: 'text',
+  },
+  {
+    Component: Datalist,
+    value: game.traductor,
+    active: [3, 5],
+    title: 'Traducteur',
+    name: 'traductor',
+    values: $traductors,
+  },
+  {
+    Component: Datalist,
+    value: game.proofreader,
+    active: [3, 5],
+    title: 'Relecteur',
+    name: 'proofreader',
+    values: $traductors,
+  },
+  {
+    Component: Select,
+    value: game.ttype,
+    active: [3, 5],
+    title: 'Type de Traduction',
+    name: 'ttype',
+    values: Game.shape.ttype.options,
+  },
+  {
+    Component: Input,
+    checked: game.ac,
+    active: [4, 5],
+    title: 'Auto-Check',
+    name: 'ac',
+    type: 'checkbox',
+    className: 'flex h-full w-full flex-col justify-center',
+  },
+];
 </script>
 
 {#if !$isLoading}
@@ -281,76 +410,16 @@ let comment = $state('');
             type="checkbox"
             class="toggle"
             checked={silentMode}
-            onchange={() => (silentMode = !silentMode)}
+            onchange={() => {silentMode = !silentMode}}
           />
         </label>
       </div>
       <div
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-
-        <FormGameSelect value={game.domain} {game} active={[0, 5]} {step} title="Platforme" name="domain" values={Game.shape.domain.options} />
-      
-        <FormGameInput value={game.id} {game} active={[1, 5]} {step} title="ID du jeu" name="id" type="number" pattern="[0-9]" inputmode="numeric" />
-
-        <FormGameInput value={game.name} {game} active={[2, 5]} {step} title="Nom du jeu" name="name" type="text" />
-
-        <FormGameInput value={game.link} {game} active={[3, 5]} {step} title="Lien du jeu" name="link" type="text">
-          <a
-            href={game.link}
-            target="_blank"
-            class="btn w-min"
-            class:btn-disable={!game.link}
-            class:btn-primary={game.link}>
-            <Icon src={game.link ? Link : LinkSlash} size="1rem" />
-          </a>
-        </FormGameInput>
-
-        <FormGameSelect value={game.status} {game} active={[4, 5]} {step} title="Status du jeu" name="status" values={Game.shape.status.options} />
-
-        <FormGameTextarea value={game.tags} {game} name="tags" active={[2,5]} {step} title="Tags du jeu" />
-
-        <FormGameSelect value={game.type} {game} active={[5]} {step} title="Type du jeu" name="type" values={Game.shape.type.options} />
-
-        <FormGameInputImage {game} {step} />
-
-        <FormGameInput value={game.version} {game} active={[7, 5]} {step} title="Version du jeu" name="version" type="text" />
-
-        <FormGameInput value={game.tversion} {game} active={[8, 5]} {step} title="Version de la traduction" name="tversion" type="text">
-          <button
-            class="btn w-min"
-            class:btn-disable={!game.version}
-            class:btn-primary={game.version}
-            onclick={(e) => {
-              e.preventDefault();
-              if (game.version) game.tversion = game.version;
-            }}>
-            <Icon src={DocumentDuplicate} size="1rem" />
-          </button>
-        </FormGameInput>
-
-        <FormGameSelect value={game.tname} {game} active={[9, 5]} {step} title="Status de la traduction" name="tname" values={Game.shape.tname.options} />
-
-        <FormGameInput value={game.tlink} {game} active={[10, 5]} {step} title="Lien de la traduction" name="tlink" type="text">
-          <a
-            href={game.tlink}
-            target="_blank"
-            class="btn w-min"
-            class:btn-disable={!game.tlink}
-            class:btn-primary={game.tlink}>
-            <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
-          </a>
-        </FormGameInput>
-
-        <FormGameDatalist value={game.traductor} {game} active={[11, 5]} {step} title="Traducteur" name="traductor" values={$traductors} modal={traductorModal[0]} />
-
-        <FormGameDatalist value={game.proofreader} {game} active={[12, 5]} {step} title="Relecteur" name="proofreader" values={$traductors} modal={traductorModal[1]} />
-
-        <FormGameSelect value={game.ttype} {game} active={[13, 5]} {step} title="Type de Traduction" name="ttype" values={Game.shape.ttype.options} />
-
-        {#if checkUser(['admin'])}
-          <FormGameInput value={game.ac} {game} checked={game.ac} active={[14, 5]} {step} title="Auto-Check" name="ac" type="checkbox" className="flex h-full w-full flex-col justify-center" />
-        {/if}
+        {#each elements as {Component, value, active, title, name, values}}
+          <Component {value} {game} {active} {step} {title} {name} {values} />
+        {/each}
       </div>
       <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">
         {#if step < 5}
@@ -372,25 +441,16 @@ let comment = $state('');
             {edit ? "Éditer le jeu" : "Ajouter le jeu"}
           </button>
           {#if edit}
-            <FormGameRemove {game} silentMode={silentMode} comment={comment} />
+            <Remove {game} silentMode={silentMode} />
           {/if}
         {/if}
         {#if !edit && checkUser(['superAdmin'])}
-          <FormGameDev {game} {step} {scrapeData} />
+          <Dev {game} {step} {scrapeData} />
         {/if}
         {#if game.domain === "LewdCorner"}
-          <FormGameInsert {game} />
+          <Insert {game} />
         {/if}
       </div>
     </form>
   </div>
 {/if}
-
-<AddTraductorModal
-  bind:showModal={traductorModal[0]}
-  name={game.traductor}
-/>
-<AddTraductorModal
-  bind:showModal={traductorModal[1]}
-  name={game.proofreader}
-/>

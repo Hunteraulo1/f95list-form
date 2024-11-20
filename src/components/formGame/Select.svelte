@@ -3,7 +3,7 @@ import type { GameType } from '$types/schemas';
 import type { ChangeEventHandler, HTMLSelectAttributes } from 'svelte/elements';
 
 interface Props extends HTMLSelectAttributes {
-  values: Array<GameType[keyof GameType]>;
+  values?: Array<GameType[keyof GameType]>;
   title: string;
   className?: string;
   active?: number[];
@@ -12,7 +12,7 @@ interface Props extends HTMLSelectAttributes {
   name: keyof GameType;
 }
 
-let { title, values, className, active, step, game, name, ...rest }: Props = $props();
+let { title, values = [], className, active, step, game, name, ...rest }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   if (name === 'tname' && rest.value === 'Intégrée') {
@@ -45,9 +45,8 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     {...rest}
     class="select select-bordered w-full {rest.class}"
     >
-    <option>Traduction Humaine</option>
     {#each Object.values(values) as value}
       <option>{value}</option>
-  {/each}
+    {/each}
   </select>
 </div>

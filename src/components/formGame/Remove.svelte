@@ -4,17 +4,17 @@ import checkUser from '$lib/checkUser';
 import { isLoading, newToast, queryGame } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 import { navigate } from 'svelte-routing';
-import Modal from './Modal.svelte';
+import Modal from '../Modal.svelte';
 
 interface Props {
-  comment: string;
   silentMode: boolean;
   game: GameType;
 }
 
-let { comment, silentMode, game }: Props = $props();
+let { silentMode, game }: Props = $props();
 
 let deleteModal = $state(false);
+let comment = $state('');
 
 const handleClickDelete = async () => {
   if (!comment) {

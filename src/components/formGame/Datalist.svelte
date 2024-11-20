@@ -1,12 +1,12 @@
 <script lang="ts">
+import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import type { GameType, TraductorType } from '$types/schemas';
 import { Icon, UserPlus } from 'svelte-hero-icons';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
 interface Props extends HTMLInputAttributes {
-  values: TraductorType[];
+  values?: TraductorType[];
   title: string;
-  modal: boolean;
   className?: string;
   active?: number[];
   step?: number;
@@ -14,11 +14,13 @@ interface Props extends HTMLInputAttributes {
   name: keyof GameType;
 }
 
-let { title, values, modal = $bindable(true), className, active, step, game, name, ...rest }: Props = $props();
+let { title, values = [], className, active, step, game, name, ...rest }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
   (game[name] as string) = event.currentTarget.value;
 };
+
+let modal = $state(false);
 </script>
 
 <div class={className} class:hidden={!step || !active?.includes(step)}>
@@ -49,3 +51,8 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     </button>
   </div>
 </div>
+
+<AddTraductorModal
+  bind:showModal={modal}
+  name={game.traductor}
+/>
