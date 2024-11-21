@@ -1,5 +1,5 @@
 <script lang="ts">
-import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
+import { isLoading, sessionUser } from '$lib/stores';
 import { Bars3, Icon } from 'svelte-hero-icons';
 import { Link, navigate } from 'svelte-routing';
 import packageJson from '../../package.json';
@@ -9,9 +9,6 @@ interface Props {
 }
 
 let { title = '' }: Props = $props();
-
-console.log('sessionUser', $sessionUser);
-console.log('appConfiguration', $appConfiguration.appName);
 </script>
 
 <div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>

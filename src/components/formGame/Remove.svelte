@@ -9,9 +9,11 @@ import Modal from '../Modal.svelte';
 interface Props {
   silentMode: boolean;
   game: GameType;
+  handleUpdateSubmit?: (type: 'validated' | 'rejected') => void;
+  editor?: boolean;
 }
 
-let { silentMode, game }: Props = $props();
+let { silentMode, game, handleUpdateSubmit, editor }: Props = $props();
 
 let deleteModal = $state(false);
 let comment = $state('');
@@ -33,7 +35,7 @@ const handleClickDelete = async () => {
 
   if (checkUser(['traductor'])) {
     try {
-      await GAS_API.postSubmit({ game, type: 'delete', comment });
+      await GAS_API.postSubmit({ query: $queryGame, game, type: 'delete', comment });
 
       navigate('/');
       newToast({
@@ -51,6 +53,10 @@ const handleClickDelete = async () => {
         message: 'Impossible de soumettre la suppression du jeu',
         milliseconds: 3000,
       });
+    }
+
+    if (editor) {
+      editor = false;
     }
 
     return;
@@ -81,32 +87,31 @@ const handleClickDelete = async () => {
   } finally {
     $isLoading = false;
   }
+
+  handleUpdateSubmit?.('validated');
 };
 </script>
 
 <button
   class="btn btn-error w-full sm:w-48"
   type="button"
-  onclick={() => {
-    deleteModal = true;
-  }}>
+  onclick={() => { deleteModal = true }}>
   Supprimer le jeu
 </button>
 
 <Modal bind:showModal={deleteModal} title="Supprimer le jeu">
-  <div slot="modalContent">
+  {#snippet modalContent()}    
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea
       placeholder="Pourquoi voulez-vous supprimer le jeu ?"
-      class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={comment}
-    ></textarea>
-  </div>
-  <button
-    slot="modalAction"
-    onclick={handleClickDelete}
-    class="btn btn-error"
-  >
-    Supprimer définitivement
-  </button>
+      class="textarea textarea-bordered max-h-32 w-full">
+    </textarea>
+  {/snippet}
+  {#snippet modalAction()}
+    <button
+      onclick={handleClickDelete}
+      class="btn btn-error">
+      Supprimer définitivement
+    </button>
+  {/snippet}
 </Modal>

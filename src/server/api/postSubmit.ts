@@ -1,13 +1,21 @@
 import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas';
 import checkUser from '../lib/checkUser';
+import { getSubmits } from './getSubmits';
 
-export const postSubmit = async ({ game, type, comment }: PostSubmitType): Promise<void> => {
+export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<void> => {
   // Report request
-  console.info('postSubmit called with args:', { dataSubmit: { game, type, comment } });
+  console.info('postSubmit called with args:', { dataSubmit: { query, game, type, comment } });
 
   if (!checkUser('traductor')) throw new Error('Unauthorized');
 
-  const validSubmit = PostSubmit.parse({ game, type, comment });
+  const validSubmit = PostSubmit.parse({ query, game, type, comment });
+
+  if (!validSubmit) throw new Error('Invalid submit');
+
+  const submits = await getSubmits({});
+  if (!submits) throw new Error('Submits not found');
+
+  if (submits.find((s) => s.query === validSubmit.query)) throw new Error('Submit already exists');
 
   try {
     const requestingUserEmail = Session.getActiveUser().getEmail();

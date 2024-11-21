@@ -3,12 +3,12 @@ import sleep from '$lib/sleep';
 import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas';
 import { getUser } from './getUser';
 
-export const postSubmit = async ({ game, type, comment }: PostSubmitType): Promise<void> => {
-  console.info('postSubmit called with args:', { dataSubmit: { game, type, comment } });
+export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<void> => {
+  console.info('postSubmit called with args:', { dataSubmit: { query, game, type, comment } });
 
   await sleep();
 
-  const validSubmit = PostSubmit.parse({ game, type, comment });
+  const validSubmit = PostSubmit.parse({ query, game, type, comment });
 
   const requestingUser = await getUser();
 

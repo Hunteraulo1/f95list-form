@@ -23,7 +23,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
 };
 </script>
 
-<div class="flex h-full w-full flex-col justify-center" class:hidden={!step || !active?.includes(step) || !checkUser(['admin'])}>
+<div class="flex h-full w-full flex-col justify-center" class:hidden={!step || !active?.includes(step) || !checkUser(['admin', 'superAdmin'])}>
   <label for={name}>{title}:</label>
   <div class="flex gap-1">
     <input

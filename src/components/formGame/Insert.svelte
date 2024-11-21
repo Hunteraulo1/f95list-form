@@ -40,15 +40,17 @@ const handleClickInsert = () => {
 </button>
 
 <Modal bind:showModal={insertModal} title="Insérer les données du jeu">
-  <div slot="modalContent">
+  {#snippet modalContent()}
     <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
     <textarea
       placeholder="Données de LC Extractor"
       class="textarea textarea-bordered max-h-32 w-full"
       bind:value={insertObject}
     ></textarea>
-  </div>
-  <button slot="modalAction" onclick={handleClickInsert} class="btn btn-info">
-    Envoyer
-  </button>
+  {/snippet}
+  {#snippet modalAction()}
+    <button onclick={handleClickInsert} class="btn btn-info">
+      Envoyer
+    </button>
+  {/snippet}
 </Modal>

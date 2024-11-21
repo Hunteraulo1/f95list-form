@@ -6,7 +6,7 @@ import { getGames } from './getGames';
 
 import { Game, type GameType, type QueryGameType } from '$types/schemas';
 
-export interface PutGameArgs {
+interface PutGameArgs {
   game: GameType;
   query: QueryGameType;
   silentMode: boolean;

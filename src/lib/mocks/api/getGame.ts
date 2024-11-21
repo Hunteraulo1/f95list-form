@@ -1,7 +1,7 @@
 import sleep from '$lib/sleep';
 import { games } from '../data/game';
 
-export interface GetGameArgs {
+interface GetGameArgs {
   name: string | null;
   version: string | null;
 }

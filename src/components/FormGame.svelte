@@ -1,11 +1,10 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-import { navigate } from 'svelte-routing';
-
 import { GAS_API } from '$lib/GAS_API';
 import checkUser from '$lib/checkUser';
 import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import { Game, type GameType } from '$types/schemas';
+import { onMount } from 'svelte';
+import { navigate } from 'svelte-routing';
 import LoadingSpinner from './LoadingSpinner.svelte';
 import Search from './Search.svelte';
 import Checkbox from './formGame/Checkbox.svelte';
@@ -22,6 +21,9 @@ interface Props {
   step?: number;
   edit?: boolean;
   game?: GameType;
+  handleUpdateSubmit?: (type: 'validated' | 'rejected') => void;
+  editor?: boolean;
+  deleteMode?: boolean;
 }
 
 let {
@@ -46,6 +48,9 @@ let {
     trlink: '',
     image: '',
   }),
+  handleUpdateSubmit,
+  editor = $bindable(),
+  deleteMode = false,
 }: Props = $props();
 
 let savedId = '';
@@ -94,7 +99,10 @@ const changeStep = async (amount: number) => {
   if (step + amount >= 0 && step + amount <= 5) step += amount;
   if (step === 1 && game.domain === 'Autre') step += amount; // ID
   if (step === 2 && game.domain === 'F95z') step += amount; // Game informations
-  if ((step === 4 && game.domain === 'Autre' && checkUser(['admin'])) || (step === 4 && !checkUser(['admin']))) {
+  if (
+    (step === 4 && game.domain === 'Autre' && checkUser(['admin', 'superAdmin'])) ||
+    (step === 4 && !checkUser(['admin', 'superAdmin']))
+  ) {
     step += amount; // Auto-Check
   }
 
@@ -155,6 +163,7 @@ const handleSubmit = async () => {
   if (checkUser(['traductor'])) {
     try {
       await GAS_API.postSubmit({
+        query: $queryGame,
         game,
         type: edit ? 'edit' : 'add',
         comment: '',
@@ -176,6 +185,8 @@ const handleSubmit = async () => {
         message: 'Impossible de soumettre le jeu',
         milliseconds: 3000,
       });
+    } finally {
+      $isLoading = false;
     }
 
     return;
@@ -205,6 +216,8 @@ const handleSubmit = async () => {
         message: 'Le jeu a bien été modifié',
         milliseconds: 3000,
       });
+
+      handleUpdateSubmit?.('validated');
     } catch (error) {
       console.error('Error fetching game', error);
 
@@ -251,11 +264,13 @@ const handleSubmit = async () => {
     } finally {
       $isLoading = false;
     }
+
+    handleUpdateSubmit?.('validated');
   }
 };
 
 type Element = {
-  Component: typeof Select | typeof Input | typeof Textarea | typeof Datalist | typeof InputImage;
+  Component: typeof Select | typeof Input | typeof Textarea | typeof Datalist | typeof InputImage | typeof Checkbox;
   type?: HTMLInputElement['type'];
   values?: any[];
   title: string;
@@ -380,8 +395,10 @@ const elements: Element[] = [
 </script>
 
 {#if !$isLoading}
-  <div class="mt-0 flex flex-col items-center justify-center gap-4">
-    <Search {edit} />
+  <div class="mt-0 flex flex-col items-center justify-center gap-4 w-full">
+    {#if !handleUpdateSubmit}
+      <Search {edit} />
+    {/if}
     <form
       class="relative flex w-full flex-col items-center"
       onsubmit={handleSubmit}
@@ -407,38 +424,47 @@ const elements: Element[] = [
       <div
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        {#each elements as { Component, name, title, active, className, checked, values, type }}
-          <Component {game} {step} {name} {title} {active} {className} {checked} {values} {type} />
-        {/each}
+        {#if !deleteMode}
+          {#each elements as { Component, name, title, active, className, checked, values, type }}
+            <Component {game} {step} {name} {title} {active} {className} {checked} {values} {type} />
+          {/each}
+        {/if}
       </div>
       <div class="flex w-full flex-col justify-center gap-4 px-8 sm:flex-row">
-        {#if step < 5}
-          <button
-            class="btn btn-outline btn-primary w-full sm:w-48"
-            type="button"
-            onclick={() => changeStep(-1)}
-            disabled={step <= 0}>
-            Précédent
-          </button>
-          <button
-            class="btn btn-primary w-full sm:w-48"
-            type="button"
-            onclick={() => changeStep(1)}>
-            Suivant
-          </button>
-        {:else}
-          <button class="btn btn-primary w-full sm:w-48" type="submit">
-            {edit ? "Éditer le jeu" : "Ajouter le jeu"}
-          </button>
-          {#if edit}
-            <Remove {game} silentMode={silentMode} />
+        {#if !deleteMode}
+          {#if step < 5}
+            <button
+              class="btn btn-outline btn-primary w-full sm:w-48"
+              type="button"
+              onclick={() => changeStep(-1)}
+              disabled={step <= 0}>
+              Précédent
+            </button>
+            <button
+              class="btn btn-primary w-full sm:w-48"
+              type="button"
+              onclick={() => changeStep(1)}>
+              Suivant
+            </button>
+          {:else}
+            <button class="btn btn-primary w-full sm:w-48" type="submit">
+              {edit ? "Éditer le jeu" : "Ajouter le jeu"}
+            </button>
           {/if}
         {/if}
-        {#if !edit && checkUser(['superAdmin'])}
+        {#if edit && !(!editor && !deleteMode)}
+          <Remove {game} {silentMode} {handleUpdateSubmit} {editor} />
+        {/if}
+        {#if !edit && checkUser(['superAdmin', 'superAdmin'])}
           <Dev {game} {step} {scrapeData} />
         {/if}
         {#if game.domain === "LewdCorner"}
           <Insert {game} />
+        {/if}
+        {#if editor}
+          <button class="btn btn-primary w-full sm:w-48" type="button" onclick={()=> {editor = false}}>
+            Annuler
+          </button>
         {/if}
       </div>
     </form>

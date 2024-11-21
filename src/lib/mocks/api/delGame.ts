@@ -2,11 +2,14 @@ import sleep from '$lib/sleep';
 import { games } from '../data/game';
 import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
 
-export interface DelGameArgs {
+interface DelGameArgs {
   query: { name: string; version: string };
   comment?: string;
   silentMode: boolean;
 }
+
+const title = 'Suppression du jeu:';
+const color = 12256517;
 
 export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Promise<void> => {
   await sleep();
@@ -18,9 +21,6 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
   if (!game) throw new Error('delGame game not found');
 
   console.info('mockResponse_delGame', { query, comment, silentMode, games });
-
-  const title = 'Suppression du jeu:';
-  const color = 12256517;
 
   const { link, tversion, traductor, proofreader, image } = game;
 

@@ -1,26 +1,24 @@
 import type { GameType, QueryGameType } from '$types/schemas';
 
-export const game: GameType = {
-  domain: 'F95z',
-  id: '6547',
-  name: 'Sisterly Lust',
-  link: 'https://f95zone.to/threads/6547',
-  status: 'TERMINÉ',
-  tags: '3dcg, anal sex, blackmail, cheating, corruption, creampie, exhibitionism, groping, group sex, handjob, harem, incest, interracial, lesbian, male domination, male protagonist, masturbation, milf, mobile game, oral sex, pregnancy, romance, sex toys, sleep sex, spanking, urination, vaginal sex, virgin, voyeurism',
-  type: 'RenPy',
-  version: 'v1.1.11',
-  tversion: 'V1.1.2 ES',
-  tname: 'Traduction',
-  tlink: 'https://f95zone.to/threads/sisterly-lust-french-translation-v1-0-extra-scenes-maxo.31772/',
-  traductor: 'Maxo',
-  proofreader: '',
-  ttype: 'Traduction Humaine',
-  ac: true,
-  image: '',
-};
-
 export const games: GameType[] = [
-  game,
+  {
+    domain: 'F95z',
+    id: '6547',
+    name: 'Sisterly Lust',
+    link: 'https://f95zone.to/threads/6547',
+    status: 'TERMINÉ',
+    tags: '3dcg, anal sex, blackmail, cheating, corruption, creampie, exhibitionism, groping, group sex, handjob, harem, incest, interracial, lesbian, male domination, male protagonist, masturbation, milf, mobile game, oral sex, pregnancy, romance, sex toys, sleep sex, spanking, urination, vaginal sex, virgin, voyeurism',
+    type: 'RenPy',
+    version: 'v1.1.11',
+    tversion: 'V1.1.2 ES',
+    tname: 'Traduction',
+    tlink: 'https://f95zone.to/threads/sisterly-lust-french-translation-v1-0-extra-scenes-maxo.31772/',
+    traductor: 'Maxo',
+    proofreader: '',
+    ttype: 'Traduction Humaine',
+    ac: true,
+    image: '',
+  },
   {
     domain: 'F95z',
     id: '70317',
@@ -29,7 +27,7 @@ export const games: GameType[] = [
     status: 'ABANDONNÉ',
     tags: '3dcg, big ass, big tits, blackmail, corruption, drugs, female domination, groping, humiliation, humor, incest, interracial, male protagonist, masturbation, milf, paranormal, romance, sexual harassment, sleep sex, voyeurism',
     type: 'RenPy',
-    version: 'v0.3',
+    version: 'v0.4',
     tversion: 'v0.3',
     tname: 'Traduction',
     tlink: 'https://drive.google.com/file/d/15yIHenTXFYyQJW9mGl3OscWJ9V4NQC6F/view?usp=sharing',

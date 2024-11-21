@@ -1,4 +1,8 @@
 <script lang="ts">
+import { GAS_API } from '$lib/GAS_API';
+import checkUser from '$lib/checkUser';
+import { fetchAppConfiguration } from '$lib/fetchAppConfig';
+import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
 import { onMount } from 'svelte';
 import {
   AdjustmentsVertical,
@@ -6,6 +10,7 @@ import {
   Home as HomeIcon,
   Icon,
   InboxArrowDown,
+  InboxStack,
   Language,
   UserCircle,
 } from 'svelte-hero-icons';
@@ -13,23 +18,20 @@ import { Route as RoutePrimitive, Router } from 'svelte-routing';
 
 import Home from './routes/Home.svelte';
 import Profile from './routes/Profile.svelte';
-import UserPreferences from './routes/UserPreferences.svelte';
 import AddGame from './routes/protected/AddGame.svelte';
 import Developper from './routes/protected/Developper.svelte';
 import EditGame from './routes/protected/EditGame.svelte';
 import EditTraductor from './routes/protected/EditTraductor.svelte';
+import MySubmits from './routes/protected/MySubmits.svelte';
 import Settings from './routes/protected/Settings.svelte';
+import Submits from './routes/protected/Submits.svelte';
+import UserPreferences from './routes/protected/UserPreferences.svelte';
 
 import HeaderBar from '$components/HeaderBar.svelte';
 import InitialLoad from '$components/InitialLoad.svelte';
 import NavLink from '$components/NavLink.svelte';
 import Route from '$components/Route.svelte';
 import Toaster from '$components/Toaster.svelte';
-import { GAS_API } from '$lib/GAS_API';
-import checkUser from '$lib/checkUser';
-import { fetchAppConfiguration } from '$lib/fetchAppConfig';
-import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
-import Submits from './routes/protected/Submits.svelte';
 
 interface Props {
   url?: string;
@@ -95,7 +97,7 @@ const fetchUser = async () => {
           <Route path="*">
             <Home />
           </Route>
-          <Route path="settings" ranks={["admin"]}>
+          <Route path="settings" ranks={["admin", "superAdmin"]}>
             <Settings />
           </Route>
           <Route path="user-preferences">
@@ -106,17 +108,20 @@ const fetchUser = async () => {
               <Profile email={params.email} />
             {/snippet}
           </RoutePrimitive>
-          <Route path="add" ranks={["traductor", "admin"]}>
+          <Route path="add" ranks={["traductor", "admin", "superAdmin"]}>
             <AddGame />
           </Route>
-          <Route path="edit" ranks={["traductor", "admin"]}>
+          <Route path="edit" ranks={["traductor", "admin", "superAdmin"]}>
             <EditGame />
           </Route>
-          <Route path="traductor" ranks={["admin"]}>
+          <Route path="traductor" ranks={["admin", "superAdmin"]}>
             <EditTraductor />
           </Route>
-          <Route path="submits" ranks={["admin"]}>
+          <Route path="submits" ranks={["admin", "superAdmin"]}>
             <Submits />
+          </Route>
+          <Route path="mysubmits" ranks={["traductor", "superAdmin"]}>
+            <MySubmits />
           </Route>
           <Route path="dev" ranks={["superAdmin"]}>
             <Developper />
@@ -132,7 +137,7 @@ const fetchUser = async () => {
             Accueil
           </NavLink>
 
-          {#if checkUser(['admin'])}
+          {#if checkUser(['admin', 'superAdmin'])}
             <NavLink to="/settings" onClick={toggleDrawer}>
               <Icon src={Cog6Tooth} size="1rem" />
               Paramètres
@@ -142,8 +147,15 @@ const fetchUser = async () => {
               Traducteurs
             </NavLink>
             <NavLink to="/submits" onClick={toggleDrawer}>
-              <Icon src={InboxArrowDown} size="1rem" />
+              <Icon src={InboxStack} size="1rem" />
               Soumissions
+            </NavLink>
+          {/if}
+
+          {#if checkUser(['traductor', 'superAdmin'])}
+            <NavLink to="/mysubmits" onClick={toggleDrawer}>
+              <Icon src={InboxArrowDown} size="1rem" />
+              Mes Soumissions
             </NavLink>
           {/if}
 
@@ -153,7 +165,7 @@ const fetchUser = async () => {
           </NavLink>
           <div class="divider"></div>
 
-          {#if checkUser(['superAdmin'])}
+          {#if checkUser(['superAdmin', 'superAdmin'])}
             <NavLink to="/dev" onClick={toggleDrawer}>
               <Icon src={AdjustmentsVertical} size="1rem" />
               Panel développeur

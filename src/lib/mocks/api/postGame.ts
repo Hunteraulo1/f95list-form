@@ -4,10 +4,13 @@ import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
 
 import { Game, type GameType } from '$types/schemas';
 
-export interface PostGameArgs {
+interface PostGameArgs {
   game: GameType;
   silentMode: boolean;
 }
+
+const title = 'Ajout du jeu:';
+const color = 12256517;
 
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void> => {
   await sleep();
@@ -17,9 +20,6 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void
   games.push(validGame);
 
   console.info('mockResponse_postGame', { validGame, games });
-
-  const title = 'Suppression du jeu:';
-  const color = 12256517;
 
   const { link, name, tversion, traductor, proofreader, image } = validGame;
 

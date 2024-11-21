@@ -8,10 +8,9 @@ import type { PostGameArgs } from '../server/api/postGame';
 import type { PostTraductorArgs } from '../server/api/postTraductor';
 import type { PutAppConfigArgs } from '../server/api/putAppConfiguration';
 import type { PutGameArgs } from '../server/api/putGame';
+import type { PutSubmitArgs } from '../server/api/putSubmit';
 import type { PutTraductorArgs } from '../server/api/putTraductor';
 import type { PutUserArgs } from '../server/api/putUser';
-
-import './polyfillScriptRun.js';
 
 import type {
   AppConfigurationType,
@@ -23,6 +22,8 @@ import type {
   TraductorType,
   UserType,
 } from '$types/schemas';
+
+import './polyfillScriptRun.js';
 
 const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A) => {
   console.info('calling api', functionName, args);
@@ -64,5 +65,6 @@ export const GAS_API = {
 
   // Submit
   getSubmits: (args: GetSubmitsArgs) => callAPI<SubmitType[], typeof args>('getSubmits', args),
-  postSubmit: (args: PostSubmitType) => callAPI<undefined | string, typeof args>('postSubmit', args),
+  postSubmit: (args: PostSubmitType) => callAPI<void, typeof args>('postSubmit', args),
+  putSubmit: (args: PutSubmitArgs) => callAPI<void, typeof args>('putSubmit', args),
 };

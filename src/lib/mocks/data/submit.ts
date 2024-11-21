@@ -2,6 +2,11 @@ import type { SubmitType } from '$types/schemas';
 
 export const submits: SubmitType[] = [
   {
+    query: {
+      id: '6547',
+      name: 'Sisterly Lust',
+      version: 'v1.1.11',
+    },
     email: 'mock_mockerson@test.com',
     game: {
       domain: 'F95z',
@@ -28,6 +33,11 @@ export const submits: SubmitType[] = [
     comment: '',
   },
   {
+    query: {
+      id: '70317',
+      name: 'A Split Existence',
+      version: 'v0.4',
+    },
     email: 'mock_mockerson@test.com',
     game: {
       domain: 'F95z',
@@ -37,8 +47,8 @@ export const submits: SubmitType[] = [
       status: 'ABANDONNÉ',
       tags: '3dcg, big ass, big tits, blackmail, corruption, drugs, female domination, groping, humiliation, humor, incest, interracial, male protagonist, masturbation, milf, paranormal, romance, sexual harassment, sleep sex, voyeurism',
       type: 'RenPy',
-      version: 'v0.3',
-      tversion: 'v0.3',
+      version: 'v0.4',
+      tversion: 'v0.4',
       tname: 'Traduction',
       tlink: 'https://drive.google.com/file/d/15yIHenTXFYyQJW9mGl3OscWJ9V4NQC6F/view?usp=sharing',
       traductor: 'Franky28',
@@ -54,6 +64,11 @@ export const submits: SubmitType[] = [
     comment: '',
   },
   {
+    query: {
+      id: '70317',
+      name: 'A Split Existence',
+      version: 'v0.4',
+    },
     email: 'johndoe@test.com',
     game: {
       domain: 'F95z',
