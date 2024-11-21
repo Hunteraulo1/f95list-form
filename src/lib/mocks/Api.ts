@@ -12,39 +12,11 @@ import { postSubmit } from './api/postSubmit';
 import { postTraductor } from './api/postTraductor';
 import { putAppConfiguration } from './api/putAppConfiguration';
 import { putGame } from './api/putGame';
+import { putSubmit } from './api/putSubmit';
 import { putTraductor } from './api/putTraductor';
 import { putUser, putUserRole } from './api/putUser';
 
-type MockEndpoints = {
-  // App Configuration
-  getAppConfiguration: typeof getAppConfiguration;
-  putAppConfiguration: typeof putAppConfiguration;
-
-  // User
-  getUser: typeof getUser;
-  getUsers: typeof getUsers;
-  putUser: typeof putUser;
-  putUserRole: typeof putUserRole;
-
-  // Game
-  getGame: typeof getGame;
-  postGame: typeof postGame;
-  putGame: typeof putGame;
-  delGame: typeof delGame;
-  getQueryGames: typeof getQueryGames;
-  getScrape: typeof getScrape;
-
-  // Traductor
-  getTraductors: typeof getTraductors;
-  postTraductor: typeof postTraductor;
-  putTraductor: typeof putTraductor;
-
-  // Submit
-  getSubmits: typeof getSubmits;
-  postSubmit: typeof postSubmit;
-};
-
-const getMockEndpoints = (): MockEndpoints => ({
+const getMockEndpoints = () => ({
   // App Configuration
   getAppConfiguration,
   putAppConfiguration,
@@ -71,6 +43,7 @@ const getMockEndpoints = (): MockEndpoints => ({
   // Submit
   getSubmits,
   postSubmit,
+  putSubmit,
 });
 
 export default getMockEndpoints;
