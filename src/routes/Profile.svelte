@@ -96,9 +96,10 @@ run(() => {
         </div>
       </div>
       <Panel title="Activité récente" showDivider={false}>
-  <div slot="panelContent" class="overflow-x-auto">
-          <table class="table">
-            <!-- head -->
+        {#snippet panelContent()}
+          <div class="overflow-x-auto">
+            <table class="table">
+              <!-- head -->
             <thead>
               <tr>
                 <th> Évenement </th>
@@ -106,19 +107,22 @@ run(() => {
               </tr>
             </thead>
             <tbody>
-              {#each user.activity as record}
+              {#if user}
+                {#each user.activity as record}
                 <tr>
                   <td>{record.label}</td>
                   <td
-                    >{new Date(record.value).toLocaleDateString("fr-FR", {
-                      hour: "numeric",
-                      minute: "numeric",
-                    })}</td>
-                </tr>
-              {/each}
+                  >{new Date(record.value).toLocaleDateString("fr-FR", {
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}</td>
+                  </tr>
+                {/each}
+              {/if}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        {/snippet}
       </Panel>
     </div>
   </div>

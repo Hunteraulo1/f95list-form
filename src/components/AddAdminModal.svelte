@@ -63,19 +63,20 @@ const handleNewAdminSubmit = async () => {
 </script>
 
 <Modal bind:showModal title="Ajouter un administrateur">
-  <div slot="modalContent">
+  {#snippet modalContent()}
     <p class="py-4">Sélectionnez un utilisateur pour en faire un administrateur</p>
     <UserSelect
       on:update={(e) => {
         selectedUsersFromChild = e.detail;
       }} />
-  </div>
+  {/snippet}
 
-  <button
-    slot="modalAction"
-    onclick={handleNewAdminSubmit}
-    disabled={selectedUsersFromChild.length === 0}
-    class="btn">
-    Ajouter
-  </button>
+  {#snippet modalAction()}
+    <button
+      onclick={handleNewAdminSubmit}
+      disabled={selectedUsersFromChild.length === 0}
+      class="btn">
+      Ajouter
+    </button>
+  {/snippet}
 </Modal>

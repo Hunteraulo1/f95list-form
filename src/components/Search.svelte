@@ -76,7 +76,7 @@ onMount(() => {
 <svelte:window onkeydown={handleCtrlK} />
 
 <Panel title="Rechercher un jeu" showDivider={false}>
-  <div slot="panelContent">
+  {#snippet panelContent()}
     <div class="flex flex-col gap-4 sm:flex-row">
       <div id="container-search" class="relative w-full">
         <label class="input input-bordered flex items-center gap-2">
@@ -119,5 +119,5 @@ onMount(() => {
 
       <Link to="/add" class="btn btn-primary sm:w-40">AJOUTER UN JEU</Link>
     </div>
-  </div>
+  {/snippet}
 </Panel>

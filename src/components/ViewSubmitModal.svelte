@@ -1,4 +1,5 @@
 <script lang="ts">
+import { getConvert } from '$lib/convert';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast } from '$lib/stores';
 import type { GameType, SubmitType, UserType } from '$types/schemas';
@@ -99,8 +100,8 @@ const submitAttributes: SubmitAttributes[] = [
   { label: 'Commentaire', value: submit.comment },
   { label: 'Date', value: submit.date },
   { label: 'Raison', value: submit.reason },
-  { label: 'Status', value: submit.status },
-  { label: 'Type', value: submit.type },
+  { label: 'Status', value: getConvert(submit.status, 'status') },
+  { label: 'Type', value: getConvert(submit.type, 'types') },
 ];
 </script>
 

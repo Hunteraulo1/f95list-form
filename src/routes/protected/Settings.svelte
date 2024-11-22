@@ -59,14 +59,19 @@ let dialogRemove: boolean[] = $state([]);
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      <button slot="button" class="btn" onclick={handleClick} disabled={!checkUser(['superAdmin', 'superAdmin'])}>
-        Sauvegarder
-      </button>
-      <p slot="description" class="text-gray-500">
-        Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
-      </p>
-      <div slot="panelContent" class="flex w-full gap-8">
-        <div class="w-full max-w-xs">
+      {#snippet button()}
+        <button class="btn" onclick={handleClick} disabled={!checkUser(['superAdmin', 'superAdmin'])}>
+          Sauvegarder
+        </button>
+      {/snippet}
+      {#snippet description()}
+        <p class="text-gray-500">
+          Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
+        </p>
+      {/snippet}
+      {#snippet panelContent()}
+        <div class="flex w-full gap-8">
+          <div class="w-full max-w-xs">
           <label class="label" for="app-name">
             <span class="label-text">Nom de l'application</span>
           </label>
@@ -101,21 +106,24 @@ let dialogRemove: boolean[] = $state([]);
             placeholder="url du webhook"
             class="input input-bordered w-full"
             name="app-logs" />
+          </div>
         </div>
-      </div>
+      {/snippet}
     </Panel>
 
     <Panel title="Admins">
-      <button
-        onclick={() => (dialogAdd = true)}
-        slot="button"
-        disabled={!checkUser(['admin', 'superAdmin'])}
-        class="btn">
-        Ajouter un administrateur
-      </button>
-      
-      <p class="text-gray-500" slot="description" >Ajouter des administrateurs au formulaire !</p>
-      <div slot="panelContent">
+      {#snippet button()}
+        <button
+          onclick={() => (dialogAdd = true)}
+          disabled={!checkUser(['admin', 'superAdmin'])}
+          class="btn">
+          Ajouter un administrateur
+        </button>
+      {/snippet}
+      {#snippet description()}
+        <p class="text-gray-500">Ajouter des administrateurs au formulaire !</p>
+      {/snippet}
+      {#snippet panelContent()}
         <div class="overflow-x-auto">
           <table class="table">
             <!-- head -->
@@ -162,7 +170,7 @@ let dialogRemove: boolean[] = $state([]);
             </tbody>
           </table>
         </div>
-      </div>
+      {/snippet}
     </Panel>
 
     <AddAdminModal bind:showModal={dialogAdd} />

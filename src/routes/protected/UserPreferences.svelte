@@ -10,8 +10,10 @@ const handleClick = async () => {
 
   if ($sessionUser) {
     await submitUserUpdate();
-    $sessionUser.preferences?.theme &&
-      document.querySelector('html')?.setAttribute('data-theme', $sessionUser.preferences.theme);
+    $effect(() => {
+      $sessionUser.preferences?.theme &&
+        document.querySelector('html')?.setAttribute('data-theme', $sessionUser.preferences.theme);
+    });
   }
 };
 
@@ -49,9 +51,7 @@ const submitUserUpdate = async () => {
 {#if $sessionUser}
   <div>
     <Panel title="Informations de profil">
-      <div slot="panelContent">
-        <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
-        
+      {#snippet panelContent()}        
         <p class="text-gray-500">
           Les informations contenues dans cette section sont affichées sur votre page de profil.
         </p>
@@ -81,12 +81,13 @@ const submitUserUpdate = async () => {
               name="first-name" />
           </div>
         </div>
-      </div>
+      {/snippet}
+      {#snippet button()}
+        <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
+      {/snippet}
     </Panel>
     <Panel title="Préférences utilisateur">
-      <div slot="panelContent">
-        <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
-        
+      {#snippet panelContent()}        
         <p class="text-gray-500">
           Modifiez vos préférences d'utilisateur. N'oubliez pas de sauvegarder !
         </p>
@@ -104,7 +105,10 @@ const submitUserUpdate = async () => {
             <option value="dark">Foncé</option>
           </select>
         </div>
-      </div>
+      {/snippet}
+      {#snippet button()}
+        <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
+      {/snippet}
     </Panel>
   </div>
 {/if}

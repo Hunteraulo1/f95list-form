@@ -3,6 +3,7 @@ import { Link } from 'svelte-routing';
 
 import Panel from '$components/Panel.svelte';
 import ViewSubmitModal from '$components/ViewSubmitModal.svelte';
+import { getConvert } from '$lib/convert';
 import type { SubmitType, UserType } from '$types/schemas';
 
 interface Props {
@@ -19,8 +20,10 @@ const dialogView: boolean[] = $state([]);
 <div>
   {#if submits.length > 0 && users.length > 0}
     <Panel title="Soumissions">
-      <p class="text-gray-500" slot="description">Liste des soumissions en attente de validation</p>
-      <div slot="panelContent">
+      {#snippet description()}
+        <p class="text-gray-500">Liste des soumissions en attente de validation</p>
+      {/snippet}
+      {#snippet panelContent()}
         <div class="overflow-x-auto">
           <table class="table">
             <!-- head -->
@@ -68,10 +71,10 @@ const dialogView: boolean[] = $state([]);
                     {submit.date}
                   </td>
                   <td>
-                    {submit.type}
+                    {getConvert(submit.type, 'types')}
                   </td>
                   <td>
-                    {submit.status}
+                    {getConvert(submit.status, 'status')}
                   </td>
                   {#if editable}
                     <td>
@@ -86,7 +89,7 @@ const dialogView: boolean[] = $state([]);
             </tbody>
           </table>
         </div>
-      </div>
+      {/snippet}
     </Panel>
   {/if}
 </div>

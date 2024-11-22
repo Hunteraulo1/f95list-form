@@ -51,7 +51,7 @@ let { user = $bindable(), showModal = $bindable() }: Props = $props();
 </script>
 
 <Modal bind:showModal title="Supprimer l'administrateur">
-  <div slot="modalContent">
+  {#snippet modalContent()}
     <p class="py-4">Êtes-vous sûr de vouloir supprimer les privilèges d'administrateur de cet utilisateur ?</p>
     <div class="my-2 flex items-center space-x-3 p-2 hover:cursor-pointer hover:bg-base-200">
       <div class="flex items-center justify-center space-x-3">
@@ -66,6 +66,14 @@ let { user = $bindable(), showModal = $bindable() }: Props = $props();
         </div>
       </div>
     </div>
-  </div>
-  <button slot="modalAction" onclick={handleAdminRemovalSubmit} disabled={!user} class="btn">Confirmer</button>
+  {/snippet}
+
+  {#snippet modalAction()}
+    <button
+      onclick={handleAdminRemovalSubmit}
+      disabled={!user}
+      class="btn">
+      Confirmer
+    </button>
+  {/snippet}
 </Modal>

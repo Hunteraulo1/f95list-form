@@ -74,22 +74,21 @@ const handleSubmit = async () => {
 </script>
 
 <Modal bind:showModal title="Ajouter un traducteur/relecteur">
-  <div slot="modalContent" class="mt-4">
+  {#snippet modalContent()}
     <input
       type="text"
       placeholder="Nom du traducteur/relecteur"
       class="input input-bordered w-full appearance-none"
       value={name}
       oninput={e => name = e.currentTarget.value}
-      />
-  </div>
+    />
+  {/snippet}
 
-
-  <div slot="modalAction" class="mt-4">
+  {#snippet modalAction()}
     <button
       class="btn"
       onclick={handleSubmit}>
       Valider
     </button>
-  </div>
+  {/snippet}
 </Modal>
