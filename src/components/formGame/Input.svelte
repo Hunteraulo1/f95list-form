@@ -1,5 +1,4 @@
 <script lang="ts">
-import checkUser from '$lib/checkUser';
 import { Game, type GameType } from '$types/schemas';
 import type { Snippet } from 'svelte';
 import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
@@ -22,8 +21,6 @@ let { title, className, active, step, game, name, type, attributes, children }: 
 let error = $state(false);
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-  (game[name] as string) = event.currentTarget.value;
-
   const { domain, id } = game;
 
   if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
@@ -32,7 +29,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     return;
   }
 
-  if (name === 'id' && id && id !== '0') {
+  if (name === 'id' && id && id !== 0) {
     switch (domain) {
       case 'F95z':
         game.link = `https://f95zone.to/threads/${id}`;
@@ -42,6 +39,8 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         break;
     }
   }
+
+  (game[name] as string) = event.currentTarget.value.toString();
 };
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {

@@ -3,7 +3,7 @@ import type { GameType, QueryGameType } from '$types/schemas';
 export const games: GameType[] = [
   {
     domain: 'F95z',
-    id: '6547',
+    id: 6547,
     name: 'Sisterly Lust',
     link: 'https://f95zone.to/threads/6547',
     status: 'TERMINÉ',
@@ -21,7 +21,7 @@ export const games: GameType[] = [
   },
   {
     domain: 'F95z',
-    id: '70317',
+    id: 70317,
     name: 'A Split Existence',
     link: 'https://f95zone.to/threads/70317',
     status: 'ABANDONNÉ',
@@ -39,7 +39,7 @@ export const games: GameType[] = [
   },
   {
     domain: 'LewdCorner',
-    id: '3390',
+    id: 3390,
     name: 'Found in Translation',
     link: 'https://lewdcorner.com/threads/3390',
     status: 'EN COURS',

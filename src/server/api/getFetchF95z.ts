@@ -1,7 +1,10 @@
-import type { CheckerF95zType } from '$types/schemas';
+import type { CheckerF95zType, GameType } from '$types/schemas';
 
-export const getFetchF95z = async (id: string): Promise<string> => {
-  const host = 'https://f95zone.to';
+const host = 'https://f95zone.to';
+
+export const getFetchF95z = async (id: GameType['id']): Promise<string> => {
+  if (!id) throw new Error('id is undefined');
+
   const url = `${host}/sam/checker.php?threads=${id}`;
 
   console.info('getFetchF95z called with args:', { id });

@@ -52,8 +52,8 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
       throw new Error('Impossible de trouver le jeu dans la liste');
     } // TODO: duplicate game
 
-    const convertedGame: string[] = [
-      validGame.id || '',
+    const convertedGame: (string | number | null)[] = [
+      validGame.id ?? null,
       validGame.domain,
       `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
       validGame.version,
@@ -62,7 +62,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
         ? `=HYPERLINK("${validGame.tlink}"; "${validGame.tname}")`
         : validGame.tname,
       validGame.status,
-      validGame.tags || '',
+      validGame.tags ?? '',
       validGame.type,
       (await dataLink(validGame.traductor, validGame.domain)).toString(),
       (await dataLink(validGame.proofreader, validGame.domain)).toString(),

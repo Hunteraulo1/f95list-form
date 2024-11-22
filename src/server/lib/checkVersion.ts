@@ -3,14 +3,14 @@ import { getScrape } from '../api/getScrape';
 
 import { sendTraductorWebhook, sendWebhookAC } from './webhook';
 
-import type { GameACType } from '$types/schemas';
+import type { GameACType, GameType } from '$types/schemas';
 
 const checkVersion = async () => {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
 
-  const ids: string[] = [];
-  const games = await getGames();
-  const checkedGames: { index: number; id: string; version: string; traductor: string; name: string }[] = [];
+  const ids: number[] = [];
+  const games: GameType[] = await getGames();
+  const checkedGames: { index: number; id: number; version: string; traductor: string; name: string }[] = [];
   let result: { [key: string]: string } = {};
   const changed: GameACType[] = [];
 
@@ -18,6 +18,8 @@ const checkVersion = async () => {
     const { domain, id, ac, version, traductor, name } = game;
 
     if (domain === 'F95z' && id && ac) {
+      if (!game.id) throw new Error('id is undefined');
+
       ids.push(game.id);
       checkedGames.push({ index, id, version, traductor, name });
     }
@@ -49,7 +51,7 @@ const checkVersion = async () => {
       const rowId = sheet?.getRange(`A${index + 2}`)?.getValue();
       sheet?.getRange(`D${index + 2}`).setValue(result[id]);
 
-      if (rowId === Number.parseInt(id)) {
+      if (rowId === id) {
         try {
           const resultScrape = await getScrape({ domain: 'F95z', id });
           console.info('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);

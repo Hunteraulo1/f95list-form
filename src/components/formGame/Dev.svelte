@@ -18,7 +18,7 @@ const handleClick = async () => {
   step = 5;
   game = {
     domain: 'Autre',
-    id: '666',
+    id: 666,
     name: 'TEST GAME FOR DEV',
     link: 'https://testgame.dev',
     status: 'ABANDONNÉ',

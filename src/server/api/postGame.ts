@@ -71,8 +71,8 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
       return result;
     };
 
-    const convertedGame: string[] = [
-      validGame.id ?? '',
+    const convertedGame: (string | number | null)[] = [
+      validGame.id ?? null,
       validGame.domain,
       `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
       validGame.version,

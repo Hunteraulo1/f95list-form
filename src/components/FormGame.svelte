@@ -36,7 +36,7 @@ let {
     ttype: 'Traduction Humaine',
     ac: false,
     domain: 'F95z',
-    id: '',
+    id: null,
     link: '',
     name: '',
     proofreader: '',
@@ -47,13 +47,13 @@ let {
     version: '',
     trlink: '',
     image: '',
-  }),
+  } as GameType),
   handleUpdateSubmit,
   editor = $bindable(),
   deleteMode = false,
 }: Props = $props();
 
-let savedId = '';
+let savedId: number | undefined;
 let silentMode = $state(false);
 let scraping = $state(false);
 
@@ -106,7 +106,7 @@ const changeStep = async (amount: number) => {
     step += amount; // Auto-Check
   }
 
-  const gameId = Number.parseInt(game.id);
+  const gameId = game.id;
 
   if (step === 3 && game.domain === 'F95z' && game.id && gameId && savedId !== game.id) {
     const { id, domain } = game;

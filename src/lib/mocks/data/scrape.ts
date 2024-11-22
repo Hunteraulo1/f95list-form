@@ -1,11 +1,11 @@
-import type { GameType, ScrapeGameType } from '$types/schemas';
+import type { ScrapeGameType } from '$types/schemas';
 
 interface ScrapeDataType {
-  [key: GameType['id']]: ScrapeGameType;
+  [key: number]: ScrapeGameType;
 }
 
 export const scrape: ScrapeDataType = {
-  '6547': {
+  6547: {
     status: 'TERMINÉ',
     type: 'RenPy',
     name: 'Sisterly Lust',
@@ -13,7 +13,7 @@ export const scrape: ScrapeDataType = {
     tags: '3dcg, anal sex, blackmail, cheating, corruption, creampie, exhibitionism, groping, group sex, handjob, harem, incest, interracial, lesbian, male domination, male protagonist, masturbation, milf, mobile game, oral sex, pregnancy, romance, sex toys, sleep sex, spanking, urination, vaginal sex, virgin, voyeurism',
     image: 'https://attachments.f95zone.to/2022/04/1776325_Sisterly_Lust.jpg',
   },
-  '70317': {
+  70317: {
     status: 'EN COURS',
     type: 'RenPy',
     name: 'A Split Existence',

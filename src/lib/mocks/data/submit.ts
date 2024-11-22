@@ -3,14 +3,14 @@ import type { SubmitType } from '$types/schemas';
 export const submits: SubmitType[] = [
   {
     query: {
-      id: '6547',
+      id: 6547,
       name: 'Sisterly Lust',
       version: 'v1.1.11',
     },
     email: 'mock_mockerson@test.com',
     game: {
       domain: 'F95z',
-      id: '6547',
+      id: 6547,
       name: 'Sisterly Lust',
       link: 'https://f95zone.to/threads/6547',
       status: 'TERMINÉ',
@@ -34,14 +34,14 @@ export const submits: SubmitType[] = [
   },
   {
     query: {
-      id: '70317',
+      id: 70317,
       name: 'A Split Existence',
       version: 'v0.4',
     },
     email: 'mock_mockerson@test.com',
     game: {
       domain: 'F95z',
-      id: '70317',
+      id: 70317,
       name: 'A Split Existence',
       link: 'https://f95zone.to/threads/70317',
       status: 'ABANDONNÉ',
@@ -65,14 +65,14 @@ export const submits: SubmitType[] = [
   },
   {
     query: {
-      id: '70317',
+      id: 70317,
       name: 'A Split Existence',
       version: 'v0.4',
     },
     email: 'johndoe@test.com',
     game: {
       domain: 'F95z',
-      id: '70317',
+      id: 70317,
       name: 'A Split Existence',
       link: 'https://f95zone.to/threads/70317',
       status: 'ABANDONNÉ',

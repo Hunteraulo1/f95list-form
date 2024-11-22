@@ -3,7 +3,7 @@ import { scrape } from '../data/scrape';
 
 export type GetScrapeArgs = {
   domain: 'F95z' | 'LewdCorner';
-  id: string;
+  id: GameType['id'];
 };
 interface GetScrape {
   name: GameType['name'];
@@ -15,6 +15,7 @@ interface GetScrape {
 }
 
 export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
+  if (!id) throw new Error('id is undefined');
   // Report request
   console.info(`getScrape called with args: ${{ domain, id }}`);
 

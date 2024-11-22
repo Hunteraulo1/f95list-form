@@ -24,7 +24,7 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   (game[name] as string) = event.currentTarget.value;
 
   const { domain, id } = game;
-  if (name === 'domain' && id && id !== '0') {
+  if (name === 'domain' && id && id !== 0) {
     switch (domain) {
       case 'F95z':
         game.link = `https://f95zone.to/threads/${id}`;

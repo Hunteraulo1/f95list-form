@@ -23,7 +23,7 @@ const User = z.object({
 });
 
 const Game = z.object({
-  id: z.string(),
+  id: z.number().nullable(),
   domain: z.enum(['F95z', 'LewdCorner', 'Autre']),
   name: z.string().min(1),
   version: z.string().min(1),
@@ -50,7 +50,7 @@ const Game = z.object({
 });
 
 const QueryGame = z.object({
-  id: Game.shape.version,
+  id: Game.shape.id,
   name: Game.shape.name,
   version: Game.shape.version,
 });

@@ -4,7 +4,7 @@ import { type GameType, ScrapeGame } from '$types/schemas';
 
 export type GetScrapeArgs = {
   domain: Extract<GameType['domain'], 'F95z'>;
-  id: string;
+  id: GameType['id'];
 };
 
 interface GetScrape {
