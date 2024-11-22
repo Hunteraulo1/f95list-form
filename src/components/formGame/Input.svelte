@@ -53,7 +53,7 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
 };
 </script>
 
-<div class={className} class:hidden={!step || !active?.includes(step) || !checkUser(['admin', 'superAdmin'])}>
+<div class={className} class:hidden={!step || !active?.includes(step)}>
   <label for={name}>{title}:</label>
   <div class="flex gap-1">
     <input
