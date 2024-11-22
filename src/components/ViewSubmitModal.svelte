@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getConvert } from '$lib/convert';
 import { GAS_API } from '$lib/GAS_API';
+import { getConvert } from '$lib/convert';
 import { isLoading, newToast } from '$lib/stores';
 import type { GameType, SubmitType, UserType } from '$types/schemas';
 import { onMount } from 'svelte';
