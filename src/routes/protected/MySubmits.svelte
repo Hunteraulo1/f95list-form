@@ -24,8 +24,6 @@ onMount(async () => {
     newToast({
       message: 'Une erreur est survenue lors de la récupération des soumissions',
       alertType: 'error',
-      milliseconds: 5000,
-      id: 'my-submits-error',
     });
   } finally {
     $isLoading = false;
