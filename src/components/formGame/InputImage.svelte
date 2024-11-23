@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { GameType } from '$types/schemas';
 import type { HTMLInputAttributes } from 'svelte/elements';
-import FormGameInput from './Input.svelte';
+import Input from './Input.svelte';
 
 interface Props {
   title: string;
@@ -31,7 +31,7 @@ const attributes: HTMLInputAttributes = {
 };
 </script>
 
-<FormGameInput
+<Input
   {game}
   {active}
   {step}
@@ -47,4 +47,4 @@ const attributes: HTMLInputAttributes = {
     loading="lazy"
     onerror={handleImageError}
   />
-</FormGameInput>
+</Input>
