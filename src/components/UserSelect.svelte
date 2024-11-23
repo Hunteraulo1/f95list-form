@@ -6,7 +6,12 @@ import type { UserType } from '$types/schemas';
 
 let searchCount = 0;
 let searchResults: UserType[] = $state([]);
-let selectedUsers: UserType[] = $state([]);
+
+interface Props {
+  selectedUsers: UserType[];
+}
+
+let { selectedUsers = $bindable([]) }: Props = $props();
 
 let debounceTimeout: ReturnType<typeof setTimeout>;
 

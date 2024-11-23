@@ -61,10 +61,7 @@ const handleNewAdminSubmit = async () => {
 <Modal bind:showModal title="Ajouter un administrateur">
   {#snippet modalContent()}
     <p class="py-4">Sélectionnez un utilisateur pour en faire un administrateur</p>
-    <UserSelect
-      on:update={(e) => {
-        selectedUsersFromChild = e.detail;
-      }} />
+    <UserSelect selectedUsers={selectedUsersFromChild} />
   {/snippet}
 
   {#snippet modalAction()}
