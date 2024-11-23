@@ -1,5 +1,6 @@
 <script lang="ts">
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
+import { checkUser } from '$lib/utils';
 import type { GameType, TraductorType } from '$types/schemas';
 import { Icon, UserPlus } from 'svelte-hero-icons';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
@@ -41,15 +42,16 @@ let modal = $state(false);
         <option>{item.name}</option>
       {/each}
     </datalist>
-    <button
-      class="btn btn-primary w-min"
-      onclick={(e) => {
-        e.preventDefault();
-        modal = true;
-      }}
-    >
-      <Icon src={UserPlus} size="1rem" />
-    </button>
+    {#if checkUser(['admin', 'superAdmin'])}
+      <button
+        class="btn btn-primary w-min"
+        onclick={(e) => {
+          e.preventDefault();
+          modal = true;
+        }}>
+        <Icon src={UserPlus} size="1rem" />
+      </button>
+    {/if}
   </div>
 </div>
 

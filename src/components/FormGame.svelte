@@ -430,7 +430,7 @@ const elements: Element[] = [
             </button>
           {/if}
         {/if}
-        {#if edit && !(!editor && !deleteMode)}
+        {#if edit && !(editor && deleteMode)}
           <Remove {game} {silentMode} {handleUpdateSubmit} {editor} />
         {/if}
         {#if !edit && checkUser(['superAdmin', 'superAdmin'])}

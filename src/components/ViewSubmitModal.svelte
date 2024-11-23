@@ -36,7 +36,7 @@ onMount(async () => {
 
   let queryGame: GameType | null = null;
 
-  if (submit.type !== 'add') {
+  if (submit.type !== 'add' && submit.query) {
     queryGame = await GAS_API.getGame(submit.query);
   }
 
@@ -87,6 +87,9 @@ const handleUpdateSubmit = async (type: 'validated' | 'rejected') => {
 const handleClickConfirm = () => {
   editor = true;
   showModal = false;
+
+  if (submit.type === 'add' || !submit.query) return;
+
   $queryGame = submit.query;
 };
 

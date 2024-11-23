@@ -100,7 +100,7 @@ const AppWebhooks = z.object({
 });
 
 const Submit = z.object({
-  query: QueryGame,
+  query: z.optional(QueryGame),
   email: User.shape.email,
   date: z.string().datetime(),
   status: z.enum(['wait', 'validated', 'rejected']),

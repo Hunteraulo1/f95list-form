@@ -40,7 +40,13 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     }
   }
 
-  (game[name] as string) = event.currentTarget.value;
+  const value = event.currentTarget.value;
+
+  if (type === 'number') {
+    (game[name] as number) = Number.parseInt(value);
+  } else {
+    (game[name] as string) = value;
+  }
 };
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
