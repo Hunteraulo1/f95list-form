@@ -9,7 +9,6 @@ interface Props {
   step?: number;
   game: GameType;
   name: keyof GameType;
-  type?: HTMLInputElement['type'];
 }
 
 let { game, step, title, active, name }: Props = $props();

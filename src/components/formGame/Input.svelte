@@ -16,7 +16,7 @@ interface Props {
   children?: Snippet;
 }
 
-let { title, className, active, step, game, name, type, attributes, children }: Props = $props();
+let { title, className, active, step, game, name, type, children }: Props = $props();
 
 let error = $state(false);
 
@@ -62,8 +62,8 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
       oninput={handleInput}
       disabled={(name === 'ac' && game.domain !== 'F95z') || (name === 'id' && game.domain === 'Autre')}
       value={game[name]}
-      {...attributes}
-      class="{type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"} {attributes?.class}"
+      {type}
+      class={type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"}
       class:border-error={error}
     />
     {#if name === 'link'}
