@@ -15,10 +15,19 @@ interface Props extends HTMLInputAttributes {
   name: keyof GameType;
 }
 
-let { title, values = [], className, active, step, game, name, ...rest }: Props = $props();
+let { title, values = [], className, active, step, game, name }: Props = $props();
+
+let warning = $state(false);
+const isTraductor = checkUser(['traductor']);
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-  (game[name] as string) = event.currentTarget.value;
+  const value = event.currentTarget.value;
+
+  (game[name] as string) = value;
+
+  if (values.find((item) => item.name === value) || isTraductor) return;
+
+  warning = true;
 };
 
 let modal = $state(false);
@@ -34,8 +43,7 @@ let modal = $state(false);
       list="traductor-list"
       onchange={handleChange}
       value={game[name]}
-      {...rest}
-      class="input input-bordered w-full {rest.class}"
+      class="input input-bordered w-full {warning ? 'input-warning' : ''}"
     />
     <datalist id="traductor-list">
       {#each values as item}

@@ -14,6 +14,11 @@ interface Props extends HTMLSelectAttributes {
 
 let { title, values = [], className, active, step, game, name, ...rest }: Props = $props();
 
+if (name === 'domain') {
+  console.log('🚀 ~ step:', step);
+  console.log('🚀 ~ active:', active);
+}
+
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   if (name === 'tname' && rest.value === 'Intégrée') {
     game.tversion = 'Intégrée';
@@ -36,7 +41,7 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
 };
 </script>
 
-<div class={className} class:hidden={!step || !active?.includes(step)}>
+<div class={className} class:hidden={step !== undefined && !active?.includes(step)}>
   <label for={name}>{title}:</label>
   <select
     placeholder={title}

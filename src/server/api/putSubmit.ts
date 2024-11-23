@@ -26,7 +26,16 @@ export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> 
   console.log('🚀 ~ putSubmit ~ submits:', submits);
   console.log('🚀 ~ putSubmit ~ query:', submit.query);
 
-  if (!submits || !submits.find((s) => s.query === submit.query)) throw new Error('Submit(s) not found');
+  if (
+    !submits ||
+    !submits.find(
+      (s) =>
+        s.query?.id === submit.query?.id &&
+        s.query?.name === submit.query?.name &&
+        s.query?.version === submit.query?.version,
+    )
+  )
+    throw new Error('Submit(s) not found');
 
   if (type !== 'validated' && type !== 'rejected') throw new Error('invalid type');
 

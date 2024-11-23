@@ -4,6 +4,7 @@ import { Link } from 'svelte-routing';
 import Panel from '$components/Panel.svelte';
 import ViewSubmitModal from '$components/ViewSubmitModal.svelte';
 import { getConvert } from '$lib/convert';
+import { dateFormat } from '$lib/utils';
 import type { SubmitType, UserType } from '$types/schemas';
 
 interface Props {
@@ -68,7 +69,7 @@ const dialogView: boolean[] = $state([]);
                     </Link>
                   </td>
                   <td>
-                    {submit.date}
+                    {dateFormat(new Date(submit.date))}
                   </td>
                   <td>
                     {getConvert(submit.type, 'types')}
