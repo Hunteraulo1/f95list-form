@@ -11,8 +11,8 @@ export const user: UserType = {
     theme: 'dark',
   },
   activity: [
-    { label: 'User Created', value: '2021-01-01T00:00:00.000Z' },
-    { label: 'User Updated', value: '2021-01-01T00:00:00.000Z' },
+    { label: 'User Created', value: new Date('2021-01-01T00:00:00.000Z') },
+    { label: 'User Updated', value: new Date('2021-01-01T00:00:00.000Z') },
   ],
   statistics: {
     gameAdded: 84,
@@ -33,8 +33,8 @@ export const users: UserType[] = [
       theme: 'light',
     },
     activity: [
-      { label: 'User Created', value: '2023-01-01T00:00:00.000Z' },
-      { label: 'User Updated', value: '2023-03-12T00:00:00.000Z' },
+      { label: 'User Created', value: new Date('2023-01-01T00:00:00.000Z') },
+      { label: 'User Updated', value: new Date('2023-03-12T00:00:00.000Z') },
     ],
     statistics: {
       gameAdded: 25,
@@ -52,8 +52,8 @@ export const users: UserType[] = [
       theme: 'light',
     },
     activity: [
-      { label: 'User Created', value: '2023-01-01T00:00:00.000Z' },
-      { label: 'User Updated', value: '2023-03-12T00:00:00.000Z' },
+      { label: 'User Created', value: new Date('2023-01-01T00:00:00.000Z') },
+      { label: 'User Updated', value: new Date('2023-03-12T00:00:00.000Z') },
     ],
     statistics: {
       gameAdded: 18,
