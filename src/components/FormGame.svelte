@@ -5,7 +5,7 @@ import { checkUser } from '$lib/utils';
 import { Game, type GameType } from '$types/schemas';
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
-import { HTMLInputAttributes } from 'svelte/elements';
+import type { HTMLInputAttributes } from 'svelte/elements';
 import LoadingSpinner from './LoadingSpinner.svelte';
 import Search from './Search.svelte';
 import Checkbox from './formGame/Checkbox.svelte';
