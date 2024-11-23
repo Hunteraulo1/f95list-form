@@ -1,5 +1,5 @@
 import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas';
-import checkUser from '../lib/checkUser';
+import { checkUser } from '../lib/functions';
 import { getSubmits } from './getSubmits';
 
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<void> => {

@@ -12,7 +12,5 @@ export const getQueryGames = async (): Promise<QueryGameType[]> => {
 
   if (!data) throw new Error('getQueryGames no return');
 
-  return data.map(([id, , name, version]) => {
-    return { id, name, version };
-  });
+  return data.map(([id, , name, version]) => ({ id, name, version }));
 };

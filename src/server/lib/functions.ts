@@ -13,4 +13,4 @@ const checkUser = (rank: UserType['roles'][0]): boolean => {
   return false;
 };
 
-export default checkUser;
+export { checkUser };

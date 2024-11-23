@@ -36,7 +36,7 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
   }
 
   return Game.parse({
-    id: data[0].toString(),
+    id: data[0],
     domain: data[1],
     name: data[2],
     version: data[3],

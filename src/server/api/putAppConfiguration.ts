@@ -1,5 +1,5 @@
 import { AppConfiguration, type AppConfigurationType, AppWebhooks, type AppWebhooksType } from '$types/schemas';
-import checkUser from '../lib/checkUser';
+import { checkUser } from '../lib/functions';
 
 export type PutAppConfigArgs = {
   appConfiguration: AppConfigurationType;

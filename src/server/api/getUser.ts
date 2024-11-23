@@ -2,8 +2,8 @@ import * as z from 'zod';
 
 import { postUser } from './postUser';
 
-import checkUser from '$lib/checkUser';
 import { User, type UserType } from '$types/schemas';
+import { checkUser } from '../lib/functions';
 
 export type GetUserArgs = {
   email: string | null;
@@ -20,7 +20,7 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   let validArgs = null;
 
   if (email) {
-    if (!checkUser(['admin', 'superAdmin']) && email !== requestingUserEmail) throw new Error('Unauthorized');
+    if (!checkUser('admin') && email !== requestingUserEmail) throw new Error('Unauthorized');
     // Validate the arguments against the schema
     const GetUserArgsSchema = z.object({
       email: User.shape.email,

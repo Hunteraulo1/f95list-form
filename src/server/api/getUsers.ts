@@ -1,5 +1,5 @@
 import type { UserType } from '$types/schemas';
-import checkUser from '../lib/checkUser';
+import { checkUser } from '../lib/functions';
 
 /**
  * **API Endpoint** | Returns the accessing user object
@@ -19,8 +19,9 @@ export const getUsers = (): UserType[] | undefined => {
 
   // Check if scriptProperties is an array or iterable object
   for (const user of scriptPropertiesEntries) {
+    console.log('🚀 ~ getUsers ~ user:', user);
     const [key, value] = user;
-    if (!key.includes('@')) return;
+    if (!key.includes('@')) continue;
 
     users.push(JSON.parse(value));
   }

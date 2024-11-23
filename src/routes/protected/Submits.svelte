@@ -12,9 +12,13 @@ onMount(async () => {
   if (!$sessionUser) return;
 
   submits = await GAS_API.getSubmits({});
+  console.log('🚀 ~ onMount ~ submits:', submits);
 
   users = await GAS_API.getUsers();
+  console.log('🚀 ~ onMount ~ users:', users);
 });
 </script>
 
-<Submits bind:submits={submits} {users} editable />
+{#if submits && users}
+  <Submits bind:submits={submits} {users} editable />
+{/if}

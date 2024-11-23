@@ -44,7 +44,7 @@ onMount(async () => {
     { label: 'Domaine', value: submit.game.domain, queryValue: queryGame?.domain ?? null },
     { label: 'ID du jeu', value: submit.game.id, queryValue: queryGame?.id ?? null },
     { label: 'Image du jeu', value: submit.game.image, queryValue: queryGame?.image ?? null },
-    { label: 'Email', value: submit.game.link, queryValue: queryGame?.link ?? null },
+    { label: 'Lien du jeu', value: submit.game.link, queryValue: queryGame?.link ?? null },
     { label: 'Nom du jeu', value: submit.game.name, queryValue: queryGame?.name ?? null },
     { label: 'Relecteur', value: submit.game.proofreader, queryValue: queryGame?.proofreader ?? null },
     { label: 'Status', value: submit.game.status, queryValue: queryGame?.status ?? null },

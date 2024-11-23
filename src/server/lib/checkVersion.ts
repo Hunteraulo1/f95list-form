@@ -4,6 +4,7 @@ import { getScrape } from '../api/getScrape';
 import { sendTraductorWebhook, sendWebhookAC } from './webhook';
 
 import type { GameACType, GameType } from '$types/schemas';
+import { F95host } from '../env';
 
 const checkVersion = async () => {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
@@ -78,8 +79,6 @@ const checkVersion = async () => {
   sendTraductorWebhook({ games: changed });
 };
 
-const host = 'https://f95zone.to';
-
 const f95Api = async (ids: string | string[]) => {
   interface Response {
     status: string;
@@ -88,7 +87,7 @@ const f95Api = async (ids: string | string[]) => {
     };
   }
 
-  const url = `${host}/sam/checker.php?threads=${ids}`;
+  const url = `${F95host}/sam/checker.php?threads=${ids}`;
   const response = await UrlFetchApp.fetch(url, { muteHttpExceptions: true });
 
   const json = response.getContentText();

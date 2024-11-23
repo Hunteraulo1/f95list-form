@@ -3,7 +3,7 @@ import { disableLock, enableLock } from '../lib/lockMode';
 import { getTraductors } from './getTraductors';
 
 import { Traductor, type TraductorType } from '$types/schemas';
-import checkUser from '../lib/checkUser';
+import { checkUser } from '../lib/functions';
 
 export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };

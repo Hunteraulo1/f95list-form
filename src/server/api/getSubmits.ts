@@ -1,5 +1,4 @@
 import { type SubmitType, User, type UserType } from '$types/schemas';
-import checkUser from '../lib/checkUser';
 
 export interface GetSubmitsArgs {
   user?: UserType;
@@ -13,8 +12,6 @@ export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined =
   // Report request
   console.info('getSubmits called by: ', requestingUserEmail);
 
-  if (!checkUser('traductor') || (!user && !checkUser('admin'))) throw new Error('Unauthorized');
-
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
   const submits: SubmitType[] = JSON.parse(scriptProperties.submits);
@@ -24,8 +21,14 @@ export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined =
 
     const { email } = validUser;
 
-    return submits.filter((submit) => submit.email === email);
+    const filteredSubmits = submits.filter((submit) => submit.email === email);
+
+    console.info('getSubmits filteredSubmits: ', filteredSubmits);
+
+    return filteredSubmits;
   }
+
+  console.info('getSubmits submits: ', submits);
 
   return submits;
 };
