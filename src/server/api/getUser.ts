@@ -3,7 +3,7 @@ import * as z from 'zod';
 import { postUser } from './postUser';
 
 import { User, type UserType } from '$types/schemas';
-import { checkUser } from '../lib/functions';
+import { checkUser } from '../lib/utils';
 
 export type GetUserArgs = {
   email: string | null;

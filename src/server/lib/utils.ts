@@ -13,4 +13,6 @@ const checkUser = (rank: UserType['roles'][0]): boolean => {
   return false;
 };
 
-export { checkUser };
+const dateNow = () => new Date().toISOString();
+
+export { checkUser, dateNow };

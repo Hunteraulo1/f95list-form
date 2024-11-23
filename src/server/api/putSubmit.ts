@@ -1,7 +1,7 @@
 import { getUser } from './getUser';
 
 import { Submit, type SubmitType } from '$types/schemas';
-import { checkUser } from '../lib/functions';
+import { checkUser } from '../lib/utils';
 import { getSubmits } from './getSubmits';
 
 /**

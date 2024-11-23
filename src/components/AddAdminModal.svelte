@@ -40,18 +40,14 @@ const handleNewAdminSubmit = async () => {
       await fetchAppConfiguration();
 
       newToast({
-        id: Date.now().toString(),
         alertType: 'success',
         message: 'Nouveau Admin ajouté!',
-        milliseconds: 3000,
       });
     } catch (error) {
       console.error('Could not add new admin:', error);
       newToast({
-        id: Date.now().toString(),
         alertType: 'error',
         message: "Erreur lors de l'ajout de l'Admin",
-        milliseconds: 3000,
       });
     } finally {
       $isLoading = false;

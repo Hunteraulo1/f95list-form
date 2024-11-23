@@ -19,4 +19,6 @@ const checkUser = (ranks: UserType['roles']): boolean => {
   return false;
 };
 
-export default checkUser;
+const dateFormat = (date: Date) => date.toLocaleDateString('fr-FR');
+
+export { checkUser, dateFormat };

@@ -5,8 +5,8 @@ import AddAdminModal from '$components/AddAdminModal.svelte';
 import Panel from '$components/Panel.svelte';
 import RemoveAdminModal from '$components/RemoveAdminModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import checkUser from '$lib/checkUser';
 import { appConfiguration, isLoading, newToast } from '$lib/stores';
+import { checkUser } from '$lib/utils';
 
 let webhookUpdateUrl = $state('');
 let webhookLogsUrl = $state('');
@@ -34,18 +34,14 @@ const updateAppConfiguration = async () => {
     });
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'success',
       message: "Configuration de l'application mise à jour !",
-      milliseconds: 3000,
     });
   } catch (error) {
     console.error("Erreur de transmission des changements de l'utilisateur", error);
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: "Vos modifications n'ont pas pu être enregistrées",
-      milliseconds: 3000,
     });
   } finally {
     $isLoading = false;

@@ -1,5 +1,5 @@
-import checkUser from '$lib/checkUser';
 import sleep from '$lib/sleep';
+import { checkUser } from '$lib/utils';
 import { type SubmitType, User, type UserType } from '$types/schemas';
 import { submits } from '../data/submit';
 

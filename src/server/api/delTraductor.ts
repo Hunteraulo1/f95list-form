@@ -1,6 +1,6 @@
 import type { TraductorType } from '$types/schemas';
-import { checkUser } from '../lib/functions';
 import { disableLock, enableLock } from '../lib/lockMode';
+import { checkUser } from '../lib/utils';
 
 import { getTraductors } from './getTraductors';
 

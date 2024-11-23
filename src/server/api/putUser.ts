@@ -1,6 +1,7 @@
 import { getUser } from './getUser';
 
 import { User, type UserType } from '$types/schemas';
+import { dateNow } from '../lib/utils';
 
 export type PutUserArgs = {
   user: UserType;
@@ -30,7 +31,7 @@ export const putUser = ({ user }: PutUserArgs) => {
 
   if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
     user.activity.push({
-      value: new Date().toISOString(),
+      value: dateNow(),
       label: 'Utilisateur mis à jour',
     });
   }
@@ -64,7 +65,7 @@ export const putUserRole = ({ user }: PutUserArgs) => {
 
   if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
     user.activity.push({
-      value: new Date().toISOString(),
+      value: dateNow(),
       label: 'Utilisateur mis à jour',
     });
   }

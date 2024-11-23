@@ -22,10 +22,8 @@ onMount(async () => {
     console.error('Error deleting game', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer la liste des traducteurs',
-      milliseconds: 3000,
     });
   }
 });

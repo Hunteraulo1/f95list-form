@@ -1,4 +1,5 @@
 import { User, type UserType } from '$types/schemas';
+import { dateNow } from '../lib/utils';
 
 export const postUser = (email: string, overrides = {}): UserType => {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
@@ -20,7 +21,7 @@ export const postUser = (email: string, overrides = {}): UserType => {
     activity: [
       {
         label: 'Utilisateur créé',
-        value: new Date().toISOString(),
+        value: dateNow(),
       },
     ],
     statistics: {

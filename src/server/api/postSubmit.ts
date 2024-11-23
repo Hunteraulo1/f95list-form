@@ -1,5 +1,5 @@
 import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas';
-import { checkUser } from '../lib/functions';
+import { checkUser, dateNow } from '../lib/utils';
 import { getSubmits } from './getSubmits';
 
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<void> => {
@@ -22,7 +22,7 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
 
     const submit: SubmitType = {
       email: requestingUserEmail,
-      date: new Date().toISOString(),
+      date: dateNow(),
       status: 'wait',
       reason: '',
       ...validSubmit,

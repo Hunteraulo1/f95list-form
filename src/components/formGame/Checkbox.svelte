@@ -1,5 +1,5 @@
 <script lang="ts">
-import checkUser from '$lib/checkUser';
+import { checkUser } from '$lib/utils';
 import { type GameType } from '$types/schemas';
 import type { ChangeEventHandler } from 'svelte/elements';
 

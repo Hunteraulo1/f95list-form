@@ -13,19 +13,15 @@ let { showModal = $bindable(), name = $bindable('') }: Props = $props();
 const handleSubmit = async () => {
   if (name === '') {
     return newToast({
-      id: Date.now().toString(),
       alertType: 'warning',
       message: "Il est impossible de créer un traducteur qui n'a pas de nom",
-      milliseconds: 3000,
     });
   }
 
   if ($traductors.find((traductor) => traductor.name.toLowerCase() === name.toLowerCase())) {
     return newToast({
-      id: Date.now().toString(),
       alertType: 'warning',
       message: 'Le traducteur existe déjà',
-      milliseconds: 3000,
     });
   }
 
@@ -37,10 +33,8 @@ const handleSubmit = async () => {
 
     if (result === 'duplicate') {
       newToast({
-        id: Date.now().toString(),
         alertType: 'warning',
         message: 'Le traducteur existe déjà',
-        milliseconds: 3000,
       });
 
       return;
@@ -53,19 +47,15 @@ const handleSubmit = async () => {
     showModal = false;
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'success',
       message: 'Le traducteur a bien été ajouté',
-      milliseconds: 3000,
     });
   } catch (error) {
     console.error('Error adding game', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: "Impossible d'ajouter le traducteur",
-      milliseconds: 3000,
     });
   } finally {
     $isLoading = false;

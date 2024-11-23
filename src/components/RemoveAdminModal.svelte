@@ -23,19 +23,15 @@ const handleAdminRemovalSubmit = async () => {
     await fetchAppConfiguration();
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'success',
       message: 'Admin supprimé!',
-      milliseconds: 3000,
     });
   } catch (error) {
     console.error('Could not remove admin:', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: "Erreur lors de la suppression de l'Admin",
-      milliseconds: 3000,
     });
   } finally {
     $isLoading = false;

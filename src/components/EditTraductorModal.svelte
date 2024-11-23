@@ -28,19 +28,15 @@ const handleSubmit = async () => {
     showModal = false;
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'success',
       message: 'Le traducteur a bien été modifié',
-      milliseconds: 3000,
     });
   } catch (error) {
     console.error('Error adding game', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de modifier le traducteur',
-      milliseconds: 3000,
     });
   } finally {
     $isLoading = false;

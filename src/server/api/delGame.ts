@@ -7,7 +7,7 @@ import { getUser } from './getUser';
 import { putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
-import checkUser from '../lib/functions';
+import { checkUser } from '../lib/utils';
 
 export interface DelGameArgs {
   query: { name: string; version: string };

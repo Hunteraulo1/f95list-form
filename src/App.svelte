@@ -1,8 +1,8 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
-import checkUser from '$lib/checkUser';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
+import { checkUser } from '$lib/utils';
 import { onMount } from 'svelte';
 import {
   AdjustmentsVertical,

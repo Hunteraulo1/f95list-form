@@ -29,18 +29,14 @@ const submitUserUpdate = async () => {
 
     console.info('result', result);
     newToast({
-      id: Date.now().toString(),
       alertType: 'success',
       message: "Mise à jour de l'utilisateur!",
-      milliseconds: 3000,
     });
   } catch (error) {
     console.error('Error submitting user change', error);
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: "Vos modifications n'ont pas pu être enregistrées",
-      milliseconds: 3000,
     });
   } finally {
     $isLoading = false;

@@ -1,5 +1,5 @@
 <script lang="ts">
-import checkUser from '$lib/checkUser';
+import { checkUser } from '$lib/utils';
 import type { UserType } from '$types/schemas';
 import { Route, type Route as RouteType } from 'svelte-routing';
 import PageNotFound from '../routes/error404.svelte';

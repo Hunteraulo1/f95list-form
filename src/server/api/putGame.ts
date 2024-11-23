@@ -11,7 +11,7 @@ import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 import { Game } from '$types/schemas';
-import { checkUser } from '../lib/functions';
+import { checkUser } from '../lib/utils';
 
 export interface PutGameArgs {
   game: GameType;

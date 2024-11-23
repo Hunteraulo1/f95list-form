@@ -1,5 +1,5 @@
 import type { UserType } from '$types/schemas';
-import { checkUser } from '../lib/functions';
+import { checkUser } from '../lib/utils';
 
 /**
  * **API Endpoint** | Returns the accessing user object

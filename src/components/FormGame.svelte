@@ -1,7 +1,7 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
-import checkUser from '$lib/checkUser';
 import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
+import { checkUser } from '$lib/utils';
 import { Game, type GameType } from '$types/schemas';
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
@@ -70,10 +70,8 @@ onMount(async () => {
     console.error('getTradutor no return: ', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer la liste des traducteurs',
-      milliseconds: 3000,
     });
   }
 
@@ -87,10 +85,8 @@ onMount(async () => {
     console.error('scrapeData no return: ', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'warning',
       message: 'Impossible de récupérer les informations du jeu',
-      milliseconds: 3000,
     });
   }
 });
@@ -147,10 +143,8 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
   } catch (error) {
     console.error('Error scrapped game', error);
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer les informations du jeu',
-      milliseconds: 3000,
     });
   } finally {
     scraping = false;
@@ -171,19 +165,15 @@ const handleSubmit = async () => {
 
       navigate('/');
       newToast({
-        id: Date.now().toString(),
         alertType: 'success',
         message: 'Le jeu a bien été soumis',
-        milliseconds: 3000,
       });
     } catch (error) {
       console.error('Error fetching game', error);
 
       newToast({
-        id: Date.now().toString(),
         alertType: 'error',
         message: 'Impossible de soumettre le jeu',
-        milliseconds: 3000,
       });
     } finally {
       $isLoading = false;
@@ -200,10 +190,8 @@ const handleSubmit = async () => {
 
       if (result === 'duplicate') {
         newToast({
-          id: Date.now().toString(),
           alertType: 'warning',
           message: 'Le jeu existe déjà dans la liste',
-          milliseconds: 3000,
         });
 
         return;
@@ -211,10 +199,8 @@ const handleSubmit = async () => {
 
       navigate('/');
       newToast({
-        id: Date.now().toString(),
         alertType: 'success',
         message: 'Le jeu a bien été modifié',
-        milliseconds: 3000,
       });
 
       handleUpdateSubmit?.('validated');
@@ -222,10 +208,8 @@ const handleSubmit = async () => {
       console.error('Error fetching game', error);
 
       newToast({
-        id: Date.now().toString(),
         alertType: 'error',
         message: 'Impossible de modifier le jeu',
-        milliseconds: 3000,
       });
     } finally {
       $isLoading = false;
@@ -236,10 +220,8 @@ const handleSubmit = async () => {
 
       if (result === 'duplicate') {
         newToast({
-          id: Date.now().toString(),
           alertType: 'warning',
           message: 'Le jeu existe déjà dans la liste',
-          milliseconds: 3000,
         });
 
         return;
@@ -247,19 +229,15 @@ const handleSubmit = async () => {
 
       navigate('/');
       newToast({
-        id: Date.now().toString(),
         alertType: 'success',
         message: 'Le jeu a bien été ajouté',
-        milliseconds: 3000,
       });
     } catch (error) {
       console.error('Error adding game', error);
 
       newToast({
-        id: Date.now().toString(),
         alertType: 'error',
         message: "Impossible d'ajouter le jeu",
-        milliseconds: 3000,
       });
     } finally {
       $isLoading = false;

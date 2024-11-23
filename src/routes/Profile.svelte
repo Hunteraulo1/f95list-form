@@ -32,10 +32,8 @@ const fetchUser = async () => {
     console.error('Could not get user data:', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: 'Impossible de récupérer les information utilisateur',
-      milliseconds: 3000,
     });
   } finally {
     console.info('User data loaded.');

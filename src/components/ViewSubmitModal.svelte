@@ -68,19 +68,15 @@ const handleUpdateSubmit = async (type: 'validated' | 'rejected') => {
     console.info('Submit updated:', result);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'success',
       message: 'Soumission mise à jour!',
-      milliseconds: 3000,
     });
   } catch (error) {
     console.error('Could not update submit:', error);
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'error',
       message: 'Erreur lors de la mise à jour de la soumission',
-      milliseconds: 3000,
     });
   } finally {
     $isLoading = false;

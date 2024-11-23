@@ -17,10 +17,8 @@ const handleClickInsert = () => {
     console.log('no object');
 
     newToast({
-      id: Date.now().toString(),
       alertType: 'warning',
       message: 'Veuillez entrer les données de LC Extractor',
-      milliseconds: 3000,
     });
 
     return null;
