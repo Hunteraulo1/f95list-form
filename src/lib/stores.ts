@@ -12,22 +12,25 @@ export const traductors = writable<TraductorType[]>([]);
 
 export const appConfiguration = writable<AppConfigurationType>();
 
-export const toasts = writable<Toast[]>([]);
+export const toasts = writable<ToastPrimitive[]>([]);
 
 interface Toast {
-  id?: ToastPrimitive['id'];
   milliseconds?: ToastPrimitive['milliseconds'];
   message: ToastPrimitive['message'];
   alertType: ToastPrimitive['alertType'];
 }
 
 export const newToast = (toast: Toast) => {
-  toast.id = toast.id ?? new Date().toISOString();
-  toast.milliseconds = toast.milliseconds ?? 3000;
+  const toastData: ToastPrimitive = {
+    id: new Date().toISOString(),
+    milliseconds: toast.milliseconds ?? 3000,
+    alertType: toast.alertType,
+    message: toast.message,
+  };
 
-  toasts.update((currentToasts) => [...currentToasts, toast]);
+  toasts.update((currentToasts) => [...currentToasts, toastData]);
 
   setTimeout(() => {
-    toasts.update((currentToasts) => currentToasts.filter((t) => t.id !== toast.id));
-  }, toast.milliseconds);
+    toasts.update((currentToasts) => currentToasts.filter((t) => t.id !== toastData.id));
+  }, toastData.milliseconds);
 };

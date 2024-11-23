@@ -5,6 +5,7 @@ import { checkUser } from '$lib/utils';
 import { Game, type GameType } from '$types/schemas';
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
+import { HTMLInputAttributes } from 'svelte/elements';
 import LoadingSpinner from './LoadingSpinner.svelte';
 import Search from './Search.svelte';
 import Checkbox from './formGame/Checkbox.svelte';
@@ -256,6 +257,7 @@ type Element = {
   active?: number[];
   checked?: boolean;
   name: keyof GameType;
+  attributes?: HTMLInputAttributes;
 };
 
 const elements: Element[] = [
@@ -271,21 +273,27 @@ const elements: Element[] = [
     active: [1, 5],
     title: 'ID du jeu',
     name: 'id',
-    type: 'number',
+    attributes: {
+      type: 'number',
+    },
   },
   {
     Component: Input,
     active: [2, 5],
     title: 'Nom du jeu',
     name: 'name',
-    type: 'text',
+    attributes: {
+      type: 'text',
+    },
   },
   {
     Component: Input,
     active: [2, 5],
     title: 'Lien du jeu',
     name: 'link',
-    type: 'text',
+    attributes: {
+      type: 'text',
+    },
   },
   {
     Component: Select,
@@ -339,7 +347,9 @@ const elements: Element[] = [
     active: [3, 5],
     title: 'Lien de la traduction',
     name: 'tlink',
-    type: 'text',
+    attributes: {
+      type: 'text',
+    },
   },
   {
     Component: Datalist,
