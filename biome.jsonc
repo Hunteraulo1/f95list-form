@@ -32,6 +32,7 @@
         "noExplicitAny": "off"
       },
       "style": {
+        "useImportType": "error",
         "useFilenamingConvention": {
           "level": "error",
           "options": {
@@ -87,8 +88,7 @@
       "linter": {
         "rules": {
           "style": {
-            "useConst": "off",
-            "useImportType": "off"
+            "useConst": "off"
           },
           "correctness": {
             "noUndeclaredVariables": "off" // Store error

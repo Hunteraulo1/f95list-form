@@ -1,10 +1,8 @@
 <script lang="ts">
-import { createEventDispatcher, onMount } from 'svelte';
+import { onMount } from 'svelte';
 
 import { GAS_API } from '$lib/GAS_API';
 import type { UserType } from '$types/schemas';
-
-const dispatch = createEventDispatcher();
 
 let searchCount = 0;
 let searchResults: UserType[] = $state([]);
@@ -13,10 +11,6 @@ let selectedUsers: UserType[] = $state([]);
 let debounceTimeout: ReturnType<typeof setTimeout>;
 
 onMount(() => {
-  selectedUsers = [];
-  dispatch('update', selectedUsers);
-
-  // Simulating a server request
   console.info('Fetching results users');
 
   if (debounceTimeout) {
@@ -52,9 +46,6 @@ const toggleSelect = (user: UserType) => {
     selectedUsers.push(user);
     selectedUsers = [...selectedUsers];
   }
-
-  // Notify the parent component
-  dispatch('update', selectedUsers);
 };
 </script>
 
