@@ -1,7 +1,7 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
 import { getConvert } from '$lib/convert';
-import { isLoading, newToast } from '$lib/stores';
+import { isLoading, newToast, queryGame } from '$lib/stores';
 import type { GameType, SubmitType, UserType } from '$types/schemas';
 import { onMount } from 'svelte';
 import FormGame from './FormGame.svelte';
@@ -86,6 +86,7 @@ const handleUpdateSubmit = async (type: 'validated' | 'rejected') => {
 const handleClickConfirm = () => {
   editor = true;
   showModal = false;
+  $queryGame = submit.query;
 };
 
 interface SubmitAttributes {
