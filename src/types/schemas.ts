@@ -13,7 +13,7 @@ const User = z.object({
   activity: z.array(
     z.object({
       label: z.string(),
-      value: z.date(),
+      value: z.string().date(),
     }),
   ),
   statistics: z.object({
@@ -102,7 +102,7 @@ const AppWebhooks = z.object({
 const Submit = z.object({
   query: QueryGame,
   email: User.shape.email,
-  date: z.date(),
+  date: z.string().date(),
   status: z.enum(['wait', 'validated', 'rejected']),
   type: z.enum(['add', 'edit', 'delete']),
   comment: z.string().or(z.literal('')),

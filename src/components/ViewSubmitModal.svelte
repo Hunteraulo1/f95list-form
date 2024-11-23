@@ -96,7 +96,7 @@ interface SubmitAttributes {
 }
 const submitAttributes: SubmitAttributes[] = [
   { label: 'Commentaire', value: submit.comment },
-  { label: 'Date', value: dateFormat(submit.date) },
+  { label: 'Date', value: dateFormat(new Date(submit.date)) },
   { label: 'Raison', value: submit.reason },
   { label: 'Status', value: getConvert(submit.status, 'status') },
   { label: 'Type', value: getConvert(submit.type, 'types') },
