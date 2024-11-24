@@ -12,7 +12,7 @@ interface Props extends HTMLSelectAttributes {
   name: keyof GameType;
 }
 
-let { title, values = [], className, active, step, game, name, ...rest }: Props = $props();
+const { title, values = [], className, active, step, game, name, ...rest }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   if (name === 'tname' && rest.value === 'Intégrée') {

@@ -21,11 +21,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
 
   if (domain !== 'F95z') throw new Error('domaine incompatible');
 
-  const mockResponse = scrape[id];
-  console.log('🚀 ~ getScrape ~ mockResponse:', mockResponse);
-
   const validScrapeGame = ScrapeGame.parse(scrape[id]);
-  console.log('🚀 ~ getScrape ~ validScrapeGame:', validScrapeGame);
 
   return validScrapeGame;
 };

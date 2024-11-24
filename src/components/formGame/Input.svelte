@@ -16,7 +16,7 @@ interface Props {
   children?: Snippet;
 }
 
-let { title, className, active, step, game, name, type, attributes, children }: Props = $props();
+const { title, className, active, step, game, name, type, attributes, children }: Props = $props();
 
 let error = $state(false);
 

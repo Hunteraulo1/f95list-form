@@ -12,7 +12,7 @@ interface Props {
   component?: RouteType['component'];
 }
 
-let { path, ranks, component, children }: Props = $props();
+const { path, ranks, component, children }: Props = $props();
 </script>
 
 <Route {path} {component}>

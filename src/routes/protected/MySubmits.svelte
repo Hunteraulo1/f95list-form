@@ -9,7 +9,7 @@ import { getConvert } from '$lib/convert';
 import { dateFormat } from '$lib/utils';
 
 let submits: SubmitType[] = $state([]);
-let users: UserType[] = $state([]);
+const users: UserType[] = $state([]);
 
 onMount(async () => {
   if (!$sessionUser) return;

@@ -12,13 +12,13 @@ interface Props {
   email: string;
 }
 
-let { email }: Props = $props();
+const { email }: Props = $props();
 
-let loading = false;
+const loading = false;
 
 let user: UserType | undefined = $state(undefined);
 
-const fetchUser = async () => {
+const fetchUser = async (): Promise<void> => {
   $isLoading = true;
 
   console.info('fetching user data for profile...');

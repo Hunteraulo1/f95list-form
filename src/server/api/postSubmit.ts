@@ -3,9 +3,8 @@ import { checkUser, dateNow } from '../lib/utils';
 import { getSubmits } from './getSubmits';
 
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<string | null> => {
-  // Report request
-  console.info('postSubmit called with args:', { dataSubmit: { query, game, type, comment } });
-  console.log('🚀 ~ postSubmit ~ query:', query);
+  console.groupCollapsed('postSubmit');
+  console.info('args', { dataSubmit: { query, game, type, comment } });
 
   if (!checkUser('traductor')) throw new Error('Unauthorized');
 
@@ -45,6 +44,8 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
   );
 
   if (submitFound) return 'duplicate';
+
+  console.groupEnd();
 
   try {
     const scriptPropertiesService = PropertiesService.getScriptProperties();

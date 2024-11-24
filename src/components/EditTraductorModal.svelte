@@ -15,13 +15,13 @@ let { showModal = $bindable(), index }: Props = $props();
 
 let localTraductor: TraductorType | undefined = $state({ ...get(traductors)[index] });
 
-const handleSubmit = async () => {
+const handleSubmit = async (): Promise<void> => {
   if (!localTraductor) return;
   $isLoading = true;
   try {
     await GAS_API.putTraductor({ query: { name: localTraductor.name }, data: localTraductor });
 
-    let newTraductors = get(traductors);
+    const newTraductors = get(traductors);
     newTraductors[index] = localTraductor;
     traductors.set(newTraductors);
 
@@ -43,7 +43,7 @@ const handleSubmit = async () => {
   }
 };
 
-const handleAddLink = (e: Event) => {
+const handleAddLink = (e: Event): void => {
   e.preventDefault();
 
   if (!localTraductor) return;
@@ -53,7 +53,7 @@ const handleAddLink = (e: Event) => {
   localTraductor.links = [...localTraductor.links, { name: '', link: '' }];
 };
 
-const handleRemoveLink = (e: Event, linkIndex: number) => {
+const handleRemoveLink = (e: Event, linkIndex: number): void => {
   e.preventDefault();
 
   if (!localTraductor) return;

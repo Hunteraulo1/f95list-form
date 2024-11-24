@@ -11,7 +11,7 @@ interface Props extends HTMLTextareaAttributes {
   name: keyof GameType;
 }
 
-let { title, children, className, active, step, game, name, ...rest }: Props = $props();
+const { title, children, className, active, step, game, name, ...rest }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
   (game[name] as string) = event.currentTarget.value;

@@ -5,7 +5,7 @@ import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, sessionUser } from '$lib/stores';
 
-const handleClick = async () => {
+const handleClick = async (): Promise<void> => {
   console.info('Button clicked!');
 
   if ($sessionUser) {
@@ -17,7 +17,7 @@ const handleClick = async () => {
   }
 };
 
-const submitUserUpdate = async () => {
+const submitUserUpdate = async (): Promise<void> => {
   $isLoading = true;
 
   console.info('submitting user update', $sessionUser);

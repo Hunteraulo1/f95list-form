@@ -22,8 +22,8 @@ export const sendWebhookUpdate = async ({
   traductor,
   proofreader,
   image,
-}: SendWebhookUpdateArgs) => {
-  if (!tversion || !name) return null;
+}: SendWebhookUpdateArgs): Promise<void> => {
+  if (!tversion || !name) return;
 
   const fields = [];
 
@@ -99,7 +99,7 @@ interface SendWebhookLogsArgs {
   game: GameType;
 }
 
-export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs) => {
+export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs): Promise<void> => {
   const fields = [];
 
   for (const prop in game) {

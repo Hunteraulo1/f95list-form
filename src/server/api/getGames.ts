@@ -1,8 +1,7 @@
 import { Game, type GameType } from '$types/schemas';
 
 export const getGames = async (): Promise<GameType[]> => {
-  // Report request
-  console.info('getGames called');
+  console.groupCollapsed('getGames');
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const gameSheet = sheet.getSheetByName('Jeux');
@@ -14,7 +13,7 @@ export const getGames = async (): Promise<GameType[]> => {
 
   const data = gameSheet.getRange(`A2:N${totalRow}`).getValues();
 
-  return data.map((game) =>
+  const result = data.map((game) =>
     Game.parse({
       id: game[0].toString(),
       domain: game[1],
@@ -35,4 +34,10 @@ export const getGames = async (): Promise<GameType[]> => {
       trlink: '',
     }),
   );
+
+  console.info('result:', result);
+
+  console.groupEnd();
+
+  return result;
 };

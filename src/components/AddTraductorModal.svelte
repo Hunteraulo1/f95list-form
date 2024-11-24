@@ -10,7 +10,7 @@ interface Props {
 
 let { showModal = $bindable(), name = $bindable('') }: Props = $props();
 
-const handleSubmit = async () => {
+const handleSubmit = async (): Promise<void> => {
   if (name === '') {
     return newToast({
       alertType: 'warning',
@@ -25,7 +25,7 @@ const handleSubmit = async () => {
     });
   }
 
-  let newTraductor = { name: name ?? '', links: [], discordID: '' };
+  const newTraductor = { name: name ?? '', links: [], discordID: '' };
 
   $isLoading = true;
   try {
@@ -40,7 +40,7 @@ const handleSubmit = async () => {
       return;
     }
 
-    let newTraductors = $traductors;
+    const newTraductors = $traductors;
     newTraductors.push(newTraductor);
     $traductors = newTraductors;
 

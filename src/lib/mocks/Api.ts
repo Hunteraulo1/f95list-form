@@ -16,7 +16,7 @@ import { putSubmit } from './api/putSubmit';
 import { putTraductor } from './api/putTraductor';
 import { putUser, putUserRole } from './api/putUser';
 
-const getMockEndpoints = () => ({
+const getMockEndpoints = (): any => ({
   // App Configuration
   getAppConfiguration,
   putAppConfiguration,

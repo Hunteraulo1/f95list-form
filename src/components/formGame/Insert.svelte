@@ -7,21 +7,19 @@ interface Props {
   game: GameType;
 }
 
-let { game }: Props = $props();
+const { game }: Props = $props();
 
 let insertModal = $state(false);
 let insertObject: string = $state('');
 
-const handleClickInsert = () => {
+const handleClickInsert = (): void => {
   if (!insertObject) {
-    console.log('no object');
-
     newToast({
       alertType: 'warning',
       message: 'Veuillez entrer les données de LC Extractor',
     });
 
-    return null;
+    return;
   }
 
   Object.assign(game, JSON.parse(insertObject));

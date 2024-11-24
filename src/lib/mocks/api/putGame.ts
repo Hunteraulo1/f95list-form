@@ -53,7 +53,7 @@ export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise
 
     if (validGame.tlink !== oldGame.tlink && validGame.tlink === 'n/a') {
       title = 'Traduction manquante';
-      color = 12256517;
+      color = 12_256_517;
 
       webhookUpdate(oldGame, validGame, title, color);
     } else if (validGame.tversion !== oldGame.tversion) {
@@ -62,7 +62,7 @@ export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise
       webhookUpdate(oldGame, validGame, title, color);
     } else if (validGame.tlink !== oldGame.tlink) {
       title = "Mise à jour d'un lien de traduction:";
-      color = 15122688;
+      color = 15_122_688;
 
       webhookUpdate(oldGame, validGame, title, color);
     }
@@ -71,7 +71,7 @@ export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise
   }
 };
 
-const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, color: number) => {
+const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, color: number): void => {
   sendWebhookUpdate({
     title,
     url: validGame.link,

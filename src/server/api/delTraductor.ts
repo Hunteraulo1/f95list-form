@@ -9,8 +9,8 @@ export interface DelTraductorArgs {
 }
 
 export const delTraductor = async ({ query }: DelTraductorArgs): Promise<void> => {
-  // Report request
-  console.info('delTraductor called with args:', { query });
+  console.groupCollapsed('delTraductor');
+  console.info('args', { query });
 
   checkUser('admin');
 
@@ -45,4 +45,6 @@ export const delTraductor = async ({ query }: DelTraductorArgs): Promise<void> =
   } finally {
     disableLock();
   }
+
+  console.groupEnd();
 };

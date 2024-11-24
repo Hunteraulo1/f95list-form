@@ -15,7 +15,7 @@ let { showModal = $bindable(), user = $bindable() }: Props = $props();
 
 let selectedRole = $state(user.role);
 
-const handleEditUserSubmit = async () => {
+const handleEditUserSubmit = async (): Promise<void> => {
   $isLoading = true;
 
   try {

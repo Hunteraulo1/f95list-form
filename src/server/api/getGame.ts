@@ -8,7 +8,8 @@ export interface GetGameArgs {
 }
 
 export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType> => {
-  console.info('getGame called with args:', { name, version });
+  console.groupCollapsed('getGame');
+  console.info('args:', { name, version });
 
   const games = await getQueryGames();
 
@@ -35,7 +36,7 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
     throw new Error('No return getGame');
   }
 
-  return Game.parse({
+  const result = Game.parse({
     id: data[0],
     domain: data[1],
     name: data[2],
@@ -54,4 +55,10 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
     tlink: dataLink[3]?.getLinkUrl() ?? '',
     trlink: dataLink[7]?.getLinkUrl() ?? '',
   });
+
+  console.info('result:', result);
+
+  console.groupEnd();
+
+  return result;
 };

@@ -2,6 +2,8 @@ import { User, type UserType } from '$types/schemas';
 import { getUser } from '../api/getUser';
 
 const checkUser = (rank: UserType['role'][0]): boolean => {
+  console.groupCollapsed('checkUser');
+
   const user = getUser();
 
   console.info('checkUser() called with: ', user, 'by: ', user.email);
@@ -10,9 +12,11 @@ const checkUser = (rank: UserType['role'][0]): boolean => {
 
   if (validUser.role.includes(rank) || validUser.role.includes('superAdmin')) return true;
 
+  console.groupEnd();
+
   return false;
 };
 
-const dateNow = () => new Date().toISOString();
+const dateNow = (): string => new Date().toISOString();
 
 export { checkUser, dateNow };

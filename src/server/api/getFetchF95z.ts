@@ -6,7 +6,6 @@ export const getFetchF95z = async (id: GameType['id']): Promise<string> => {
 
   const url = `${F95host}/sam/checker.php?threads=${id}`;
 
-  console.info('getFetchF95z called with args:', { id });
   try {
     const response = UrlFetchApp.fetch(url, {
       muteHttpExceptions: true,

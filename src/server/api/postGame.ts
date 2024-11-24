@@ -17,12 +17,11 @@ export interface PostGameArgs {
 }
 
 const title = 'Nouveau jeu ajouté:';
-
-const color = 115201;
+const color = 115_201;
 
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
-  // Report request
-  console.info('postGame called with args:', { dataGame: game });
+  console.groupCollapsed('postGame');
+  console.info('args', { dataGame: game });
 
   checkUser('admin');
 
@@ -44,7 +43,7 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
 
     if (!sheet) throw new Error('No gameSheet found');
 
-    const dataLink = async (data: string | null, domain: string) => {
+    const dataLink = async (data: string | null, domain: string): Promise<string | undefined> => {
       let result = '';
 
       if (!data) return;
@@ -131,4 +130,6 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
   } finally {
     disableLock();
   }
+
+  console.groupEnd();
 };

@@ -18,16 +18,14 @@ let { silentMode, game, handleUpdateSubmit, editor }: Props = $props();
 let deleteModal = $state(false);
 let comment = $state('');
 
-const handleClickDelete = async () => {
+const handleClickDelete = async (): Promise<void> => {
   if (!comment) {
-    console.log('no comment');
-
     newToast({
       alertType: 'warning',
       message: 'Veuillez entrer une raison pour supprimer le jeu',
     });
 
-    return null;
+    return;
   }
   $isLoading = true;
 

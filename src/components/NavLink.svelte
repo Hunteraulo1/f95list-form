@@ -7,9 +7,9 @@ interface Props {
   children?: import('svelte').Snippet;
 }
 
-let { to = '', onClick, children }: Props = $props();
+const { to = '', onClick, children }: Props = $props();
 
-const handleClick = () => {
+const handleClick = (): void => {
   navigate(to);
   onClick();
 };

@@ -61,14 +61,13 @@ onMount(async () => {
   $isLoading = true;
 
   try {
-    let dataTraductors = await GAS_API.getTraductors();
+    const dataTraductors = await GAS_API.getTraductors();
 
     if (!Array.isArray(dataTraductors)) {
       throw new Error('getTraductor no result');
     }
 
     $traductors = dataTraductors;
-    console.log('traductors data:', dataTraductors);
   } catch (error) {
     console.error('getTradutor no return: ', error);
 
@@ -96,7 +95,7 @@ onMount(async () => {
   }
 });
 
-const changeStep = async (amount: number) => {
+const changeStep = async (amount: number): Promise<void> => {
   if (step + amount >= 0 && step + amount <= 5) step += amount;
   if (step === 1 && game.domain === 'Autre') step += amount; // ID
   if (step === 2 && game.domain === 'F95z') step += amount; // Game informations
@@ -123,7 +122,7 @@ interface ScrapeDataArgs {
   domain: Extract<GameType['domain'], 'F95z'>;
 }
 
-const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
+const scrapeData = async ({ id, domain }: ScrapeDataArgs): Promise<void> => {
   try {
     scraping = true;
     const result = await GAS_API.getScrape({ id, domain });
@@ -156,7 +155,7 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs) => {
   }
 };
 
-const handleSubmit = async () => {
+const handleSubmit = async (): Promise<void> => {
   $isLoading = true;
 
   if (checkUser(['traductor'])) {
@@ -267,7 +266,7 @@ const handleSubmit = async () => {
 type Element = {
   Component: typeof Select | typeof Input | typeof Textarea | typeof Datalist | typeof InputImage | typeof Checkbox;
   type?: HTMLInputElement['type'];
-  values?: any[];
+  values?: string[];
   title: string;
   className?: string;
   active?: number[];

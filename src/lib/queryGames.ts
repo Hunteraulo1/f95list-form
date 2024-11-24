@@ -4,7 +4,7 @@ import { queryGames } from './stores';
 /**
  * Fetches the queryGames from the server.
  */
-export const fetchQueryGames = async () => {
+export const fetchQueryGames = async (): Promise<void> => {
   console.info('fetching QueryGames...');
 
   try {

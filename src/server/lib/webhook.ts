@@ -1,5 +1,6 @@
-import type { GameACType, GameType } from '$types/schemas';
 import { getTraductors } from '../api/getTraductors';
+
+import type { GameACType, GameType } from '$types/schemas';
 
 interface SendWebhookUpdateArgs {
   title: string;
@@ -23,11 +24,14 @@ export const sendWebhookUpdate = async ({
   traductor,
   proofreader,
   image,
-}: SendWebhookUpdateArgs) => {
+}: SendWebhookUpdateArgs): Promise<void> => {
+  console.groupCollapsed('sendWebhookUpdate');
+  console.info('args', { title, url, color, comment, name, tversion, traductor, proofreader, image });
+
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('webhookUrl');
 
-  if (!link || !tversion || !name) return null;
+  if (!link || !tversion || !name) return;
 
   const fields = [];
 
@@ -93,6 +97,8 @@ export const sendWebhookUpdate = async ({
       actions: {},
     }),
   });
+
+  console.groupEnd();
 };
 
 interface SendWebhookLogsArgs {
@@ -103,11 +109,14 @@ interface SendWebhookLogsArgs {
   game: GameType;
 }
 
-export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs) => {
+export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs): Promise<void> => {
+  console.groupCollapsed('sendWebhookLogs');
+  console.info('args', { title, color, oldGame, game, comment });
+
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('logsUrl');
 
-  if (!link) return null;
+  if (!link) return;
 
   const fields = [];
 
@@ -162,17 +171,22 @@ export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: 
       actions: {},
     }),
   });
+
+  console.groupEnd();
 };
 
 interface SendWebhookACArgs {
   games: GameACType[];
 }
 
-export const sendWebhookAC = async ({ games }: SendWebhookACArgs) => {
+export const sendWebhookAC = async ({ games }: SendWebhookACArgs): Promise<void> => {
+  console.groupCollapsed('sendWebhookAC');
+  console.info('args', { games });
+
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('logsUrl');
 
-  if (!link) return null;
+  if (!link) return;
 
   const fields = [];
 
@@ -211,21 +225,26 @@ export const sendWebhookAC = async ({ games }: SendWebhookACArgs) => {
       actions: {},
     }),
   });
+
+  console.groupEnd();
 };
 
 export interface SendTraductorWebhookArgs {
   games: GameACType[];
 }
 
-export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs) => {
+export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs): Promise<void> => {
+  console.groupCollapsed('sendTraductorWebhook');
+  console.info('args', { games });
+
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('callTraductorUrl');
 
-  if (!link) return null;
+  if (!link) return;
 
   const traductors = await getTraductors();
 
-  if (!traductors) return null;
+  if (!traductors) return;
 
   const fields = [];
 
@@ -272,9 +291,11 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs) 
       actions: {},
     }),
   });
+
+  console.groupEnd();
 };
 
-const getName = () => {
+const getName = (): string => {
   const user = Session.getActiveUser();
   // @ts-expect-error - getUsername() is not in the types
   const username = user.getUsername();

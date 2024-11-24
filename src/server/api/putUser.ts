@@ -3,15 +3,14 @@ import { getUser } from './getUser';
 import { User, type UserType } from '$types/schemas';
 import { checkUser, dateNow } from '../lib/utils';
 
-export type PutUserArgs = {
+export interface PutUserArgs {
   user: UserType;
   role?: UserType['role'];
-};
+}
 
-/**
- * **API Endpoint** | Updates the app configuration and returns it
- */
-export const putUser = ({ user }: PutUserArgs) => {
+export const putUser = ({ user }: PutUserArgs): void => {
+  console.groupCollapsed('putUser');
+  console.info('args', { user });
   const activeUserEmail = Session.getActiveUser().getEmail();
   const effectiveUserEmail = Session.getEffectiveUser().getEmail();
 
@@ -40,9 +39,14 @@ export const putUser = ({ user }: PutUserArgs) => {
   scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
 
   console.info('User successfully saved.');
+
+  console.groupEnd();
 };
 
 export const putUserRole = ({ user, role }: PutUserArgs): void => {
+  console.groupCollapsed('putUserRole');
+  console.info('args', { user, role });
+
   if (!role) throw new Error('No role found');
 
   console.info('putUserRole() called with: ', user, 'by: ', Session.getActiveUser().getEmail());
@@ -77,10 +81,13 @@ export const putUserRole = ({ user, role }: PutUserArgs): void => {
   scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
 
   console.info('User successfully saved.');
+
+  console.groupEnd();
 };
 
 export const putStatistics = (type: 'put' | 'post'): void => {
-  console.info('putUserRole() called with: ', type);
+  console.groupCollapsed('putStatistics');
+  console.info('args', { type });
 
   const validUser = User.parse(getUser());
 
@@ -102,4 +109,6 @@ export const putStatistics = (type: 'put' | 'post'): void => {
     case 'put':
       scriptPropertiesService.setProperty('statistics', JSON.stringify(result.gameEdited + 1));
   }
+
+  console.groupEnd();
 };

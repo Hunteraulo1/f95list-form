@@ -1,17 +1,14 @@
-import { getAdmins } from '../api/getAdmins';
-
 import { AppConfiguration, type AppConfigurationType } from '$types/schemas';
 
-export const loadAppConfiguration = () => {
+export const loadAppConfiguration = (): AppConfigurationType | null => {
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
-  const appConfigurationString = scriptProperties.appConfiguration || null;
+  const appConfigurationString = scriptProperties.appConfiguration;
 
   if (!appConfigurationString) return null;
 
   const appConfig: AppConfigurationType = {
     ...JSON.parse(appConfigurationString),
-    admins: getAdmins(),
   };
 
   AppConfiguration.parse(appConfig);

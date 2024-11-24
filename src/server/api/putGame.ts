@@ -23,8 +23,8 @@ export interface PutGameArgs {
 }
 
 export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
-  // Report request
-  console.info('putGame called with args:', { dataGame });
+  console.groupCollapsed('putGame');
+  console.info('args', { dataGame });
 
   checkUser('admin');
 
@@ -131,9 +131,14 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
   } finally {
     disableLock();
   }
+
+  console.groupEnd();
 };
 
-const dataLink = async (data: string | null, domain: string) => {
+const dataLink = async (data: string | null, domain: string): Promise<string> => {
+  console.groupCollapsed('dataLink');
+  console.info('args', { data, domain });
+
   if (!data) return '';
 
   const traductors = await getTraductors();
@@ -161,10 +166,17 @@ const dataLink = async (data: string | null, domain: string) => {
     }
   }
 
+  console.info('result', result);
+
+  console.groupEnd();
+
   return result;
 };
 
-const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, color: number) => {
+const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, color: number): void => {
+  console.groupCollapsed('webhookUpdate');
+  console.info('args', { oldGame, validGame, title, color });
+
   sendWebhookUpdate({
     title,
     url: validGame.link,
@@ -180,4 +192,6 @@ const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, co
         : validGame.proofreader,
     image: validGame.image,
   });
+
+  console.groupEnd();
 };

@@ -12,9 +12,9 @@ interface Props {
   name: keyof GameType;
 }
 
-let { title, active, step, game, name, checked }: Props = $props();
+const { title, active, step, game, name, checked }: Props = $props();
 
-let error = $state(false);
+const error = $state(false);
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
   (game[name] as string) = event.currentTarget.value;

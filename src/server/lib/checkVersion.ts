@@ -6,7 +6,9 @@ import { sendTraductorWebhook, sendWebhookAC } from './webhook';
 import type { GameACType, GameType } from '$types/schemas';
 import { F95host } from '../env';
 
-const checkVersion = async () => {
+const checkVersion = async (): Promise<void> => {
+  console.groupCollapsed('checkVersion');
+
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
 
   const ids: number[] = [];
@@ -18,12 +20,10 @@ const checkVersion = async () => {
   games.forEach((game, index) => {
     const { domain, id, ac, version, traductor, name } = game;
 
-    if (domain === 'F95z' && id && ac) {
-      if (!game.id) throw new Error('id is undefined');
+    if (domain !== 'F95z' || !id || !ac) return;
 
-      ids.push(game.id);
-      checkedGames.push({ index, id, version, traductor, name });
-    }
+    ids.push(id);
+    checkedGames.push({ index, id, version, traductor, name });
   });
 
   for (let index = 0; index <= ids.length / 100; index++) {
@@ -77,20 +77,30 @@ const checkVersion = async () => {
   sendWebhookAC({ games: changed });
 
   sendTraductorWebhook({ games: changed });
+
+  console.groupEnd();
 };
 
-const f95Api = async (ids: string | string[]) => {
-  interface Response {
-    status: string;
-    msg: {
-      [key: string]: string;
-    };
-  }
+interface Response {
+  status: string;
+  msg: {
+    [key: string]: string;
+  };
+}
+
+const f95Api = async (ids: string | string[]): Promise<Response> => {
+  console.groupCollapsed('f95Api');
+  console.info('args', { ids });
 
   const url = `${F95host}/sam/checker.php?threads=${ids}`;
   const response = await UrlFetchApp.fetch(url, { muteHttpExceptions: true });
 
   const json = response.getContentText();
 
-  return JSON.parse(json) as Response;
+  const result = JSON.parse(json) as Response;
+
+  console.info('result', result);
+  console.groupEnd();
+
+  return result;
 };

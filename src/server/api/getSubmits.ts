@@ -8,9 +8,10 @@ export interface GetSubmitsArgs {
  * **API Endpoint** | Returns the accessing submits object
  */
 export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined => {
+  console.groupCollapsed('getSubmits');
+  console.info('args', { user });
+
   const requestingUserEmail = Session.getActiveUser().getEmail();
-  // Report request
-  console.info('getSubmits called by: ', requestingUserEmail);
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
@@ -28,7 +29,9 @@ export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined =
     return filteredSubmits;
   }
 
-  console.info('getSubmits submits: ', submits);
+  console.info('submits: ', submits);
+
+  console.groupEnd();
 
   return submits;
 };

@@ -9,7 +9,7 @@ import type { GameType } from '$types/schemas';
 
 let game: GameType | null = $state(null);
 
-const fetchGame = async () => {
+const fetchGame = async (): Promise<void> => {
   const query = $queryGame;
 
   if (!query) return navigate('/');

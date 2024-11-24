@@ -11,9 +11,9 @@ interface Props {
   name: keyof GameType;
 }
 
-let { game, step, title, active, name }: Props = $props();
+const { game, step, title, active, name }: Props = $props();
 
-const handleImageError = (e: Event) => {
+const handleImageError = (e: Event): void => {
   const target = e.currentTarget as HTMLImageElement;
 
   if (game.image.startsWith('https://attachments.f95zone.to/')) {

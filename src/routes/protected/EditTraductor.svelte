@@ -11,7 +11,7 @@ let addModal: boolean = $state(false);
 
 onMount(async () => {
   try {
-    let data = await GAS_API.getTraductors();
+    const data = await GAS_API.getTraductors();
 
     if (!Array.isArray(data)) {
       throw new Error('getTraductor no result');
@@ -31,7 +31,7 @@ onMount(async () => {
 
 <button
   class="btn mx-auto"
-  onclick={() => addModal = true}
+  onclick={() => {addModal = true}}
   >
     Ajouter un traducteur
   </button>

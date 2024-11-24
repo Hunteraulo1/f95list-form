@@ -20,7 +20,7 @@ interface Toast {
   alertType: ToastPrimitive['alertType'];
 }
 
-export const newToast = (toast: Toast) => {
+export const newToast = (toast: Toast): void => {
   const toastData: ToastPrimitive = {
     id: new Date().toISOString(),
     milliseconds: toast.milliseconds ?? 3000,

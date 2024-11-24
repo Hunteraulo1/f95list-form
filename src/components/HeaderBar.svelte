@@ -8,7 +8,7 @@ interface Props {
   title?: string;
 }
 
-let { title = '' }: Props = $props();
+const { title = '' }: Props = $props();
 </script>
 
 <div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>

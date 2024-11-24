@@ -1,7 +1,8 @@
 import { User, type UserType } from '$types/schemas';
 
 export const getAdmins = (): UserType[] => {
-  // Return variable
+  console.groupCollapsed('getAdmins');
+
   const adminUsers = [];
 
   // Load all of the script properties as an object
@@ -21,6 +22,10 @@ export const getAdmins = (): UserType[] => {
       console.error(error);
     }
   }
+
+  console.info('adminUsers:', adminUsers);
+
+  console.groupEnd();
 
   return adminUsers;
 };

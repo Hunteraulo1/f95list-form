@@ -15,11 +15,11 @@ interface Props extends HTMLInputAttributes {
   name: keyof GameType;
 }
 
-let { title, className, active, step, game, name }: Props = $props();
+const { title, className, active, step, game, name }: Props = $props();
 
 const isTraductor = checkUser(['traductor']);
 
-const checkValue = (value: string) => {
+const checkValue = (value: string): boolean => {
   if (isTraductor || game[name] === '') return false;
 
   return !$traductors.find((item) => item.name === value);
@@ -27,13 +27,13 @@ const checkValue = (value: string) => {
 
 let warning = $state(checkValue(game[name] as string));
 
-const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+const handleChange: ChangeEventHandler<HTMLInputElement> = (event): void => {
   const value = event.currentTarget.value;
 
   (game[name] as string) = value;
 };
 
-const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
+const handleInput: ChangeEventHandler<HTMLInputElement> = (event): void => {
   warning = checkValue(event.currentTarget.value);
 };
 

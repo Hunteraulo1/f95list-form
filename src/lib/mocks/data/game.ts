@@ -63,7 +63,7 @@ export const queryGames: QueryGameType[] = games.map((game) => ({
   version: game.version,
 }));
 
-export const checkerF95z = (id: string) => {
+export const checkerF95z = (id: string): { status: 'ok' | 'error'; msg: Record<string, string> | string } => {
   switch (id) {
     case '100':
       return {
@@ -88,37 +88,36 @@ export const checkerF95z = (id: string) => {
   }
 };
 
-export const scrape = (domain: 'F95z' | 'LewdCorner', id: string) => {
-  switch (domain) {
-    case 'F95z':
-      switch (id) {
-        case '100':
-          return {
-            name: 'Camelot',
-            status: 'ABANDONNÉ',
-            tags: '2dcg, adventure, big tits, fantasy, handjob, male protagonist, monster girl, oral sex, rpg, sex toys',
-            type: 'RPGM',
-            version: 'v0.68',
-            image: 'https://attachments.f95zone.to/2017/07/23177_t.png',
-          };
-        case '110':
-          return {
-            name: 'Dragon Throne',
-            status: 'ABANDONNÉ',
-            tags: '3dcg, adventure, combat, fantasy, male protagonist, oral sex, romance, vaginal sex',
-            type: 'RPGM',
-            version: 'v4.1',
-            image: '',
-          };
-        case '150':
-          return {
-            name: 'Pokkaloh',
-            status: 'TERMINÉ',
-            tags: '2d game, dating sim, harem, male protagonist',
-            type: 'Flash',
-            version: 'v1.0',
-            image: '',
-          };
-      }
+export const scrape = (domain: 'F95z' | 'LewdCorner', id: string): Partial<GameType | undefined> => {
+  if (domain === 'F95z') {
+    switch (id) {
+      case '100':
+        return {
+          name: 'Camelot',
+          status: 'ABANDONNÉ',
+          tags: '2dcg, adventure, big tits, fantasy, handjob, male protagonist, monster girl, oral sex, rpg, sex toys',
+          type: 'RPGM',
+          version: 'v0.68',
+          image: 'https://attachments.f95zone.to/2017/07/23177_t.png',
+        };
+      case '110':
+        return {
+          name: 'Dragon Throne',
+          status: 'ABANDONNÉ',
+          tags: '3dcg, adventure, combat, fantasy, male protagonist, oral sex, romance, vaginal sex',
+          type: 'RPGM',
+          version: 'v4.1',
+          image: '',
+        };
+      case '150':
+        return {
+          name: 'Pokkaloh',
+          status: 'TERMINÉ',
+          tags: '2d game, dating sim, harem, male protagonist',
+          type: 'Flash',
+          version: 'v1.0',
+          image: '',
+        };
+    }
   }
 };

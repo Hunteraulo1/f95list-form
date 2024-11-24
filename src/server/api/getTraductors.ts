@@ -1,8 +1,7 @@
 import type { TraductorType } from '$types/schemas';
 
 export const getTraductors = async (): Promise<TraductorType[]> => {
-  // Report request
-  console.info('getTraductors called');
+  console.groupCollapsed('getTraductors');
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
 
@@ -25,7 +24,9 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
     discordID: tr[2]?.getText() || '',
   }));
 
-  console.info('getTraductors result:', result);
+  console.info('result:', result);
+
+  console.groupEnd();
 
   return result;
 };

@@ -18,7 +18,7 @@ interface Props {
 
 let { showModal = $bindable(), submits = $bindable(), index, user }: Props = $props();
 
-const submit = $state(submits[index]);
+let submit = $state(submits[index]);
 let denyModal = $state(false);
 
 interface GameAttributes {
@@ -60,7 +60,7 @@ onMount(async () => {
   ];
 });
 
-const handleUpdateSubmit = async (type: 'validated' | 'rejected') => {
+const handleUpdateSubmit = async (type: 'validated' | 'rejected'): Promise<void> => {
   editor = false;
   $isLoading = true;
 
@@ -85,7 +85,7 @@ const handleUpdateSubmit = async (type: 'validated' | 'rejected') => {
   }
 };
 
-const handleClickConfirm = () => {
+const handleClickConfirm = (): void => {
   editor = true;
   showModal = false;
 

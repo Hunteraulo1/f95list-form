@@ -9,14 +9,14 @@ interface Props {
   toast: Toast;
 }
 
-let { toast }: Props = $props();
+const { toast }: Props = $props();
 const { alertType, message, id, milliseconds } = toast;
 
-const handleRemove = () => {
+const handleRemove = (): void => {
   toasts.update((currentToasts) => currentToasts.filter((t) => t.id !== id));
 };
 
-const alertClass = () => {
+const alertClass = (): string => {
   switch (alertType) {
     case 'info':
       return 'alert-info';

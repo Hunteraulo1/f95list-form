@@ -23,7 +23,7 @@ onMount(async () => {
   }
 });
 
-const handleClick = async () => {
+const handleClick = async (): Promise<void> => {
   if ($appConfiguration !== null) {
     await updateAppConfiguration();
   } else {
@@ -31,7 +31,7 @@ const handleClick = async () => {
   }
 };
 
-const updateAppConfiguration = async () => {
+const updateAppConfiguration = async (): Promise<void> => {
   $isLoading = true;
 
   console.info('submitting app configuration update', $appConfiguration);
@@ -60,7 +60,7 @@ const updateAppConfiguration = async () => {
   }
 };
 
-let dialogEdit: boolean[] = $state([]);
+const dialogEdit: boolean[] = $state([]);
 </script>
 
 <div>

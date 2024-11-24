@@ -14,7 +14,7 @@ interface Props {
 
 let { game, step, scrapeData }: Props = $props();
 
-const handleClick = async () => {
+const handleClick = (): void => {
   step = 5;
   game = {
     domain: 'Autre',

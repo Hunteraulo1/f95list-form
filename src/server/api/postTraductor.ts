@@ -7,8 +7,8 @@ export interface PostTraductorArgs {
 }
 
 export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
-  // Report request
-  console.info('postTraductor called with args:', { dataTraductor: traductor });
+  console.groupCollapsed('postTraductor');
+  console.info('args', { dataTraductor: traductor });
 
   checkUser('admin');
 
@@ -52,4 +52,6 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
   } finally {
     disableLock();
   }
+
+  console.groupEnd();
 };

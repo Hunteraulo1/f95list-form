@@ -25,7 +25,7 @@ import type {
 
 import './polyfillScriptRun.js';
 
-const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A) => {
+const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A): Promise<T> => {
   console.info('calling api', functionName, args);
 
   return new Promise<T>((resolve, reject) => {
@@ -39,32 +39,37 @@ const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unk
 export const GAS_API = {
   // AppConfiguration
   getAppConfiguration: (): Promise<AppConfigurationType> => callAPI<AppConfigurationType>('getAppConfiguration'),
-  putAppConfiguration: (args: PutAppConfigArgs) => callAPI<void, typeof args>('putAppConfiguration', args),
+  putAppConfiguration: (args: PutAppConfigArgs): Promise<void> =>
+    callAPI<void, typeof args>('putAppConfiguration', args),
 
   // User
-  getUser: (args?: GetUserArgs) => callAPI<UserType, typeof args>('getUser', args),
-  getUsers: () => callAPI<UserType[]>('getUsers'),
-  putUser: (args: PutUserArgs) => callAPI<void, typeof args>('putUser', args),
-  putUserRole: (args: PutUserArgs) => callAPI<void, typeof args>('putUserRole', args),
+  getUser: (args?: GetUserArgs): Promise<UserType> => callAPI<UserType, typeof args>('getUser', args),
+  getUsers: (): Promise<UserType[]> => callAPI<UserType[]>('getUsers'),
+  putUser: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUser', args),
+  putUserRole: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUserRole', args),
 
   // Game
-  getGame: (args: GetGameArgs) => callAPI<GameType, typeof args>('getGame', args),
-  postGame: (args: PostGameArgs) => callAPI<undefined | string, typeof args>('postGame', args),
-  putGame: (args: PutGameArgs) => callAPI<undefined | string, typeof args>('putGame', args),
-  delGame: (args: DelGameArgs) => callAPI<void, typeof args>('delGame', args),
-  getQueryGames: () => callAPI<QueryGameType[]>('getQueryGames'),
+  getGame: (args: GetGameArgs): Promise<GameType> => callAPI<GameType, typeof args>('getGame', args),
+  postGame: (args: PostGameArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('postGame', args),
+  putGame: (args: PutGameArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('putGame', args),
+  delGame: (args: DelGameArgs): Promise<void> => callAPI<void, typeof args>('delGame', args),
+  getQueryGames: (): Promise<QueryGameType[]> => callAPI<QueryGameType[]>('getQueryGames'),
 
   // Traducteurs
-  getTraductors: () => callAPI<TraductorType[]>('getTraductors'),
-  postTraductor: (args: PostTraductorArgs) => callAPI<undefined | string, typeof args>('postTraductor', args),
-  putTraductor: (args: PutTraductorArgs) => callAPI<undefined | string, typeof args>('putTraductor', args),
-  delTraductor: (args: DelTraductorArgs) => callAPI<void, typeof args>('delTraductor', args),
+  getTraductors: (): Promise<TraductorType[]> => callAPI<TraductorType[]>('getTraductors'),
+  postTraductor: (args: PostTraductorArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('postTraductor', args),
+  putTraductor: (args: PutTraductorArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('putTraductor', args),
+  delTraductor: (args: DelTraductorArgs): Promise<void> => callAPI<void, typeof args>('delTraductor', args),
 
   // Others
-  getScrape: (args: GetScrapeArgs) => callAPI<ScrapeGameType, typeof args>('getScrape', args),
+  getScrape: (args: GetScrapeArgs): Promise<ScrapeGameType> => callAPI<ScrapeGameType, typeof args>('getScrape', args),
 
   // Submit
-  getSubmits: (args: GetSubmitsArgs) => callAPI<SubmitType[], typeof args>('getSubmits', args),
-  postSubmit: (args: PostSubmitType) => callAPI<string | null, typeof args>('postSubmit', args),
-  putSubmit: (args: PutSubmitArgs) => callAPI<void, typeof args>('putSubmit', args),
+  getSubmits: (args: GetSubmitsArgs): Promise<SubmitType[]> => callAPI<SubmitType[], typeof args>('getSubmits', args),
+  postSubmit: (args: PostSubmitType): Promise<string | null> => callAPI<string | null, typeof args>('postSubmit', args),
+  putSubmit: (args: PutSubmitArgs): Promise<void> => callAPI<void, typeof args>('putSubmit', args),
 };

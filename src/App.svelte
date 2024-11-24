@@ -37,12 +37,12 @@ interface Props {
   url?: string;
 }
 
-let { url = '' }: Props = $props();
+const { url = '' }: Props = $props();
 
-let initialLoadComplete = $derived($sessionUser && $appConfiguration);
+const initialLoadComplete = $derived($sessionUser && $appConfiguration);
 
 let isDrawerOpen = $state(false);
-const toggleDrawer = () => {
+const toggleDrawer = (): void => {
   isDrawerOpen = !isDrawerOpen;
 };
 
@@ -54,7 +54,7 @@ onMount(() => {
 /**
  * Fetches the user from the server.
  */
-const fetchUser = async () => {
+const fetchUser = async (): Promise<void> => {
   $isLoading = true;
 
   console.info('fetching user...');

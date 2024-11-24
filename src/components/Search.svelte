@@ -12,7 +12,7 @@ interface Props {
   edit?: boolean;
 }
 
-let { edit = false }: Props = $props();
+const { edit = false }: Props = $props();
 
 let inputSearch = $state(edit ? $queryGame?.name : '');
 let badgeSearch = $state(edit ? $queryGame?.version : '');
@@ -45,7 +45,7 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
   }, 200);
 };
 
-const handleClick = (data: QueryGameType) => {
+const handleClick = (data: QueryGameType): void => {
   inputSearch = data.name;
   badgeSearch = data.version;
   filtered = [];
@@ -54,14 +54,14 @@ const handleClick = (data: QueryGameType) => {
   navigate('/edit');
 };
 
-const handleFocus = () => {
+const handleFocus = (): void => {
   if (!badgeSearch) return;
 
   inputSearch = '';
   badgeSearch = '';
 };
 
-const handleCtrlK = (event: KeyboardEvent) => {
+const handleCtrlK = (event: KeyboardEvent): void => {
   if (event.ctrlKey && event.key === 'k') {
     const inputField = document.getElementById('searchField');
     inputField?.focus();

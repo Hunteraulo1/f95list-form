@@ -9,13 +9,11 @@ export type GetUserArgs = {
   email: string | null;
 };
 
-/**
- * **API Endpoint** | Returns the accessing user object
- */
 export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
+  console.groupCollapsed('getUser');
+  console.info('args', { email });
+
   const requestingUserEmail = Session.getActiveUser().getEmail();
-  // Report request
-  console.info('getUser called with args:', { email }, ' | by: ', requestingUserEmail);
 
   let validArgs = null;
 
@@ -48,6 +46,8 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   if (!userObjectString && isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 
   console.info(userObjectString);
+
+  console.groupEnd();
 
   // Otherwise, the user object exists and we can return it.
   return JSON.parse(userObjectString) as UserType;

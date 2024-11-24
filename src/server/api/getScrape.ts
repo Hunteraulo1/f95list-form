@@ -2,10 +2,10 @@ import { getFetchF95z } from './getFetchF95z';
 
 import { type GameType, ScrapeGame } from '$types/schemas';
 
-export type GetScrapeArgs = {
+export interface GetScrapeArgs {
   domain: Extract<GameType['domain'], 'F95z'>;
   id: GameType['id'];
-};
+}
 
 interface GetScrape {
   name: GameType['name'];
@@ -16,23 +16,14 @@ interface GetScrape {
   image: GameType['image'];
 }
 export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
-  // const domain = "F95z";
-  // const id = "100";
-
-  // Report request
-  console.info(`getScrape called with args: ${{ domain, id }}`);
+  console.groupCollapsed('getScrape');
+  console.info('args', { domain, id });
 
   if (domain !== 'F95z') throw new Error('domaine incompatible');
 
   const link = `https://f95zone.to/threads/${id}`;
   const regName = /.*-\s(.*?)\s\[/i;
   const regTitle = /([\w\\']+)(?=\s-)/gi;
-
-  // case "LewdCorner":
-  //   link = `https://lewdcorner.com/threads/${id}`;
-  //   regName = /-\s([\w\d].*?)\s\[/i;
-  //   regTitle = /(?!\[)([\w\\']+)(?=\]\s-)/gi;
-  //   break;
 
   const response = UrlFetchApp.fetch(link, {
     muteHttpExceptions: true,
@@ -85,10 +76,14 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
     image,
   });
 
+  console.info('validScrapeGame:', validScrapeGame);
+
+  console.groupEnd();
+
   return validScrapeGame;
 };
 
-const scrapeGetTitle = (data: string[]) => {
+const scrapeGetTitle = (data: string[]): { status: string; type: string } => {
   let status = '';
   let type = '';
 
