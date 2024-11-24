@@ -14,8 +14,8 @@ interface Props {
 
 let { edit = false }: Props = $props();
 
-let inputSearch = $state(edit ? $queryGame.name : '');
-let badgeSearch = $state(edit ? $queryGame.version : '');
+let inputSearch = $state(edit ? $queryGame?.name : '');
+let badgeSearch = $state(edit ? $queryGame?.version : '');
 
 let filtered: QueryGameType[] = $state([]);
 let timer: ReturnType<typeof setTimeout>;

@@ -14,7 +14,7 @@ export const getAdmins = (): UserType[] => {
       const user = User.parse(JSON.parse(scriptProperties[property]));
 
       // If the user has an admin role, add them to our list
-      if (user.roles.includes('admin') || user.roles.includes('superAdmin')) {
+      if (user.role.includes('admin') || user.role.includes('superAdmin')) {
         adminUsers.push(user);
       }
     } catch (error) {

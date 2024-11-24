@@ -13,7 +13,7 @@ export const getAdmins = (): UserType[] => {
       const validUser = User.parse(user);
 
       // If the user has an admin role, add them to our list
-      if (validUser.roles.includes('admin')) {
+      if (validUser.role.includes('admin')) {
         adminUsers.push(validUser);
       }
     } catch (error) {

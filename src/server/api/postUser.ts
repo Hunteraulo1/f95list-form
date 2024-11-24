@@ -10,7 +10,7 @@ export const postUser = (email: string, overrides = {}): UserType => {
 
   const userDefaults: UserType = {
     email,
-    roles: [],
+    role: 'user',
     preferences: {
       theme: 'dark',
     },

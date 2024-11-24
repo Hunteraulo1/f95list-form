@@ -14,7 +14,6 @@ export const initializeApp = (): AppConfigurationType => {
   const newAppConfig: AppConfigurationType = {
     appName: 'My App',
     deployingUserEmail,
-    admins: [],
   };
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();

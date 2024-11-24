@@ -1,15 +1,27 @@
 <script lang="ts">
 import { Link } from 'svelte-routing';
 
-import AddAdminModal from '$components/AddAdminModal.svelte';
+import EditUserModal from '$components/EditUserModal.svelte';
+import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Panel from '$components/Panel.svelte';
-import RemoveAdminModal from '$components/RemoveAdminModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { appConfiguration, isLoading, newToast } from '$lib/stores';
 import { checkUser } from '$lib/utils';
+import type { UserType } from '$types/schemas';
+import { onMount } from 'svelte';
 
 let webhookUpdateUrl = $state('');
 let webhookLogsUrl = $state('');
+
+let users: UserType[] = $state([]);
+
+onMount(async () => {
+  try {
+    users = await GAS_API.getUsers();
+  } catch (error) {
+    console.error('Error fetching users', error);
+  }
+});
 
 const handleClick = async () => {
   if ($appConfiguration !== null) {
@@ -48,8 +60,7 @@ const updateAppConfiguration = async () => {
   }
 };
 
-let dialogAdd: boolean = $state(false);
-let dialogRemove: boolean[] = $state([]);
+let dialogEdit: boolean[] = $state([]);
 </script>
 
 <div>
@@ -73,7 +84,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={$appConfiguration.appName}
-            disabled={$isLoading || !checkUser(['superAdmin', 'superAdmin'])}
+            disabled={$isLoading && !checkUser(['superAdmin'])}
             type="text"
             placeholder="Nom de l'application"
             class="input input-bordered w-full"
@@ -85,7 +96,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookLogsUrl}
-            disabled={$isLoading || !checkUser(['superAdmin', 'superAdmin'])}
+            disabled={$isLoading && !checkUser(['superAdmin'])}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -97,7 +108,7 @@ let dialogRemove: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookUpdateUrl}
-            disabled={$isLoading || !checkUser(['superAdmin', 'superAdmin'])}
+            disabled={$isLoading && !checkUser(['superAdmin'])}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -107,60 +118,56 @@ let dialogRemove: boolean[] = $state([]);
       {/snippet}
     </Panel>
 
-    <Panel title="Admins">
-      {#snippet button()}
-        <button
-          onclick={() => (dialogAdd = true)}
-          disabled={!checkUser(['admin', 'superAdmin'])}
-          class="btn">
-          Ajouter un administrateur
-        </button>
-      {/snippet}
+    <Panel title="Utilisateurs">
       {#snippet description()}
-        <p class="text-gray-500">Ajouter des administrateurs au formulaire !</p>
+        <p class="text-gray-500">Liste des utilisateurs</p>
       {/snippet}
       {#snippet panelContent()}
         <div class="overflow-x-auto">
           <table class="table">
-            <!-- head -->
             <thead>
               <tr>
                 <th>Admin</th>
               </tr>
             </thead>
             <tbody>
-              {#each $appConfiguration.admins as admin, index}
-                <!-- row -->
+              {#each users as user, index}
                 <tr>
                   <td>
-                    <Link to="/user/{admin.email}">
+                    <Link to="/user/{user.email}">
                       <div class="flex items-center space-x-3">
                         <div class="avatar">
                           <div class="mask mask-squircle h-12 w-12">
                             <img
-                              src={admin.profile?.imageUrl ||
+                              src={user.profile?.imageUrl ||
                                 "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
                               alt="Avatar Tailwind CSS Component" />
                           </div>
                         </div>
                         <div>
                           <div class="font-bold">
-                            {admin.email}
+                            {user.email}
                           </div>
                           <div>
-                            {#each admin.roles as role}
-                              <span class="badge badge-ghost badge-sm mr-2">{role}</span>
-                            {/each}
+                            <span class="badge badge-ghost badge-sm mr-2">{user.role}</span>
                           </div>
                         </div>
                       </div>
                     </Link>
                   </td>
                   <th>
-                    <button onclick={() => (dialogRemove[index] = true)} class="btn btn-ghost btn-xs"
-                      >Supprimer</button>
-                    <RemoveAdminModal bind:showModal={dialogRemove[index]} user={admin} />
+                    <button onclick={() => {dialogEdit[index] = true}} class="btn btn-ghost btn-xs">
+                      Modifier
+                    </button>
+                    <EditUserModal bind:showModal={dialogEdit[index]} {user} />
                   </th>
+                </tr>
+              {:else}
+                <tr>
+                  <td class="flex justify-center items-center">
+                    <LoadingSpinner />
+                    Chargement des utilisateurs...
+                  </td>
                 </tr>
               {/each}
             </tbody>
@@ -168,7 +175,5 @@ let dialogRemove: boolean[] = $state([]);
         </div>
       {/snippet}
     </Panel>
-
-    <AddAdminModal bind:showModal={dialogAdd} />
   {/if}
 </div>

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const User = z.object({
   email: z.string().email().or(z.string().nullable()),
-  roles: z.array(z.enum(['superAdmin', 'admin', 'traductor'])),
+  role: z.enum(['superAdmin', 'admin', 'traductor', 'user']),
   profile: z.object({
     pseudo: z.string(),
     imageUrl: z.string().or(z.literal('')),
@@ -91,7 +91,6 @@ const Traductor = z.object({
 const AppConfiguration = z.object({
   appName: z.string(),
   deployingUserEmail: z.string(),
-  admins: z.array(User),
 });
 
 const AppWebhooks = z.object({

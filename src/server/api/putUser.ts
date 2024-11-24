@@ -1,10 +1,11 @@
 import { getUser } from './getUser';
 
 import { User, type UserType } from '$types/schemas';
-import { dateNow } from '../lib/utils';
+import { checkUser, dateNow } from '../lib/utils';
 
 export type PutUserArgs = {
   user: UserType;
+  role?: UserType['role'];
 };
 
 /**
@@ -20,7 +21,7 @@ export const putUser = ({ user }: PutUserArgs) => {
 
   if (!validUser.email) throw new Error('No email found');
 
-  if (validUser.roles.includes('superAdmin') && activeUserEmail !== effectiveUserEmail)
+  if (validUser.role.includes('superAdmin') && activeUserEmail !== effectiveUserEmail)
     throw new Error('A user resource can only be updated by themselves or the superAdmin.');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
@@ -41,27 +42,30 @@ export const putUser = ({ user }: PutUserArgs) => {
   console.info('User successfully saved.');
 };
 
-export const putUserRole = ({ user }: PutUserArgs) => {
-  const invokingUserEmail = Session.getActiveUser().getEmail();
+export const putUserRole = ({ user, role }: PutUserArgs): void => {
+  if (!role) throw new Error('No role found');
 
-  console.info('putUserRole() called with: ', user, 'by: ', invokingUserEmail);
+  console.info('putUserRole() called with: ', user, 'by: ', Session.getActiveUser().getEmail());
 
   const validUser = User.parse(user);
 
-  if (validUser.roles.includes('superAdmin') && invokingUserEmail !== Session.getEffectiveUser().getEmail())
-    throw new Error('A user resource can only be updated by themselves or the superAdmin.');
+  if (!validUser) throw new Error('Invalid user');
+  if (!checkUser('admin')) throw new Error('A user permission is required to update a user role.');
 
-  // If the code reaches here, the user object is valid
-  // and the invoking user is either the user or a superAdmin.
+  if (checkUser('admin') && ['admin', 'superAdmin'].includes(role))
+    throw new Error('A user resource can only be updated by superAdmin.');
+
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
   if (!validUser.email) throw new Error('No email found');
 
-  const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? '{}');
+  const userScriptPropertiesUser = scriptPropertiesService.getProperty(validUser.email);
 
-  if (!properties) throw new Error('No roles found');
+  if (!userScriptPropertiesUser) throw new Error('No user found');
 
-  properties.roles = validUser.roles;
+  const properties: UserType = JSON.parse(userScriptPropertiesUser);
+
+  properties.role = validUser.role;
 
   if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
     user.activity.push({

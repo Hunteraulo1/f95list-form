@@ -60,9 +60,7 @@ const dialogView: boolean[] = $state([]);
                             {submit.email}
                           </div>
                           <div>
-                            {#each user?.roles as role}
-                              <span class="badge badge-ghost badge-sm mr-2">{role}</span>
-                            {/each}
+                            <span class="badge badge-ghost badge-sm mr-2">{user.role}</span>
                           </div>
                         </div>
                       </div>
