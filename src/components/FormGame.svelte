@@ -194,7 +194,6 @@ const handleSubmit = async () => {
       });
     } finally {
       $isLoading = false;
-      $queryGame = undefined;
     }
 
     return;
@@ -231,7 +230,6 @@ const handleSubmit = async () => {
       });
     } finally {
       $isLoading = false;
-      $queryGame = undefined;
     }
   } else {
     try {

@@ -60,7 +60,6 @@ const handleClickDelete = async () => {
       });
     } finally {
       $isLoading = false;
-      $queryGame = undefined;
     }
 
     if (editor) {
@@ -89,7 +88,6 @@ const handleClickDelete = async () => {
     });
   } finally {
     $isLoading = false;
-    $queryGame = undefined;
   }
 
   handleUpdateSubmit?.('validated');
