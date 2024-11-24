@@ -5,7 +5,7 @@ import { checkUser } from '../lib/utils';
  * **API Endpoint** | Returns the accessing user object
  */
 export const getUsers = (): UserType[] | undefined => {
-  console.groupCollapsed('getUsers');
+  console.info('getUsers');
   const requestingUserEmail = Session.getActiveUser().getEmail();
   // Report request
   console.info('getUsers called by: ', requestingUserEmail);
@@ -26,8 +26,6 @@ export const getUsers = (): UserType[] | undefined => {
 
     users.push(JSON.parse(value));
   }
-
-  console.groupEnd();
 
   // Otherwise, the user object exists and we can return it.
   return users;

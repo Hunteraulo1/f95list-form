@@ -25,7 +25,5 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
     mockResponse = user;
   }
 
-  console.info('mockResponse', mockResponse);
-
   return JSON.parse(JSON.stringify(mockResponse));
 };

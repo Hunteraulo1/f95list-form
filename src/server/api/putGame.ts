@@ -23,8 +23,7 @@ export interface PutGameArgs {
 }
 
 export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
-  console.groupCollapsed('putGame');
-  console.info('args', { dataGame });
+  console.info('putGame ~ args:', { dataGame });
 
   checkUser('admin');
 
@@ -131,13 +130,10 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
   } finally {
     disableLock();
   }
-
-  console.groupEnd();
 };
 
 const dataLink = async (data: string | null, domain: string): Promise<string> => {
-  console.groupCollapsed('dataLink');
-  console.info('args', { data, domain });
+  console.info('dataLink ~ args:', { data, domain });
 
   if (!data) return '';
 
@@ -166,16 +162,13 @@ const dataLink = async (data: string | null, domain: string): Promise<string> =>
     }
   }
 
-  console.info('result', result);
-
-  console.groupEnd();
+  console.info('dataLink ~ result:', result);
 
   return result;
 };
 
 const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, color: number): void => {
-  console.groupCollapsed('webhookUpdate');
-  console.info('args', { oldGame, validGame, title, color });
+  console.info('webhookUpdate ~ args:', { oldGame, validGame, title, color });
 
   sendWebhookUpdate({
     title,
@@ -192,6 +185,4 @@ const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, co
         : validGame.proofreader,
     image: validGame.image,
   });
-
-  console.groupEnd();
 };

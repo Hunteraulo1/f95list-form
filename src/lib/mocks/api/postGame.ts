@@ -19,8 +19,6 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void
 
   games.push(validGame);
 
-  console.info('mockResponse_postGame', { validGame, games });
-
   const { link, name, tversion, traductor, proofreader, image } = validGame;
 
   if (!silentMode) {

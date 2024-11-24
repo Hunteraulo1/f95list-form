@@ -8,7 +8,7 @@ const isLocked = (): boolean | undefined => {
 };
 
 export const enableLock = (): void => {
-  console.groupCollapsed('enableLock');
+  console.info('enableLock');
 
   if (isLocked()) throw new Error('Lock mode already enabled');
 
@@ -16,18 +16,14 @@ export const enableLock = (): void => {
   inProgress = true;
 
   console.info('lockMode: true');
-
-  console.groupEnd();
 };
 
 export const disableLock = (): void => {
-  console.groupCollapsed('disableLock');
+  console.info('disableLock');
 
   if (!inProgress) return;
 
   scriptPropertiesService.setProperty('lockMode', 'false');
 
   console.info('lockMode: false');
-
-  console.groupEnd();
 };

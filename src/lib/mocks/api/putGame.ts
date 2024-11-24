@@ -37,10 +37,9 @@ export const putGame = async ({ game, query, silentMode }: PutGameArgs): Promise
     }
 
     const validGame = Game.parse(game);
-    console.info('mockResponse_putGame', { validGame, games });
 
     let title = "Modification d'un jeu";
-    let color = 5814783;
+    let color = 5_814_783;
 
     sendWebhookLogs({
       title,

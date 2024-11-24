@@ -20,8 +20,6 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
 
   if (!game) throw new Error('delGame game not found');
 
-  console.info('mockResponse_delGame', { query, comment, silentMode, games });
-
   const { link, tversion, traductor, proofreader, image } = game;
 
   if (!silentMode) {

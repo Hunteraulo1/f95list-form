@@ -2,8 +2,7 @@ import { User, type UserType } from '$types/schemas';
 import { dateNow } from '../lib/utils';
 
 export const postUser = (email: string, overrides = {}): UserType => {
-  console.groupCollapsed('postUser');
-  console.info('args', { email, overrides });
+  console.info('postUser ~ args:', { email, overrides });
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
@@ -41,9 +40,7 @@ export const postUser = (email: string, overrides = {}): UserType => {
   const validUser = User.parse(user);
   scriptPropertiesService.setProperty(email, JSON.stringify(validUser));
 
-  console.info('result', user);
-
-  console.groupEnd();
+  console.info('postUser ~ result:', user);
 
   return user;
 };

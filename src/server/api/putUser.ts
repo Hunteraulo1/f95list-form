@@ -9,8 +9,8 @@ export interface PutUserArgs {
 }
 
 export const putUser = ({ user }: PutUserArgs): void => {
-  console.groupCollapsed('putUser');
-  console.info('args', { user });
+  console.info('putUser ~ args:', { user });
+
   const activeUserEmail = Session.getActiveUser().getEmail();
   const effectiveUserEmail = Session.getEffectiveUser().getEmail();
 
@@ -39,13 +39,10 @@ export const putUser = ({ user }: PutUserArgs): void => {
   scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
 
   console.info('User successfully saved.');
-
-  console.groupEnd();
 };
 
 export const putUserRole = ({ user, role }: PutUserArgs): void => {
-  console.groupCollapsed('putUserRole');
-  console.info('args', { user, role });
+  console.info('putUserRole ~ args:', { user, role });
 
   if (!role) throw new Error('No role found');
 
@@ -81,13 +78,10 @@ export const putUserRole = ({ user, role }: PutUserArgs): void => {
   scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
 
   console.info('User successfully saved.');
-
-  console.groupEnd();
 };
 
 export const putStatistics = (type: 'put' | 'post'): void => {
-  console.groupCollapsed('putStatistics');
-  console.info('args', { type });
+  console.info('putStatistics ~ args:', { type });
 
   const validUser = User.parse(getUser());
 
@@ -109,6 +103,4 @@ export const putStatistics = (type: 'put' | 'post'): void => {
     case 'put':
       scriptPropertiesService.setProperty('statistics', JSON.stringify(result.gameEdited + 1));
   }
-
-  console.groupEnd();
 };

@@ -13,6 +13,4 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<v
   const validTraductor = Traductor.parse(traductor);
 
   traductors.push(validTraductor);
-
-  console.info('mockResponse_postGame', { validGame: validTraductor, traductors });
 };

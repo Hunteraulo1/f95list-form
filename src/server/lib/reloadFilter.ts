@@ -1,5 +1,5 @@
 export const reloadFilter = async (sheet: GoogleAppsScript.Spreadsheet.Sheet): Promise<void> => {
-  console.groupCollapsed('reloadFilter');
+  console.info('reloadFilter');
 
   const oldRange = await sheet.getDataRange();
   const newRange = await sheet.getRange(`A1:N${sheet.getLastRow()}`);
@@ -11,6 +11,4 @@ export const reloadFilter = async (sheet: GoogleAppsScript.Spreadsheet.Sheet): P
   await SpreadsheetApp.flush();
 
   console.info('filter reloaded');
-
-  console.groupEnd();
 };

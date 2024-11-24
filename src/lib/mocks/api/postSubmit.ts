@@ -5,8 +5,6 @@ import { dateNow } from '../../../server/lib/utils';
 import { getUser } from './getUser';
 
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<void> => {
-  console.info('postSubmit called with args:', { dataSubmit: { query, game, type, comment } });
-
   await sleep();
 
   const validSubmit = PostSubmit.parse({ query, game, type, comment });
@@ -22,6 +20,4 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
     reason: '',
     ...validSubmit,
   };
-
-  console.info('mockResponse_postSubmit', { submit });
 };

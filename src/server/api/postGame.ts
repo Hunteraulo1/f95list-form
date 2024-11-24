@@ -20,8 +20,7 @@ const title = 'Nouveau jeu ajouté:';
 const color = 115_201;
 
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
-  console.groupCollapsed('postGame');
-  console.info('args', { dataGame: game });
+  console.info('postGame ~ args:', { dataGame: game });
 
   checkUser('admin');
 
@@ -130,6 +129,4 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
   } finally {
     disableLock();
   }
-
-  console.groupEnd();
 };

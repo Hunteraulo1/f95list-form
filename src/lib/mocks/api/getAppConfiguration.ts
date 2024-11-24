@@ -15,7 +15,5 @@ export const getAppConfiguration = async (): Promise<AppConfigurationType> => {
 
   const mockResponse = appConfig;
 
-  console.info('mockResponse', mockResponse);
-
   return JSON.parse(JSON.stringify(mockResponse));
 };

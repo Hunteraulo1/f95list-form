@@ -27,7 +27,7 @@ const submitUserUpdate = async (): Promise<void> => {
 
     const result = await GAS_API.putUser({ user: $sessionUser });
 
-    console.info('result', result);
+    console.info('putUser ~ result:', result);
     newToast({
       alertType: 'success',
       message: "Mise à jour de l'utilisateur!",

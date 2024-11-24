@@ -11,8 +11,7 @@ export interface PutTraductorArgs {
 }
 
 export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<void> => {
-  console.groupCollapsed('putTraductor');
-  console.info('args', { query, data });
+  console.info('putTraductor ~ args:', { query, data });
 
   checkUser('admin');
 
@@ -63,6 +62,4 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
   } finally {
     disableLock();
   }
-
-  console.groupEnd();
 };

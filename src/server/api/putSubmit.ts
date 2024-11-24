@@ -14,8 +14,7 @@ export interface PutSubmitArgs {
 }
 
 export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> => {
-  console.groupCollapsed('putSubmit');
-  console.info('args', { submit, type });
+  console.info('putSubmit ~ args:', { submit, type });
 
   if (!checkUser('admin')) throw new Error('Unauthorized');
 
@@ -68,7 +67,5 @@ export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> 
 
   scriptPropertiesService.setProperty('submits', JSON.stringify(result));
 
-  console.info('result', result);
-
-  console.groupEnd();
+  console.info('putSubmit ~ result:', result);
 };

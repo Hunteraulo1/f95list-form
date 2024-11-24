@@ -1,7 +1,7 @@
 import type { TraductorType } from '$types/schemas';
 
 export const getTraductors = async (): Promise<TraductorType[]> => {
-  console.groupCollapsed('getTraductors');
+  console.info('getTraductors');
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
 
@@ -25,8 +25,6 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
   }));
 
   console.info('result:', result);
-
-  console.groupEnd();
 
   return result;
 };

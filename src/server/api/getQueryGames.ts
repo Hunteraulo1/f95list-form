@@ -1,7 +1,7 @@
 import type { QueryGameType } from '$types/schemas';
 
 export const getQueryGames = async (): Promise<QueryGameType[]> => {
-  console.groupCollapsed('getQueryGames');
+  console.info('getQueryGames');
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const gameSheet = sheet.getSheetByName('Jeux');
@@ -14,8 +14,6 @@ export const getQueryGames = async (): Promise<QueryGameType[]> => {
   const result = data.map(([id, , name, version]) => ({ id, name, version }));
 
   console.info('result:', result);
-
-  console.groupEnd();
 
   return result;
 };

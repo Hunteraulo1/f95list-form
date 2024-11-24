@@ -1,7 +1,7 @@
 import { Game, type GameType } from '$types/schemas';
 
 export const getGames = async (): Promise<GameType[]> => {
-  console.groupCollapsed('getGames');
+  console.info('getGames');
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const gameSheet = sheet.getSheetByName('Jeux');
@@ -36,8 +36,6 @@ export const getGames = async (): Promise<GameType[]> => {
   );
 
   console.info('result:', result);
-
-  console.groupEnd();
 
   return result;
 };

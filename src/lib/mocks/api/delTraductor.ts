@@ -12,6 +12,4 @@ export const delTraductor = async ({ query }: DelTraductorArgs): Promise<void> =
   const traductor = traductors.find((traductor) => traductor.name === query);
 
   if (!traductor) throw new Error('delTraductor traductor not found');
-
-  console.info('mockResponse_delTraductor', { query, traductors });
 };

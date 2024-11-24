@@ -3,13 +3,11 @@ import { loadAppConfiguration } from '../lib/loadAppConfiguration';
 import type { AppConfigurationType } from '$types/schemas';
 
 export const getAppConfiguration = (): AppConfigurationType | null => {
-  console.groupCollapsed('getAppConfiguration');
+  console.info('getAppConfiguration');
 
   const appConfigurationObject = loadAppConfiguration();
 
   console.info(appConfigurationObject);
-
-  console.groupEnd();
 
   // Do we want to filter the appConfig based on user?
 

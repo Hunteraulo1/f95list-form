@@ -4,7 +4,7 @@ import { loadAppConfiguration } from './loadAppConfiguration';
 import type { AppConfigurationType } from '$types/schemas';
 
 export const initializeApp = (): AppConfigurationType => {
-  console.groupCollapsed('initializeApp');
+  console.info('initializeApp');
 
   const deployingUserEmail = Session.getEffectiveUser().getEmail();
 
@@ -21,8 +21,6 @@ export const initializeApp = (): AppConfigurationType => {
   scriptPropertiesService.setProperty('appConfiguration', JSON.stringify(newAppConfig));
 
   const appConfig = loadAppConfiguration();
-
-  console.groupEnd();
 
   return JSON.parse(JSON.stringify(appConfig)) as AppConfigurationType;
 };

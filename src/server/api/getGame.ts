@@ -8,8 +8,7 @@ export interface GetGameArgs {
 }
 
 export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType> => {
-  console.groupCollapsed('getGame');
-  console.info('args:', { name, version });
+  console.info('getGame ~ args:', { name, version });
 
   const games = await getQueryGames();
 
@@ -57,8 +56,6 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
   });
 
   console.info('result:', result);
-
-  console.groupEnd();
 
   return result;
 };

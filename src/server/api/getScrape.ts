@@ -16,8 +16,7 @@ interface GetScrape {
   image: GameType['image'];
 }
 export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
-  console.groupCollapsed('getScrape');
-  console.info('args', { domain, id });
+  console.info('getScrape ~ args:', { domain, id });
 
   if (domain !== 'F95z') throw new Error('domaine incompatible');
 
@@ -57,7 +56,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
     throw new Error('getFetchF95z no return');
   }
 
-  console.info('scrapePage', {
+  console.info('scrapePage ~ args:', {
     name,
     version,
     status,
@@ -77,8 +76,6 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
   });
 
   console.info('validScrapeGame:', validScrapeGame);
-
-  console.groupEnd();
 
   return validScrapeGame;
 };

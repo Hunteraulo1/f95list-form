@@ -2,7 +2,7 @@ import { User, type UserType } from '$types/schemas';
 import { getUser } from '../api/getUser';
 
 const checkUser = (rank: UserType['role'][0]): boolean => {
-  console.groupCollapsed('checkUser');
+  console.info('checkUser');
 
   const user = getUser();
 
@@ -11,8 +11,6 @@ const checkUser = (rank: UserType['role'][0]): boolean => {
   const validUser = User.parse(user);
 
   if (validUser.role.includes(rank) || validUser.role.includes('superAdmin')) return true;
-
-  console.groupEnd();
 
   return false;
 };

@@ -16,8 +16,7 @@ export interface DelGameArgs {
 }
 
 export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Promise<void> => {
-  console.groupCollapsed('delGame');
-  console.info('args', { query, comment, silentMode });
+  console.info('delGame ~ args:', { query, comment, silentMode });
 
   const { name, version } = query;
   // Report request

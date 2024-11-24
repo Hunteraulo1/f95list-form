@@ -1,7 +1,7 @@
 import { User, type UserType } from '$types/schemas';
 
 export const getAdmins = (): UserType[] => {
-  console.groupCollapsed('getAdmins');
+  console.info('getAdmins');
 
   const adminUsers = [];
 
@@ -24,8 +24,6 @@ export const getAdmins = (): UserType[] => {
   }
 
   console.info('adminUsers:', adminUsers);
-
-  console.groupEnd();
 
   return adminUsers;
 };

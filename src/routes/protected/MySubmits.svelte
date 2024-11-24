@@ -28,7 +28,7 @@ onMount(async () => {
     $isLoading = false;
   }
 
-  console.info('submits', submits);
+  console.info('submits ~ args:', submits);
 });
 </script>
 

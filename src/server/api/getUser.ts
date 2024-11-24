@@ -10,8 +10,7 @@ export type GetUserArgs = {
 };
 
 export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
-  console.groupCollapsed('getUser');
-  console.info('args', { email });
+  console.info('getUser ~ args:', { email });
 
   const requestingUserEmail = Session.getActiveUser().getEmail();
 
@@ -46,8 +45,6 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   if (!userObjectString && isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 
   console.info(userObjectString);
-
-  console.groupEnd();
 
   // Otherwise, the user object exists and we can return it.
   return JSON.parse(userObjectString) as UserType;

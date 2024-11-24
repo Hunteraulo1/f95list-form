@@ -8,8 +8,7 @@ export interface GetSubmitsArgs {
  * **API Endpoint** | Returns the accessing submits object
  */
 export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined => {
-  console.groupCollapsed('getSubmits');
-  console.info('args', { user });
+  console.info('getSubmits ~ args:', { user });
 
   const requestingUserEmail = Session.getActiveUser().getEmail();
 
@@ -30,8 +29,6 @@ export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined =
   }
 
   console.info('submits: ', submits);
-
-  console.groupEnd();
 
   return submits;
 };

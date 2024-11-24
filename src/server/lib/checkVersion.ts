@@ -7,7 +7,7 @@ import type { GameACType, GameType } from '$types/schemas';
 import { F95host } from '../env';
 
 const checkVersion = async (): Promise<void> => {
-  console.groupCollapsed('checkVersion');
+  console.info('checkVersion');
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Jeux');
 
@@ -77,8 +77,6 @@ const checkVersion = async (): Promise<void> => {
   sendWebhookAC({ games: changed });
 
   sendTraductorWebhook({ games: changed });
-
-  console.groupEnd();
 };
 
 interface Response {
@@ -89,8 +87,7 @@ interface Response {
 }
 
 const f95Api = async (ids: string | string[]): Promise<Response> => {
-  console.groupCollapsed('f95Api');
-  console.info('args', { ids });
+  console.info('f95Api ~ args:', { ids });
 
   const url = `${F95host}/sam/checker.php?threads=${ids}`;
   const response = await UrlFetchApp.fetch(url, { muteHttpExceptions: true });
@@ -99,8 +96,7 @@ const f95Api = async (ids: string | string[]): Promise<Response> => {
 
   const result = JSON.parse(json) as Response;
 
-  console.info('result', result);
-  console.groupEnd();
+  console.info('f95Api ~ result:', result);
 
   return result;
 };

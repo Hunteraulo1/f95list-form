@@ -25,8 +25,17 @@ export const sendWebhookUpdate = async ({
   proofreader,
   image,
 }: SendWebhookUpdateArgs): Promise<void> => {
-  console.groupCollapsed('sendWebhookUpdate');
-  console.info('args', { title, url, color, comment, name, tversion, traductor, proofreader, image });
+  console.info('sendWebhookUpdate ~ args:', {
+    title,
+    url,
+    color,
+    comment,
+    name,
+    tversion,
+    traductor,
+    proofreader,
+    image,
+  });
 
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('webhookUrl');
@@ -97,8 +106,6 @@ export const sendWebhookUpdate = async ({
       actions: {},
     }),
   });
-
-  console.groupEnd();
 };
 
 interface SendWebhookLogsArgs {
@@ -110,8 +117,7 @@ interface SendWebhookLogsArgs {
 }
 
 export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs): Promise<void> => {
-  console.groupCollapsed('sendWebhookLogs');
-  console.info('args', { title, color, oldGame, game, comment });
+  console.info('sendWebhookLogs ~ args:', { title, color, oldGame, game, comment });
 
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('logsUrl');
@@ -171,8 +177,6 @@ export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: 
       actions: {},
     }),
   });
-
-  console.groupEnd();
 };
 
 interface SendWebhookACArgs {
@@ -180,8 +184,7 @@ interface SendWebhookACArgs {
 }
 
 export const sendWebhookAC = async ({ games }: SendWebhookACArgs): Promise<void> => {
-  console.groupCollapsed('sendWebhookAC');
-  console.info('args', { games });
+  console.info('sendWebhookAC ~ args:', { games });
 
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('logsUrl');
@@ -225,8 +228,6 @@ export const sendWebhookAC = async ({ games }: SendWebhookACArgs): Promise<void>
       actions: {},
     }),
   });
-
-  console.groupEnd();
 };
 
 export interface SendTraductorWebhookArgs {
@@ -234,8 +235,7 @@ export interface SendTraductorWebhookArgs {
 }
 
 export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs): Promise<void> => {
-  console.groupCollapsed('sendTraductorWebhook');
-  console.info('args', { games });
+  console.info('sendTraductorWebhook ~ args:', { games });
 
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('callTraductorUrl');
@@ -291,8 +291,6 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs):
       actions: {},
     }),
   });
-
-  console.groupEnd();
 };
 
 const getName = (): string => {

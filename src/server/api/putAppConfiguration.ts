@@ -10,8 +10,7 @@ export type PutAppConfigArgs = {
  * **API Endpoint** | Updates the app configuration and returns it
  */
 export const putAppConfiguration = ({ appConfiguration, webhooks }: PutAppConfigArgs): void => {
-  console.groupCollapsed('putAppConfiguration');
-  console.info('args', { appConfiguration, webhooks });
+  console.info('putAppConfiguration ~ args:', { appConfiguration, webhooks });
 
   try {
     checkUser('superAdmin');
@@ -27,6 +26,4 @@ export const putAppConfiguration = ({ appConfiguration, webhooks }: PutAppConfig
   } catch (error) {
     throw new Error(`Error in putAppConfiguration: ${error}`);
   }
-
-  console.groupEnd();
 };

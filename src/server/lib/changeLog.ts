@@ -6,8 +6,7 @@ interface ChangeLogArgs {
 }
 
 export const changelog = ({ game, status }: ChangeLogArgs): void => {
-  console.groupCollapsed('changelog');
-  console.info('args', { game, status });
+  console.info('changelog ~ args:', { game, status });
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const releaseSheet = sheet.getSheetByName('MAJ');
@@ -29,13 +28,9 @@ export const changelog = ({ game, status }: ChangeLogArgs): void => {
       });
       return;
     }
-
-    console.info('changelog', { cellDate, now, status });
   }
 
   insertNewRow({ sheet: releaseSheet, date: now, status, game });
-
-  console.groupEnd();
 };
 
 interface UpdateExistingRowArgs {
@@ -46,8 +41,7 @@ interface UpdateExistingRowArgs {
 }
 
 const updateExistingRow = ({ sheet, rowIndex, newGame, existingGames }: UpdateExistingRowArgs): void => {
-  console.groupCollapsed('updateExistingRow');
-  console.info('args', { sheet, rowIndex, newGame, existingGames });
+  console.info('updateExistingRow ~ args:', { sheet, rowIndex, newGame, existingGames });
 
   const games = existingGames.split(',  ');
 
@@ -55,8 +49,6 @@ const updateExistingRow = ({ sheet, rowIndex, newGame, existingGames }: UpdateEx
 
   const updatedGames = `${existingGames},  ${newGame}`;
   sheet.getRange(`C${rowIndex + 2}`).setValue(updatedGames);
-
-  console.groupEnd();
 };
 
 interface InsertNewRowArgs {
@@ -67,11 +59,8 @@ interface InsertNewRowArgs {
 }
 
 const insertNewRow = ({ sheet, date, status, game }: InsertNewRowArgs): void => {
-  console.groupCollapsed('insertNewRow');
-  console.info('args', { sheet, date, status, game });
+  console.info('insertNewRow ~ args:', { sheet, date, status, game });
 
   sheet.insertRowBefore(2);
   sheet.getRange('A2:C2').setValues([[date, status, game]]);
-
-  console.groupEnd();
 };
