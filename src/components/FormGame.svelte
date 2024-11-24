@@ -161,7 +161,7 @@ const handleSubmit = async () => {
 
   if (checkUser(['traductor'])) {
     try {
-      await GAS_API.postSubmit({
+      const result = await GAS_API.postSubmit({
         query: $queryGame,
         game,
         type: edit ? 'edit' : 'add',
@@ -169,16 +169,26 @@ const handleSubmit = async () => {
       });
 
       navigate('/');
+
+      if (result === 'duplicate') {
+        newToast({
+          alertType: 'warning',
+          message: 'Une soumission existe déjà pour cette traduction',
+        });
+
+        return;
+      }
+
       newToast({
         alertType: 'success',
-        message: 'Le jeu a bien été soumis',
+        message: 'La traduction a bien été soumise',
       });
     } catch (error) {
       console.error('Error fetching game', error);
 
       newToast({
         alertType: 'error',
-        message: 'Impossible de soumettre le jeu',
+        message: 'Impossible de soumettre la traduction',
       });
     } finally {
       $isLoading = false;

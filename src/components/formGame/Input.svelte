@@ -50,11 +50,9 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
 };
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
-  if (name === 'ac') return;
+  if (name === 'ac' || name === 'id') return;
 
-  const { success } = Game.shape[name].safeParse(event.currentTarget.value);
-
-  error = !success;
+  error = !Game.shape[name].safeParse(event.currentTarget.value).success;
 };
 </script>
 

@@ -65,6 +65,6 @@ export const GAS_API = {
 
   // Submit
   getSubmits: (args: GetSubmitsArgs) => callAPI<SubmitType[], typeof args>('getSubmits', args),
-  postSubmit: (args: PostSubmitType) => callAPI<void, typeof args>('postSubmit', args),
+  postSubmit: (args: PostSubmitType) => callAPI<string | null, typeof args>('postSubmit', args),
   putSubmit: (args: PutSubmitArgs) => callAPI<void, typeof args>('putSubmit', args),
 };
