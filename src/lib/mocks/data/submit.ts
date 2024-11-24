@@ -5,7 +5,7 @@ export const submits: SubmitType[] = [
     query: {
       id: 6547,
       name: 'Sisterly Lust',
-      version: 'v1.1.11',
+      version: 'v1.1.10',
     },
     email: 'mock_mockerson@test.com',
     game: {
