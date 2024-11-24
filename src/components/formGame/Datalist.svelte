@@ -19,16 +19,22 @@ let { title, className, active, step, game, name }: Props = $props();
 
 const isTraductor = checkUser(['traductor']);
 
-let warning = $derived.by(() => {
-  if ($traductors.find((item) => item.name === game[name]) || isTraductor || game[name] === '') return false;
+const checkValue = (value: string) => {
+  if (isTraductor || game[name] === '') return false;
 
-  return true;
-});
+  return !$traductors.find((item) => item.name === value);
+};
+
+let warning = $state(checkValue(game[name] as string));
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
   const value = event.currentTarget.value;
 
   (game[name] as string) = value;
+};
+
+const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
+  warning = checkValue(event.currentTarget.value);
 };
 
 let modal = $state(false);
@@ -44,6 +50,7 @@ let modal = $state(false);
       list="traductor-list"
       disabled={$traductors.length === 0}
       onchange={handleChange}
+      oninput={handleInput}
       value={game[name]}
       class="input input-bordered w-full {warning ? 'input-warning' : ''}"
     />

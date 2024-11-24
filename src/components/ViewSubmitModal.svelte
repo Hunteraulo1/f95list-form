@@ -6,6 +6,7 @@ import { dateFormat } from '$lib/utils';
 import type { GameType, SubmitType, UserType } from '$types/schemas';
 import { onMount } from 'svelte';
 import FormGame from './FormGame.svelte';
+import LoadingSpinner from './LoadingSpinner.svelte';
 import Modal from './Modal.svelte';
 
 interface Props {
@@ -136,21 +137,25 @@ const submitAttributes: SubmitAttributes[] = [
         
       <div class="divider"></div>
       
-      <div class="grid grid-cols-2 gap-4">
-        {#each gameAttributes as { label, value, queryValue }}
-          <div class="w-full relative">
-            <div class="font-bold">{label}</div>
-            {#if label === 'Auto-Check'}
-              <div>{value ? 'Oui' : 'Non'}</div>
-            {:else}
-              <div class="overflow-x-auto">{value === '' ? 'N/A' : value}</div>
-              {#if submit.type !== 'add' && value !== queryValue}
-                <div class="text-xs text-gray-500">({queryValue  === '' ? 'N/A' : queryValue})</div>
+      {#if gameAttributes.length > 0}
+        <div class="grid grid-cols-2 gap-4">
+          {#each gameAttributes as { label, value, queryValue }}
+            <div class="w-full relative">
+              <div class="font-bold">{label}</div>
+              {#if label === 'Auto-Check'}
+                <div>{value ? 'Oui' : 'Non'}</div>
+              {:else}
+                <div class="overflow-x-auto">{value === '' ? 'N/A' : value}</div>
+                {#if submit.type !== 'add' && value !== queryValue}
+                  <div class="text-xs text-gray-500">({queryValue  === '' ? 'N/A' : queryValue})</div>
+                {/if}
               {/if}
-            {/if}
-          </div>
-        {/each}
-      </div>
+            </div>
+          {/each}
+        </div>
+      {:else}
+        <LoadingSpinner />
+      {/if}
     {/snippet}
     {#snippet modalAction()}
       <button onclick={handleClickConfirm} class="btn">
