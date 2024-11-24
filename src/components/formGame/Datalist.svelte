@@ -1,12 +1,12 @@
 <script lang="ts">
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
+import { traductors } from '$lib/stores';
 import { checkUser } from '$lib/utils';
-import type { GameType, TraductorType } from '$types/schemas';
+import type { GameType } from '$types/schemas';
 import { Icon, UserPlus } from 'svelte-hero-icons';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
 interface Props extends HTMLInputAttributes {
-  values?: TraductorType[];
   title: string;
   className?: string;
   active?: number[];
@@ -15,19 +15,20 @@ interface Props extends HTMLInputAttributes {
   name: keyof GameType;
 }
 
-let { title, values = [], className, active, step, game, name }: Props = $props();
+let { title, className, active, step, game, name }: Props = $props();
 
-let warning = $state(false);
 const isTraductor = checkUser(['traductor']);
+
+let warning = $derived.by(() => {
+  if ($traductors.find((item) => item.name === game[name]) || isTraductor || game[name] === '') return false;
+
+  return true;
+});
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
   const value = event.currentTarget.value;
 
   (game[name] as string) = value;
-
-  if (values.find((item) => item.name === value) || isTraductor) return;
-
-  warning = true;
 };
 
 let modal = $state(false);
@@ -41,12 +42,13 @@ let modal = $state(false);
       type="search"
       id={name}
       list="traductor-list"
+      disabled={$traductors.length === 0}
       onchange={handleChange}
       value={game[name]}
       class="input input-bordered w-full {warning ? 'input-warning' : ''}"
     />
     <datalist id="traductor-list">
-      {#each values as item}
+      {#each $traductors as item}
         <option>{item.name}</option>
       {/each}
     </datalist>

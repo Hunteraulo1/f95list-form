@@ -58,6 +58,8 @@ let silentMode = $state(false);
 let scraping = $state(false);
 
 onMount(async () => {
+  $isLoading = true;
+
   try {
     let dataTraductors = await GAS_API.getTraductors();
 
@@ -66,6 +68,7 @@ onMount(async () => {
     }
 
     $traductors = dataTraductors;
+    console.log('traductors data:', dataTraductors);
   } catch (error) {
     console.error('getTradutor no return: ', error);
 
@@ -73,6 +76,8 @@ onMount(async () => {
       alertType: 'error',
       message: 'Impossible de récupérer la liste des traducteurs',
     });
+  } finally {
+    $isLoading = false;
   }
 
   const { id, domain, ac } = game;
@@ -346,14 +351,12 @@ const elements: Element[] = [
     active: [3, 5],
     title: 'Traducteur',
     name: 'traductor',
-    values: $traductors,
   },
   {
     Component: Datalist,
     active: [3, 5],
     title: 'Relecteur',
     name: 'proofreader',
-    values: $traductors,
   },
   {
     Component: Select,
@@ -402,7 +405,7 @@ const elements: Element[] = [
       <div
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
-        {#if !deleteMode}
+        {#if !deleteMode && $traductors.length > 0}
           {#each elements as { Component, name, title, active, className, checked, values, type }}
             <Component {game} {step} {name} {title} {active} {className} {checked} {values} {type} />
           {/each}

@@ -47,6 +47,8 @@ const handleClickDelete = async () => {
         alertType: 'error',
         message: 'Impossible de soumettre la suppression du jeu',
       });
+    } finally {
+      $isLoading = false;
     }
 
     if (editor) {
