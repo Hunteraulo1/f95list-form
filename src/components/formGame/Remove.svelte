@@ -33,7 +33,16 @@ const handleClickDelete = async () => {
 
   if (checkUser(['traductor'])) {
     try {
-      await GAS_API.postSubmit({ query: $queryGame, game, type: 'delete', comment });
+      const result = await GAS_API.postSubmit({ query: $queryGame, game, type: 'delete', comment });
+
+      if (result === 'duplicate') {
+        newToast({
+          alertType: 'warning',
+          message: 'Une soumission existe déjà pour ce jeu',
+        });
+
+        return;
+      }
 
       navigate('/');
       newToast({
