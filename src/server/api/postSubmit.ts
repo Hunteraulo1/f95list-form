@@ -17,24 +17,36 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
 
   if (!submits) throw new Error('Submits not found');
 
+  const requestingUserEmail = Session.getActiveUser().getEmail();
+
+  const submit: SubmitType = {
+    email: requestingUserEmail,
+    date: dateNow(),
+    status: 'wait',
+    reason: '',
+    ...validSubmit,
+  };
+
+  if (type === 'add') {
+    submit.query = {
+      name: game.name,
+      version: game.version,
+      id: game.id,
+    };
+  }
+
+  if (!submit.query) throw new Error('Submit query not found');
+
   const submitFound = submits.find(
-    (s) => s.query?.id === query?.id && s.query?.name === query?.name && s.query?.version === query?.version,
+    (s) =>
+      s.query?.id === submit.query?.id &&
+      s.query?.name === submit.query?.name &&
+      s.query?.version === submit.query?.version,
   );
-  console.log('🚀 ~ postSubmit ~ submitFound:', submitFound);
 
   if (submitFound) return 'duplicate';
 
   try {
-    const requestingUserEmail = Session.getActiveUser().getEmail();
-
-    const submit: SubmitType = {
-      email: requestingUserEmail,
-      date: dateNow(),
-      status: 'wait',
-      reason: '',
-      ...validSubmit,
-    };
-
     const scriptPropertiesService = PropertiesService.getScriptProperties();
     const submits = JSON.parse(scriptPropertiesService.getProperty('submits') ?? '[]');
 
