@@ -33,6 +33,8 @@ const handleClickDelete = async () => {
 
   if (checkUser(['traductor'])) {
     try {
+      if (!$queryGame) throw new Error('Query not found');
+
       const result = await GAS_API.postSubmit({ query: $queryGame, game, type: 'delete', comment });
 
       if (result === 'duplicate') {
@@ -58,6 +60,7 @@ const handleClickDelete = async () => {
       });
     } finally {
       $isLoading = false;
+      $queryGame = undefined;
     }
 
     if (editor) {
@@ -67,11 +70,10 @@ const handleClickDelete = async () => {
     return;
   }
 
-  const { name, version } = $queryGame;
   try {
-    const query = { name, version };
+    if (!$queryGame) throw new Error('Query not found');
 
-    await GAS_API.delGame({ query, comment, silentMode });
+    await GAS_API.delGame({ query: $queryGame, comment, silentMode });
 
     navigate('/');
     newToast({
@@ -87,6 +89,7 @@ const handleClickDelete = async () => {
     });
   } finally {
     $isLoading = false;
+    $queryGame = undefined;
   }
 
   handleUpdateSubmit?.('validated');

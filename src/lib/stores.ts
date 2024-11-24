@@ -6,7 +6,7 @@ import type { AppConfigurationType, QueryGameType, TraductorType, UserType } fro
 export const sessionUser = writable<UserType | null>(null);
 
 export const isLoading = writable<boolean>(false);
-export const queryGame = writable<QueryGameType>();
+export const queryGame = writable<QueryGameType | undefined>(undefined);
 export const queryGames = writable<QueryGameType[]>([]);
 export const traductors = writable<TraductorType[]>([]);
 

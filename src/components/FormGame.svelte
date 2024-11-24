@@ -160,9 +160,11 @@ const handleSubmit = async () => {
   $isLoading = true;
 
   if (checkUser(['traductor'])) {
+    if (edit && !$queryGame) throw new Error('Query not found');
+
     try {
       const result = await GAS_API.postSubmit({
-        query: $queryGame,
+        query: edit ? $queryGame : undefined,
         game,
         type: edit ? 'edit' : 'add',
         comment: '',
@@ -192,16 +194,17 @@ const handleSubmit = async () => {
       });
     } finally {
       $isLoading = false;
+      $queryGame = undefined;
     }
 
     return;
   }
 
   if (edit) {
-    const query = $queryGame;
-
     try {
-      const result = await GAS_API.putGame({ game, query, silentMode });
+      if (!$queryGame) throw new Error('Query not found');
+
+      const result = await GAS_API.putGame({ game, query: $queryGame, silentMode });
 
       if (result === 'duplicate') {
         newToast({
@@ -228,6 +231,7 @@ const handleSubmit = async () => {
       });
     } finally {
       $isLoading = false;
+      $queryGame = undefined;
     }
   } else {
     try {

@@ -5,6 +5,7 @@ import { getSubmits } from './getSubmits';
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<string | null> => {
   // Report request
   console.info('postSubmit called with args:', { dataSubmit: { query, game, type, comment } });
+  console.log('🚀 ~ postSubmit ~ query:', query);
 
   if (!checkUser('traductor')) throw new Error('Unauthorized');
 
@@ -13,14 +14,15 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
   if (!validSubmit) throw new Error('Invalid submit');
 
   const submits = await getSubmits({});
+
   if (!submits) throw new Error('Submits not found');
 
-  if (
-    submits.find(
-      (s) => s.query?.id === query?.id && s.query?.name === query?.name && s.query?.version === query?.version,
-    )
-  )
-    return 'duplicate';
+  const submitFound = submits.find(
+    (s) => s.query?.id === query?.id && s.query?.name === query?.name && s.query?.version === query?.version,
+  );
+  console.log('🚀 ~ postSubmit ~ submitFound:', submitFound);
+
+  if (submitFound) return 'duplicate';
 
   try {
     const requestingUserEmail = Session.getActiveUser().getEmail();
