@@ -2,7 +2,7 @@ import { getGame } from './getGame';
 import { getQueryGames } from './getQueryGames';
 import { getTraductors } from './getTraductors';
 import { getUser } from './getUser';
-import { putUser } from './putUser';
+import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 import { Game } from '$types/schemas';
@@ -71,7 +71,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
     console.info('putGame convert:', { convertedGame });
 
     const user = getUser();
-    // putStatistics('put');
+    putStatistics('put');
 
     putUser({ user });
   } catch (error) {

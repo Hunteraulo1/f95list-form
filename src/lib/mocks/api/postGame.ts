@@ -4,7 +4,7 @@ import { disableLock, enableLock } from '../lockMode';
 import { getQueryGames } from './getQueryGames';
 import { getTraductors } from './getTraductors';
 import { getUser } from './getUser';
-import { putUser } from './putUser';
+import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 
@@ -81,7 +81,7 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
     console.info('postGame ~ convert:', { convertedGame });
 
     const user = getUser();
-    // putStatistics('post');
+    putStatistics('post');
 
     putUser({ user });
   } catch (error) {
