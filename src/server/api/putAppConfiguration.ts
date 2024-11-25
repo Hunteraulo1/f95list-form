@@ -24,6 +24,6 @@ export const putAppConfiguration = ({ appConfiguration, webhooks }: PutAppConfig
     if (webhooks.update !== '') scriptPropertiesService.setProperty('webhookUrl', JSON.stringify(webhooks.update));
     if (webhooks.logs !== '') scriptPropertiesService.setProperty('logsUrl', JSON.stringify(webhooks.logs));
   } catch (error) {
-    throw new Error(`Error in putAppConfiguration: ${error}`);
+    throw new Error(`putAppConfiguration ~ Error: ${error}`);
   }
 };

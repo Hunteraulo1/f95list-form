@@ -1,4 +1,5 @@
 import getMockEndpoints from './mocks/Api';
+
 let polyfilled = false;
 
 const polyfillScriptRun = async () => {
@@ -11,30 +12,31 @@ const polyfillScriptRun = async () => {
   const google = _window.google || {};
   _window.google = google;
 
-  if (!google.script || !google.script.run) {
-    const mocks = getMockEndpoints();
-    google.script = google.script || {};
-    google.script.run = {
-      withSuccessHandler: (resolve) => {
-        return {
-          withFailureHandler: (reject) => {
-            const wrappedMocks = {};
-            for (const [key, value] of Object.entries(mocks)) {
-              wrappedMocks[key] = async (...args) => {
-                try {
-                  const result = await value(...args);
-                  resolve(result);
-                } catch (error) {
-                  reject(error);
-                }
-              };
+  if (!(!google.script || !google.script.run)) return;
+
+  const mocks = getMockEndpoints();
+  google.script = google.script || {};
+  google.script.run = {
+    withSuccessHandler: (resolve) => ({
+      withFailureHandler: async (reject) => {
+        const wrappedMocks = {};
+
+        
+
+        for (const [key, value] of Object.entries(mocks)) {
+          wrappedMocks[key] = async (...args) => {
+            try {
+              const result = await value(...args);
+              resolve(result);
+            } catch (error) {
+              reject(error);
             }
-            return wrappedMocks;
-          },
-        };
+          };
+        }
+        return wrappedMocks;
       },
-    };
-  }
+    }),
+  };
 };
 
 polyfillScriptRun();

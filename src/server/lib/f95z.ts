@@ -1,7 +1,7 @@
 import type { CheckerF95zType, GameType } from '$types/schemas';
 import { F95host } from '../env';
 
-export const getFetchF95z = async (id: GameType['id']): Promise<string> => {
+export const f95z = async (id: GameType['id']): Promise<string> => {
   if (!id) throw new Error('id is undefined');
 
   const url = `${F95host}/sam/checker.php?threads=${id}`;

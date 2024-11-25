@@ -9,7 +9,5 @@ export const getAppConfiguration = (): AppConfigurationType | null => {
 
   console.info(appConfigurationObject);
 
-  // Do we want to filter the appConfig based on user?
-
   return appConfigurationObject;
 };

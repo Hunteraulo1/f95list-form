@@ -1,42 +1,94 @@
-import sleep from '$lib/sleep';
-import { games } from '../data/game';
-import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
+import { Game } from '$types/schemas';
+import { checkUser } from '../../../server/lib/utils';
+import { disableLock, enableLock } from '../lockMode';
+import { getQueryGames } from './getQueryGames';
+import { getTraductors } from './getTraductors';
+import { getUser } from './getUser';
+import { putStatistics, putUser } from './putUser';
 
-import { Game, type GameType } from '$types/schemas';
+import type { GameType } from '$types/schemas';
 
-interface PostGameArgs {
+export interface PostGameArgs {
   game: GameType;
   silentMode: boolean;
 }
 
-const title = 'Ajout du jeu:';
-const color = 12256517;
+export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
+  console.info('postGame ~ args:', { game, silentMode });
 
-export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<void> => {
-  await sleep();
+  checkUser('admin');
 
-  const validGame = Game.parse(game);
+  try {
+    enableLock();
 
-  games.push(validGame);
+    const validGame = Game.parse(game);
+    const games = await getQueryGames();
 
-  const { link, name, tversion, traductor, proofreader, image } = validGame;
+    const duplicate = games?.findIndex(
+      (game) => game.name.toLowerCase() === validGame.name.toLowerCase() && game.version === validGame.version,
+    );
 
-  if (!silentMode) {
-    sendWebhookUpdate({
-      title,
-      url: link,
-      color,
-      name,
-      tversion,
-      traductor,
-      proofreader,
-      image,
-    });
+    if (duplicate !== -1) {
+      return 'duplicate';
+    }
+
+    const dataLink = async (data: string | null, domain: string): Promise<string | undefined> => {
+      let result = '';
+
+      if (!data) return;
+
+      result = data;
+      const traductors = await getTraductors();
+
+      if (!traductors) throw new Error('postGame ~ No traductors found');
+
+      for (const { name, links } of traductors) {
+        if (name !== data || !links?.length) continue;
+
+        result = links[0].name;
+
+        for (let index = 0; index < links.length; index++) {
+          result = `=HYPERLINK("${links[0].link}"; "${data}")`;
+
+          if (links[index].name === domain) {
+            return `=HYPERLINK("${links[index].link}"; "${data}")`;
+          }
+        }
+      }
+
+      return result;
+    };
+
+    const convertedGame: (string | number | null)[] = [
+      validGame.id ?? null,
+      validGame.domain,
+      `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
+      validGame.version,
+      validGame.tversion,
+      validGame.tname.startsWith('Traduction')
+        ? `=HYPERLINK("${validGame.tlink}"; "${validGame.tname}")`
+        : validGame.tname,
+      validGame.status,
+      validGame.tags ?? '',
+      validGame.type,
+      (await dataLink(validGame.traductor, validGame.domain))?.toString() ?? '',
+      (await dataLink(validGame.proofreader, validGame.domain))?.toString() ?? '',
+      validGame.ttype,
+      validGame.ac.toString(),
+      validGame.image,
+    ];
+
+    console.info('postGame ~ convert:', { convertedGame });
+
+    const user = getUser();
+    putStatistics('post');
+
+    putUser({ user });
+  } catch (error) {
+    console.error(error);
+
+    throw new Error("postGame ~ Un problème est survenue lors de l'ajout du jeu");
+  } finally {
+    disableLock();
   }
-
-  sendWebhookLogs({
-    title,
-    color,
-    game,
-  });
 };

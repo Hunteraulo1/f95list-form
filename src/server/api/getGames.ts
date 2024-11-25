@@ -8,7 +8,7 @@ export const getGames = async (): Promise<GameType[]> => {
   const totalRow = gameSheet?.getLastRow();
 
   if (!gameSheet) {
-    throw new Error('No gameSheet detected');
+    throw new Error('getGames ~ No gameSheet detected');
   }
 
   const data = gameSheet.getRange(`A2:N${totalRow}`).getValues();
@@ -35,7 +35,7 @@ export const getGames = async (): Promise<GameType[]> => {
     }),
   );
 
-  console.info('result:', result);
+  console.info('getGames ~ result:', result);
 
   return result;
 };

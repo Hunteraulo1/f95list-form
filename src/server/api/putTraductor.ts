@@ -1,10 +1,9 @@
+import { Traductor } from '$types/schemas';
 import { disableLock, enableLock } from '../lib/lockMode';
-
+import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
 
-import { Traductor, type TraductorType } from '$types/schemas';
-import { checkUser } from '../lib/utils';
-
+import type { TraductorType } from '$types/schemas';
 export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
   data: TraductorType;

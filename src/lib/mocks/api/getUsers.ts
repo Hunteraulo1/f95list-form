@@ -1,10 +1,16 @@
-import sleep from '$lib/sleep';
+import { checkUser } from '../../../server/lib/utils';
 import { users } from '../data/user';
 
 import type { UserType } from '$types/schemas';
 
-export const getUsers = async (): Promise<UserType[]> => {
-  await sleep();
+export const getUsers = (): UserType[] | undefined => {
+  console.info('getUsers');
 
-  return JSON.parse(JSON.stringify(users));
+  const requestingUserEmail = Session.getActiveUser().getEmail();
+
+  console.info('getUsers called by: ', requestingUserEmail);
+
+  checkUser('admin');
+
+  return users;
 };

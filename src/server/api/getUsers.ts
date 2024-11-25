@@ -1,13 +1,11 @@
-import type { UserType } from '$types/schemas';
 import { checkUser } from '../lib/utils';
 
-/**
- * **API Endpoint** | Returns the accessing user object
- */
+import type { UserType } from '$types/schemas';
+
 export const getUsers = (): UserType[] | undefined => {
   console.info('getUsers');
   const requestingUserEmail = Session.getActiveUser().getEmail();
-  // Report request
+
   console.info('getUsers called by: ', requestingUserEmail);
 
   checkUser('admin');
@@ -18,7 +16,6 @@ export const getUsers = (): UserType[] | undefined => {
 
   const users: UserType[] = [];
 
-  // Check if scriptProperties is an array or iterable object
   for (const user of scriptPropertiesEntries) {
     console.info('🚀 ~ getUsers ~ user:', user);
     const [key, value] = user;
@@ -27,6 +24,5 @@ export const getUsers = (): UserType[] | undefined => {
     users.push(JSON.parse(value));
   }
 
-  // Otherwise, the user object exists and we can return it.
   return users;
 };

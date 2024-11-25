@@ -1,12 +1,9 @@
-import { getUser } from './getUser';
-
-import { Submit, type SubmitType } from '$types/schemas';
+import { Submit } from '$types/schemas';
 import { checkUser } from '../lib/utils';
 import { getSubmits } from './getSubmits';
+import { getUser } from './getUser';
 
-/**
- * **API Endpoint** | Updates the app configuration and returns it
- */
+import type { SubmitType } from '$types/schemas';
 
 export interface PutSubmitArgs {
   submit: SubmitType;
@@ -16,17 +13,17 @@ export interface PutSubmitArgs {
 export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> => {
   console.info('putSubmit ~ args:', { submit, type });
 
-  if (!checkUser('admin')) throw new Error('Unauthorized');
+  if (!checkUser('admin')) throw new Error('putSubmit ~ Unauthorized');
 
   const validSubmit = Submit.parse(submit);
-  if (!validSubmit) throw new Error('Invalid submit');
+  if (!validSubmit) throw new Error('putSubmit ~ Invalid submit');
 
-  const user = await getUser({ email: submit.email });
-  if (!user) throw new Error('User not found');
+  const user = getUser({ email: submit.email });
+  if (!user) throw new Error('putSubmit ~ User not found');
 
-  const submits = await getSubmits({});
+  const submits = getSubmits({});
 
-  if (!submits) throw new Error('Submits not found');
+  if (!submits) throw new Error('putSubmit ~ Submits not found');
 
   const submitFound = submits.find(
     (s) =>
@@ -35,13 +32,13 @@ export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> 
       s.query?.version === submit.query?.version,
   );
 
-  if (!submitFound) throw new Error('Submit not found');
+  if (!submitFound) throw new Error('putSubmit ~ Submit not found');
 
-  if (submitFound.status === 'validated') throw new Error('Submit already validated');
+  if (submitFound.status === 'validated') throw new Error('putSubmit ~ Submit already validated');
 
-  if (type !== 'validated' && type !== 'rejected') throw new Error('invalid type');
+  if (type !== 'validated' && type !== 'rejected') throw new Error('putSubmit ~ invalid type');
 
-  let confirmed: boolean | undefined;
+  let confirmed = false;
 
   const result = submits.map((s) => {
     if (
@@ -61,7 +58,7 @@ export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> 
     return s;
   });
 
-  if (!confirmed) throw new Error('Submit not found');
+  if (!confirmed) throw new Error('putSubmit ~ Submit not found');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 

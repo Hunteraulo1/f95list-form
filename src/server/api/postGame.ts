@@ -8,19 +8,18 @@ import { getTraductors } from './getTraductors';
 import { getUser } from './getUser';
 import { putStatistics, putUser } from './putUser';
 
-import { Game, type GameType } from '$types/schemas';
+import { Game } from '$types/schemas';
 import { checkUser } from '../lib/utils';
+
+import type { GameType } from '$types/schemas';
 
 export interface PostGameArgs {
   game: GameType;
   silentMode: boolean;
 }
 
-const title = 'Nouveau jeu ajouté:';
-const color = 115_201;
-
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
-  console.info('postGame ~ args:', { dataGame: game });
+  console.info('postGame ~ args:', { game, silentMode });
 
   checkUser('admin');
 
@@ -106,9 +105,9 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
 
     if (!silentMode) {
       sendWebhookUpdate({
-        title,
+        title: 'Nouveau jeu ajouté:',
         url: validGame.link,
-        color,
+        color: 115_201,
         name: validGame.name,
         tversion: validGame.tversion,
         traductor: validGame.traductor,
@@ -118,8 +117,8 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
     }
 
     sendWebhookLogs({
-      title,
-      color,
+      title: 'Nouveau jeu ajouté:',
+      color: 115_201,
       game: validGame,
     });
   } catch (error) {

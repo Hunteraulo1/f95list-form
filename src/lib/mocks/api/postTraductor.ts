@@ -1,16 +1,35 @@
-import sleep from '$lib/sleep';
+import { Traductor } from '$types/schemas';
+import { checkUser } from '../../../server/lib/utils';
+import { disableLock, enableLock } from '../lockMode';
+import { getTraductors } from './getTraductors';
 
-import { Traductor, type TraductorType } from '$types/schemas';
-import { traductors } from '../data/traductor';
+import type { TraductorType } from '$types/schemas';
 
-interface PostTraductorArgs {
+export interface PostTraductorArgs {
   traductor: TraductorType;
 }
 
-export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<void> => {
-  await sleep();
+export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
+  console.info('postTraductor ~ args:', { dataTraductor: traductor });
 
-  const validTraductor = Traductor.parse(traductor);
+  checkUser('admin');
 
-  traductors.push(validTraductor);
+  try {
+    enableLock();
+
+    const validTraductor = Traductor.parse(traductor);
+    const traductors = await getTraductors();
+
+    const duplicate = traductors?.findIndex(
+      (traductor) => traductor.name.toLowerCase() === validTraductor.name.toLowerCase(),
+    );
+
+    if (duplicate !== -1) return 'duplicate';
+  } catch (error) {
+    console.error(error);
+
+    throw new Error("postTraductor ~ Un problème est survenue lors de l'ajout du traducteur");
+  } finally {
+    disableLock();
+  }
 };

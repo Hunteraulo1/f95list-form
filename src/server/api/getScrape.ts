@@ -1,7 +1,7 @@
-import { getFetchF95z } from './getFetchF95z';
+import { ScrapeGame } from '$types/schemas';
+import { f95z } from '../lib/f95z';
 
-import { type GameType, ScrapeGame } from '$types/schemas';
-
+import type { GameType } from '$types/schemas';
 export interface GetScrapeArgs {
   domain: Extract<GameType['domain'], 'F95z'>;
   id: GameType['id'];
@@ -18,7 +18,7 @@ interface GetScrape {
 export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
   console.info('getScrape ~ args:', { domain, id });
 
-  if (domain !== 'F95z') throw new Error('domaine incompatible');
+  if (domain !== 'F95z') throw new Error('getScrape ~ domaine incompatible');
 
   const link = `https://f95zone.to/threads/${id}`;
   const regName = /.*-\s(.*?)\s\[/i;
@@ -46,14 +46,14 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
   let version = '';
 
   try {
-    const result = await getFetchF95z(id);
+    const result = await f95z(id);
 
     console.info({ result });
 
     version = result ?? '';
   } catch (error) {
-    console.error('Error getFetchF95z: ', error);
-    throw new Error('getFetchF95z no return');
+    console.error('getScrape ~ Error getFetchF95z: ', error);
+    throw new Error('getScrape ~ getFetchF95z no return');
   }
 
   console.info('scrapePage ~ args:', {
@@ -75,7 +75,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
     image,
   });
 
-  console.info('validScrapeGame:', validScrapeGame);
+  console.info('getScrape ~ validScrapeGame:', validScrapeGame);
 
   return validScrapeGame;
 };

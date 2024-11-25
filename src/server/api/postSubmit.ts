@@ -2,18 +2,18 @@ import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas
 import { checkUser, dateNow } from '../lib/utils';
 import { getSubmits } from './getSubmits';
 
-export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<string | null> => {
+export const postSubmit = ({ query, game, type, comment }: PostSubmitType): string | undefined => {
   console.info('postSubmit ~ args:', { dataSubmit: { query, game, type, comment } });
 
-  if (!checkUser('traductor')) throw new Error('Unauthorized');
+  if (!checkUser('traductor')) throw new Error('postSubmit ~ Unauthorized');
 
   const validSubmit = PostSubmit.parse({ query, game, type, comment });
 
-  if (!validSubmit) throw new Error('Invalid submit');
+  if (!validSubmit) throw new Error('postSubmit ~ Invalid submit');
 
-  const submits = await getSubmits({});
+  const submits = getSubmits({});
 
-  if (!submits) throw new Error('Submits not found');
+  if (!submits) throw new Error('postSubmit ~ Submits not found');
 
   const requestingUserEmail = Session.getActiveUser().getEmail();
 
@@ -33,7 +33,7 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
     };
   }
 
-  if (!submit.query) throw new Error('Submit query not found');
+  if (!submit.query) throw new Error('postSubmit ~ Submit query not found');
 
   const submitFound = submits.find(
     (s) =>
@@ -52,10 +52,10 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
 
     scriptPropertiesService.setProperty('submits', JSON.stringify(submits));
 
-    return null;
+    return;
   } catch (error) {
     console.error(error);
 
-    throw new Error('Un problème est survenue lors de soumission du jeu');
+    throw new Error('postSubmit ~ Un problème est survenue lors de soumission du jeu');
   }
 };

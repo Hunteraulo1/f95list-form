@@ -1,7 +1,10 @@
-import { Traductor, type TraductorType } from '$types/schemas';
+import { Traductor } from '$types/schemas';
 import { disableLock, enableLock } from '../lib/lockMode';
 import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
+
+import type { TraductorType } from '$types/schemas';
+
 export interface PostTraductorArgs {
   traductor: TraductorType;
 }
@@ -21,13 +24,11 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
       (traductor) => traductor.name.toLowerCase() === validTraductor.name.toLowerCase(),
     );
 
-    if (duplicate !== -1) {
-      return 'duplicate';
-    }
+    if (duplicate !== -1) return 'duplicate';
 
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
 
-    if (!sheet) throw new Error('No gameSheet found');
+    if (!sheet) throw new Error('postTraductor ~ No gameSheet found');
 
     const totalRow = sheet.getLastRow();
 
@@ -47,7 +48,7 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
   } catch (error) {
     console.error(error);
 
-    throw new Error("Un problème est survenue lors de l'ajout du traducteur");
+    throw new Error("postTraductor ~ Un problème est survenue lors de l'ajout du traducteur");
   } finally {
     disableLock();
   }

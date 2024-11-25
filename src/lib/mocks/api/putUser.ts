@@ -1,5 +1,3 @@
-import sleep from '$lib/sleep';
-
 import { User, type UserType } from '$types/schemas';
 
 interface PutUserArgs {
@@ -10,16 +8,12 @@ interface PutUserArgs {
  * **API Endpoint** | Updates the app configuration and returns it
  */
 export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
-  await sleep();
-
   User.parse(user);
 
   console.info('putUser() called with: ', user);
 };
 
 export const putUserRole = async ({ user }: PutUserArgs): Promise<void> => {
-  await sleep();
-
   User.parse(user);
 
   console.info('putUserRole() called with: ', user);

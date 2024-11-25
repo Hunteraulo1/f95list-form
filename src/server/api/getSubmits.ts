@@ -1,16 +1,13 @@
-import { type SubmitType, User, type UserType } from '$types/schemas';
+import { User } from '$types/schemas';
+
+import type { SubmitType, UserType } from '$types/schemas';
 
 export interface GetSubmitsArgs {
   user?: UserType;
 }
 
-/**
- * **API Endpoint** | Returns the accessing submits object
- */
 export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined => {
   console.info('getSubmits ~ args:', { user });
-
-  const requestingUserEmail = Session.getActiveUser().getEmail();
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
@@ -23,12 +20,12 @@ export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined =
 
     const filteredSubmits = submits.filter((submit) => submit.email === email);
 
-    console.info('getSubmits filteredSubmits: ', filteredSubmits);
+    console.info('getSubmits ~ filteredSubmits: ', filteredSubmits);
 
     return filteredSubmits;
   }
 
-  console.info('submits: ', submits);
+  console.info('getSubmits ~ submits: ', submits);
 
   return submits;
 };

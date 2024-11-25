@@ -1,25 +1,29 @@
-import sleep from '$lib/sleep';
-import { checkUser } from '$lib/utils';
-import { type SubmitType, User, type UserType } from '$types/schemas';
-import { submits } from '../data/submit';
+import { User } from '$types/schemas';
+import { submits as submitsData } from '../data/submit';
 
-interface GetSubmitsArgs {
+import type { SubmitType, UserType } from '$types/schemas';
+export interface GetSubmitsArgs {
   user?: UserType;
 }
 
-export const getSubmits = async ({ user }: GetSubmitsArgs): Promise<SubmitType[] | null> => {
-  await sleep();
+export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined => {
+  console.info('getSubmits ~ args:', { user });
 
-  if (!checkUser(['traductor', 'admin', 'superAdmin']) || (!user && !checkUser(['admin', 'superAdmin'])))
-    throw new Error('Unauthorized');
+  const submits: SubmitType[] = submitsData;
 
   if (user) {
     const validUser = User.parse(user);
 
     const { email } = validUser;
 
-    return submits.filter((submit) => submit.email === email);
+    const filteredSubmits = submits.filter((submit) => submit.email === email);
+
+    console.info('getSubmits ~ filteredSubmits: ', filteredSubmits);
+
+    return filteredSubmits;
   }
+
+  console.info('getSubmits ~ submits: ', submits);
 
   return submits;
 };
