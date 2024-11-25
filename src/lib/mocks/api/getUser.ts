@@ -1,10 +1,10 @@
-import { checkUser } from '$lib/utils';
 import { User } from '$types/schemas';
 import { object as zObject } from 'zod';
-import { user as userData, users as usersData } from '../data/user';
+import { checkUser } from '../../../server/lib/utils';
 import { postUser } from './postUser';
 
 import type { UserType } from '$types/schemas';
+import { user as userData, users as usersData } from '../data/user';
 
 export type GetUserArgs = {
   email: string | null;
@@ -18,7 +18,7 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
   let validArgs = null;
 
   if (email) {
-    if (!checkUser(['admin']) && email !== requestingUserEmail) throw new Error('getUser ~ Unauthorized');
+    if (!checkUser('admin') && email !== requestingUserEmail) throw new Error('getUser ~ Unauthorized');
 
     const GetUserArgsSchema = zObject({
       email: User.shape.email,
@@ -37,7 +37,7 @@ export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
     throw new Error('getUser ~ User not found');
   }
 
-  if (!EMAIL_FOR_RETRIEVAL) throw new Error('getUser ~ Your email is not found');
+  if (!EMAIL_FOR_RETRIEVAL) throw new Error('getUser ~ email not found');
 
   if (!userObjectString && isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 

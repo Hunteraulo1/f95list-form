@@ -21,8 +21,6 @@ const polyfillScriptRun = async () => {
       withFailureHandler: async (reject) => {
         const wrappedMocks = {};
 
-        
-
         for (const [key, value] of Object.entries(mocks)) {
           wrappedMocks[key] = async (...args) => {
             try {
