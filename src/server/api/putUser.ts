@@ -53,7 +53,7 @@ export const putUserRole = ({ user, role }: PutUserArgs): void => {
   if (!validUser) throw new Error('putUserRole ~ Invalid user');
   if (!checkUser('admin')) throw new Error('putUserRole ~ A user permission is required to update a user role.');
 
-  if (checkUser('admin') && ['admin', 'superAdmin'].includes(role))
+  if (!checkUser('superAdmin') && ['admin', 'superAdmin'].includes(role))
     throw new Error('putUserRole ~ A user resource can only be updated by superAdmin.');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();

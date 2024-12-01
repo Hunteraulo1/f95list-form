@@ -3,7 +3,7 @@ import { checkUser } from '$lib/utils';
 import type { UserType } from '$types/schemas';
 import type { Snippet } from 'svelte';
 import { Route, type Route as RouteType } from 'svelte-routing';
-import PageNotFound from '../routes/error404.svelte';
+import PageNotFound from '../routes/Error404.svelte';
 
 interface Props {
   ranks?: UserType['role'][];
