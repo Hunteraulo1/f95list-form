@@ -27,16 +27,23 @@ export const putUser = ({ user }: PutUserArgs): void => {
 
   const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? '');
 
-  properties.profile = validUser.profile;
+  const { preferences, profile, activity } = validUser;
+  const newUser: UserType = {
+    ...properties,
+    preferences,
+    profile,
+  };
 
-  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.push({
+  if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
+    newUser.activity.push({
       value: dateNow(),
       label: 'Utilisateur mis à jour',
     });
   }
 
-  scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
+  const validNewUser = User.parse(newUser);
+
+  scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validNewUser));
 
   console.info('putUser ~ successfully saved.');
 };
@@ -66,16 +73,24 @@ export const putUserRole = ({ user, role }: PutUserArgs): void => {
 
   const properties: UserType = JSON.parse(userScriptPropertiesUser);
 
-  properties.role = validUser.role;
+  const { preferences, profile, activity } = validUser;
+  const newUser: UserType = {
+    ...properties,
+    role,
+    preferences,
+    profile,
+  };
 
-  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.push({
+  if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
+    newUser.activity.push({
       value: dateNow(),
-      label: 'Utilisateur mis à jour',
+      label: 'Rôle changé',
     });
   }
 
-  scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validUser));
+  const validNewUser = User.parse(newUser);
+
+  scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validNewUser));
 
   console.info('putUserRole ~ successfully saved.');
 };
