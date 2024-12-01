@@ -13,7 +13,7 @@ export const getQueryGames = async (): Promise<QueryGameType[]> => {
 
   if (!data) throw new Error('getQueryGames ~ no return');
 
-  const validQueryGames = data.map(([id, , name, version]) => QueryGame.parse({ id, name, version }));
+  const validQueryGames = data.map(([id, , name, version]) => QueryGame.parse({ id: Number(id), name, version }));
 
   console.info('getQueryGames ~ result:', validQueryGames);
 

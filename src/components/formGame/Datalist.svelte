@@ -15,7 +15,7 @@ interface Props extends HTMLInputAttributes {
   name: keyof GameType;
 }
 
-const { title, className, active, step, game, name }: Props = $props();
+const { title, className, active, step, game = $bindable(), name }: Props = $props();
 
 const isTraductor = checkUser(['traductor']);
 
@@ -51,7 +51,7 @@ let modal = $state(false);
       disabled={$traductors.length === 0}
       onchange={handleChange}
       oninput={handleInput}
-      value={game[name]}
+      bind:value={game[name]}
       class="input input-bordered w-full {warning ? 'input-warning' : ''}"
     />
     <datalist id="traductor-list">

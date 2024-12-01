@@ -11,7 +11,7 @@ interface Props {
   name: keyof GameType;
 }
 
-const { game, step, title, active, name }: Props = $props();
+const { game = $bindable(), step, title, active, name }: Props = $props();
 
 const handleImageError = (e: Event): void => {
   const target = e.currentTarget as HTMLImageElement;
@@ -37,8 +37,7 @@ const attributes: HTMLInputAttributes = {
   className="imgHint relative"
   {title}
   {name}
-  type="text"
-  {attributes}>
+  type="text">
   <img
     src={game.image}
     alt="bannière du jeu 2"

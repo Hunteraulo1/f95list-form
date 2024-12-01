@@ -11,7 +11,7 @@ interface Props extends HTMLTextareaAttributes {
   name: keyof GameType;
 }
 
-const { title, children, className, active, step, game, name, ...rest }: Props = $props();
+const { title, className, active, step, game = $bindable(), name }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
   (game[name] as string) = event.currentTarget.value;
@@ -25,8 +25,8 @@ const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
       placeholder={title}
       id={name}
       onchange={handleChange}
-      {...rest}
-      class="textarea textarea-bordered textarea-xs max-h-32 w-full {rest.class}"
+      bind:value={game[name]}
+      class="textarea textarea-bordered textarea-xs max-h-32 w-full"
     >{game[name]}</textarea>
   </div>
 </div>

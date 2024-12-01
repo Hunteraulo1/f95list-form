@@ -270,7 +270,6 @@ type Element = {
   title: string;
   className?: string;
   active?: number[];
-  checked?: boolean;
   name: keyof GameType;
 };
 
@@ -381,7 +380,6 @@ const elements: Element[] = [
     active: [4, 5],
     title: 'Auto-Check',
     name: 'ac',
-    checked: game.ac,
   },
 ];
 </script>
@@ -417,8 +415,8 @@ const elements: Element[] = [
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         {#if !deleteMode && $traductors.length > 0}
-          {#each elements as { Component, name, title, active, className, checked, values, type }}
-            <Component {game} {step} {name} {title} {active} {className} {checked} {values} {type} />
+          {#each elements as { Component, name, title, active, className, values, type }}
+            <Component bind:game {step} {name} {title} {active} {className} {values} {type} />
           {/each}
         {/if}
       </div>

@@ -12,11 +12,13 @@ interface Props extends HTMLSelectAttributes {
   name: keyof GameType;
 }
 
-const { title, values = [], className, active, step, game, name, ...rest }: Props = $props();
+const { title, values = [], className, active, step, game = $bindable(), name }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
-  if (name === 'tname' && rest.value === 'Intégrée') {
+  if (name === 'tname' && event.currentTarget.value === 'Intégrée') {
     game.tversion = 'Intégrée';
+
+    console.info('handleChange ~ game:', game);
 
     return;
   }
@@ -42,9 +44,8 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     placeholder={title}
     id={name}
     onchange={handleChange}
-    value={game[name]}
-    {...rest}
-    class="select select-bordered w-full {rest.class}"
+    bind:value={game[name]}
+    class="select select-bordered w-full"
     >
     {#each Object.values(values) as value}
       <option>{value}</option>

@@ -2,7 +2,7 @@
 import { Game, type GameType } from '$types/schemas';
 import type { Snippet } from 'svelte';
 import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
-import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
+import type { ChangeEventHandler } from 'svelte/elements';
 
 interface Props {
   title: string;
@@ -12,11 +12,10 @@ interface Props {
   game: GameType;
   name: keyof GameType;
   type?: HTMLInputElement['type'];
-  attributes?: HTMLInputAttributes;
   children?: Snippet;
 }
 
-const { title, className, active, step, game, name, type, attributes, children }: Props = $props();
+const { title, className, active, step, game = $bindable(), name, type, children }: Props = $props();
 
 let error = $state(false);
 
@@ -65,9 +64,8 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
       onchange={handleChange}
       oninput={handleInput}
       disabled={(name === 'ac' && game.domain !== 'F95z') || (name === 'id' && game.domain === 'Autre')}
-      value={game[name]}
+      bind:value={game[name]}
       {type}
-      {...attributes}
       class={type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"}
       class:border-error={error}
     />

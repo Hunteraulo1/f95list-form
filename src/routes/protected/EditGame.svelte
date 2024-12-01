@@ -40,5 +40,5 @@ onMount(() => {
 </script>
 
 {#if game}
-  <FormGame {game} step={5} edit />
+  <FormGame bind:game step={5} edit />
 {/if}
