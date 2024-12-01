@@ -16,6 +16,7 @@ import { putSubmit } from './api/putSubmit';
 import { putTraductor } from './api/putTraductor';
 import { putUser, putUserRole } from './api/putUser';
 
+// biome-ignore lint/suspicious/noExplicitAny: later
 const getMockEndpoints = (): any => ({
   // App Configuration
   getAppConfiguration,
