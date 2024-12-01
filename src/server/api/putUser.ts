@@ -57,7 +57,6 @@ export const putUserRole = ({ user, role }: PutUserArgs): void => {
 
   const validUser = User.parse(user);
 
-  if (!validUser) throw new Error('putUserRole ~ Invalid user');
   if (!checkUser('admin')) throw new Error('putUserRole ~ A user permission is required to update a user role.');
 
   if (!checkUser('superAdmin') && ['admin', 'superAdmin'].includes(role))
