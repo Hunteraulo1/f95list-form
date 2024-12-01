@@ -159,7 +159,7 @@ const dialogEdit: boolean[] = $state([]);
                     <button onclick={() => {dialogEdit[index] = true}} class="btn btn-ghost btn-xs">
                       Modifier
                     </button>
-                    <EditUserModal bind:showModal={dialogEdit[index]} {user} />
+                    <EditUserModal bind:showModal={dialogEdit[index]} {user} bind:users={users} />
                   </th>
                 </tr>
               {:else}

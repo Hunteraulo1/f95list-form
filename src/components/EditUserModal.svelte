@@ -1,17 +1,19 @@
 <script lang="ts">
-import Modal from './Modal.svelte';
-
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast } from '$lib/stores';
 import { checkUser } from '$lib/utils';
-import { User, type UserType } from '$types/schemas';
+import { User } from '$types/schemas';
+import Modal from './Modal.svelte';
+
+import type { UserType } from '$types/schemas';
 
 interface Props {
   showModal: boolean;
   user: UserType;
+  users: UserType[];
 }
 
-let { showModal = $bindable(), user = $bindable() }: Props = $props();
+let { showModal = $bindable(), user = $bindable(), users = $bindable() }: Props = $props();
 
 let selectedRole = $state(user.role);
 
@@ -19,7 +21,7 @@ const handleEditUserSubmit = async (): Promise<void> => {
   $isLoading = true;
 
   try {
-    const result = await GAS_API.putUserRole({ user, role: selectedRole });
+    await GAS_API.putUserRole({ user, role: selectedRole });
 
     if (user.role === 'superAdmin' && !checkUser(['superAdmin'])) {
       newToast({
@@ -38,6 +40,12 @@ const handleEditUserSubmit = async (): Promise<void> => {
 
       return;
     }
+
+    users = users.map((u) => {
+      if (u.email !== user.email) return u;
+
+      return { ...u, role: selectedRole };
+    });
 
     newToast({
       alertType: 'success',
