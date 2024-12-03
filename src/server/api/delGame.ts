@@ -47,10 +47,10 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
 
     gameSheet.deleteRow(gameIndex + 2);
 
-    const user = getUser();
+    const user = await getUser();
     user.statistics.gameEdited++;
 
-    putUser({ user });
+    await putUser({ user });
 
     const { link, traductor, proofreader, image, tversion } = game;
 

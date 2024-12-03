@@ -51,9 +51,10 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
   const validUser = User.parse(user);
 
   if (!validUser) throw new Error('putUserRole ~ Invalid user');
-  if (!checkUser('admin')) throw new Error('putUserRole ~ A user permission is required to update a user role.');
+  if (!(await checkUser('admin')))
+    throw new Error('putUserRole ~ A user permission is required to update a user role.');
 
-  if (checkUser('admin') && ['admin', 'superAdmin'].includes(role))
+  if ((await checkUser('admin')) && ['admin', 'superAdmin'].includes(role))
     throw new Error('putUserRole ~ A user resource can only be updated by superAdmin.');
 
   if (!validUser.email) throw new Error('putUserRole ~ No email found');

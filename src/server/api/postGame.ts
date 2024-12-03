@@ -98,10 +98,10 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
 
     changelog({ game: validGame.name, status: 'AJOUT DE JEU' });
 
-    const user = getUser();
-    putStatistics('post');
+    const user = await getUser();
+    await putStatistics('post');
 
-    putUser({ user });
+    await putUser({ user });
 
     if (!silentMode) {
       sendWebhookUpdate({

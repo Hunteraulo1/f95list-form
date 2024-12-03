@@ -91,10 +91,10 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
       changelog({ game: validGame.name, status: 'MISE À JOUR' });
     }
 
-    const user = getUser();
-    putStatistics('put');
+    const user = await getUser();
+    await putStatistics('put');
 
-    putUser({ user });
+    await putUser({ user });
 
     let title = "Modification d'un jeu";
     let color = 5_814_783;

@@ -8,7 +8,7 @@ export interface PutUserArgs {
   role?: UserType['role'];
 }
 
-export const putUser = ({ user }: PutUserArgs): void => {
+export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   console.info('putUser ~ args:', { user });
 
   const activeUserEmail = Session.getActiveUser().getEmail();
@@ -48,7 +48,7 @@ export const putUser = ({ user }: PutUserArgs): void => {
   console.info('putUser ~ successfully saved.');
 };
 
-export const putUserRole = ({ user, role }: PutUserArgs): void => {
+export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> => {
   console.info('putUserRole ~ args:', { user, role });
 
   if (!role) throw new Error('putUserRole ~ No role found');
@@ -94,7 +94,7 @@ export const putUserRole = ({ user, role }: PutUserArgs): void => {
   console.info('putUserRole ~ successfully saved.');
 };
 
-export const putStatistics = (type: 'put' | 'post'): void => {
+export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {
   console.info('putStatistics ~ args:', { type });
 
   const validUser = User.parse(getUser());
