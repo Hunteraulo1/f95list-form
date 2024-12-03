@@ -78,7 +78,7 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
         class="btn w-min"
         class:btn-disable={!$game.version}
         class:btn-primary={$game.version}
-        disabled={$game.tname === 'Intégrée'}
+        disabled={$game.tname === 'Intégrée' && name === 'tversion'}
         onclick={(e) => {
           e.preventDefault();
           if ($game.version) $game.tversion = $game.version;
