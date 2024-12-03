@@ -1,10 +1,10 @@
 import { User } from '$types/schemas';
 import { object as zObject } from 'zod';
-import { checkUser } from '../../../server/lib/utils';
+import { user as userData, users as usersData } from '../data/user';
+import { checkUser } from '../utils';
 import { postUser } from './postUser';
 
 import type { UserType } from '$types/schemas';
-import { user as userData, users as usersData } from '../data/user';
 
 export type GetUserArgs = {
   email: string | null;
@@ -18,7 +18,7 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
   let validArgs = null;
 
   if (email) {
-    if (!checkUser('admin') && email !== requestingUserEmail) throw new Error('getUser ~ Unauthorized');
+    if (!(await checkUser('admin')) && email !== requestingUserEmail) throw new Error('getUser ~ Unauthorized');
 
     const GetUserArgsSchema = zObject({
       email: User.shape.email,

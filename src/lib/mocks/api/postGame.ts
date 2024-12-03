@@ -1,6 +1,6 @@
 import { Game } from '$types/schemas';
-import { checkUser } from '../../../server/lib/utils';
 import { disableLock, enableLock } from '../lockMode';
+import { checkUser } from '../utils';
 import { getQueryGames } from './getQueryGames';
 import { getTraductors } from './getTraductors';
 import { getUser } from './getUser';
@@ -16,7 +16,7 @@ export interface PostGameArgs {
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
   console.info('postGame ~ args:', { game, silentMode });
 
-  checkUser('admin');
+  if (!(await checkUser('admin'))) throw new Error('postGame ~ Unauthorized');
 
   try {
     enableLock();

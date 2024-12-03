@@ -1,7 +1,5 @@
-import { User } from '$types/schemas';
-import { getUser } from '../api/getUser';
-
-import type { UserType } from '$types/schemas';
+import { User, type UserType } from '$types/schemas';
+import { getUser } from './api/getUser';
 
 const checkUser = async (rank: UserType['role'][0]): Promise<boolean> => {
   console.info('checkUser');

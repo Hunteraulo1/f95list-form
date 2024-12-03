@@ -1,16 +1,16 @@
-import { checkUser } from '../../../server/lib/utils';
-import { users } from '../data/user';
+import { user, users } from '../data/user';
+import { checkUser } from '../utils';
 
 import type { UserType } from '$types/schemas';
 
 export const getUsers = async (): Promise<UserType[]> => {
   console.info('getUsers');
 
-  const requestingUserEmail = Session.getActiveUser().getEmail();
+  const requestingUserEmail = user.email;
 
   console.info('getUsers called by: ', requestingUserEmail);
 
-  checkUser('admin');
+  if (!(await checkUser('admin'))) throw new Error('getUsers ~ Unauthorized');
 
   return users;
 };

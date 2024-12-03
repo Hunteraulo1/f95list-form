@@ -2,8 +2,8 @@ import { User } from '$types/schemas';
 import { getUser } from './getUser';
 
 import type { UserType } from '$types/schemas';
-import { checkUser, dateNow } from '../../../server/lib/utils';
 import { users as usersData } from '../data/user';
+import { checkUser, dateNow } from '../utils';
 
 export interface PutUserArgs {
   user: UserType;
@@ -13,8 +13,8 @@ export interface PutUserArgs {
 export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   console.info('putUser ~ args:', { user });
 
-  const activeUserEmail = Session.getActiveUser().getEmail();
-  const effectiveUserEmail = Session.getEffectiveUser().getEmail();
+  const activeUserEmail = user.email;
+  const effectiveUserEmail = user.email;
 
   console.info('putUser ~ called by: ', activeUserEmail);
 
@@ -46,7 +46,7 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 
   if (!role) throw new Error('putUserRole ~ No role found');
 
-  console.info('putUserRole ~ called by: ', Session.getActiveUser().getEmail());
+  console.info('putUserRole ~ called by: ', user.email);
 
   const validUser = User.parse(user);
 

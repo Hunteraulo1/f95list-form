@@ -1,5 +1,5 @@
-import { checkUser } from '../../../server/lib/utils';
 import { disableLock, enableLock } from '../lockMode';
+import { checkUser } from '../utils';
 import { getQueryGames } from './getQueryGames';
 import { getUser } from './getUser';
 import { putUser } from './putUser';
@@ -15,7 +15,7 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
 
   const { name, version } = query;
 
-  if (!checkUser('admin')) throw new Error('delGame ~ Unauthorized');
+  if (!(await checkUser('admin'))) throw new Error('delGame ~ Unauthorized');
 
   enableLock();
 

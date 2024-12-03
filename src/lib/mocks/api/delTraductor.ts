@@ -2,7 +2,7 @@ import { disableLock, enableLock } from '../lockMode';
 import { getTraductors } from './getTraductors';
 
 import type { TraductorType } from '$types/schemas';
-import { checkUser } from '../../../server/lib/utils';
+import { checkUser } from '../utils';
 
 export interface DelTraductorArgs {
   query: TraductorType['name'];
@@ -11,7 +11,7 @@ export interface DelTraductorArgs {
 export const delTraductor = async ({ query }: DelTraductorArgs): Promise<void> => {
   console.info('delTraductor ~ args:', { query });
 
-  if (!checkUser('admin')) throw new Error('delTraductor ~ Unauthorized');
+  if (!(await checkUser('admin'))) throw new Error('delTraductor ~ Unauthorized');
 
   enableLock();
 

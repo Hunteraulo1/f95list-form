@@ -1,5 +1,8 @@
 <script lang="ts">
+import { GAS_API } from '$lib/GAS_API';
 import { isLoading, sessionUser } from '$lib/stores';
+import { checkUser } from '$lib/utils';
+import { onMount } from 'svelte';
 import { Bars3, Icon } from 'svelte-hero-icons';
 import { Link, navigate } from 'svelte-routing';
 import packageJson from '../../package.json';
@@ -10,15 +13,27 @@ interface Props {
 
 const { title = '' }: Props = $props();
 
-const count = 3;
+let count = $state(0);
+
+onMount(async () => {
+  if (checkUser(['admin', 'superAdmin'])) {
+    const submits = await GAS_API.getSubmits({});
+
+    if (!submits) return;
+
+    const submitsWait = submits.filter((submit) => submit.status === 'wait');
+
+    count = submitsWait.length;
+  }
+});
 </script>
 
 <div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>
   <div class="flex-none">
-    <label for="nav-drawer-control" class="btn btn-square btn-ghost">
+    <label for="nav-drawer-control" class="btn btn-square btn-ghost relative">
       <Icon src={Bars3} size="1.5rem" />
       {#if count > 0}
-        <span class="badge badge-primary">{count}</span>
+        <span class="badge badge-error absolute top-1 right-1 size-4 p-0 pb-0.5 text-white text-xs">{count}</span>
       {/if}
     </label>
   </div>

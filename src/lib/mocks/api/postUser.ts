@@ -1,7 +1,7 @@
 import { User } from '$types/schemas';
 
 import type { UserType } from '$types/schemas';
-import { dateNow } from '../../../server/lib/utils';
+import { dateNow } from '../utils';
 
 export const postUser = async (email: string, overrides = {}): Promise<UserType> => {
   console.info('postUser ~ args:', { email, overrides });

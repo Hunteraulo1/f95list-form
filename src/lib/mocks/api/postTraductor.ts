@@ -1,6 +1,6 @@
 import { Traductor } from '$types/schemas';
-import { checkUser } from '../../../server/lib/utils';
 import { disableLock, enableLock } from '../lockMode';
+import { checkUser } from '../utils';
 import { getTraductors } from './getTraductors';
 
 import type { TraductorType } from '$types/schemas';
@@ -12,7 +12,7 @@ export interface PostTraductorArgs {
 export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
   console.info('postTraductor ~ args:', { dataTraductor: traductor });
 
-  checkUser('admin');
+  if (!(await checkUser('admin'))) throw new Error('postTraductor ~ Unauthorized');
 
   try {
     enableLock();

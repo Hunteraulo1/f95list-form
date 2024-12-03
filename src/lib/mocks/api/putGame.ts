@@ -6,8 +6,8 @@ import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 import { Game } from '$types/schemas';
-import { checkUser } from '../../../server/lib/utils';
 import { disableLock, enableLock } from '../lockMode';
+import { checkUser } from '../utils';
 
 export interface PutGameArgs {
   game: GameType;
@@ -21,7 +21,7 @@ export interface PutGameArgs {
 export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
   console.info('putGame ~ args:', { dataGame });
 
-  checkUser('admin');
+  if (!(await checkUser('admin'))) throw new Error('putGame ~ Unauthorized');
 
   try {
     enableLock();

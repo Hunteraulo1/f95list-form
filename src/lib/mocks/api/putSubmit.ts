@@ -1,5 +1,5 @@
 import { Submit } from '$types/schemas';
-import { checkUser } from '../../../server/lib/utils';
+import { checkUser } from '../utils';
 import { getSubmits } from './getSubmits';
 import { getUser } from './getUser';
 
