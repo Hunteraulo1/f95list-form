@@ -66,14 +66,26 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
       id={name}
       onchange={handleChange}
       oninput={handleInput}
-      disabled={(name === 'ac' && $game.domain !== 'F95z') || (name === 'id' && $game.domain === 'Autre')}
+      disabled={(name === 'ac' && $game.domain !== 'F95z') || (name === 'id' && $game.domain === 'Autre') || $game.tname === 'Intégrée'}
       value={$game[name]}
       {type}
       class={type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"}
       class:border-error={error}
       {...attributes}
     />
-    {#if name === 'link'}
+    {#if name === 'tversion'}
+      <button
+        class="btn w-min"
+        class:btn-disable={!$game.version}
+        class:btn-primary={$game.version}
+        disabled={$game.tname === 'Intégrée'}
+        onclick={(e) => {
+          e.preventDefault();
+          if ($game.version) $game.tversion = $game.version;
+        }}>
+        <Icon src={DocumentDuplicate} size="1rem" />
+    </button>
+    {:else if name === 'link'}
       <a
         href={$game.link}
         target="_blank"
@@ -82,17 +94,6 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
         class:btn-primary={$game.link}>
         <Icon src={$game.link ? Link : LinkSlash} size="1rem" />
       </a>
-    {:else if name === 'tversion'}
-      <button
-        class="btn w-min"
-        class:btn-disable={!$game.version}
-        class:btn-primary={$game.version}
-        onclick={(e) => {
-          e.preventDefault();
-          if ($game.version) $game.tversion = $game.version;
-        }}>
-        <Icon src={DocumentDuplicate} size="1rem" />
-      </button>
     {:else if name === 'tlink'}
       <a
         href={$game.tlink}
