@@ -6,7 +6,7 @@ export interface GetSubmitsArgs {
   user?: UserType;
 }
 
-export const getSubmits = ({ user }: GetSubmitsArgs): SubmitType[] | undefined => {
+export const getSubmits = async ({ user }: GetSubmitsArgs): Promise<SubmitType[]> => {
   console.info('getSubmits ~ args:', { user });
 
   const submits: SubmitType[] = submitsData;

@@ -3,7 +3,7 @@ import { User } from '$types/schemas';
 import type { UserType } from '$types/schemas';
 import { dateNow } from '../../../server/lib/utils';
 
-export const postUser = (email: string, overrides = {}): UserType => {
+export const postUser = async (email: string, overrides = {}): Promise<UserType> => {
   console.info('postUser ~ args:', { email, overrides });
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();

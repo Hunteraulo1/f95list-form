@@ -3,7 +3,7 @@ import { users } from '../data/user';
 
 import type { UserType } from '$types/schemas';
 
-export const getUsers = (): UserType[] | undefined => {
+export const getUsers = async (): Promise<UserType[]> => {
   console.info('getUsers');
 
   const requestingUserEmail = Session.getActiveUser().getEmail();

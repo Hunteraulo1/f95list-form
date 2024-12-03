@@ -80,10 +80,10 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
 
     console.info('postGame ~ convert:', { convertedGame });
 
-    const user = getUser();
-    putStatistics('post');
+    const user = await getUser();
+    await putStatistics('post');
 
-    putUser({ user });
+    await putUser({ user });
   } catch (error) {
     console.error(error);
 

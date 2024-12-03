@@ -70,6 +70,7 @@ export const GAS_API = {
 
   // Submit
   getSubmits: (args: GetSubmitsArgs): Promise<SubmitType[]> => callAPI<SubmitType[], typeof args>('getSubmits', args),
-  postSubmit: (args: PostSubmitType): Promise<string | null> => callAPI<string | null, typeof args>('postSubmit', args),
+  postSubmit: (args: PostSubmitType): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('postSubmit', args),
   putSubmit: (args: PutSubmitArgs): Promise<void> => callAPI<void, typeof args>('putSubmit', args),
 };

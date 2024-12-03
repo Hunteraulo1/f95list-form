@@ -10,7 +10,7 @@ export type GetUserArgs = {
   email: string | null;
 };
 
-export const getUser = ({ email }: GetUserArgs = { email: null }): UserType => {
+export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise<UserType> => {
   console.info('getUser ~ args:', { email });
 
   const requestingUserEmail = userData.email;

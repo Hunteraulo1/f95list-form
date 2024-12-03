@@ -25,6 +25,7 @@
     "@sveltejs/vite-plugin-svelte": "5.0.1",
     "@types/cheerio": "0.22.35",
     "@types/google-apps-script": "1.0.86",
+    "@types/google.script.client-side": "0.1.5",
     "@types/jsdom": "21.1.7",
     "@types/node": "22.10.1",
     "autoprefixer": "10.4.20",

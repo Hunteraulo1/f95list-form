@@ -21,7 +21,7 @@ export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> 
   const user = getUser({ email: submit.email });
   if (!user) throw new Error('putSubmit ~ User not found');
 
-  const submits = getSubmits({});
+  const submits = await getSubmits({});
 
   if (!submits) throw new Error('putSubmit ~ Submits not found');
 

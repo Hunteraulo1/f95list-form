@@ -70,10 +70,10 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
 
     console.info('putGame convert:', { convertedGame });
 
-    const user = getUser();
+    const user = await getUser();
     putStatistics('put');
 
-    putUser({ user });
+    await putUser({ user });
   } catch (error) {
     console.error(error);
 

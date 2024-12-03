@@ -9,12 +9,17 @@ interface Props {
 }
 
 const { title = '' }: Props = $props();
+
+const count = 3;
 </script>
 
 <div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>
   <div class="flex-none">
     <label for="nav-drawer-control" class="btn btn-square btn-ghost">
       <Icon src={Bars3} size="1.5rem" />
+      {#if count > 0}
+        <span class="badge badge-primary">{count}</span>
+      {/if}
     </label>
   </div>
   <div class="flex-1">

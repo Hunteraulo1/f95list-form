@@ -2,7 +2,7 @@ import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas
 import { checkUser, dateNow } from '../lib/utils';
 import { getSubmits } from './getSubmits';
 
-export const postSubmit = ({ query, game, type, comment }: PostSubmitType): string | undefined => {
+export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<string | undefined> => {
   console.info('postSubmit ~ args:', { dataSubmit: { query, game, type, comment } });
 
   if (!checkUser('traductor')) throw new Error('postSubmit ~ Unauthorized');
@@ -11,7 +11,7 @@ export const postSubmit = ({ query, game, type, comment }: PostSubmitType): stri
 
   if (!validSubmit) throw new Error('postSubmit ~ Invalid submit');
 
-  const submits = getSubmits({});
+  const submits = await getSubmits({});
 
   if (!submits) throw new Error('postSubmit ~ Submits not found');
 

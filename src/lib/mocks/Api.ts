@@ -1,4 +1,5 @@
 import { delGame } from './api/delGame';
+import { delTraductor } from './api/delTraductor';
 import { getAppConfiguration } from './api/getAppConfiguration';
 import { getGame } from './api/getGame';
 import { getQueryGames } from './api/getQueryGames';
@@ -16,8 +17,13 @@ import { putSubmit } from './api/putSubmit';
 import { putTraductor } from './api/putTraductor';
 import { putUser, putUserRole } from './api/putUser';
 
-// biome-ignore lint/suspicious/noExplicitAny: later
-const getMockEndpoints = (): any => ({
+import type { GAS_API } from '$lib/GAS_API';
+
+export type MockEndpoints = {
+  [K in keyof typeof GAS_API]: (typeof GAS_API)[K];
+};
+
+const getMockEndpoints = (): MockEndpoints => ({
   // App Configuration
   getAppConfiguration,
   putAppConfiguration,
@@ -40,6 +46,7 @@ const getMockEndpoints = (): any => ({
   getTraductors,
   postTraductor,
   putTraductor,
+  delTraductor,
 
   // Submit
   getSubmits,

@@ -1,4 +1,5 @@
 import { ScrapeGame } from '$types/schemas';
+import Cheerio from 'cheerio';
 import { f95z } from '../lib/f95z';
 
 import type { GameType } from '$types/schemas';
