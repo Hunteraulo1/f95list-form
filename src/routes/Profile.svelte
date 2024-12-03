@@ -68,9 +68,7 @@ run(() => {
         <span>{user.email}</span>
       </div>
       <div class="py-1">
-        {#each user.role as role}
-          <span class="badge">{role.toUpperCase()}</span>
-        {/each}
+        <span class="badge">{user.role.toUpperCase()}</span>
       </div>
     </div>
     <div class="flex flex-grow flex-col items-center">
