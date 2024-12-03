@@ -101,9 +101,9 @@ const handleClickDelete = async (): Promise<void> => {
   {#snippet modalContent()}    
     <p class="py-4">Êtes-vous sûr de vouloir supprimer ce jeu ?</p>
     <textarea
-      bind:value={comment}
       placeholder="Pourquoi voulez-vous supprimer le jeu ?"
       class="textarea textarea-bordered max-h-32 w-full">
+      {comment}
     </textarea>
   {/snippet}
   {#snippet modalAction()}

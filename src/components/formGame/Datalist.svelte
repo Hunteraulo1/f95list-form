@@ -50,7 +50,7 @@ let modal = $state(false);
       disabled={$traductors.length === 0}
       onchange={handleChange}
       oninput={handleInput}
-      bind:value={$game[name]}
+      value={$game[name]}
       class="input input-bordered w-full {warning ? 'input-warning' : ''}"
     />
     <datalist id="traductor-list">
