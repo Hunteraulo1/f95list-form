@@ -1,13 +1,14 @@
 import { writable } from 'svelte/store';
 
 import type { Toast as ToastPrimitive } from '$types/index';
-import type { AppConfigurationType, QueryGameType, TraductorType, UserType } from '$types/schemas';
+import type { AppConfigurationType, GameType, QueryGameType, TraductorType, UserType } from '$types/schemas';
 
 export const sessionUser = writable<UserType | null>(null);
 
 export const isLoading = writable<boolean>(false);
 export const queryGame = writable<QueryGameType | undefined>(undefined);
 export const queryGames = writable<QueryGameType[]>([]);
+export const game = writable<GameType>();
 export const traductors = writable<TraductorType[]>([]);
 
 export const appConfiguration = writable<AppConfigurationType>();

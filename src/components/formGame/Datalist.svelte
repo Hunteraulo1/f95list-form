@@ -1,6 +1,6 @@
 <script lang="ts">
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
-import { traductors } from '$lib/stores';
+import { game, traductors } from '$lib/stores';
 import { checkUser } from '$lib/utils';
 import type { GameType } from '$types/schemas';
 import { Icon, UserPlus } from 'svelte-hero-icons';
@@ -11,26 +11,25 @@ interface Props extends HTMLInputAttributes {
   className?: string;
   active?: number[];
   step?: number;
-  game: GameType;
   name: keyof GameType;
 }
 
-const { title, className, active, step, game = $bindable(), name }: Props = $props();
+const { title, className, active, step, name }: Props = $props();
 
 const isTraductor = checkUser(['traductor']);
 
 const checkValue = (value: string): boolean => {
-  if (isTraductor || game[name] === '') return false;
+  if (isTraductor || $game[name] === '') return false;
 
   return !$traductors.find((item) => item.name === value);
 };
 
-let warning = $state(checkValue(game[name] as string));
+let warning = $state(checkValue($game[name] as string));
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event): void => {
   const value = event.currentTarget.value;
 
-  (game[name] as string) = value;
+  ($game[name] as string) = value;
 };
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event): void => {
@@ -51,7 +50,7 @@ let modal = $state(false);
       disabled={$traductors.length === 0}
       onchange={handleChange}
       oninput={handleInput}
-      bind:value={game[name]}
+      bind:value={$game[name]}
       class="input input-bordered w-full {warning ? 'input-warning' : ''}"
     />
     <datalist id="traductor-list">
@@ -74,5 +73,5 @@ let modal = $state(false);
 
 <AddTraductorModal
   bind:showModal={modal}
-  name={game.traductor}
+  name={$game.traductor}
 />

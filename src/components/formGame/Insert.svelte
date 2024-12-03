@@ -1,13 +1,6 @@
 <script lang="ts">
-import { newToast } from '$lib/stores';
-import type { GameType } from '$types/schemas';
+import { game, newToast } from '$lib/stores';
 import Modal from '../Modal.svelte';
-
-interface Props {
-  game: GameType;
-}
-
-const { game }: Props = $props();
 
 let insertModal = $state(false);
 let insertObject: string = $state('');
@@ -22,9 +15,9 @@ const handleClickInsert = (): void => {
     return;
   }
 
-  Object.assign(game, JSON.parse(insertObject));
+  Object.assign($game, JSON.parse(insertObject));
 
-  game.ac = false; // Reload view data
+  $game.ac = false; // Reload view data
 };
 </script>
 

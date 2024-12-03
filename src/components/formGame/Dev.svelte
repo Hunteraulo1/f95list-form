@@ -1,4 +1,6 @@
 <script lang="ts">
+import { game } from '$lib/stores';
+
 import type { GameType } from '$types/schemas';
 
 interface ScrapeDataArgs {
@@ -7,16 +9,15 @@ interface ScrapeDataArgs {
 }
 
 interface Props {
-  game: GameType;
   step: number;
   scrapeData: (args: ScrapeDataArgs) => Promise<void>;
 }
 
-let { game, step, scrapeData }: Props = $props();
+let { step, scrapeData }: Props = $props();
 
 const handleClick = (): void => {
   step = 5;
-  game = {
+  $game = {
     domain: 'Autre',
     id: 666,
     name: 'TEST GAME FOR DEV',
@@ -43,11 +44,11 @@ const handleClick = (): void => {
   onclick={handleClick}>
   Dev data
 </button>
-{#if game.domain === "F95z"}
+{#if $game.domain === "F95z"}
   <button
     class="btn btn-info w-full sm:w-48"
     type="button"
-    onclick={() => scrapeData({ id: game.id, domain: 'F95z' })}>
+    onclick={() => scrapeData({ id: $game.id, domain: 'F95z' })}>
     Force scrape
   </button>
 {/if}

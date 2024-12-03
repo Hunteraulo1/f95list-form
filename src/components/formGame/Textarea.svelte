@@ -1,4 +1,5 @@
 <script lang="ts">
+import { game } from '$lib/stores';
 import type { GameType } from '$types/schemas';
 import type { ChangeEventHandler, HTMLTextareaAttributes } from 'svelte/elements';
 
@@ -7,14 +8,13 @@ interface Props extends HTMLTextareaAttributes {
   className?: string;
   active?: number[];
   step?: number;
-  game: GameType;
   name: keyof GameType;
 }
 
-const { title, className, active, step, game = $bindable(), name }: Props = $props();
+const { title, className, active, step, name }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
-  (game[name] as string) = event.currentTarget.value;
+  ($game[name] as GameType[keyof GameType]) = event.currentTarget.value;
 };
 </script>
 
@@ -25,8 +25,8 @@ const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
       placeholder={title}
       id={name}
       onchange={handleChange}
-      bind:value={game[name]}
+      bind:value={$game[name]}
       class="textarea textarea-bordered textarea-xs max-h-32 w-full"
-    >{game[name]}</textarea>
+    >{$game[name]}</textarea>
   </div>
 </div>

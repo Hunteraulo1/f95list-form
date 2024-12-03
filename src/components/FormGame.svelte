@@ -1,6 +1,6 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading, newToast, queryGame, traductors } from '$lib/stores';
+import { game, isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import { checkUser } from '$lib/utils';
 import { Game, type GameType } from '$types/schemas';
 import { onMount } from 'svelte';
@@ -20,7 +20,6 @@ import Textarea from './formGame/Textarea.svelte';
 interface Props {
   step?: number;
   edit?: boolean;
-  game?: GameType;
   handleUpdateSubmit?: (type: 'validated' | 'rejected') => void;
   editor?: boolean;
   deleteMode?: boolean;
@@ -29,25 +28,6 @@ interface Props {
 let {
   step = $bindable(0),
   edit = false,
-  game = $bindable({
-    status: 'EN COURS',
-    type: 'RenPy',
-    tname: 'Traduction',
-    ttype: 'Traduction Humaine',
-    ac: false,
-    domain: 'F95z',
-    id: null,
-    link: '',
-    name: '',
-    proofreader: '',
-    tags: '',
-    tlink: '',
-    traductor: '',
-    tversion: '',
-    version: '',
-    trlink: '',
-    image: '',
-  } as GameType),
   handleUpdateSubmit,
   editor = $bindable(),
   deleteMode = false,
@@ -79,7 +59,7 @@ onMount(async () => {
     $isLoading = false;
   }
 
-  const { id, domain, ac } = game;
+  const { id, domain, ac } = $game;
 
   if (step !== 5 || domain !== 'F95z' || !ac) return;
 
@@ -97,21 +77,21 @@ onMount(async () => {
 
 const changeStep = async (amount: number): Promise<void> => {
   if (step + amount >= 0 && step + amount <= 5) step += amount;
-  if (step === 1 && game.domain === 'Autre') step += amount; // ID
-  if (step === 2 && game.domain === 'F95z') step += amount; // Game informations
+  if (step === 1 && $game.domain === 'Autre') step += amount; // ID
+  if (step === 2 && $game.domain === 'F95z') step += amount; // Game informations
   if (
-    (step === 4 && game.domain === 'Autre' && checkUser(['admin', 'superAdmin'])) ||
+    (step === 4 && $game.domain === 'Autre' && checkUser(['admin', 'superAdmin'])) ||
     (step === 4 && !checkUser(['admin', 'superAdmin']))
   ) {
     step += amount; // Auto-Check
   }
 
-  const gameId = game.id;
+  const gameId = $game.id;
 
-  if (step === 3 && game.domain === 'F95z' && game.id && gameId && savedId !== game.id) {
-    const { id, domain } = game;
+  if (step === 3 && $game.domain === 'F95z' && gameId && savedId !== gameId) {
+    const { id, domain } = $game;
 
-    savedId = game.id;
+    savedId = gameId;
 
     await scrapeData({ id, domain });
   }
@@ -131,18 +111,18 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs): Promise<void> => {
 
     const { name, version, status, tags, type, image } = result;
 
-    if (game.ac === true || !edit) {
-      game.version = version ?? game.version;
+    if ($game.ac === true || !edit) {
+      $game.version = version ?? $game.version;
     }
 
-    game = {
-      ...game,
-      name: name ?? game.name,
-      tversion: game.tversion === '' ? version : game.tversion,
-      status: status ?? game.status,
-      tags: tags ?? game.tags,
-      type: type ?? game.type,
-      image: image ?? game.image,
+    $game = {
+      ...$game,
+      name: name ?? $game.name,
+      tversion: $game.tversion === '' ? version : $game.tversion,
+      status: status ?? $game.status,
+      tags: tags ?? $game.tags,
+      type: type ?? $game.type,
+      image: image ?? $game.image,
     };
   } catch (error) {
     console.error('Error scrapped game', error);
@@ -164,7 +144,7 @@ const handleSubmit = async (): Promise<void> => {
     try {
       const result = await GAS_API.postSubmit({
         query: edit ? $queryGame : undefined,
-        game,
+        game: $game,
         type: edit ? 'edit' : 'add',
         comment: '',
       });
@@ -202,7 +182,7 @@ const handleSubmit = async (): Promise<void> => {
     try {
       if (!$queryGame) throw new Error('Query not found');
 
-      const result = await GAS_API.putGame({ game, query: $queryGame, silentMode });
+      const result = await GAS_API.putGame({ game: $game, query: $queryGame, silentMode });
 
       if (result === 'duplicate') {
         newToast({
@@ -232,7 +212,7 @@ const handleSubmit = async (): Promise<void> => {
     }
   } else {
     try {
-      const result = await GAS_API.postGame({ game, silentMode });
+      const result = await GAS_API.postGame({ game: $game, silentMode });
 
       if (result === 'duplicate') {
         newToast({
@@ -416,7 +396,7 @@ const elements: Element[] = [
       >
         {#if !deleteMode && $traductors.length > 0}
           {#each elements as { Component, name, title, active, className, values, type }}
-            <Component bind:game {step} {name} {title} {active} {className} {values} {type} />
+            <Component {step} {name} {title} {active} {className} {values} {type} />
           {/each}
         {/if}
       </div>
@@ -443,13 +423,13 @@ const elements: Element[] = [
           {/if}
         {/if}
         {#if (edit && !editor) || (editor && deleteMode)}
-          <Remove {game} {silentMode} {handleUpdateSubmit} {editor} />
+          <Remove {silentMode} {handleUpdateSubmit} {editor} />
         {/if}
         {#if !edit && checkUser(['superAdmin', 'superAdmin'])}
-          <Dev {game} {step} {scrapeData} />
+          <Dev {step} {scrapeData} />
         {/if}
-        {#if game.domain === "LewdCorner"}
-          <Insert {game} />
+        {#if $game?.domain === "LewdCorner"}
+          <Insert />
         {/if}
         {#if editor}
           <button class="btn btn-primary w-full sm:w-48" type="button" onclick={()=> {editor = false}}>

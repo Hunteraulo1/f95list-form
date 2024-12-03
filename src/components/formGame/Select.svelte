@@ -1,38 +1,40 @@
 <script lang="ts">
-import type { GameType } from '$types/schemas';
-import type { ChangeEventHandler, HTMLSelectAttributes } from 'svelte/elements';
+import { game } from '$lib/stores';
 
-interface Props extends HTMLSelectAttributes {
+import type { GameType } from '$types/schemas';
+import type { ChangeEventHandler } from 'svelte/elements';
+
+interface Props {
   values?: Array<GameType[keyof GameType]>;
   title: string;
   className?: string;
   active?: number[];
   step?: number;
-  game: GameType;
   name: keyof GameType;
 }
 
-const { title, values = [], className, active, step, game = $bindable(), name }: Props = $props();
+const { title, values = [], className, active, step, name }: Props = $props();
 
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   if (name === 'tname' && event.currentTarget.value === 'Intégrée') {
-    game.tversion = 'Intégrée';
+    $game.tversion = 'Intégrée';
 
-    console.info('handleChange ~ game:', game);
+    console.info('handleChange ~ game:', $game);
 
     return;
   }
 
-  (game[name] as string) = event.currentTarget.value;
+  ($game[name] as GameType[keyof GameType]) = event.currentTarget.value;
 
-  const { domain, id } = game;
-  if (name === 'domain' && id && id !== 0) {
-    switch (domain) {
+  const gameId = $game.id;
+  if (name === 'domain' && gameId && gameId !== 0) {
+    switch ($game.domain) {
       case 'F95z':
-        game.link = `https://f95zone.to/threads/${id}`;
+        $game.link = `https://f95zone.to/threads/${gameId}`;
         break;
       case 'LewdCorner':
-        game.link = `https://lewdcorner.com/threads/${id}`;
+        $game.link = `https://lewdcorner.com/threads/${gameId}`;
+        break;
     }
   }
 };
@@ -44,7 +46,7 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     placeholder={title}
     id={name}
     onchange={handleChange}
-    bind:value={game[name]}
+    bind:value={$game[name]}
     class="select select-bordered w-full"
     >
     {#each Object.values(values) as value}

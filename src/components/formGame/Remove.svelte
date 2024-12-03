@@ -1,19 +1,17 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading, newToast, queryGame } from '$lib/stores';
+import { game, isLoading, newToast, queryGame } from '$lib/stores';
 import { checkUser } from '$lib/utils';
-import type { GameType } from '$types/schemas';
 import { navigate } from 'svelte-routing';
 import Modal from '../Modal.svelte';
 
 interface Props {
   silentMode: boolean;
-  game: GameType;
   handleUpdateSubmit?: (type: 'validated' | 'rejected') => void;
   editor?: boolean;
 }
 
-let { silentMode, game, handleUpdateSubmit, editor }: Props = $props();
+let { silentMode, handleUpdateSubmit, editor }: Props = $props();
 
 let deleteModal = $state(false);
 let comment = $state('');
@@ -33,7 +31,7 @@ const handleClickDelete = async (): Promise<void> => {
     try {
       if (!$queryGame) throw new Error('Query not found');
 
-      const result = await GAS_API.postSubmit({ query: $queryGame, game, type: 'delete', comment });
+      const result = await GAS_API.postSubmit({ query: $queryGame, game: $game, type: 'delete', comment });
 
       if (result === 'duplicate') {
         newToast({

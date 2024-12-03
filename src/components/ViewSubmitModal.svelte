@@ -1,7 +1,7 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
 import { getConvert } from '$lib/convert';
-import { isLoading, newToast, queryGame } from '$lib/stores';
+import { game, isLoading, newToast, queryGame } from '$lib/stores';
 import { dateFormat } from '$lib/utils';
 import type { GameType, SubmitType, UserType } from '$types/schemas';
 import { onMount } from 'svelte';
@@ -91,6 +91,7 @@ const handleClickConfirm = (): void => {
 
   if (submit.type === 'add' || !submit.query) return;
 
+  $game = submit.game;
   $queryGame = submit.query;
 };
 
@@ -169,7 +170,7 @@ const submitAttributes: SubmitAttributes[] = [
 
 {#if editor}
   <div class="fixed flex items-center top-0 left-0 w-full h-full bg-base-200 overflow-y-auto z-50">
-    <FormGame bind:game={submit.game} edit={submit.type !== 'add'} {handleUpdateSubmit} bind:editor={editor} step={5} deleteMode={submit.type === 'delete'} />  
+    <FormGame edit={submit.type !== 'add'} {handleUpdateSubmit} bind:editor={editor} step={5} deleteMode={submit.type === 'delete'} />  
   </div>
 {/if}
 

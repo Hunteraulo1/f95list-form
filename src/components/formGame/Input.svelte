@@ -1,40 +1,43 @@
 <script lang="ts">
-import { Game, type GameType } from '$types/schemas';
-import type { Snippet } from 'svelte';
+import { game } from '$lib/stores';
+import { Game } from '$types/schemas';
 import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
-import type { ChangeEventHandler } from 'svelte/elements';
+
+import type { GameType } from '$types/schemas';
+import type { Snippet } from 'svelte';
+import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
 interface Props {
   title: string;
   className?: string;
   active?: number[];
   step?: number;
-  game: GameType;
   name: keyof GameType;
   type?: HTMLInputElement['type'];
   children?: Snippet;
+  attributes?: HTMLInputAttributes;
 }
 
-const { title, className, active, step, game = $bindable(), name, type, children }: Props = $props();
+const { title, className, active, step, name, type, children, attributes }: Props = $props();
 
 let error = $state(false);
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-  const { domain, id } = game;
-
   if (name === 'ac' && event.currentTarget instanceof HTMLInputElement) {
-    game.ac = event.currentTarget.checked;
+    $game.ac = event.currentTarget.checked;
 
     return;
   }
 
-  if (name === 'id' && id && id !== 0) {
-    switch (domain) {
+  const gameId = $game.id;
+
+  if (name === 'id' && gameId && gameId !== 0) {
+    switch ($game.domain) {
       case 'F95z':
-        game.link = `https://f95zone.to/threads/${id}`;
+        $game.link = `https://f95zone.to/threads/${gameId}`;
         break;
       case 'LewdCorner':
-        game.link = `https://lewdcorner.com/threads/${id}`;
+        $game.link = `https://lewdcorner.com/threads/${gameId}`;
         break;
     }
   }
@@ -42,9 +45,9 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
   const value = event.currentTarget.value;
 
   if (type === 'number') {
-    (game[name] as number) = Number.parseInt(value);
+    ($game[name] as number) = Number.parseInt(value);
   } else {
-    (game[name] as string) = value;
+    ($game[name] as string) = value;
   }
 };
 
@@ -63,40 +66,41 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
       id={name}
       onchange={handleChange}
       oninput={handleInput}
-      disabled={(name === 'ac' && game.domain !== 'F95z') || (name === 'id' && game.domain === 'Autre')}
-      bind:value={game[name]}
+      disabled={(name === 'ac' && $game.domain !== 'F95z') || (name === 'id' && $game.domain === 'Autre')}
+      bind:value={$game[name]}
       {type}
       class={type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"}
       class:border-error={error}
+      {...attributes}
     />
     {#if name === 'link'}
       <a
-        href={game.link}
+        href={$game.link}
         target="_blank"
         class="btn w-min"
-        class:btn-disable={!game.link}
-        class:btn-primary={game.link}>
-        <Icon src={game.link ? Link : LinkSlash} size="1rem" />
+        class:btn-disable={!$game.link}
+        class:btn-primary={$game.link}>
+        <Icon src={$game.link ? Link : LinkSlash} size="1rem" />
       </a>
     {:else if name === 'tversion'}
       <button
         class="btn w-min"
-        class:btn-disable={!game.version}
-        class:btn-primary={game.version}
+        class:btn-disable={!$game.version}
+        class:btn-primary={$game.version}
         onclick={(e) => {
           e.preventDefault();
-          if (game.version) game.tversion = game.version;
+          if ($game.version) $game.tversion = $game.version;
         }}>
         <Icon src={DocumentDuplicate} size="1rem" />
       </button>
     {:else if name === 'tlink'}
       <a
-        href={game.tlink}
+        href={$game.tlink}
         target="_blank"
         class="btn w-min"
-        class:btn-disable={!game.tlink}
-        class:btn-primary={game.tlink}>
-        <Icon src={game.tlink ? Link : LinkSlash} size="1rem" />
+        class:btn-disable={!$game.tlink}
+        class:btn-primary={$game.tlink}>
+        <Icon src={$game.tlink ? Link : LinkSlash} size="1rem" />
       </a>
     {/if}
     {@render children?.()}
