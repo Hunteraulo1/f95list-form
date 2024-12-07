@@ -32,24 +32,24 @@
     "daisyui": "4.12.14",
     "lint-staged": "15.2.10",
     "postcss": "8.4.49",
-    "rollup": "4.28.0",
+    "rollup": "4.28.1",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-delete": "2.1.0",
-    "svelte": "5.5.0",
-    "svelte-check": "4.1.0",
+    "svelte": "5.8.1",
+    "svelte-check": "4.1.1",
     "svelte-hero-icons": "5.2.0",
     "svelte-routing": "2.13.0",
-    "tailwindcss": "3.4.15",
+    "tailwindcss": "3.4.16",
     "typescript": "5.7.2",
-    "vite": "6.0.2",
+    "vite": "6.0.3",
     "vite-plugin-singlefile": "2.0.3",
-    "vite-tsconfig-paths": "5.1.3"
+    "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
     "@lmdb/lmdb-linux-x64": "^3.2.0",
     "@lmdb/lmdb-win32-x64": "^3.2.0",
-    "@rollup/rollup-win32-x64-msvc": "4.28.0",
-    "@rollup/rollup-linux-x64-gnu": "4.28.0"
+    "@rollup/rollup-win32-x64-msvc": "4.28.1",
+    "@rollup/rollup-linux-x64-gnu": "4.28.1"
   },
   "dependencies": {
     "jest": "29.7.0",
