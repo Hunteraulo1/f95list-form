@@ -8,7 +8,7 @@
     "rollup:npm": "rollup -c rollup.config.npm.js",
     "build": "vite build && bun run rollup:npm && node postBuildProcess.js",
     "build:push": "bun run build && clasp push",
-    "build:deploy": "bun run build:push && clasp deploy -i AKfycbyDkZ_xQfxT8JQNAGqMYqRBeKB0RXfpNufNzhMwPIzthmPszVPtZkWU7E8vRGS5lW7cEg",
+    "build:deploy": "bun run build:push && clasp deploy -i AKfycbxXI2VPp3Pzkwso2MbRgUCIJJkhiZ34fApqEiZyH6zl9aMTdeIQSt_mBWQZ0fLuUXvf9Q",
     "preview": "vite preview",
     "lint": "bunx @biomejs/biome lint --write .",
     "format": "bunx @biomejs/biome format --write .",
