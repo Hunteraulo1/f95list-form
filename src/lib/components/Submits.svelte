@@ -19,13 +19,13 @@ const dialogView: boolean[] = $state([]);
 </script>
 
 <div>
-  {#if submits.length > 0 && users.length > 0}
-    <Panel title="Soumissions">
-      {#snippet description()}
-        <p class="text-gray-500">Liste des soumissions en attente de validation</p>
-      {/snippet}
-      {#snippet panelContent()}
-        <div class="overflow-x-auto">
+  <Panel title="Soumissions">
+    {#snippet description()}
+      <p class="text-gray-500">Liste des soumissions en attente de validation</p>
+    {/snippet}
+    {#snippet panelContent()}
+      <div class="overflow-x-auto">
+        {#if submits.length > 0 && users.length > 0}
           <table class="table">
             <!-- head -->
             <thead>
@@ -87,8 +87,10 @@ const dialogView: boolean[] = $state([]);
               {/each}
             </tbody>
           </table>
-        </div>
-      {/snippet}
-    </Panel>
-  {/if}
+        {:else}
+          Aucune soumission trouvé
+        {/if}
+      </div>
+    {/snippet}
+  </Panel>
 </div>
