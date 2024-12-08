@@ -32,7 +32,7 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   properties.profile = validUser.profile;
 
   if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.push({
+    user.activity.unshift({
       value: dateNow(),
       label: 'Utilisateur mis à jour',
     });
@@ -68,7 +68,7 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
   properties.role = validUser.role;
 
   if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.push({
+    user.activity.unshift({
       value: dateNow(),
       label: 'Utilisateur mis à jour',
     });

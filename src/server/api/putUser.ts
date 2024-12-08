@@ -81,7 +81,7 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
   };
 
   if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
-    newUser.activity.push({
+    newUser.activity.unshift({
       value: dateNow(),
       label: 'Rôle changé',
     });
