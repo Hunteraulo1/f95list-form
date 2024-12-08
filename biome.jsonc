@@ -25,7 +25,6 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "@typescript-eslint/consistent-type-imports": "error",
       "correctness": {
         "noUndeclaredVariables": "warn"
       },
