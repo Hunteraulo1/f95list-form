@@ -1,27 +1,31 @@
+import type { DelGameArgs } from '../server/api/delGame';
+import type { DelTraductorArgs } from '../server/api/delTraductor';
+import type { GetGameArgs } from '../server/api/getGame';
+import type { GetScrapeArgs } from '../server/api/getScrape';
+import type { GetSubmitsArgs } from '../server/api/getSubmits';
 import type { GetUserArgs } from '../server/api/getUser';
+import type { PostGameArgs } from '../server/api/postGame';
+import type { PostTraductorArgs } from '../server/api/postTraductor';
 import type { PutAppConfigArgs } from '../server/api/putAppConfiguration';
+import type { PutGameArgs } from '../server/api/putGame';
+import type { PutSubmitArgs } from '../server/api/putSubmit';
+import type { PutTraductorArgs } from '../server/api/putTraductor';
 import type { PutUserArgs } from '../server/api/putUser';
-
-import type { DelGameArgs } from './mocks/api/delGame';
-import type { GetGameArgs } from './mocks/api/getGame';
-import type { GetScrapeArgs } from './mocks/api/getScrape';
-import type { PostGameArgs } from './mocks/api/postGame';
-import type { PutGameArgs } from './mocks/api/putGame';
-import './polyfillScriptRun.js';
 
 import type {
   AppConfigurationType,
   GameType,
+  PostSubmitType,
   QueryGameType,
   ScrapeGameType,
+  SubmitType,
   TraductorType,
   UserType,
 } from '$types/schemas';
-import type { DelTraductorArgs } from '../server/api/delTraductor';
-import type { PutTraductorArgs } from '../server/api/putTraductor';
-import type { PostTraductorArgs } from './mocks/api/postTraductor';
 
-const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A) => {
+import './polyfillScriptRun.js';
+
+const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A): Promise<T> => {
   console.info('calling api', functionName, args);
 
   return new Promise<T>((resolve, reject) => {
@@ -35,38 +39,38 @@ const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unk
 export const GAS_API = {
   // AppConfiguration
   getAppConfiguration: (): Promise<AppConfigurationType> => callAPI<AppConfigurationType>('getAppConfiguration'),
-
-  putAppConfiguration: (args: PutAppConfigArgs) => callAPI<void, typeof args>('putAppConfiguration', args),
+  putAppConfiguration: (args: PutAppConfigArgs): Promise<void> =>
+    callAPI<void, typeof args>('putAppConfiguration', args),
 
   // User
-  getUser: (args?: GetUserArgs) => callAPI<UserType, typeof args>('getUser', args),
-
-  getUsers: () => callAPI<UserType[]>('getUsers'),
-
-  putUser: (args: PutUserArgs) => callAPI<void, typeof args>('putUser', args),
-
-  putUserRole: (args: PutUserArgs) => callAPI<void, typeof args>('putUserRole', args),
+  getUser: (args?: GetUserArgs): Promise<UserType> => callAPI<UserType, typeof args>('getUser', args),
+  getUsers: (): Promise<UserType[]> => callAPI<UserType[]>('getUsers'),
+  putUser: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUser', args),
+  putUserRole: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUserRole', args),
 
   // Game
-  getGame: (args: GetGameArgs) => callAPI<GameType, typeof args>('getGame', args),
-
-  postGame: (args: PostGameArgs) => callAPI<undefined | string, typeof args>('postGame', args),
-
-  putGame: (args: PutGameArgs) => callAPI<undefined | string, typeof args>('putGame', args),
-
-  delGame: (args: DelGameArgs) => callAPI<void, typeof args>('delGame', args),
-
-  getQueryGames: () => callAPI<QueryGameType[]>('getQueryGames'),
+  getGame: (args: GetGameArgs): Promise<GameType> => callAPI<GameType, typeof args>('getGame', args),
+  postGame: (args: PostGameArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('postGame', args),
+  putGame: (args: PutGameArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('putGame', args),
+  delGame: (args: DelGameArgs): Promise<void> => callAPI<void, typeof args>('delGame', args),
+  getQueryGames: (): Promise<QueryGameType[]> => callAPI<QueryGameType[]>('getQueryGames'),
 
   // Traducteurs
-  getTraductors: () => callAPI<TraductorType[]>('getTraductors'),
-
-  postTraductor: (args: PostTraductorArgs) => callAPI<undefined | string, typeof args>('postTraductor', args),
-
-  putTraductor: (args: PutTraductorArgs) => callAPI<undefined | string, typeof args>('putTraductor', args),
-
-  delTraductor: (args: DelTraductorArgs) => callAPI<void, typeof args>('delTraductor', args),
+  getTraductors: (): Promise<TraductorType[]> => callAPI<TraductorType[]>('getTraductors'),
+  postTraductor: (args: PostTraductorArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('postTraductor', args),
+  putTraductor: (args: PutTraductorArgs): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('putTraductor', args),
+  delTraductor: (args: DelTraductorArgs): Promise<void> => callAPI<void, typeof args>('delTraductor', args),
 
   // Others
-  getScrape: (args: GetScrapeArgs) => callAPI<ScrapeGameType, typeof args>('getScrape', args),
+  getScrape: (args: GetScrapeArgs): Promise<ScrapeGameType> => callAPI<ScrapeGameType, typeof args>('getScrape', args),
+
+  // Submit
+  getSubmits: (args: GetSubmitsArgs): Promise<SubmitType[]> => callAPI<SubmitType[], typeof args>('getSubmits', args),
+  postSubmit: (args: PostSubmitType): Promise<undefined | string> =>
+    callAPI<undefined | string, typeof args>('postSubmit', args),
+  putSubmit: (args: PutSubmitArgs): Promise<void> => callAPI<void, typeof args>('putSubmit', args),
 };

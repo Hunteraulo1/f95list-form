@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const User = z.object({
   email: z.string().email().or(z.string().nullable()),
-  roles: z.array(z.enum(['superAdmin', 'admin'])),
+  role: z.enum(['superAdmin', 'admin', 'traductor', 'user']),
   profile: z.object({
     pseudo: z.string(),
     imageUrl: z.string().or(z.literal('')),
@@ -13,7 +13,7 @@ const User = z.object({
   activity: z.array(
     z.object({
       label: z.string(),
-      value: z.string(), // You can add custom validation to ensure it's an ISO string
+      value: z.string().datetime(),
     }),
   ),
   statistics: z.object({
@@ -23,7 +23,7 @@ const User = z.object({
 });
 
 const Game = z.object({
-  id: z.string(),
+  id: z.number().nullable(),
   domain: z.enum(['F95z', 'LewdCorner', 'Autre']),
   name: z.string().min(1),
   version: z.string().min(1),
@@ -50,7 +50,7 @@ const Game = z.object({
 });
 
 const QueryGame = z.object({
-  id: Game.shape.version,
+  id: Game.shape.id,
   name: Game.shape.name,
   version: Game.shape.version,
 });
@@ -73,6 +73,8 @@ const GameAC = z.object({
   id: Game.shape.id,
   version: Game.shape.version,
   newVersion: Game.shape.version,
+  traductor: Game.shape.traductor,
+  name: Game.shape.name,
 });
 
 const Traductor = z.object({
@@ -83,31 +85,48 @@ const Traductor = z.object({
       link: z.string().or(z.literal('')),
     }),
   ),
+  discordID: z.string().or(z.literal('')),
 });
 
 const AppConfiguration = z.object({
   appName: z.string(),
   deployingUserEmail: z.string(),
-  admins: z.array(User),
 });
 
 const AppWebhooks = z.object({
   update: z.string().or(z.literal('')),
   logs: z.string().or(z.literal('')),
+  traductor: z.string().or(z.literal('')),
 });
 
-// You need to export in this format. See
-// https://stackoverflow.com/questions/48791868/use-typescript-with-google-apps-script
-// for more info.
-// export { AppConfiguration, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
-export { AppConfiguration, AppWebhooks, CheckerF95z, Game, QueryGame, ScrapeGame, Traductor, User };
+const Submit = z.object({
+  query: z.optional(QueryGame),
+  email: User.shape.email,
+  date: z.string().datetime(),
+  status: z.enum(['wait', 'validated', 'rejected']),
+  type: z.enum(['add', 'edit', 'delete']),
+  comment: z.string().or(z.literal('')),
+  game: Game,
+  reason: z.string().or(z.literal('')),
+});
+
+const PostSubmit = z.object({
+  query: Submit.shape.query,
+  game: Submit.shape.game,
+  type: Submit.shape.type,
+  comment: Submit.shape.comment,
+});
+
+export { AppConfiguration, AppWebhooks, CheckerF95z, Game, PostSubmit, QueryGame, ScrapeGame, Submit, Traductor, User };
 
 export type AppConfigurationType = z.infer<typeof AppConfiguration>;
 export type AppWebhooksType = z.infer<typeof AppWebhooks>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
 export type GameACType = z.infer<typeof GameAC>;
 export type GameType = z.infer<typeof Game>;
+export type PostSubmitType = z.infer<typeof PostSubmit>;
 export type QueryGameType = z.infer<typeof QueryGame>;
 export type ScrapeGameType = z.infer<typeof ScrapeGame>;
+export type SubmitType = z.infer<typeof Submit>;
 export type TraductorType = z.infer<typeof Traductor>;
 export type UserType = z.infer<typeof User>;

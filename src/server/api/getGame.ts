@@ -8,35 +8,35 @@ export interface GetGameArgs {
 }
 
 export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType> => {
-  console.info('getGame called with args:', { name, version });
+  console.info('getGame ~ args:', { name, version });
 
   const games = await getQueryGames();
 
   const gameIndex = games?.findIndex((game) => game.name === name && game.version === version);
 
   if (gameIndex === undefined || gameIndex === -1) {
-    console.error('No detected getGame with index:', { gameIndex });
-    throw new Error('No detected getGame');
+    console.error('getGame ~ No detected getQueryGames with index:', { gameIndex });
+    throw new Error('getGame ~ No detected getQueryGames');
   }
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const gameSheet = sheet.getSheetByName('Jeux');
 
   if (!gameSheet) {
-    console.error('No gameSheet detected');
-    throw new Error('No gameSheet detected');
+    console.error('getGame ~ No gameSheet detected');
+    throw new Error('getGame ~ No gameSheet detected');
   }
 
   const data = gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`).getValues()[0];
   const dataLink = gameSheet.getRange(`C${gameIndex + 2}:J${gameIndex + 2}`).getRichTextValues()[0];
 
   if (data[2] !== name || data[3] !== version) {
-    console.error('No return getGame with args:', { name, version });
-    throw new Error('No return getGame');
+    console.error('getGame ~ No return getGame with args:', { name, version });
+    throw new Error('getGame ~ No return getGame');
   }
 
-  return Game.parse({
-    id: data[0].toString(),
+  const result = Game.parse({
+    id: Number(data[0]),
     domain: data[1],
     name: data[2],
     version: data[3],
@@ -54,4 +54,8 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
     tlink: dataLink[3]?.getLinkUrl() ?? '',
     trlink: dataLink[7]?.getLinkUrl() ?? '',
   });
+
+  console.info('getGame ~ result:', result);
+
+  return result;
 };

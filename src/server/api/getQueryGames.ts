@@ -1,8 +1,9 @@
+import { QueryGame } from '$types/schemas';
+
 import type { QueryGameType } from '$types/schemas';
 
 export const getQueryGames = async (): Promise<QueryGameType[]> => {
-  // Report request
-  console.info('getQueryGames called');
+  console.info('getQueryGames');
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const gameSheet = sheet.getSheetByName('Jeux');
@@ -10,9 +11,11 @@ export const getQueryGames = async (): Promise<QueryGameType[]> => {
   const totalRow = gameSheet?.getLastRow();
   const data = gameSheet?.getRange(`A2:D${totalRow}`).getValues();
 
-  if (!data) throw new Error('getQueryGames no return');
+  if (!data) throw new Error('getQueryGames ~ no return');
 
-  return data.map(([id, , name, version]) => {
-    return { id, name, version };
-  });
+  const validQueryGames = data.map(([id, , name, version]) => QueryGame.parse({ id: Number(id), name, version }));
+
+  console.info('getQueryGames ~ result:', validQueryGames);
+
+  return validQueryGames;
 };

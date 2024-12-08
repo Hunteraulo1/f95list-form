@@ -1,21 +1,23 @@
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
-import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
-
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
-import { isLoading } from '$lib/stores';
+import { isLoading, newToast } from '$lib/stores';
+import { onMount } from 'svelte';
+import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
+
 import type { UserType } from '$types/schemas';
 
-export let email: string;
+interface Props {
+  email: string;
+}
 
-const dispatch = createEventDispatcher();
+const { email }: Props = $props();
 
-let loading = false;
+const loading = false;
 
-let user: UserType | undefined = undefined;
+let user: UserType | undefined = $state(undefined);
 
-const fetchUser = async () => {
+const fetchUser = async (): Promise<void> => {
   $isLoading = true;
 
   console.info('fetching user data for profile...');
@@ -28,11 +30,9 @@ const fetchUser = async () => {
   } catch (error) {
     console.error('Could not get user data:', error);
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
       alertType: 'error',
       message: 'Impossible de récupérer les information utilisateur',
-      milliseconds: 3000,
     });
   } finally {
     console.info('User data loaded.');
@@ -41,8 +41,7 @@ const fetchUser = async () => {
   }
 };
 
-// Fetch the user on mount
-$: fetchUser();
+onMount(() => fetchUser());
 </script>
 
 {#if user && !loading}
@@ -65,55 +64,60 @@ $: fetchUser();
         <span>{user.email}</span>
       </div>
       <div class="py-1">
-        {#each user.roles as role}
-          <span class="badge">{role.toUpperCase()}</span>
-        {/each}
+        <span class="badge">{user.role.toUpperCase()}</span>
       </div>
     </div>
     <div class="flex flex-grow flex-col items-center">
-      <div class="stats w-full shadow">
-        <div class="stat">
-          <div class="stat-figure text-primary">
-            <Icon src={PlusCircle} size="2.5rem" />
+      <!-- TODO: implement stats for traductors -->
+      {#if user.role === 'admin' || user.role === 'superAdmin'}
+        <div class="stats w-full shadow">
+          <div class="stat">
+            <div class="stat-figure text-primary">
+              <Icon src={PlusCircle} size="2.5rem" />
+            </div>
+            <div class="stat-title">Total de jeu ajouté</div>
+            <div class="stat-value text-primary">{user.statistics.gameAdded}</div>
           </div>
-          <div class="stat-title">Total de jeu ajouté</div>
-          <div class="stat-value text-primary">{user.statistics.gameAdded}</div>
-        </div>
 
-        <div class="stat">
-          <div class="stat-figure text-secondary">
-            <Icon src={PencilSquare} size="2.5rem" />
-          </div>
-          <div class="stat-title">Total de jeu modifié</div>
-          <div class="stat-value text-secondary">
-            {user.statistics.gameEdited}
+          <div class="stat">
+            <div class="stat-figure text-secondary">
+              <Icon src={PencilSquare} size="2.5rem" />
+            </div>
+            <div class="stat-title">Total de jeu modifié</div>
+            <div class="stat-value text-secondary">
+              {user.statistics.gameEdited}
+            </div>
           </div>
         </div>
-      </div>
+      {/if}
       <Panel title="Activité récente" showDivider={false}>
-        <div slot="panel-content" class="overflow-x-auto">
-          <table class="table">
-            <!-- head -->
+        {#snippet panelContent()}
+          <div class="overflow-x-auto">
+            <table class="table">
+              <!-- head -->
             <thead>
               <tr>
-                <th> Évenement </th>
-                <th> Date </th>
+                <th>Évenement</th>
+                <th>Date</th>
               </tr>
             </thead>
             <tbody>
-              {#each user.activity as record}
+              {#if user}
+                {#each user.activity as record}
                 <tr>
                   <td>{record.label}</td>
                   <td
-                    >{new Date(record.value).toLocaleDateString("fr-FR", {
-                      hour: "numeric",
-                      minute: "numeric",
-                    })}</td>
-                </tr>
-              {/each}
+                  >{new Date(record.value).toLocaleDateString("fr-FR", {
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}</td>
+                  </tr>
+                {/each}
+              {/if}
             </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        {/snippet}
       </Panel>
     </div>
   </div>

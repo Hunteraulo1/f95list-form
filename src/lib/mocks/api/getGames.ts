@@ -1,9 +1,12 @@
-import sleep from '$lib/sleep';
-import type { GameType } from '../../../types/schemas';
-import { games } from '../data/game';
+import { Game, type GameType } from '$types/schemas';
+import { games as gamesData } from '../data/game';
 
-export const getGames = async (): Promise<GameType[] | null> => {
-  await sleep();
+export const getGames = async (): Promise<GameType[]> => {
+  console.info('getGames');
 
-  return JSON.parse(JSON.stringify(games));
+  const result = gamesData.map((game) => Game.parse(game));
+
+  console.info('getGames ~ result:', result);
+
+  return result;
 };

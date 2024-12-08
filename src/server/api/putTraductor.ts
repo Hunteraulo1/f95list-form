@@ -1,17 +1,18 @@
+import { Traductor } from '$types/schemas';
 import { disableLock, enableLock } from '../lib/lockMode';
-
+import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
 
-import { Traductor, type TraductorType } from '$types/schemas';
-
+import type { TraductorType } from '$types/schemas';
 export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
   data: TraductorType;
 }
 
 export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<void> => {
-  // Report request
-  console.info('putTraductor called with args:', { query, data });
+  console.info('putTraductor ~ args:', { query, data });
+
+  checkUser('admin');
 
   enableLock();
 
@@ -48,9 +49,11 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
     const row = sheet?.getRange(`A${traductorIndex + 2}`);
     const richRow = sheet?.getRange(`B${traductorIndex + 2}`);
+    const rowDiscordID = sheet?.getRange(`C${traductorIndex + 2}`);
 
     row?.setValue(validData.name);
     richRow?.setRichTextValue(value.build());
+    rowDiscordID?.setValue(validData.discordID);
   } catch (error) {
     console.error(error);
 

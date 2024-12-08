@@ -1,9 +1,18 @@
-import sleep from '$lib/sleep';
-import type { QueryGameType } from '../../../types/schemas';
+import { QueryGame } from '$types/schemas';
 import { queryGames } from '../data/game';
 
-export const getQueryGames = async (): Promise<QueryGameType[] | null> => {
-  await sleep();
+import type { QueryGameType } from '$types/schemas';
 
-  return JSON.parse(JSON.stringify(queryGames));
+export const getQueryGames = async (): Promise<QueryGameType[]> => {
+  console.info('getQueryGames');
+
+  const data = queryGames;
+
+  if (!data) throw new Error('getQueryGames ~ no return');
+
+  const validQueryGames = data.map((query) => QueryGame.parse(query));
+
+  console.info('getQueryGames ~ result:', validQueryGames);
+
+  return validQueryGames;
 };

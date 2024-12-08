@@ -4,7 +4,7 @@ import { appConfiguration, isLoading } from './stores';
 /**
  * Fetches the app configuration from the server.
  */
-export const fetchAppConfiguration = async () => {
+export const fetchAppConfiguration = async (): Promise<void> => {
   isLoading.set(true);
 
   console.info('fetching app configuration...');

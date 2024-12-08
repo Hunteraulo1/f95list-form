@@ -33,7 +33,8 @@ export default defineConfig({
   resolve: {
     alias: {
       $lib: resolve(__dirname, 'src/lib'),
-      $components: resolve(__dirname, 'src/components'),
+      $components: resolve(__dirname, 'src/lib/components'),
+      $types: resolve(__dirname, 'src/types'),
     },
   },
 });

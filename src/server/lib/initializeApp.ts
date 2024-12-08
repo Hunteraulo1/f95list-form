@@ -1,20 +1,20 @@
 import { postUser } from '../api/postUser';
-
 import { loadAppConfiguration } from './loadAppConfiguration';
 
 import type { AppConfigurationType } from '$types/schemas';
 
 export const initializeApp = (): AppConfigurationType => {
+  console.info('initializeApp');
+
   const deployingUserEmail = Session.getEffectiveUser().getEmail();
 
   if (!deployingUserEmail) throw new Error('No deploying user email found');
 
-  postUser(deployingUserEmail, { roles: ['superAdmin'] });
+  postUser(deployingUserEmail, { role: 'superAdmin' });
 
   const newAppConfig: AppConfigurationType = {
     appName: 'My App',
     deployingUserEmail,
-    admins: [],
   };
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();

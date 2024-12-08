@@ -1,18 +1,30 @@
 <script lang="ts">
-import { createEventDispatcher } from 'svelte';
+import EditUserModal from '$components/EditUserModal.svelte';
+import LoadingSpinner from '$components/LoadingSpinner.svelte';
+import Panel from '$components/Panel.svelte';
+import { GAS_API } from '$lib/GAS_API';
+import { appConfiguration, isLoading, newToast } from '$lib/stores';
+import { checkUser } from '$lib/utils';
+import { onMount } from 'svelte';
 import { Link } from 'svelte-routing';
 
-import AddAdminModal from '$components/AddAdminModal.svelte';
-import Panel from '$components/Panel.svelte';
-import RemoveAdminModal from '$components/RemoveAdminModal.svelte';
-import { GAS_API } from '$lib/GAS_API';
-import { appConfiguration, isLoading, sessionUser, userIsSuperAdmin } from '$lib/stores';
-const dispatch = createEventDispatcher();
+import type { UserType } from '$types/schemas';
 
-let webhookUpdateUrl = '';
-let webhookLogsUrl = '';
+let webhookUpdateUrl = $state('');
+let webhookLogsUrl = $state('');
+let webhookTraductorUrl = $state('');
 
-const handleClick = async () => {
+let users: UserType[] = $state([]);
+
+onMount(async () => {
+  try {
+    users = await GAS_API.getUsers();
+  } catch (error) {
+    console.error('Error fetching users', error);
+  }
+});
+
+const handleClick = async (): Promise<void> => {
   if ($appConfiguration !== null) {
     await updateAppConfiguration();
   } else {
@@ -20,7 +32,7 @@ const handleClick = async () => {
   }
 };
 
-const updateAppConfiguration = async () => {
+const updateAppConfiguration = async (): Promise<void> => {
   $isLoading = true;
 
   console.info('submitting app configuration update', $appConfiguration);
@@ -31,47 +43,52 @@ const updateAppConfiguration = async () => {
       webhooks: {
         update: webhookUpdateUrl,
         logs: webhookLogsUrl,
+        traductor: webhookTraductorUrl,
       },
     });
 
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
       alertType: 'success',
       message: "Configuration de l'application mise à jour !",
-      milliseconds: 3000,
     });
   } catch (error) {
     console.error("Erreur de transmission des changements de l'utilisateur", error);
-    dispatch('newToast', {
-      id: Date.now(),
+    newToast({
       alertType: 'error',
       message: "Vos modifications n'ont pas pu être enregistrées",
-      milliseconds: 3000,
     });
   } finally {
     $isLoading = false;
   }
 };
 
-let dialogAdd: boolean;
-let dialogRemove: boolean[] = [];
+const dialogEdit: boolean[] = $state([]);
+
+const isSuperAdmin = checkUser(['superAdmin']);
 </script>
 
 <div>
   {#if $appConfiguration}
     <Panel title="General">
-      <button slot="button" class="btn" on:click={handleClick} disabled={!$userIsSuperAdmin}>Sauvegarder</button>
-      <p class="text-gray-500" slot="description">
-        Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
-      </p>
-      <div slot="panel-content" class="flex w-full gap-8">
-        <div class="w-full max-w-xs">
+      {#snippet button()}
+        <button class="btn" onclick={handleClick} disabled={!checkUser(['superAdmin', 'superAdmin'])}>
+          Sauvegarder
+        </button>
+      {/snippet}
+      {#snippet description()}
+        <p class="text-gray-500">
+          Modifiez les paramètres de l'application. N'oubliez pas de sauvegarder !
+        </p>
+      {/snippet}
+      {#snippet panelContent()}
+        <div class="flex w-full gap-8">
+          <div class="w-full max-w-xs">
           <label class="label" for="app-name">
             <span class="label-text">Nom de l'application</span>
           </label>
           <input
             bind:value={$appConfiguration.appName}
-            disabled={$isLoading || !$userIsSuperAdmin}
+            disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="Nom de l'application"
             class="input input-bordered w-full"
@@ -83,7 +100,7 @@ let dialogRemove: boolean[] = [];
           </label>
           <input
             bind:value={webhookLogsUrl}
-            disabled={$isLoading || !$userIsSuperAdmin}
+            disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -95,74 +112,84 @@ let dialogRemove: boolean[] = [];
           </label>
           <input
             bind:value={webhookUpdateUrl}
-            disabled={$isLoading || !$userIsSuperAdmin}
+            disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
             name="app-logs" />
+          </div>
+          <div class="w-full max-w-xs">
+            <label class="label" for="app-traductor">
+              <span class="label-text">Url du webhook des traducteurs</span>
+            </label>
+            <input
+              bind:value={webhookTraductorUrl}
+              disabled={$isLoading && !isSuperAdmin}
+              type="text"
+              placeholder="url du webhook"
+              class="input input-bordered w-full"
+              name="app-traductor" />
+          </div>
         </div>
-      </div>
+      {/snippet}
     </Panel>
 
-    <Panel title="Admins">
-      <button
-        slot="button"
-        on:click={() => (dialogAdd = true)}
-        disabled={!($sessionUser?.roles.includes("superAdmin") || $sessionUser?.roles.includes("admin"))}
-        class="btn">
-        Ajouter un administrateur
-      </button>
-      <p class="text-gray-500" slot="description">Ajouter des administrateurs au formulaire !</p>
-      <div slot="panel-content">
+    <Panel title="Utilisateurs">
+      {#snippet description()}
+        <p class="text-gray-500">Liste des utilisateurs</p>
+      {/snippet}
+      {#snippet panelContent()}
         <div class="overflow-x-auto">
           <table class="table">
-            <!-- head -->
             <thead>
               <tr>
                 <th>Admin</th>
               </tr>
             </thead>
             <tbody>
-              {#each $appConfiguration.admins as admin, index}
-                <!-- row -->
+              {#each users as user, index}
                 <tr>
                   <td>
-                    <Link to="/user/{admin.email}">
+                    <Link to="/user/{user.email}">
                       <div class="flex items-center space-x-3">
                         <div class="avatar">
                           <div class="mask mask-squircle h-12 w-12">
                             <img
-                              src={admin.profile?.imageUrl ||
+                              src={user.profile?.imageUrl ||
                                 "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"}
                               alt="Avatar Tailwind CSS Component" />
                           </div>
                         </div>
                         <div>
                           <div class="font-bold">
-                            {admin.email}
+                            {user.email}
                           </div>
                           <div>
-                            {#each admin.roles as role}
-                              <span class="badge badge-ghost badge-sm mr-2">{role}</span>
-                            {/each}
+                            <span class="badge badge-ghost badge-sm mr-2">{user.role}</span>
                           </div>
                         </div>
                       </div>
                     </Link>
                   </td>
                   <th>
-                    <button on:click={() => (dialogRemove[index] = true)} class="btn btn-ghost btn-xs"
-                      >Supprimer</button>
-                    <RemoveAdminModal bind:showModal={dialogRemove[index]} on:newToast user={admin} />
+                    <button onclick={() => {dialogEdit[index] = true}} class="btn btn-ghost btn-xs">
+                      Modifier
+                    </button>
+                    <EditUserModal bind:showModal={dialogEdit[index]} {user} bind:users={users} />
                   </th>
+                </tr>
+              {:else}
+                <tr>
+                  <td class="flex justify-center items-center">
+                    <LoadingSpinner />
+                    Chargement des utilisateurs...
+                  </td>
                 </tr>
               {/each}
             </tbody>
           </table>
         </div>
-      </div>
+      {/snippet}
     </Panel>
-
-    <AddAdminModal bind:showModal={dialogAdd} on:newToast />
   {/if}
 </div>

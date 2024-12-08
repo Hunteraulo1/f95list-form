@@ -1,11 +1,12 @@
-import { getFetchF95z } from './getFetchF95z';
+import { ScrapeGame } from '$types/schemas';
+import Cheerio from 'cheerio';
+import { f95z } from '../lib/f95z';
 
-import { type GameType, ScrapeGame } from '$types/schemas';
-
-export type GetScrapeArgs = {
+import type { GameType } from '$types/schemas';
+export interface GetScrapeArgs {
   domain: Extract<GameType['domain'], 'F95z'>;
-  id: string;
-};
+  id: GameType['id'];
+}
 
 interface GetScrape {
   name: GameType['name'];
@@ -16,23 +17,13 @@ interface GetScrape {
   image: GameType['image'];
 }
 export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
-  // const domain = "F95z";
-  // const id = "100";
+  console.info('getScrape ~ args:', { domain, id });
 
-  // Report request
-  console.info(`getScrape called with args: ${{ domain, id }}`);
-
-  if (domain !== 'F95z') throw new Error('domaine incompatible');
+  if (domain !== 'F95z') throw new Error('getScrape ~ domaine incompatible');
 
   const link = `https://f95zone.to/threads/${id}`;
   const regName = /.*-\s(.*?)\s\[/i;
   const regTitle = /([\w\\']+)(?=\s-)/gi;
-
-  // case "LewdCorner":
-  //   link = `https://lewdcorner.com/threads/${id}`;
-  //   regName = /-\s([\w\d].*?)\s\[/i;
-  //   regTitle = /(?!\[)([\w\\']+)(?=\]\s-)/gi;
-  //   break;
 
   const response = UrlFetchApp.fetch(link, {
     muteHttpExceptions: true,
@@ -56,17 +47,17 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
   let version = '';
 
   try {
-    const result = await getFetchF95z(id);
+    const result = await f95z(id);
 
     console.info({ result });
 
     version = result ?? '';
   } catch (error) {
-    console.error('Error getFetchF95z: ', error);
-    throw new Error('getFetchF95z no return');
+    console.error('getScrape ~ Error getFetchF95z: ', error);
+    throw new Error('getScrape ~ getFetchF95z no return');
   }
 
-  console.info('scrapePage', {
+  console.info('scrapePage ~ args:', {
     name,
     version,
     status,
@@ -85,10 +76,12 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrap
     image,
   });
 
+  console.info('getScrape ~ validScrapeGame:', validScrapeGame);
+
   return validScrapeGame;
 };
 
-const scrapeGetTitle = (data: string[]) => {
+const scrapeGetTitle = (data: string[]): { status: string; type: string } => {
   let status = '';
   let type = '';
 
