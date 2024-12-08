@@ -238,7 +238,7 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs):
   console.info('sendTraductorWebhook ~ args:', { games });
 
   const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty('callTraductorUrl');
+  const link = env.getProperty('traductorUrl');
 
   if (!link) return;
 

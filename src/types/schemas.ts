@@ -96,6 +96,7 @@ const AppConfiguration = z.object({
 const AppWebhooks = z.object({
   update: z.string().or(z.literal('')),
   logs: z.string().or(z.literal('')),
+  traductor: z.string().or(z.literal('')),
 });
 
 const Submit = z.object({

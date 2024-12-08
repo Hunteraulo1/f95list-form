@@ -12,6 +12,7 @@ import { onMount } from 'svelte';
 
 let webhookUpdateUrl = $state('');
 let webhookLogsUrl = $state('');
+let webhookTraductorUrl = $state('');
 
 let users: UserType[] = $state([]);
 
@@ -42,6 +43,7 @@ const updateAppConfiguration = async (): Promise<void> => {
       webhooks: {
         update: webhookUpdateUrl,
         logs: webhookLogsUrl,
+        traductor: webhookTraductorUrl,
       },
     });
 
@@ -61,6 +63,8 @@ const updateAppConfiguration = async (): Promise<void> => {
 };
 
 const dialogEdit: boolean[] = $state([]);
+
+const isSuperAdmin = checkUser(['superAdmin']);
 </script>
 
 <div>
@@ -84,7 +88,7 @@ const dialogEdit: boolean[] = $state([]);
           </label>
           <input
             bind:value={$appConfiguration.appName}
-            disabled={$isLoading && !checkUser(['superAdmin'])}
+            disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="Nom de l'application"
             class="input input-bordered w-full"
@@ -96,7 +100,7 @@ const dialogEdit: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookLogsUrl}
-            disabled={$isLoading && !checkUser(['superAdmin'])}
+            disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -108,11 +112,23 @@ const dialogEdit: boolean[] = $state([]);
           </label>
           <input
             bind:value={webhookUpdateUrl}
-            disabled={$isLoading && !checkUser(['superAdmin'])}
+            disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
             name="app-logs" />
+          </div>
+          <div class="w-full max-w-xs">
+            <label class="label" for="app-traductor">
+              <span class="label-text">Url du webhook des traducteurs</span>
+            </label>
+            <input
+              bind:value={webhookTraductorUrl}
+              disabled={$isLoading && !isSuperAdmin}
+              type="text"
+              placeholder="url du webhook"
+              class="input input-bordered w-full"
+              name="app-traductor" />
           </div>
         </div>
       {/snippet}
