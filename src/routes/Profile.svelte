@@ -68,6 +68,7 @@ onMount(() => fetchUser());
       </div>
     </div>
     <div class="flex flex-grow flex-col items-center">
+      <!-- TODO: implement stats for traductors -->
       {#if user.role === 'admin' || user.role === 'superAdmin'}
         <div class="stats w-full shadow">
           <div class="stat">
@@ -96,8 +97,8 @@ onMount(() => fetchUser());
               <!-- head -->
             <thead>
               <tr>
-                <th> Évenement </th>
-                <th> Date </th>
+                <th>Évenement</th>
+                <th>Date</th>
               </tr>
             </thead>
             <tbody>
