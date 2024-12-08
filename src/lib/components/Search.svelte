@@ -1,7 +1,7 @@
 <script lang="ts">
 import Panel from '$components/Panel.svelte';
 import { fetchQueryGames } from '$lib/queryGames';
-import { queryGame, queryGames } from '$lib/stores';
+import { game, queryGame, queryGames } from '$lib/stores';
 import { onMount } from 'svelte';
 import { Link, navigate } from 'svelte-routing';
 
@@ -50,6 +50,7 @@ const handleClick = (data: QueryGameType): void => {
   badgeSearch = data.version;
   filtered = [];
   $queryGame = data;
+  $game = undefined;
 
   navigate('/edit');
 };
