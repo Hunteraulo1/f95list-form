@@ -44,11 +44,15 @@ const handleClick = (): void => {
   onclick={handleClick}>
   Dev data
 </button>
-{#if $game.domain === "F95z"}
+{#if $game && $game.domain === "F95z"}
   <button
     class="btn btn-info w-full sm:w-48"
     type="button"
-    onclick={() => scrapeData({ id: $game.id, domain: 'F95z' })}>
+    onclick={() => {
+      if (!$game) throw new Error('no game data');
+      
+      scrapeData({ id: $game.id, domain: 'F95z' })
+    }}>
     Force scrape
   </button>
 {/if}
