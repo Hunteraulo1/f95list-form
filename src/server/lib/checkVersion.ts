@@ -1,10 +1,9 @@
 import { getGames } from '../api/getGames';
 import { getScrape } from '../api/getScrape';
-
+import { F95host } from '../env';
 import { sendTraductorWebhook, sendWebhookAC } from './webhook';
 
 import type { GameACType, GameType } from '$types/schemas';
-import { F95host } from '../env';
 
 const checkVersion = async (): Promise<void> => {
   console.info('checkVersion');
