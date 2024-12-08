@@ -1,7 +1,5 @@
 <script lang="ts">
-import { GAS_API } from '$lib/GAS_API';
 import { isLoading, sessionUser } from '$lib/stores';
-import { checkUser } from '$lib/utils';
 import { onMount } from 'svelte';
 import { Bars3, Icon } from 'svelte-hero-icons';
 import { Link, navigate } from 'svelte-routing';
@@ -9,23 +7,12 @@ import packageJson from '../../../package.json';
 
 interface Props {
   title?: string;
+  count: number;
 }
 
-const { title = '' }: Props = $props();
+const { title = '', count }: Props = $props();
 
-let count = $state(0);
-
-onMount(async () => {
-  if (checkUser(['admin', 'superAdmin'])) {
-    const submits = await GAS_API.getSubmits({});
-
-    if (!submits) return;
-
-    const submitsWait = submits.filter((submit) => submit.status === 'wait');
-
-    count = submitsWait.length;
-  }
-});
+onMount(async () => {});
 </script>
 
 <div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>

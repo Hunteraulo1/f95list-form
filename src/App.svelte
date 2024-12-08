@@ -40,21 +40,14 @@ interface Props {
 const { url = '' }: Props = $props();
 
 const initialLoadComplete = $derived($sessionUser && $appConfiguration);
+let count = $state(0);
 
 let isDrawerOpen = $state(false);
 const toggleDrawer = (): void => {
   isDrawerOpen = !isDrawerOpen;
 };
 
-onMount(() => {
-  fetchUser();
-  fetchAppConfiguration();
-});
-
-/**
- * Fetches the user from the server.
- */
-const fetchUser = async (): Promise<void> => {
+onMount(async () => {
   $isLoading = true;
 
   console.info('fetching user...');
@@ -67,6 +60,16 @@ const fetchUser = async (): Promise<void> => {
     console.info('User:', result);
 
     document.querySelector('html')?.setAttribute('data-theme', result.preferences.theme ?? 'dark');
+
+    if (checkUser(['admin', 'superAdmin'])) {
+      const submits = await GAS_API.getSubmits({});
+
+      if (!submits) return;
+
+      const submitsWait = submits.filter((submit) => submit.status === 'wait');
+
+      count = submitsWait.length;
+    }
   } catch (err) {
     console.error('Could not get user:', err); // TODO: dispatch toast
   } finally {
@@ -74,7 +77,9 @@ const fetchUser = async (): Promise<void> => {
 
     $isLoading = false;
   }
-};
+
+  fetchAppConfiguration();
+});
 </script>
 
 <Router {url}>
@@ -91,7 +96,7 @@ const fetchUser = async (): Promise<void> => {
 
       <div class="drawer-content bg-base-200">
         <!-- Page content here -->
-        <HeaderBar title={$appConfiguration.appName} />
+        <HeaderBar title={$appConfiguration.appName} {count} />
 
         <div class="container mx-auto pb-8">
           <Route path="*">
@@ -149,6 +154,9 @@ const fetchUser = async (): Promise<void> => {
             <NavLink to="/submits" onClick={toggleDrawer}>
               <Icon src={InboxStack} size="1rem" />
               Soumissions
+              {#if count > 0}
+                <span class="badge badge-error size-4 p-0 pb-0.5 text-white text-xs">{count}</span>
+              {/if}
             </NavLink>
           {/if}
 
