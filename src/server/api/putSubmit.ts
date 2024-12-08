@@ -55,6 +55,8 @@ export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void
 
     if (status === 'validated') s.game = submit.game;
 
+    console.log('🚀 ~ result ~ s:', s);
+
     return s;
   });
 

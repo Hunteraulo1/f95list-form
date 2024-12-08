@@ -154,7 +154,7 @@ const submitAttributes: SubmitAttributes[] = [
     {/if}
   {/snippet}
   {#snippet modalAction()}
-    {#if submit.reason === 'wait'}
+    {#if submit.status === 'wait'}
       <button onclick={handleClickConfirm} class="btn">
         Confirmer
       </button>
