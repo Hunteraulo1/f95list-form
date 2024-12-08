@@ -1,8 +1,9 @@
 <script lang="ts">
 import { game } from '$lib/stores';
+import Input from './Input.svelte';
+
 import type { GameType } from '$types/schemas';
 import type { HTMLInputAttributes } from 'svelte/elements';
-import Input from './Input.svelte';
 
 interface Props {
   title: string;

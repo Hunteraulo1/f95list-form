@@ -3,11 +3,12 @@ import { GAS_API } from '$lib/GAS_API';
 import { getConvert } from '$lib/convert';
 import { game, isLoading, newToast, queryGame } from '$lib/stores';
 import { dateFormat } from '$lib/utils';
-import type { GameType, SubmitType, UserType } from '$types/schemas';
 import { onMount } from 'svelte';
 import FormGame from './FormGame.svelte';
 import LoadingSpinner from './LoadingSpinner.svelte';
 import Modal from './Modal.svelte';
+
+import type { GameType, SubmitType, UserType } from '$types/schemas';
 
 interface Props {
   showModal: boolean;

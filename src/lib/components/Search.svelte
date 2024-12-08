@@ -1,12 +1,12 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-import { Link, navigate } from 'svelte-routing';
-import type { ChangeEventHandler } from 'svelte/elements';
-
 import Panel from '$components/Panel.svelte';
 import { fetchQueryGames } from '$lib/queryGames';
 import { queryGame, queryGames } from '$lib/stores';
+import { onMount } from 'svelte';
+import { Link, navigate } from 'svelte-routing';
+
 import type { QueryGameType } from '$types/schemas';
+import type { ChangeEventHandler } from 'svelte/elements';
 
 interface Props {
   edit?: boolean;

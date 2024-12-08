@@ -1,8 +1,8 @@
 <script lang="ts">
+import { toasts } from '$lib/stores';
 import { ExclamationCircle, ExclamationTriangle, HandThumbUp, Icon, InformationCircle, XMark } from 'svelte-hero-icons';
 import { fade } from 'svelte/transition';
 
-import { toasts } from '$lib/stores';
 import type { Toast } from '$types/index';
 
 interface Props {

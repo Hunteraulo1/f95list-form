@@ -1,9 +1,8 @@
 <script lang="ts">
-import { navigate } from 'svelte-routing';
-
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, sessionUser } from '$lib/stores';
+import { navigate } from 'svelte-routing';
 
 const handleClick = async (): Promise<void> => {
   console.info('Button clicked!');

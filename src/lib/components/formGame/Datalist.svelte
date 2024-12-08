@@ -2,8 +2,9 @@
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import { game, traductors } from '$lib/stores';
 import { checkUser } from '$lib/utils';
-import type { GameType } from '$types/schemas';
 import { Icon, UserPlus } from 'svelte-hero-icons';
+
+import type { GameType } from '$types/schemas';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
 interface Props extends HTMLInputAttributes {

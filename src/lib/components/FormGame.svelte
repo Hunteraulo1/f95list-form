@@ -2,7 +2,7 @@
 import { GAS_API } from '$lib/GAS_API';
 import { game, isLoading, newToast, queryGame, traductors } from '$lib/stores';
 import { checkUser } from '$lib/utils';
-import { Game, type GameType } from '$types/schemas';
+import { Game } from '$types/schemas';
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 import LoadingSpinner from './LoadingSpinner.svelte';
@@ -16,6 +16,8 @@ import Insert from './formGame/Insert.svelte';
 import Remove from './formGame/Remove.svelte';
 import Select from './formGame/Select.svelte';
 import Textarea from './formGame/Textarea.svelte';
+
+import type { GameType } from '$types/schemas';
 
 interface Props {
   step?: number;

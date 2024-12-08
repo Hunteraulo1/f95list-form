@@ -1,10 +1,11 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, traductors } from '$lib/stores';
-import type { TraductorType } from '$types/schemas';
 import { Icon, XMark } from 'svelte-hero-icons';
 import { get } from 'svelte/store';
 import Modal from './Modal.svelte';
+
+import type { TraductorType } from '$types/schemas';
 
 interface Props {
   showModal: boolean;

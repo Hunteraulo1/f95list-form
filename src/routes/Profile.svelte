@@ -2,10 +2,10 @@
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast } from '$lib/stores';
+import { onMount } from 'svelte';
 import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
 
 import type { UserType } from '$types/schemas';
-import { onMount } from 'svelte';
 
 interface Props {
   email: string;

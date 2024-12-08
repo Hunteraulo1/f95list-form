@@ -1,5 +1,6 @@
 <script lang="ts">
 import { isLoading } from '$lib/stores';
+
 import type { Snippet } from 'svelte';
 
 interface Props {

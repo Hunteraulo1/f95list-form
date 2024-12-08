@@ -1,5 +1,6 @@
 <script lang="ts">
 import { game } from '$lib/stores';
+
 import type { GameType } from '$types/schemas';
 import type { ChangeEventHandler, HTMLTextareaAttributes } from 'svelte/elements';
 

@@ -1,14 +1,14 @@
 <script lang="ts">
-import { Link } from 'svelte-routing';
-
 import EditUserModal from '$components/EditUserModal.svelte';
 import LoadingSpinner from '$components/LoadingSpinner.svelte';
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { appConfiguration, isLoading, newToast } from '$lib/stores';
 import { checkUser } from '$lib/utils';
-import type { UserType } from '$types/schemas';
 import { onMount } from 'svelte';
+import { Link } from 'svelte-routing';
+
+import type { UserType } from '$types/schemas';
 
 let webhookUpdateUrl = $state('');
 let webhookLogsUrl = $state('');

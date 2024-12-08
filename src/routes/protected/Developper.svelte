@@ -1,5 +1,6 @@
 <script lang="ts">
 import { newToast } from '$lib/stores';
+
 import type { Toast } from '$types/index';
 
 let selectToastValue = $state<Toast['alertType']>('warning');

@@ -1,10 +1,9 @@
 <script lang="ts">
-import { onMount } from 'svelte';
-
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import EditTraductorModal from '$components/EditTraductorModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { newToast, traductors } from '$lib/stores';
+import { onMount } from 'svelte';
 
 let editModal: boolean[] = $state([]);
 let addModal: boolean = $state(false);

@@ -1,9 +1,11 @@
 <script lang="ts">
 import { checkUser } from '$lib/utils';
+import { Route } from 'svelte-routing';
+import PageNotFound from '../../routes/Error404.svelte';
+
 import type { UserType } from '$types/schemas';
 import type { Snippet } from 'svelte';
-import { Route, type Route as RouteType } from 'svelte-routing';
-import PageNotFound from '../../routes/Error404.svelte';
+import type { Route as RouteType } from 'svelte-routing';
 
 interface Props {
   ranks?: UserType['role'][];
