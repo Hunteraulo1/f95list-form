@@ -1,6 +1,7 @@
+import { Traductor } from '$types/schemas';
 import { getTraductors } from './getTraductors';
 
-import { Traductor, type TraductorType } from '$types/schemas';
+import type { TraductorType } from '$types/schemas';
 
 interface PutTraductorArgs {
   query: { name: TraductorType['name'] };

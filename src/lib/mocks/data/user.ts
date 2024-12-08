@@ -2,7 +2,7 @@ import type { UserType } from '$types/schemas';
 
 export const user: UserType = {
   email: 'mock_mockerson@test.com',
-  roles: ['superAdmin', 'admin'],
+  role: 'superAdmin',
   profile: {
     pseudo: 'Mock',
     imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',
@@ -24,7 +24,7 @@ export const users: UserType[] = [
   user,
   {
     email: 'johndoe@test.com',
-    roles: ['admin'],
+    role: 'admin',
     profile: {
       pseudo: 'John',
       imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',
@@ -43,7 +43,7 @@ export const users: UserType[] = [
   },
   {
     email: 'janedoe@test.com',
-    roles: [],
+    role: 'user',
     profile: {
       pseudo: 'Jane',
       imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',

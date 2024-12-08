@@ -1,68 +1,57 @@
 import { delGame } from './api/delGame';
+import { delTraductor } from './api/delTraductor';
 import { getAppConfiguration } from './api/getAppConfiguration';
 import { getGame } from './api/getGame';
 import { getQueryGames } from './api/getQueryGames';
 import { getScrape } from './api/getScrape';
+import { getSubmits } from './api/getSubmits';
 import { getTraductors } from './api/getTraductors';
 import { getUser } from './api/getUser';
 import { getUsers } from './api/getUsers';
 import { postGame } from './api/postGame';
+import { postSubmit } from './api/postSubmit';
 import { postTraductor } from './api/postTraductor';
 import { putAppConfiguration } from './api/putAppConfiguration';
 import { putGame } from './api/putGame';
+import { putSubmit } from './api/putSubmit';
 import { putTraductor } from './api/putTraductor';
 import { putUser, putUserRole } from './api/putUser';
 
-type MockEndpoints = {
+import type { GAS_API } from '$lib/GAS_API';
+
+export type MockEndpoints = {
+  [K in keyof typeof GAS_API]: (typeof GAS_API)[K];
+};
+
+const getMockEndpoints = (): MockEndpoints => ({
   // App Configuration
-  getAppConfiguration: typeof getAppConfiguration;
-  putAppConfiguration: typeof putAppConfiguration;
+  getAppConfiguration,
+  putAppConfiguration,
 
   // User
-  getUser: typeof getUser;
-  getUsers: typeof getUsers;
-  putUser: typeof putUser;
-  putUserRole: typeof putUserRole;
+  getUser,
+  getUsers,
+  putUser,
+  putUserRole,
 
   // Game
-  getGame: typeof getGame;
-  postGame: typeof postGame;
-  putGame: typeof putGame;
-  delGame: typeof delGame;
-  getQueryGames: typeof getQueryGames;
-  getScrape: typeof getScrape;
+  getGame,
+  postGame,
+  putGame,
+  delGame,
+  getQueryGames,
+  getScrape,
 
   // Traductor
-  getTraductors: typeof getTraductors;
-  postTraductor: typeof postTraductor;
-  putTraductor: typeof putTraductor;
-};
+  getTraductors,
+  postTraductor,
+  putTraductor,
+  delTraductor,
 
-const getMockEndpoints = (): MockEndpoints => {
-  return {
-    // App Configuration
-    getAppConfiguration,
-    putAppConfiguration,
-
-    // User
-    getUser,
-    getUsers,
-    putUser,
-    putUserRole,
-
-    // Game
-    getGame,
-    postGame,
-    putGame,
-    delGame,
-    getQueryGames,
-    getScrape,
-
-    // Traductor
-    getTraductors,
-    postTraductor,
-    putTraductor,
-  };
-};
+  // Submit
+  getSubmits,
+  postSubmit,
+  putSubmit,
+});
 
 export default getMockEndpoints;

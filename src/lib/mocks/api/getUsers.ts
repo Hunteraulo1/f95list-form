@@ -1,12 +1,16 @@
-import sleep from '$lib/sleep';
-import { users } from '../data/user';
+import { user, users } from '../data/user';
+import { checkUser } from '../utils';
 
 import type { UserType } from '$types/schemas';
 
 export const getUsers = async (): Promise<UserType[]> => {
-  await sleep();
+  console.info('getUsers');
 
-  console.info('mockResponse', users);
+  const requestingUserEmail = user.email;
 
-  return JSON.parse(JSON.stringify(users));
+  console.info('getUsers called by: ', requestingUserEmail);
+
+  if (!(await checkUser('admin'))) throw new Error('getUsers ~ Unauthorized');
+
+  return users;
 };

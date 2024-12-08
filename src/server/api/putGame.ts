@@ -11,6 +11,7 @@ import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 import { Game } from '$types/schemas';
+import { checkUser } from '../lib/utils';
 
 export interface PutGameArgs {
   game: GameType;
@@ -22,8 +23,9 @@ export interface PutGameArgs {
 }
 
 export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
-  // Report request
-  console.info('putGame called with args:', { dataGame });
+  console.info('putGame ~ args:', { dataGame });
+
+  checkUser('admin');
 
   try {
     enableLock();
@@ -45,12 +47,12 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
     const gameIndex = games?.findIndex((oldGame) => oldGame.name === query.name && oldGame.version === query.version);
 
     if (gameIndex === undefined || gameIndex === -1) {
-      console.error('No detect game putGame with index:', { gameIndex });
-      throw new Error('Impossible de trouver le jeu dans la liste');
-    } // TODO: duplicate game
+      console.error('putGame ~ No detect game with index:', { gameIndex });
+      throw new Error('putGame ~ Impossible de trouver le jeu dans la liste');
+    }
 
-    const convertedGame: string[] = [
-      validGame.id || '',
+    const convertedGame: (string | number | null)[] = [
+      validGame.id ?? null,
       validGame.domain,
       `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
       validGame.version,
@@ -59,7 +61,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
         ? `=HYPERLINK("${validGame.tlink}"; "${validGame.tname}")`
         : validGame.tname,
       validGame.status,
-      validGame.tags || '',
+      validGame.tags ?? '',
       validGame.type,
       (await dataLink(validGame.traductor, validGame.domain)).toString(),
       (await dataLink(validGame.proofreader, validGame.domain)).toString(),
@@ -70,14 +72,14 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
 
     const oldGame: GameType = await getGame(query);
 
-    console.info('putGame convert:', { convertedGame });
+    console.info('putGame ~ convert:', { convertedGame });
 
     const sheet = SpreadsheetApp.getActiveSpreadsheet();
     const gameSheet = sheet.getSheetByName('Jeux');
 
     if (!gameSheet) {
       console.error({ gameSheet });
-      throw Error('Une erreur est survenue !');
+      throw new Error('putGame ~ Une erreur est survenue !');
     }
 
     const row = gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`);
@@ -89,18 +91,18 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
       changelog({ game: validGame.name, status: 'MISE À JOUR' });
     }
 
-    const user = getUser();
-    putStatistics('put');
+    const user = await getUser();
+    await putStatistics('put');
 
-    putUser({ user });
+    await putUser({ user });
 
     let title = "Modification d'un jeu";
-    let color = 5814783;
+    let color = 5_814_783;
 
     if (!silentMode) {
       if (validGame.tlink !== oldGame.tlink && validGame.tlink === 'n/a') {
         title = 'Traduction manquante';
-        color = 12256517;
+        color = 12_256_517;
 
         webhookUpdate(oldGame, validGame, title, color);
       } else if (validGame.tversion !== oldGame.tversion) {
@@ -109,7 +111,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
         webhookUpdate(oldGame, validGame, title, color);
       } else if (validGame.tlink !== oldGame.tlink) {
         title = "Mise à jour d'un lien de traduction:";
-        color = 15122688;
+        color = 15_122_688;
 
         webhookUpdate(oldGame, validGame, title, color);
       }
@@ -124,20 +126,22 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
   } catch (error) {
     console.error(error);
 
-    throw new Error('Un problème est survenue lors de modification du jeu');
+    throw new Error('putGame ~ Un problème est survenue lors de modification du jeu');
   } finally {
     disableLock();
   }
 };
 
-const dataLink = async (data: string | null, domain: string) => {
+const dataLink = async (data: string | null, domain: string): Promise<string> => {
+  console.info('dataLink ~ args:', { data, domain });
+
   if (!data) return '';
 
   const traductors = await getTraductors();
 
   if (!traductors) {
     console.error({ traductors });
-    throw new Error('Une erreur est survenue !');
+    throw new Error('dataLink ~ Une erreur est survenue !');
   }
 
   let result = data;
@@ -158,23 +162,27 @@ const dataLink = async (data: string | null, domain: string) => {
     }
   }
 
+  console.info('dataLink ~ result:', result);
+
   return result;
 };
 
-const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, color: number) => {
+const webhookUpdate = (oldGame: GameType, validGame: GameType, title: string, color: number): void => {
+  console.info('webhookUpdate ~ args:', { oldGame, validGame, title, color });
+
   sendWebhookUpdate({
     title,
     url: validGame.link,
     color,
     name: validGame.name,
     tversion:
-      oldGame.tversion !== validGame.tversion ? `${oldGame.tversion} > ${validGame.tversion}` : validGame.tversion,
+      oldGame.tversion === validGame.tversion ? validGame.tversion : `${oldGame.tversion} > ${validGame.tversion}`,
     traductor:
-      oldGame.traductor !== validGame.traductor ? `${oldGame.traductor} > ${validGame.traductor}` : validGame.traductor,
+      oldGame.traductor === validGame.traductor ? validGame.traductor : `${oldGame.traductor} > ${validGame.traductor}`,
     proofreader:
-      oldGame.proofreader !== validGame.proofreader
-        ? `${oldGame.proofreader} > ${validGame.proofreader}`
-        : validGame.proofreader,
+      oldGame.proofreader === validGame.proofreader
+        ? validGame.proofreader
+        : `${oldGame.proofreader} > ${validGame.proofreader}`,
     image: validGame.image,
   });
 };

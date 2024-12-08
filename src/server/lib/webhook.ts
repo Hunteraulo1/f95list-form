@@ -1,3 +1,5 @@
+import { getTraductors } from '../api/getTraductors';
+
 import type { GameACType, GameType } from '$types/schemas';
 
 interface SendWebhookUpdateArgs {
@@ -22,11 +24,23 @@ export const sendWebhookUpdate = async ({
   traductor,
   proofreader,
   image,
-}: SendWebhookUpdateArgs) => {
+}: SendWebhookUpdateArgs): Promise<void> => {
+  console.info('sendWebhookUpdate ~ args:', {
+    title,
+    url,
+    color,
+    comment,
+    name,
+    tversion,
+    traductor,
+    proofreader,
+    image,
+  });
+
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('webhookUrl');
 
-  if (!link || !tversion || !name) return null;
+  if (!link || !tversion || !name) return;
 
   const fields = [];
 
@@ -102,11 +116,13 @@ interface SendWebhookLogsArgs {
   game: GameType;
 }
 
-export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs) => {
+export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: SendWebhookLogsArgs): Promise<void> => {
+  console.info('sendWebhookLogs ~ args:', { title, color, oldGame, game, comment });
+
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('logsUrl');
 
-  if (!link) return null;
+  if (!link) return;
 
   const fields = [];
 
@@ -167,11 +183,13 @@ interface SendWebhookACArgs {
   games: GameACType[];
 }
 
-export const sendWebhookAC = async ({ games }: SendWebhookACArgs) => {
+export const sendWebhookAC = async ({ games }: SendWebhookACArgs): Promise<void> => {
+  console.info('sendWebhookAC ~ args:', { games });
+
   const env = PropertiesService.getScriptProperties();
   const link = env.getProperty('logsUrl');
 
-  if (!link) return null;
+  if (!link) return;
 
   const fields = [];
 
@@ -212,7 +230,70 @@ export const sendWebhookAC = async ({ games }: SendWebhookACArgs) => {
   });
 };
 
-const getName = () => {
+export interface SendTraductorWebhookArgs {
+  games: GameACType[];
+}
+
+export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs): Promise<void> => {
+  console.info('sendTraductorWebhook ~ args:', { games });
+
+  const env = PropertiesService.getScriptProperties();
+  const link = env.getProperty('traductorUrl');
+
+  if (!link) return;
+
+  const traductors = await getTraductors();
+
+  if (!traductors) return;
+
+  const fields = [];
+
+  for (const game of games) {
+    const index = traductors.findIndex((t) => t.name === game.traductor);
+
+    if (!index) continue;
+
+    const discordID = traductors[index]?.discordID;
+
+    if (!discordID) continue;
+
+    fields.push({
+      name: `${game.name} (${game.id}): ${game.version} **>** ${game.newVersion}`,
+      value: ` <@${discordID}>`,
+      inline: true,
+    });
+  }
+
+  if (fields.length === 0) {
+    console.error({ fields });
+
+    return;
+  }
+
+  await UrlFetchApp.fetch(link, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    payload: JSON.stringify({
+      content: '',
+      tts: false,
+      embeds: [
+        {
+          title: 'Jeux mis à jour',
+          fields,
+          author: {
+            name: 'Auto-Check',
+          },
+        },
+      ],
+      components: [],
+      actions: {},
+    }),
+  });
+};
+
+const getName = (): string => {
   const user = Session.getActiveUser();
   // @ts-expect-error - getUsername() is not in the types
   const username = user.getUsername();

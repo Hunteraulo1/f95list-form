@@ -1,6 +1,6 @@
-import sleep from '$lib/sleep';
+import { AppConfiguration, AppWebhooks } from '$types/schemas';
 
-import { AppConfiguration, type AppConfigurationType, AppWebhooks, type AppWebhooksType } from '$types/schemas';
+import type { AppConfigurationType, AppWebhooksType } from '$types/schemas';
 
 interface PutAppConfigArgs {
   appConfiguration: AppConfigurationType;
@@ -8,14 +8,12 @@ interface PutAppConfigArgs {
 }
 
 export const putAppConfiguration = async ({ appConfiguration, webhooks }: PutAppConfigArgs): Promise<void> => {
-  await sleep();
+  console.info('putAppConfiguration ~ args:', { appConfiguration, webhooks });
 
   try {
-    const appConfigurationResult = AppConfiguration.parse(appConfiguration);
-    console.log('🚀 ~ putAppConfiguration ~ appConfigurationResult:', appConfigurationResult);
-    const appWebhooksResult = AppWebhooks.parse(webhooks);
-    console.log('🚀 ~ putAppConfiguration ~ appWebhooksResult:', appWebhooksResult);
+    AppConfiguration.parse(appConfiguration);
+    AppWebhooks.parse(webhooks);
   } catch (error) {
-    throw new Error(`Error in putAppConfiguration: ${error}`);
+    throw new Error(`putAppConfiguration ~ Error: ${error}`);
   }
 };

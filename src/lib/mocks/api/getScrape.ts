@@ -1,26 +1,31 @@
-import sleep from '$lib/sleep';
-import { scrape } from '../data/game';
+import { ScrapeGame } from '$types/schemas';
+import { scrape } from '../data/scrape';
 
-export type GetScrapeArgs = {
-  domain: 'F95z' | 'LewdCorner';
-  id: string;
-};
+import type { GameType } from '$types/schemas';
 
-export const getScrape = async ({ domain, id }: GetScrapeArgs) => {
-  await sleep();
+export interface GetScrapeArgs {
+  domain: Extract<GameType['domain'], 'F95z'>;
+  id: GameType['id'];
+}
 
-  let mockResponse = await scrape(domain, id);
+interface GetScrape {
+  name: GameType['name'];
+  version: GameType['version'];
+  status: GameType['status'];
+  tags: GameType['tags'];
+  type: GameType['type'];
+  image: GameType['image'];
+}
+export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
+  console.info('getScrape ~ args:', { domain, id });
 
-  if (!mockResponse) {
-    mockResponse = {
-      name: '',
-      status: '',
-      tags: '',
-      type: '',
-      version: '',
-      image: '',
-    };
-  }
+  if (domain !== 'F95z') throw new Error('getScrape ~ domaine incompatible');
 
-  return JSON.parse(JSON.stringify(mockResponse));
+  if (!id) throw new Error('getScrape ~ no id');
+
+  const validScrapeGame = ScrapeGame.parse(scrape[id]);
+
+  console.info('getScrape ~ validScrapeGame:', validScrapeGame);
+
+  return validScrapeGame;
 };

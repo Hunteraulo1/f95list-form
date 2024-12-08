@@ -1,15 +1,20 @@
-import { User, type UserType } from '$types/schemas';
+import { User } from '$types/schemas';
+import { dateNow } from '../lib/utils';
+
+import type { UserType } from '$types/schemas';
 
 export const postUser = (email: string, overrides = {}): UserType => {
+  console.info('postUser ~ args:', { email, overrides });
+
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
-  if (!email) throw new Error('No email found');
+  if (!email) throw new Error('postUser ~ No email found');
 
-  if (scriptPropertiesService.getProperty(email)) throw new Error('User already exists');
+  if (scriptPropertiesService.getProperty(email)) throw new Error('postUser ~ User already exists');
 
   const userDefaults: UserType = {
     email,
-    roles: [],
+    role: 'user',
     preferences: {
       theme: 'dark',
     },
@@ -20,7 +25,7 @@ export const postUser = (email: string, overrides = {}): UserType => {
     activity: [
       {
         label: 'Utilisateur créé',
-        value: new Date().toISOString(),
+        value: dateNow(),
       },
     ],
     statistics: {
@@ -36,6 +41,8 @@ export const postUser = (email: string, overrides = {}): UserType => {
 
   const validUser = User.parse(user);
   scriptPropertiesService.setProperty(email, JSON.stringify(validUser));
+
+  console.info('postUser ~ result:', validUser);
 
   return user;
 };

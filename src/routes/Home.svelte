@@ -1,11 +1,10 @@
 <script lang="ts">
-import Search from '../components/Search.svelte';
-
-import { userIsAdmin } from '$lib/stores';
+import Search from '$components/Search.svelte';
+import { checkUser } from '$lib/utils';
 </script>
 
 <div class="mt-0 flex flex-col items-center justify-center gap-4">
-  {#if $userIsAdmin}
+  {#if checkUser(['traductor', 'admin', 'superAdmin'])}
     <Search />
   {:else}
     <div class="h-screen">

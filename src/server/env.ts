@@ -12,4 +12,6 @@ const ENV: EnvironmentDetails = {
   },
 };
 
-export { ENV };
+const F95host = 'https://f95zone.to';
+
+export { ENV, F95host };

@@ -1,58 +1,58 @@
 {
   "name": "flist",
   "private": true,
-  "version": "3.1.14",
+  "version": "3.4.6",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "rollup:npm": "rollup -c rollup.config.npm.js",
     "build": "vite build && bun run rollup:npm && node postBuildProcess.js",
     "build:push": "bun run build && clasp push",
-    "build:deploy": "bun run build:push && clasp deploy -i AKfycbztpdKu2yZEwtsvjLUFKEpOiB6gGMP_qq65CJ-mlPXOw8DbJ7XX9UqP-5Ab7cMXCN7Otg",
+    "build:deploy": "bun run build:push && clasp deploy -i AKfycbxXI2VPp3Pzkwso2MbRgUCIJJkhiZ34fApqEiZyH6zl9aMTdeIQSt_mBWQZ0fLuUXvf9Q",
     "preview": "vite preview",
     "lint": "bunx @biomejs/biome lint --write .",
     "format": "bunx @biomejs/biome format --write .",
     "check": "bunx @biomejs/biome check --write . && svelte-check --tsconfig ./tsconfig.json",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest"
   },
-  "lint-staged": {
-    "*.{js,ts,svelte,html,css}": "bunx @biomejs/biome lint --write ."
-  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@rollup/plugin-commonjs": "28.0.1",
     "@rollup/plugin-node-resolve": "15.3.0",
-    "@sveltejs/vite-plugin-svelte": "3.1.2",
+    "@sveltejs/vite-plugin-svelte": "5.0.1",
     "@types/cheerio": "0.22.35",
-    "@types/google-apps-script": "1.0.84",
+    "@types/google-apps-script": "1.0.86",
+    "@types/google.script.client-side": "0.1.5",
     "@types/jsdom": "21.1.7",
-    "@types/node": "22.8.4",
+    "@types/node": "22.10.1",
     "autoprefixer": "10.4.20",
     "daisyui": "4.12.14",
     "lint-staged": "15.2.10",
-    "postcss": "8.4.47",
-    "rollup": "4.24.3",
+    "postcss": "8.4.49",
+    "rollup": "4.28.1",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-delete": "2.1.0",
-    "svelte": "4.2.19",
-    "svelte-check": "4.0.5",
+    "svelte": "5.9.0",
+    "svelte-check": "4.1.1",
     "svelte-hero-icons": "5.2.0",
     "svelte-routing": "2.13.0",
-    "tailwindcss": "3.4.14",
-    "typescript": "5.6.3",
-    "vite": "5.4.10",
-    "vite-plugin-singlefile": "2.0.2",
-    "vite-tsconfig-paths": "5.0.1"
+    "tailwindcss": "3.4.16",
+    "typescript": "5.7.2",
+    "vite": "6.0.3",
+    "vite-plugin-singlefile": "2.0.3",
+    "vite-tsconfig-paths": "5.1.4"
+  },
+  "optionalDependencies": {
+    "@lmdb/lmdb-linux-x64": "^3.2.0",
+    "@lmdb/lmdb-win32-x64": "^3.2.0",
+    "@rollup/rollup-win32-x64-msvc": "4.28.1",
+    "@rollup/rollup-linux-x64-gnu": "4.28.1"
   },
   "dependencies": {
     "jest": "29.7.0",
     "zod": "3.23.8"
   },
   "trustedDependencies": ["@biomejs/biome", "esbuild"],
-  "overrides": {
-    "svelte": ">=4.0.0 <5.0.0",
-    "@sveltejs/vite-plugin-svelte": ">=3.0.0 <4.0.0"
-  },
   "config": {
     "commitizen": {
       "path": "cz-emoji"

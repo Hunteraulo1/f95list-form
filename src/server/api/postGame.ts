@@ -8,7 +8,10 @@ import { getTraductors } from './getTraductors';
 import { getUser } from './getUser';
 import { putStatistics, putUser } from './putUser';
 
-import { Game, type GameType } from '$types/schemas';
+import { Game } from '$types/schemas';
+import { checkUser } from '../lib/utils';
+
+import type { GameType } from '$types/schemas';
 
 export interface PostGameArgs {
   game: GameType;
@@ -16,8 +19,9 @@ export interface PostGameArgs {
 }
 
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
-  // Report request
-  console.info('postGame called with args:', { dataGame: game });
+  console.info('postGame ~ args:', { game, silentMode });
+
+  checkUser('admin');
 
   try {
     enableLock();
@@ -37,7 +41,7 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
 
     if (!sheet) throw new Error('No gameSheet found');
 
-    const dataLink = async (data: string | null, domain: string) => {
+    const dataLink = async (data: string | null, domain: string): Promise<string | undefined> => {
       let result = '';
 
       if (!data) return;
@@ -64,8 +68,8 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
       return result;
     };
 
-    const convertedGame: string[] = [
-      validGame.id ?? '',
+    const convertedGame: (string | number | null)[] = [
+      validGame.id ?? null,
       validGame.domain,
       `=HYPERLINK("${validGame.link}"; "${validGame.name}")`,
       validGame.version,
@@ -94,19 +98,16 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
 
     changelog({ game: validGame.name, status: 'AJOUT DE JEU' });
 
-    const user = getUser();
-    putStatistics('post');
+    const user = await getUser();
+    await putStatistics('post');
 
-    putUser({ user });
-
-    const title = 'Nouveau jeu ajouté:';
-    const color = 115201;
+    await putUser({ user });
 
     if (!silentMode) {
       sendWebhookUpdate({
-        title,
+        title: 'Nouveau jeu ajouté:',
         url: validGame.link,
-        color,
+        color: 115_201,
         name: validGame.name,
         tversion: validGame.tversion,
         traductor: validGame.traductor,
@@ -116,8 +117,8 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
     }
 
     sendWebhookLogs({
-      title,
-      color,
+      title: 'Nouveau jeu ajouté:',
+      color: 115_201,
       game: validGame,
     });
   } catch (error) {

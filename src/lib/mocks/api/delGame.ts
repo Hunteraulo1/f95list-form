@@ -1,46 +1,56 @@
-import sleep from '$lib/sleep';
-import { games } from '../data/game';
-import { sendWebhookLogs, sendWebhookUpdate } from '../webhook';
+import { disableLock, enableLock } from '../lockMode';
+import { checkUser } from '../utils';
+import { getQueryGames } from './getQueryGames';
+import { getUser } from './getUser';
+import { putUser } from './putUser';
 
 export interface DelGameArgs {
   query: { name: string; version: string };
-  comment?: string;
+  comment: string;
   silentMode: boolean;
 }
 
 export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Promise<void> => {
-  await sleep();
+  console.info('delGame ~ args:', { query, comment, silentMode });
 
   const { name, version } = query;
 
-  const game = games.find((game) => game.name === name && game.version === version);
+  if (!(await checkUser('admin'))) throw new Error('delGame ~ Unauthorized');
 
-  if (!game) throw new Error('delGame game not found');
+  enableLock();
 
-  console.info('mockResponse_delGame', { query, comment, silentMode, games });
+  try {
+    const games = (await getQueryGames()) ?? [];
 
-  const title = 'Suppression du jeu:';
-  const color = 12256517;
+    const gameIndex = games.findIndex((game) => game.name === name && game.version === version);
 
-  const { link, tversion, traductor, proofreader, image } = game;
+    if (gameIndex === -1) {
+      console.error('delGame ~ No detected getGame with index:', { gameIndex });
 
-  if (!silentMode) {
-    sendWebhookUpdate({
-      title,
-      url: link,
-      color,
-      comment,
-      name,
-      tversion,
-      traductor,
-      proofreader,
-      image,
-    });
+      throw new Error('delGame ~ No detected getGame');
+    }
+
+    const sheet = SpreadsheetApp.getActiveSpreadsheet();
+
+    const gameSheet = sheet.getSheetByName('Jeux');
+
+    if (!gameSheet) {
+      console.error('delGame ~ No gameSheet detected');
+
+      throw new Error('delGame ~ No gameSheet detected');
+    }
+
+    gameSheet.deleteRow(gameIndex + 2);
+
+    const user = await getUser();
+    user.statistics.gameEdited++;
+
+    await putUser({ user });
+  } catch (error) {
+    console.error(error);
+
+    throw new Error('delGame ~ Un problème est survenue lors de la suppression du jeu');
+  } finally {
+    disableLock();
   }
-
-  sendWebhookLogs({
-    title,
-    color,
-    game,
-  });
 };
