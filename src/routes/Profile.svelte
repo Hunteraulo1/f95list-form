@@ -1,11 +1,10 @@
 <script lang="ts">
-import { run } from 'svelte/legacy';
-
-import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
-
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast } from '$lib/stores';
+import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
+import { run } from 'svelte/legacy';
+
 import type { UserType } from '$types/schemas';
 
 interface Props {

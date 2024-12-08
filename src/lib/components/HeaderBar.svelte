@@ -5,7 +5,7 @@ import { checkUser } from '$lib/utils';
 import { onMount } from 'svelte';
 import { Bars3, Icon } from 'svelte-hero-icons';
 import { Link, navigate } from 'svelte-routing';
-import packageJson from '../../package.json';
+import packageJson from '../../../package.json';
 
 interface Props {
   title?: string;
