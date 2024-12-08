@@ -97,7 +97,9 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {
   console.info('putStatistics ~ args:', { type });
 
-  const validUser = User.parse(getUser());
+  const user = await getUser();
+
+  const validUser = User.parse(user);
 
   if (!validUser.email) throw new Error('putStatistics ~ No email found');
 
