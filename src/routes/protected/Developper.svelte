@@ -18,13 +18,10 @@ const alertTypes: Toast['alertType'][] = ['error', 'info', 'success', 'warning']
     class="btn btn-primary sm:w-40"
     onclick={() =>
       newToast({
-        
         alertType: selectToastValue,
         message: "Test du Dispatch",
         milliseconds: 60000,
       })}>
     Test Dispatch
   </button>
-
-  <h1>test</h1>
 </div>
