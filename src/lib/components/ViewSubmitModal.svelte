@@ -132,39 +132,41 @@ const submitAttributes: SubmitAttributes[] = [
             <div class="font-bold">{label}</div>
             <div>{value}</div>
           </div>
-          {/if}
+        {/if}
+      {/each}
+    </div>
+        
+    <div class="divider"></div>
+      
+    {#if gameAttributes.length > 0}
+      <div class="grid grid-cols-2 gap-4">
+        {#each gameAttributes as { label, value, queryValue }}
+          <div class="w-full relative">
+            <div class="font-bold">{label}</div>
+            {#if label === 'Auto-Check'}
+              <div>{value ? 'Oui' : 'Non'}</div>
+            {:else}
+              <div class="overflow-x-auto">{value === '' ? 'N/A' : value}</div>
+              {#if submit.type !== 'add' && value !== queryValue}
+                <div class="text-xs text-gray-500">({queryValue  === '' ? 'N/A' : queryValue})</div>
+              {/if}
+            {/if}
+          </div>
         {/each}
       </div>
-        
-      <div class="divider"></div>
-      
-      {#if gameAttributes.length > 0}
-        <div class="grid grid-cols-2 gap-4">
-          {#each gameAttributes as { label, value, queryValue }}
-            <div class="w-full relative">
-              <div class="font-bold">{label}</div>
-              {#if label === 'Auto-Check'}
-                <div>{value ? 'Oui' : 'Non'}</div>
-              {:else}
-                <div class="overflow-x-auto">{value === '' ? 'N/A' : value}</div>
-                {#if submit.type !== 'add' && value !== queryValue}
-                  <div class="text-xs text-gray-500">({queryValue  === '' ? 'N/A' : queryValue})</div>
-                {/if}
-              {/if}
-            </div>
-          {/each}
-        </div>
-      {:else}
-        <LoadingSpinner />
-      {/if}
-    {/snippet}
-    {#snippet modalAction()}
+    {:else}
+      <LoadingSpinner />
+    {/if}
+  {/snippet}
+  {#snippet modalAction()}
+    {#if submit.reason === 'wait'}
       <button onclick={handleClickConfirm} class="btn">
         Confirmer
       </button>
       <button onclick={() => { denyModal = true }} class="btn">
         Refuser
       </button>
+    {/if}
   {/snippet}
 </Modal>
 
