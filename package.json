@@ -1,14 +1,14 @@
 {
   "name": "flist",
   "private": true,
-  "version": "3.4.6",
+  "version": "3.4.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "rollup:npm": "rollup -c rollup.config.npm.js",
     "build": "vite build && bun run rollup:npm && node postBuildProcess.js",
     "build:push": "bun run build && clasp push",
-    "build:deploy": "bun run build:push && clasp deploy -i AKfycbxXI2VPp3Pzkwso2MbRgUCIJJkhiZ34fApqEiZyH6zl9aMTdeIQSt_mBWQZ0fLuUXvf9Q",
+    "build:deploy": "bun run build:push && clasp deploy -i AKfycbztpdKu2yZEwtsvjLUFKEpOiB6gGMP_qq65CJ-mlPXOw8DbJ7XX9UqP-5Ab7cMXCN7Otg",
     "preview": "vite preview",
     "lint": "bunx @biomejs/biome lint --write .",
     "format": "bunx @biomejs/biome format --write .",

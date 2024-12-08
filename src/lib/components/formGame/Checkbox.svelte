@@ -33,7 +33,7 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
         type="checkbox"
         onchange={handleChange}
         disabled={name === 'ac' && $game.domain !== 'F95z'}
-        checked={$game[name]}
+        bind:checked={$game[name]}
         class="checkbox checkbox-lg"
         class:border-error={error}
       />

@@ -46,7 +46,7 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
     placeholder={title}
     id={name}
     onchange={handleChange}
-    value={$game[name]}
+    bind:value={$game[name]}
     class="select select-bordered w-full"
     >
     {#each Object.values(values) as value}
