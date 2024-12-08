@@ -42,9 +42,9 @@ export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void
 
   const result = submits.map((s) => {
     if (
-      s.query?.id === submit.query?.id &&
-      s.query?.name === submit.query?.name &&
-      s.query?.version === submit.query?.version
+      s.query?.id !== submit.query?.id ||
+      s.query?.name !== submit.query?.name ||
+      s.query?.version !== submit.query?.version
     )
       return s;
 
