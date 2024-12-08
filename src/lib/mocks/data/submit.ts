@@ -34,14 +34,14 @@ export const submits: SubmitType[] = [
   },
   {
     query: {
-      id: 70317,
+      id: 70_317,
       name: 'A Split Existence',
       version: 'v0.4',
     },
     email: 'mock_mockerson@test.com',
     game: {
       domain: 'F95z',
-      id: 70317,
+      id: 70_317,
       name: 'A Split Existence',
       link: 'https://f95zone.to/threads/70317',
       status: 'ABANDONNÉ',
@@ -60,19 +60,19 @@ export const submits: SubmitType[] = [
     status: 'rejected',
     date: '2024-01-01',
     type: 'edit',
-    reason: '',
+    reason: "par-ce que c'est comme ça",
     comment: '',
   },
   {
     query: {
-      id: 70317,
+      id: 70_317,
       name: 'A Split Existence',
       version: 'v0.4',
     },
     email: 'johndoe@test.com',
     game: {
       domain: 'F95z',
-      id: 70317,
+      id: 70_317,
       name: 'A Split Existence',
       link: 'https://f95zone.to/threads/70317',
       status: 'ABANDONNÉ',
@@ -91,7 +91,7 @@ export const submits: SubmitType[] = [
     status: 'wait',
     date: '2024-01-01',
     type: 'delete',
-    reason: 'yolo',
-    comment: '',
+    reason: '',
+    comment: 'yolo',
   },
 ];

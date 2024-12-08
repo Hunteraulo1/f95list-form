@@ -1,15 +1,14 @@
 <script lang="ts">
-import { GAS_API } from '$lib/GAS_API';
-import { isLoading, newToast, sessionUser } from '$lib/stores';
-import type { SubmitType, UserType } from '$types/schemas';
-import { onMount } from 'svelte';
-
 import Panel from '$components/Panel.svelte';
 import { getConvert } from '$lib/convert';
+import { GAS_API } from '$lib/GAS_API';
+import { isLoading, newToast, sessionUser } from '$lib/stores';
 import { dateFormat } from '$lib/utils';
+import { onMount } from 'svelte';
+
+import type { SubmitType } from '$types/schemas';
 
 let submits: SubmitType[] = $state([]);
-const users: UserType[] = $state([]);
 
 onMount(async () => {
   if (!$sessionUser) return;
@@ -32,13 +31,13 @@ onMount(async () => {
 });
 </script>
 
-{#if submits.length > 0}
-  <div>
-    <Panel title="Mes soumissions">
-      {#snippet description()}
-        <p class="text-gray-500">Liste des soumissions en attente de validation</p>
-      {/snippet}
-      {#snippet panelContent()}
+<div>
+  <Panel title="Mes soumissions">
+    {#snippet description()}
+    <p class="text-gray-500">Liste des soumissions en attente de validation</p>
+    {/snippet}
+    {#snippet panelContent()}
+      {#if submits.length > 0}
         <div class="overflow-x-auto">
           <table class="table">
             <!-- head -->
@@ -48,6 +47,7 @@ onMount(async () => {
                 <th>Date</th>
                 <th>Type</th>
                 <th>Statut</th>
+                <th>Raison</th>
               </tr>
             </thead>
             <tbody>
@@ -74,18 +74,17 @@ onMount(async () => {
                   <td>
                     {getConvert(submit.status, 'status')}
                   </td>
-                </tr>
-              {:else}
-                <tr>
-                  <td colspan="4" class="text-center">
-                    Vous n'avez pas soumis de traduction
+                  <td>
+                    {submit.reason}
                   </td>
                 </tr>
               {/each}
             </tbody>
           </table>
         </div>
-      {/snippet}
-    </Panel>
-  </div>
-{/if}
+      {:else}
+        <p>Vous n'avez aucune soumission actuellement</p>
+      {/if}
+    {/snippet}
+  </Panel>
+</div>

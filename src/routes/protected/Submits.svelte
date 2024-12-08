@@ -1,14 +1,14 @@
 <script lang="ts">
-import { GAS_API } from '$lib/GAS_API';
-import { isLoading, newToast, sessionUser } from '$lib/stores';
-import type { SubmitType, UserType } from '$types/schemas';
-import { onMount } from 'svelte';
-import { Link } from 'svelte-routing';
-
 import Panel from '$components/Panel.svelte';
 import ViewSubmitModal from '$components/ViewSubmitModal.svelte';
 import { getConvert } from '$lib/convert';
+import { GAS_API } from '$lib/GAS_API';
+import { isLoading, newToast, sessionUser } from '$lib/stores';
 import { dateFormat } from '$lib/utils';
+import { onMount } from 'svelte';
+import { Link } from 'svelte-routing';
+
+import type { SubmitType, UserType } from '$types/schemas';
 
 const dialogView: boolean[] = $state([]);
 
@@ -36,13 +36,13 @@ onMount(async () => {
 });
 </script>
 
-{#if submits.length > 0 && users.length > 0}
-  <div>
-    <Panel title="Soumissions">
-      {#snippet description()}
-        <p class="text-gray-500">Liste des soumissions en attente de validation</p>
-      {/snippet}
-      {#snippet panelContent()}
+<div>
+  <Panel title="Soumissions">
+    {#snippet description()}
+    <p class="text-gray-500">Liste des soumissions en attente de validation</p>
+    {/snippet}
+    {#snippet panelContent()}
+      {#if submits.length > 0 && users.length > 0}
         <div class="overflow-x-auto">
           <table class="table">
             <!-- head -->
@@ -98,17 +98,13 @@ onMount(async () => {
                     <ViewSubmitModal bind:showModal={dialogView[index]} bind:submits={submits} {index} {user} />
                   </td>
                 </tr>
-              {:else}
-                <tr>
-                  <td colspan="5" class="text-center">
-                    Aucune soumission pour le moment
-                  </td>
-                </tr>
               {/each}
             </tbody>
           </table>
         </div>
-      {/snippet}
-    </Panel>
-  </div>
-{/if}
+      {:else}
+        <p>Il n'y a aucune soumission actuellement</p>
+      {/if}
+    {/snippet}
+  </Panel>
+</div>
