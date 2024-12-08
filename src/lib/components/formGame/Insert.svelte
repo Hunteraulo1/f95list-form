@@ -6,6 +6,7 @@ let insertModal = $state(false);
 let insertObject: string = $state('');
 
 const handleClickInsert = (): void => {
+  if (!$game) throw new Error('no game data');
   if (!insertObject) {
     newToast({
       alertType: 'warning',

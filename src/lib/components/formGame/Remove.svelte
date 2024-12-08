@@ -30,6 +30,7 @@ const handleClickDelete = async (): Promise<void> => {
   if (checkUser(['traductor'])) {
     try {
       if (!$queryGame) throw new Error('Query not found');
+      if (!$game) throw new Error('no game data');
 
       const result = await GAS_API.postSubmit({ query: $queryGame, game: $game, type: 'delete', comment });
 

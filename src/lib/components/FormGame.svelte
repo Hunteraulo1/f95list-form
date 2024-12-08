@@ -35,6 +35,8 @@ let {
   deleteMode = false,
 }: Props = $props();
 
+if (!$game) throw new Error('no game data');
+
 let savedId: number | undefined;
 let silentMode = $state(false);
 let scraping = $state(false);
@@ -61,6 +63,8 @@ onMount(async () => {
     $isLoading = false;
   }
 
+  if (!$game) throw new Error('no game data');
+
   const { id, domain, ac } = $game;
 
   if (step !== 5 || domain !== 'F95z' || !ac) return;
@@ -78,13 +82,18 @@ onMount(async () => {
 });
 
 const changeStep = async (amount: number): Promise<void> => {
+  if (!$game) throw new Error('no game data');
+
   if (step + amount >= 0 && step + amount <= 5) step += amount;
-  if (step === 1 && $game.domain === 'Autre') step += amount; // ID
-  if (step === 2 && $game.domain === 'F95z') step += amount; // Game informations
+  if (step === 1 && $game.domain === 'Autre') step += amount;
+  if (step === 2 && $game.domain === 'F95z')
+    // ID
+    step += amount;
   if (
     (step === 4 && $game.domain === 'Autre' && checkUser(['admin', 'superAdmin'])) ||
     (step === 4 && !checkUser(['admin', 'superAdmin']))
   ) {
+    // Game informations
     step += amount; // Auto-Check
   }
 
@@ -105,6 +114,8 @@ interface ScrapeDataArgs {
 }
 
 const scrapeData = async ({ id, domain }: ScrapeDataArgs): Promise<void> => {
+  if (!$game) throw new Error('no game data');
+
   try {
     scraping = true;
     const result = await GAS_API.getScrape({ id, domain });
@@ -138,6 +149,7 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs): Promise<void> => {
 };
 
 const handleSubmit = async (): Promise<void> => {
+  if (!$game) throw new Error('no game data');
   $isLoading = true;
 
   if (checkUser(['traductor'])) {
@@ -174,6 +186,7 @@ const handleSubmit = async (): Promise<void> => {
         message: 'Impossible de soumettre la traduction',
       });
     } finally {
+      $game = undefined;
       $isLoading = false;
     }
 
@@ -210,6 +223,7 @@ const handleSubmit = async (): Promise<void> => {
         message: 'Impossible de modifier le jeu',
       });
     } finally {
+      $game = undefined;
       $isLoading = false;
     }
   } else {
@@ -238,6 +252,7 @@ const handleSubmit = async (): Promise<void> => {
         message: "Impossible d'ajouter le jeu",
       });
     } finally {
+      $game = undefined;
       $isLoading = false;
     }
 

@@ -14,6 +14,8 @@ interface Props {
 
 const { title, active, step, name }: Props = $props();
 
+if (!$game) throw new Error('no game data');
+
 const error = $state(false);
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {

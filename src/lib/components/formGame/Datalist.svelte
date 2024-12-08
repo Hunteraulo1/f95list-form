@@ -17,6 +17,8 @@ interface Props extends HTMLInputAttributes {
 
 const { title, className, active, step, name }: Props = $props();
 
+if (!$game) throw new Error('no game data');
+
 const isTraductor = checkUser(['traductor']);
 
 const checkValue = (value: string): boolean => {

@@ -15,6 +15,8 @@ interface Props {
 
 const { title, values = [], className, active, step, name }: Props = $props();
 
+if (!$game) throw new Error('no game data');
+
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   if (name === 'tname' && event.currentTarget.value === 'Intégrée') {
     $game.tversion = 'Intégrée';
