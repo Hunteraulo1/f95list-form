@@ -28,13 +28,8 @@ interface GameAttributes {
 }
 let gameAttributes = $state<GameAttributes[]>([]);
 let editor = $state<boolean>(false);
-let deleteModalValue = $state<boolean>(false);
 
 onMount(async () => {
-  if (submit.type === 'delete') {
-    deleteModalValue = true;
-  }
-
   let queryGame: GameType | null = null;
 
   if (submit.type !== 'add' && submit.query) {
@@ -60,12 +55,12 @@ onMount(async () => {
   ];
 });
 
-const handleUpdateSubmit = async (type: 'validated' | 'rejected'): Promise<void> => {
+const handleUpdateSubmit = async (status: 'validated' | 'rejected'): Promise<void> => {
   editor = false;
   $isLoading = true;
 
   try {
-    const result = await GAS_API.putSubmit({ submit, type });
+    const result = await GAS_API.putSubmit({ submit, status });
 
     console.info('Submit updated:', result);
 

@@ -7,11 +7,11 @@ import type { SubmitType } from '$types/schemas';
 
 export interface PutSubmitArgs {
   submit: SubmitType;
-  type: string;
+  status: string;
 }
 
-export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> => {
-  console.info('putSubmit ~ args:', { submit, type });
+export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void> => {
+  console.info('putSubmit ~ args:', { submit, type: status });
 
   if (!checkUser('admin')) throw new Error('putSubmit ~ Unauthorized');
 
@@ -36,7 +36,7 @@ export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> 
 
   if (submitFound.status === 'validated') throw new Error('putSubmit ~ Submit already validated');
 
-  if (type !== 'validated' && type !== 'rejected') throw new Error('putSubmit ~ invalid type');
+  if (status !== 'validated' && status !== 'rejected') throw new Error('putSubmit ~ invalid type');
 
   let confirmed = false;
 
@@ -48,12 +48,12 @@ export const putSubmit = async ({ submit, type }: PutSubmitArgs): Promise<void> 
     )
       return s;
 
-    s.status = type;
+    s.status = status;
     s.reason = submit.reason;
 
     confirmed = true;
 
-    if (type === 'validated') s.game = submit.game;
+    if (status === 'validated') s.game = submit.game;
 
     return s;
   });
