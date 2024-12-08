@@ -68,25 +68,27 @@ onMount(() => fetchUser());
       </div>
     </div>
     <div class="flex flex-grow flex-col items-center">
-      <div class="stats w-full shadow">
-        <div class="stat">
-          <div class="stat-figure text-primary">
-            <Icon src={PlusCircle} size="2.5rem" />
+      {#if user.role === 'admin' || user.role === 'superAdmin'}
+        <div class="stats w-full shadow">
+          <div class="stat">
+            <div class="stat-figure text-primary">
+              <Icon src={PlusCircle} size="2.5rem" />
+            </div>
+            <div class="stat-title">Total de jeu ajouté</div>
+            <div class="stat-value text-primary">{user.statistics.gameAdded}</div>
           </div>
-          <div class="stat-title">Total de jeu ajouté</div>
-          <div class="stat-value text-primary">{user.statistics.gameAdded}</div>
-        </div>
 
-        <div class="stat">
-          <div class="stat-figure text-secondary">
-            <Icon src={PencilSquare} size="2.5rem" />
-          </div>
-          <div class="stat-title">Total de jeu modifié</div>
-          <div class="stat-value text-secondary">
-            {user.statistics.gameEdited}
+          <div class="stat">
+            <div class="stat-figure text-secondary">
+              <Icon src={PencilSquare} size="2.5rem" />
+            </div>
+            <div class="stat-title">Total de jeu modifié</div>
+            <div class="stat-value text-secondary">
+              {user.statistics.gameEdited}
+            </div>
           </div>
         </div>
-      </div>
+      {/if}
       <Panel title="Activité récente" showDivider={false}>
         {#snippet panelContent()}
           <div class="overflow-x-auto">
