@@ -15,6 +15,8 @@ interface Props {
 
 const { title, values = [], className, active, step, name }: Props = $props();
 
+if (!$game) throw new Error('no game data');
+
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
   if (name === 'tname' && event.currentTarget.value === 'Intégrée') {
     $game.tversion = 'Intégrée';
@@ -26,8 +28,13 @@ const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
 
   ($game[name] as GameType[keyof GameType]) = event.currentTarget.value;
 
-  const gameId = $game.id;
-  if (name === 'domain' && gameId && gameId !== 0) {
+  if (name === 'domain') {
+    if ($game.domain !== 'F95z') $game.ac = false;
+
+    const gameId = $game.id;
+
+    if (!gameId || gameId === 0) return;
+
     switch ($game.domain) {
       case 'F95z':
         $game.link = `https://f95zone.to/threads/${gameId}`;

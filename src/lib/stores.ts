@@ -8,7 +8,7 @@ export const sessionUser = writable<UserType | null>(null);
 export const isLoading = writable<boolean>(false);
 export const queryGame = writable<QueryGameType | undefined>(undefined);
 export const queryGames = writable<QueryGameType[]>([]);
-export const game = writable<GameType>();
+export const game = writable<GameType | undefined>();
 export const traductors = writable<TraductorType[]>([]);
 
 export const appConfiguration = writable<AppConfigurationType>();

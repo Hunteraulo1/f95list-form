@@ -97,24 +97,21 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {
   console.info('putStatistics ~ args:', { type });
 
-  const validUser = User.parse(getUser());
+  const user = await getUser();
 
-  if (!validUser.email) throw new Error('putStatistics ~ No email found');
+  if (!user) throw new Error('not user found');
 
-  const scriptPropertiesService = PropertiesService.getScriptProperties();
-  const userScriptPropertiesService: UserType = JSON.parse(
-    scriptPropertiesService.getProperty(validUser.email) ?? '{}',
-  );
-
-  const result: UserType['statistics'] = userScriptPropertiesService.statistics;
-
-  if (!result) throw new Error('putStatistics ~ No statistics found');
+  if (!user.email) throw new Error('putStatistics ~ No email found');
 
   switch (type) {
     case 'post':
-      scriptPropertiesService.setProperty('statistics', JSON.stringify(result.gameAdded + 1));
+      user.statistics.gameAdded++;
       break;
     case 'put':
-      scriptPropertiesService.setProperty('statistics', JSON.stringify(result.gameEdited + 1));
+      user.statistics.gameEdited++;
+      break;
   }
+
+  const scriptPropertiesService = PropertiesService.getScriptProperties();
+  scriptPropertiesService.setProperty(user.email, JSON.stringify(user));
 };

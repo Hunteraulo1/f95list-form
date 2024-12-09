@@ -13,8 +13,13 @@ export const initializeApp = (): AppConfigurationType => {
   postUser(deployingUserEmail, { role: 'superAdmin' });
 
   const newAppConfig: AppConfigurationType = {
-    appName: 'My App',
+    appName: 'Gestionnaire des traductions',
     deployingUserEmail,
+    webhooks: {
+      update: '',
+      logs: '',
+      traductor: '',
+    },
   };
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();

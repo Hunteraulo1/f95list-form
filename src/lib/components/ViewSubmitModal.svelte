@@ -82,13 +82,13 @@ const handleUpdateSubmit = async (status: 'validated' | 'rejected'): Promise<voi
 };
 
 const handleClickConfirm = (): void => {
-  editor = true;
-  showModal = false;
-
-  if (submit.type === 'add' || !submit.query) return;
+  if (submit.type === 'add' && !submit.query) return;
 
   $game = submit.game;
   $queryGame = submit.query;
+
+  showModal = false;
+  editor = true;
 };
 
 interface SubmitAttributes {

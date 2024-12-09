@@ -14,6 +14,8 @@ interface Props {
 
 const { step, title, active, name }: Props = $props();
 
+if (!$game) throw new Error('no game data');
+
 const handleImageError = (e: Event): void => {
   const target = e.currentTarget as HTMLImageElement;
 

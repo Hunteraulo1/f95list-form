@@ -40,7 +40,5 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
 
   if (!userObjectString && isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 
-  console.info(userObjectString);
-
-  return JSON.parse(userObjectString) as UserType;
+  return User.parse(JSON.parse(userObjectString));
 };

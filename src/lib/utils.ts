@@ -15,6 +15,14 @@ const checkUser = (ranks: UserType['role'][]): boolean => {
   return ranks.includes(validUser.role);
 };
 
-const dateFormat = (date: Date): string => date.toLocaleDateString('fr-FR');
+const dateFormatOptions: Intl.DateTimeFormatOptions = {
+  day: 'numeric',
+  month: 'numeric',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+};
+
+const dateFormat = (date: Date): string => date.toLocaleString('fr-FR', dateFormatOptions);
 
 export { checkUser, dateFormat };
