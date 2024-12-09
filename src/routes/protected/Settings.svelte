@@ -10,10 +10,6 @@ import { Link } from 'svelte-routing';
 
 import type { UserType } from '$types/schemas';
 
-let webhookUpdateUrl = $state('');
-let webhookLogsUrl = $state('');
-let webhookTraductorUrl = $state('');
-
 let users: UserType[] = $state([]);
 
 onMount(async () => {
@@ -40,11 +36,6 @@ const updateAppConfiguration = async (): Promise<void> => {
   try {
     await GAS_API.putAppConfiguration({
       appConfiguration: $appConfiguration,
-      webhooks: {
-        update: webhookUpdateUrl,
-        logs: webhookLogsUrl,
-        traductor: webhookTraductorUrl,
-      },
     });
 
     newToast({
@@ -99,7 +90,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
             <span class="label-text">Url du webhook des mise à jours</span>
           </label>
           <input
-            bind:value={webhookLogsUrl}
+            bind:value={$appConfiguration.webhooks.logs}
             disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
@@ -111,7 +102,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
             <span class="label-text">Url du webhook des logs</span>
           </label>
           <input
-            bind:value={webhookUpdateUrl}
+            bind:value={$appConfiguration.webhooks.update}
             disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
@@ -123,7 +114,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
               <span class="label-text">Url du webhook des traducteurs</span>
             </label>
             <input
-              bind:value={webhookTraductorUrl}
+              bind:value={$appConfiguration.webhooks.traductor}
               disabled={$isLoading && !isSuperAdmin}
               type="text"
               placeholder="url du webhook"

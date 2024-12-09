@@ -1,6 +1,6 @@
 import { getTraductors } from '../api/getTraductors';
 
-import type { GameACType, GameType } from '$types/schemas';
+import { AppConfiguration, type GameACType, type GameType } from '$types/schemas';
 
 interface SendWebhookUpdateArgs {
   title: string;
@@ -38,9 +38,11 @@ export const sendWebhookUpdate = async ({
   });
 
   const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty('webhookUrl');
+  const appConfiguration = env.getProperty('appConfiguration');
 
-  if (!link || !tversion || !name) return;
+  if (!appConfiguration || !tversion || !name) return;
+
+  const { webhooks } = AppConfiguration.parse(JSON.parse(appConfiguration));
 
   const fields = [];
 
@@ -80,7 +82,7 @@ export const sendWebhookUpdate = async ({
     return;
   }
 
-  await UrlFetchApp.fetch(link, {
+  UrlFetchApp.fetch(webhooks.update, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -120,9 +122,11 @@ export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: 
   console.info('sendWebhookLogs ~ args:', { title, color, oldGame, game, comment });
 
   const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty('logsUrl');
+  const appConfiguration = env.getProperty('appConfiguration');
 
-  if (!link) return;
+  if (!appConfiguration) return;
+
+  const { webhooks } = AppConfiguration.parse(JSON.parse(appConfiguration));
 
   const fields = [];
 
@@ -155,7 +159,7 @@ export const sendWebhookLogs = async ({ title, color, oldGame, game, comment }: 
     return;
   }
 
-  await UrlFetchApp.fetch(link, {
+  UrlFetchApp.fetch(webhooks.logs, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -187,9 +191,11 @@ export const sendWebhookAC = async ({ games }: SendWebhookACArgs): Promise<void>
   console.info('sendWebhookAC ~ args:', { games });
 
   const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty('logsUrl');
+  const appConfiguration = env.getProperty('appConfiguration');
 
-  if (!link) return;
+  if (!appConfiguration) return;
+
+  const { webhooks } = AppConfiguration.parse(JSON.parse(appConfiguration));
 
   const fields = [];
 
@@ -207,7 +213,7 @@ export const sendWebhookAC = async ({ games }: SendWebhookACArgs): Promise<void>
     return;
   }
 
-  await UrlFetchApp.fetch(link, {
+  UrlFetchApp.fetch(webhooks.logs, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -238,9 +244,11 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs):
   console.info('sendTraductorWebhook ~ args:', { games });
 
   const env = PropertiesService.getScriptProperties();
-  const link = env.getProperty('traductorUrl');
+  const appConfiguration = env.getProperty('appConfiguration');
 
-  if (!link) return;
+  if (!appConfiguration) return;
+
+  const { webhooks } = AppConfiguration.parse(JSON.parse(appConfiguration));
 
   const traductors = await getTraductors();
 
@@ -270,7 +278,7 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs):
     return;
   }
 
-  await UrlFetchApp.fetch(link, {
+  UrlFetchApp.fetch(webhooks.traductor, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',

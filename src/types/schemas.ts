@@ -91,12 +91,11 @@ const Traductor = z.object({
 const AppConfiguration = z.object({
   appName: z.string(),
   deployingUserEmail: z.string(),
-});
-
-const AppWebhooks = z.object({
-  update: z.string().or(z.literal('')),
-  logs: z.string().or(z.literal('')),
-  traductor: z.string().or(z.literal('')),
+  webhooks: z.object({
+    update: z.string().or(z.literal('')),
+    logs: z.string().or(z.literal('')),
+    traductor: z.string().or(z.literal('')),
+  }),
 });
 
 const Submit = z.object({
@@ -117,10 +116,9 @@ const PostSubmit = z.object({
   comment: Submit.shape.comment,
 });
 
-export { AppConfiguration, AppWebhooks, CheckerF95z, Game, PostSubmit, QueryGame, ScrapeGame, Submit, Traductor, User };
+export { AppConfiguration, CheckerF95z, Game, PostSubmit, QueryGame, ScrapeGame, Submit, Traductor, User };
 
 export type AppConfigurationType = z.infer<typeof AppConfiguration>;
-export type AppWebhooksType = z.infer<typeof AppWebhooks>;
 export type CheckerF95zType = z.infer<typeof CheckerF95z>;
 export type GameACType = z.infer<typeof GameAC>;
 export type GameType = z.infer<typeof Game>;
