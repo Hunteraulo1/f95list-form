@@ -90,7 +90,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
             <span class="label-text">Url du webhook des mise à jours</span>
           </label>
           <input
-            bind:value={$appConfiguration.webhooks.logs}
+            bind:value={$appConfiguration.webhooks.update}
             disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
@@ -102,7 +102,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
             <span class="label-text">Url du webhook des logs</span>
           </label>
           <input
-            bind:value={$appConfiguration.webhooks.update}
+            bind:value={$appConfiguration.webhooks.logs}
             disabled={$isLoading && !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
