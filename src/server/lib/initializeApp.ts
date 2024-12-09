@@ -15,6 +15,11 @@ export const initializeApp = (): AppConfigurationType => {
   const newAppConfig: AppConfigurationType = {
     appName: 'My App',
     deployingUserEmail,
+    webhooks: {
+      update: '',
+      logs: '',
+      traductor: '',
+    },
   };
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
