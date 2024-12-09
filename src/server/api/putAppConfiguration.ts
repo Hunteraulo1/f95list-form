@@ -16,11 +16,11 @@ export const putAppConfiguration = ({ appConfiguration }: PutAppConfigArgs): voi
   try {
     checkUser('superAdmin');
 
-    AppConfiguration.parse(appConfiguration);
+    const validAppConfiguration = AppConfiguration.parse(appConfiguration);
 
     const scriptPropertiesService = PropertiesService.getScriptProperties();
 
-    scriptPropertiesService.setProperty('appConfiguration', JSON.stringify(appConfiguration));
+    scriptPropertiesService.setProperty('appConfiguration', JSON.stringify(validAppConfiguration));
   } catch (error) {
     throw new Error(`putAppConfiguration ~ Error: ${error}`);
   }
