@@ -5,8 +5,15 @@ import { GAS_API } from '$lib/GAS_API';
 import { newToast, traductors } from '$lib/stores';
 import { onMount } from 'svelte';
 
+import type { TraductorType } from '$types/schemas';
+
 let editModal: boolean[] = $state([]);
 let addModal: boolean = $state(false);
+let search: string = $state('');
+
+let filterTradutors: TraductorType[] | null = $derived(
+  search !== '' ? $traductors.filter(({ name }) => name.includes(search)) : $traductors,
+);
 
 onMount(async () => {
   try {
@@ -28,12 +35,12 @@ onMount(async () => {
 });
 </script>
 
-<button
-  class="btn mx-auto"
-  onclick={() => {addModal = true}}
-  >
+<div class="flex justify-end gap-2 mb-4">
+  <button class="btn" onclick={() => {addModal = true}}>
     Ajouter un traducteur
   </button>
+  <input type="text" class="input input-bordered" placeholder="Rechercher un traducteur" bind:value={search}>
+</div>
 
 <div class="overflow-x-auto">
   <table class="table text-center">
@@ -47,36 +54,38 @@ onMount(async () => {
       </tr>
     </thead>
     <tbody class="relative">
-      {#each $traductors as traductor, index}
-        <tr>
-          <th>{index + 1}</th>
-          <td class="font-bold text-primary">{traductor.name}</td>
-          <td class="font-bold text-secondary">{traductor.discordID}</td>
-          <td>
-            <ul class="flex gap-2 justify-center">
-              {#if traductor.links && traductor.links.length > 0}
-                {#each traductor.links as link}
-                  <li class="text-secondary">
-                    <a href={link.link} target="_blank">{link.name}</a>
-                  </li>
+      {#if filterTradutors}
+        {#each filterTradutors as traductor, index}
+          <tr>
+            <th>{index + 1}</th>
+            <td class="font-bold text-primary">{traductor.name}</td>
+            <td class="font-bold text-secondary">{traductor.discordID}</td>
+            <td>
+              <ul class="flex gap-2 justify-center">
+                {#if traductor.links && traductor.links.length > 0}
+                  {#each traductor.links as link}
+                    <li class="text-secondary">
+                      <a href={link.link} target="_blank">{link.name}</a>
+                    </li>
                   {/each}
-                  {:else}
+                {:else}
                   <li class="text-xs">Aucun lien disponible</li>
-                  {/if}
-                </ul>
-          </td>
-          <td>
-            <button class="btn btn-primary btn-xs" onclick={() => editModal[index] = true}>Modifier</button>
-          </td>
-        </tr>
-        <EditTraductorModal bind:showModal={editModal[index]} {index} />
-      {:else}
-        <tr>
-          <td>
-            <p class="fixed flex w-full justify-center">Aucun traducteur disponible</p>
-          </td>
-        </tr>
-      {/each}
+                {/if}
+              </ul>
+            </td>
+            <td>
+              <button class="btn btn-primary btn-xs" onclick={() => editModal[index] = true}>Modifier</button>
+            </td>
+          </tr>
+          <EditTraductorModal bind:showModal={editModal[index]} {index} />
+        {:else}
+          <tr>
+            <td>
+              <p class="fixed flex w-full justify-center">Aucun traducteur disponible</p>
+            </td>
+          </tr>
+        {/each}
+      {/if}
     </tbody>
   </table>
 </div>
