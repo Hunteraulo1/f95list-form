@@ -94,7 +94,7 @@ export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<unde
     const row = sheet.getRange(`A${totalRow + 1}:N${totalRow + 1}`);
     row.setValues([convertedGame]);
 
-    await reloadFilter(sheet);
+    await reloadFilter({ sheet, end: 'N', sort: 3 });
 
     changelog({ game: validGame.name, status: 'AJOUT DE JEU' });
 

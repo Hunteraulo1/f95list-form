@@ -62,7 +62,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
   {#if $appConfiguration}
     <Panel title="General">
       {#snippet button()}
-        <button class="btn" onclick={handleClick} disabled={!checkUser(['superAdmin', 'superAdmin'])}>
+        <button class="btn" onclick={handleClick} disabled={!isSuperAdmin}>
           Sauvegarder
         </button>
       {/snippet}
@@ -79,7 +79,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
           </label>
           <input
             bind:value={$appConfiguration.appName}
-            disabled={$isLoading && !isSuperAdmin}
+            disabled={$isLoading || !isSuperAdmin}
             type="text"
             placeholder="Nom de l'application"
             class="input input-bordered w-full"
@@ -91,7 +91,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
           </label>
           <input
             bind:value={$appConfiguration.webhooks.update}
-            disabled={$isLoading && !isSuperAdmin}
+            disabled={$isLoading || !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -103,7 +103,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
           </label>
           <input
             bind:value={$appConfiguration.webhooks.logs}
-            disabled={$isLoading && !isSuperAdmin}
+            disabled={$isLoading || !isSuperAdmin}
             type="text"
             placeholder="url du webhook"
             class="input input-bordered w-full"
@@ -115,7 +115,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
             </label>
             <input
               bind:value={$appConfiguration.webhooks.traductor}
-              disabled={$isLoading && !isSuperAdmin}
+              disabled={$isLoading || !isSuperAdmin}
               type="text"
               placeholder="url du webhook"
               class="input input-bordered w-full"

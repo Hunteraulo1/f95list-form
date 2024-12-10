@@ -76,7 +76,7 @@ onMount(() => {
 
 <svelte:window onkeydown={handleCtrlK} />
 
-<Panel title="Rechercher un jeu" showDivider={false}>
+<Panel title="Ajouter/Modifier un jeu sur la liste" showDivider={false}>
   {#snippet panelContent()}
     <div class="flex flex-col gap-4 sm:flex-row">
       <div id="container-search" class="relative w-full">
@@ -84,7 +84,7 @@ onMount(() => {
           <input
             disabled={$queryGames.length === 0}
             type="text"
-            placeholder="Rechercher un jeu"
+            placeholder="Rechercher un jeu dans la liste"
             class="grow bg-transparent"
             name="theme"
             id="searchField"

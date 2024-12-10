@@ -85,7 +85,7 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
     const row = gameSheet.getRange(`A${gameIndex + 2}:N${gameIndex + 2}`);
     row.setValues([convertedGame]);
 
-    await reloadFilter(gameSheet);
+    await reloadFilter({ sheet: gameSheet, end: 'N', sort: 3 });
 
     if (validGame.tversion !== oldGame.tversion) {
       changelog({ game: validGame.name, status: 'MISE À JOUR' });
