@@ -4,6 +4,7 @@ import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
 
 import type { TraductorType } from '$types/schemas';
+import { reloadFilter } from '../lib/reloadFilter';
 
 export interface PostTraductorArgs {
   traductor: TraductorType;
@@ -45,6 +46,8 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
     const row = sheet.getRange(`A${totalRow + 1}:E${totalRow + 1}`);
 
     row.setValues([convertedTraductor]);
+
+    reloadFilter({ sheet, end: 'F', sort: 6 });
   } catch (error) {
     console.error(error);
 
