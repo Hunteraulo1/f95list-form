@@ -12,20 +12,17 @@ export const getSubmits = async ({ user }: GetSubmitsArgs): Promise<SubmitType[]
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();
   const submits: SubmitType[] = JSON.parse(scriptProperties.submits);
-
-  if (user) {
-    const validUser = User.parse(user);
-
-    const { email } = validUser;
-
-    const filteredSubmits = submits.filter((submit) => submit.email === email);
-
-    console.info('getSubmits ~ filteredSubmits: ', filteredSubmits);
-
-    return filteredSubmits;
-  }
-
   console.info('getSubmits ~ submits: ', submits);
 
-  return submits;
+  if (!user) return submits;
+
+  const validUser = User.parse(user);
+
+  const { email } = validUser;
+
+  const filteredSubmits = submits.filter((submit) => submit.email === email);
+
+  console.info('getSubmits ~ filteredSubmits: ', filteredSubmits);
+
+  return filteredSubmits;
 };
