@@ -17,11 +17,11 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        uses: jcbhmr/configure-bun-action@v1
 
       - name: Install clasp
         id: install-clasp
-        run: sudo npm install @google/clasp@2.4.1 -g
+        run: sudo bun install @google/clasp@2.4.1 -g
 
       - name: Write CLASPRC_JSON secret to .clasprc.json file
         id: write-clasprc
