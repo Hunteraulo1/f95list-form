@@ -4,6 +4,7 @@ import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
 
 import type { TraductorType } from '$types/schemas';
+import { reloadFilter } from '../lib/reloadFilter';
 export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
   data: TraductorType;
@@ -47,13 +48,18 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
     });
 
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
-    const row = sheet?.getRange(`A${traductorIndex + 2}`);
-    const richRow = sheet?.getRange(`B${traductorIndex + 2}`);
-    const rowDiscordID = sheet?.getRange(`C${traductorIndex + 2}`);
 
-    row?.setValue(validData.name);
-    richRow?.setRichTextValue(value.build());
-    rowDiscordID?.setValue(validData.discordID);
+    if (!sheet) throw new Error('sheet not found');
+
+    const row = sheet.getRange(`A${traductorIndex + 2}`);
+    const richRow = sheet.getRange(`B${traductorIndex + 2}`);
+    const rowDiscordID = sheet.getRange(`C${traductorIndex + 2}`);
+
+    row.setValue(validData.name);
+    richRow.setRichTextValue(value.build());
+    rowDiscordID.setValue(validData.discordID);
+
+    reloadFilter({ sheet, end: 'F', sort: 6 });
   } catch (error) {
     console.error(error);
 
