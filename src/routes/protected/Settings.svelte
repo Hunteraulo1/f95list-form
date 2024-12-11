@@ -153,7 +153,7 @@ const isSuperAdmin = checkUser(['superAdmin']);
                         </div>
                         <div>
                           <div class="font-bold">
-                            {user.email}
+                            {user.profile.pseudo !== '' ? user.profile.pseudo : user.email}
                           </div>
                           <div>
                             <span class="badge badge-ghost badge-sm mr-2">{user.role}</span>

@@ -41,6 +41,8 @@ let savedId: number | undefined;
 let silentMode = $state(false);
 let scraping = $state(false);
 
+const isAdmin = checkUser(['admin', 'superAdmin']);
+
 onMount(async () => {
   $isLoading = true;
 
@@ -86,16 +88,9 @@ const changeStep = async (amount: number): Promise<void> => {
 
   if (step + amount >= 0 && step + amount <= 5) step += amount;
   if (step === 1 && $game.domain === 'Autre') step += amount;
-  if (step === 2 && $game.domain === 'F95z')
-    // ID
-    step += amount;
-  if (
-    (step === 4 && $game.domain === 'Autre' && checkUser(['admin', 'superAdmin'])) ||
-    (step === 4 && !checkUser(['admin', 'superAdmin']))
-  ) {
-    // Game informations
-    step += amount; // Auto-Check
-  }
+  if (step === 2 && $game.domain === 'F95z') step += amount;
+
+  if ((step === 4 && $game.domain === 'Autre' && isAdmin) || (step === 4 && !isAdmin)) step += amount;
 
   const gameId = $game.id;
 
@@ -397,17 +392,19 @@ const elements: Element[] = [
           Chargement des données en cours
         </div>
       {/if}
-      <div class="form-control">
-        <label class="label cursor-pointer">
-          <span class="label-text pr-2">Mode silencieux</span>
-          <input
-            type="checkbox"
-            class="toggle"
-            checked={silentMode}
-            onchange={() => {silentMode = !silentMode}}
-          />
-        </label>
-      </div>
+      {#if isAdmin}
+        <div class="form-control">
+          <label class="label cursor-pointer">
+            <span class="label-text pr-2">Mode silencieux</span>
+            <input
+              type="checkbox"
+              class="toggle"
+              checked={silentMode}
+              onchange={() => {silentMode = !silentMode}}
+            />
+          </label>
+        </div>
+      {/if}
       <div
         class="grid w-full grid-cols-1 gap-8 p-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >

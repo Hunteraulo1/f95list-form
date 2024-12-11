@@ -1,6 +1,5 @@
 <script lang="ts">
 import Panel from '$components/Panel.svelte';
-import ViewSubmitModal from '$components/ViewSubmitModal.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { getConvert } from '$lib/convert';
 import { isLoading, newToast, sessionUser } from '$lib/stores';
@@ -8,6 +7,7 @@ import { dateFormat } from '$lib/utils';
 import { onMount } from 'svelte';
 import { Link } from 'svelte-routing';
 
+import ViewSubmitModal from '$lib/components/ViewSubmitModal.svelte';
 import type { SubmitType, UserType } from '$types/schemas';
 
 const dialogView: boolean[] = $state([]);
@@ -45,7 +45,6 @@ onMount(async () => {
       {#if submits.length > 0 && users.length > 0}
         <div class="overflow-x-auto">
           <table class="table">
-            <!-- head -->
             <thead>
               <tr>
                 <th>Email</th>
@@ -60,27 +59,45 @@ onMount(async () => {
                 {@const user = users.find((user) => user.email === submit.email) as UserType}
                 <tr>
                   <td>
-                    <Link to="/user/{submit.email}">
+                    {#if user}
+                      <Link to="/user/{submit.email}">
+                        <div class="flex items-center space-x-3">
+                          <div class="avatar">
+                            <div class="mask mask-squircle h-12 w-12">
+                              <img
+                                src={user?.profile?.imageUrl ||
+                                  'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100'
+                                }
+                                alt="Avatar Tailwind CSS Component" />
+                            </div>
+                          </div>
+                          <div>
+                            <div class="font-bold">
+                              {user.profile.pseudo !== '' ? user.profile.pseudo : user.email}
+                            </div>
+                            <div>
+                              <span class="badge badge-ghost badge-sm mr-2">{user.role}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    {:else}
                       <div class="flex items-center space-x-3">
                         <div class="avatar">
                           <div class="mask mask-squircle h-12 w-12">
                             <img
-                              src={user?.profile?.imageUrl ||
-                                'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100'
-                              }
+                              src={'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100'}
                               alt="Avatar Tailwind CSS Component" />
                           </div>
                         </div>
                         <div>
+                          <h2>Utilisateur inconnu</h2>
                           <div class="font-bold">
                             {submit.email}
                           </div>
-                          <div>
-                            <span class="badge badge-ghost badge-sm mr-2">{user.role}</span>
-                          </div>
                         </div>
                       </div>
-                    </Link>
+                    {/if}
                   </td>
                   <td>
                     {dateFormat(new Date(submit.date))}
@@ -95,7 +112,9 @@ onMount(async () => {
                     <button onclick={() => (dialogView[index] = true)} class="btn btn-ghost btn-xs">
                       Accèder
                     </button>
-                    <ViewSubmitModal bind:showModal={dialogView[index]} bind:submits={submits} {index} {user} />
+                    {#if user}
+                      <ViewSubmitModal bind:showModal={dialogView[index]} bind:submits={submits} {index} {user} />
+                    {/if}
                   </td>
                 </tr>
               {/each}

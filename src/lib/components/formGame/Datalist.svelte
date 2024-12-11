@@ -21,13 +21,20 @@ if (!$game) throw new Error('no game data');
 
 const isTraductor = checkUser(['traductor']);
 
-const checkValue = (value: string): boolean => {
+const handleWarning = (value: string): boolean => {
   if (isTraductor || $game[name] === '') return false;
 
   return !$traductors.find((item) => item.name === value);
 };
 
-let warning = $state(checkValue($game[name] as string));
+const handleError = (): boolean => {
+  if ($game.traductor === '') return false;
+
+  return $game.traductor === $game.proofreader;
+};
+
+let warning = $state(handleWarning($game[name] as string));
+let error = $state(handleError());
 
 const handleChange: ChangeEventHandler<HTMLInputElement> = (event): void => {
   const value = event.currentTarget.value;
@@ -36,7 +43,8 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event): void => {
 };
 
 const handleInput: ChangeEventHandler<HTMLInputElement> = (event): void => {
-  warning = checkValue(event.currentTarget.value);
+  warning = handleWarning(event.currentTarget.value);
+  error = handleError();
 };
 
 let modal = $state(false);
@@ -54,7 +62,9 @@ let modal = $state(false);
       onchange={handleChange}
       oninput={handleInput}
       bind:value={$game[name]}
-      class="input input-bordered w-full {warning ? 'input-warning' : ''}"
+      class="input input-bordered w-full"
+      class:input-warning={warning}
+      class:input-error={error}
     />
     <datalist id="traductor-list">
       {#each $traductors as item}
