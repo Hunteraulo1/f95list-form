@@ -86,16 +86,11 @@ const changeStep = async (amount: number): Promise<void> => {
 
   if (step + amount >= 0 && step + amount <= 5) step += amount;
   if (step === 1 && $game.domain === 'Autre') step += amount;
-  if (step === 2 && $game.domain === 'F95z')
-    // ID
-    step += amount;
-  if (
-    (step === 4 && $game.domain === 'Autre' && checkUser(['admin', 'superAdmin'])) ||
-    (step === 4 && !checkUser(['admin', 'superAdmin']))
-  ) {
-    // Game informations
-    step += amount; // Auto-Check
-  }
+  if (step === 2 && $game.domain === 'F95z') step += amount;
+
+  const isAdmin = checkUser(['admin', 'superAdmin']);
+
+  if ((step === 4 && $game.domain === 'Autre' && isAdmin) || (step === 4 && !isAdmin)) step += amount;
 
   const gameId = $game.id;
 
