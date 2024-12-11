@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+        uses: oven-sh/setup-bun@v2
 
       - name: Install clasp
         id: install-clasp
