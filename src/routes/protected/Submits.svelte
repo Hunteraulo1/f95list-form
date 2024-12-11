@@ -73,7 +73,7 @@ onMount(async () => {
                           </div>
                           <div>
                             <div class="font-bold">
-                              {submit.email}
+                              {user.profile.pseudo !== '' ? user.profile.pseudo : user.email}
                             </div>
                             <div>
                               <span class="badge badge-ghost badge-sm mr-2">{user.role}</span>
@@ -81,6 +81,22 @@ onMount(async () => {
                           </div>
                         </div>
                       </Link>
+                    {:else}
+                      <div class="flex items-center space-x-3">
+                        <div class="avatar">
+                          <div class="mask mask-squircle h-12 w-12">
+                            <img
+                              src={'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100'}
+                              alt="Avatar Tailwind CSS Component" />
+                          </div>
+                        </div>
+                        <div>
+                          <h2>Utilisateur inconnu</h2>
+                          <div class="font-bold">
+                            {submit.email}
+                          </div>
+                        </div>
+                      </div>
                     {/if}
                   </td>
                   <td>
