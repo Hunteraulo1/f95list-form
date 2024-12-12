@@ -2,21 +2,13 @@ import { ScrapeGame } from '$types/schemas';
 import Cheerio from 'cheerio';
 import { f95z } from '../lib/f95z';
 
-import type { GameType } from '$types/schemas';
+import type { GameType, ScrapeGameType } from '$types/schemas';
 export interface GetScrapeArgs {
   domain: Extract<GameType['domain'], 'F95z'>;
   id: GameType['id'];
 }
 
-interface GetScrape {
-  name: GameType['name'];
-  version: GameType['version'];
-  status: GameType['status'];
-  tags: GameType['tags'];
-  type: GameType['type'];
-  image: GameType['image'];
-}
-export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<GetScrape> => {
+export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGameType> => {
   console.info('getScrape ~ args:', { domain, id });
 
   if (domain !== 'F95z') throw new Error('getScrape ~ domaine incompatible');
@@ -107,7 +99,7 @@ const scrapeGetTitle = (data: string[]): { status: string; type: string } => {
       case 'Unity':
         type = 'Unity';
         break;
-      case 'Unreal':
+      case 'Unreal Engine':
         type = 'Unreal';
         break;
       case 'Flash':
