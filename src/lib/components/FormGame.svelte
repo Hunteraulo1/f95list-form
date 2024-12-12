@@ -123,13 +123,20 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs): Promise<void> => {
       $game.version = version ?? $game.version;
     }
 
+    for (const [key, _] of Object.entries(result)) {
+      newToast({
+        alertType: 'warning',
+        message: `Échec de la récupération de '${key}'`,
+      });
+    }
+
     $game = {
       ...$game,
       name: name ?? $game.name,
       tversion: $game.tversion === '' ? version : $game.tversion,
-      status: status ?? $game.status,
+      status: status === '' ? $game.status : status,
       tags: tags ?? $game.tags,
-      type: type ?? $game.type,
+      type: type === '' ? $game.type : type,
       image: image ?? $game.image,
     };
   } catch (error) {
