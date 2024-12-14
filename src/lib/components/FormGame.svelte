@@ -453,7 +453,7 @@ const elements: Element[] = [
         {#if !edit && checkUser(['superAdmin', 'superAdmin'])}
           <Dev {step} {scrapeData} />
         {/if}
-        {#if $game?.domain === "LewdCorner"}
+        {#if $game?.domain === "LewdCorner" || $game?.domain === "F95z"}
           <Insert />
         {/if}
         {#if editor}
