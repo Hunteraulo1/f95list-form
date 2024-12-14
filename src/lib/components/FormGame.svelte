@@ -124,7 +124,7 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs): Promise<void> => {
     }
 
     for (const [key, value] of Object.entries(result)) {
-      if (value !== '') continue;
+      if (value) continue;
 
       setTimeout(() => {
         newToast({

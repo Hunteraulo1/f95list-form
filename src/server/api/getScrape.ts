@@ -21,10 +21,10 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
     muteHttpExceptions: true,
   });
   const $ = Cheerio.load(response.getContentText());
-  const tags = $('.tagItem')
-    .map((_, tag) => $(tag).text().trim())
-    .get()
-    .join(', ');
+  
+  const tagsData = $('.tagItem').map((_, tag) => $(tag).text().trim()).get()
+  const tags = tagsData.length > 0 ? tagsData.join(', ') : null;
+
   const title = $('title').text();
   const img = $('img.bbImage').attr('src');
 
@@ -40,8 +40,6 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
 
   try {
     const result = await f95z(id);
-
-    console.info({ result });
 
     version = result ?? null;
   } catch (error) {
