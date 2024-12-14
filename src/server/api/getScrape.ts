@@ -32,11 +32,12 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
 
   const image = img?.replace('thumb/', '') ?? null;
 
-  const titleMatch = title.match(regTitle) ?? [];
+  const titleMatch = title.match(regTitle);
   const nameMatch = title.match(regName) ?? [];
 
   const name = nameMatch?.[1] ?? null;
-  const { status, type } = scrapeGetTitle(titleMatch);
+
+  const { status, type } = titleMatch ? scrapeGetTitle(titleMatch) : { status: null, type: null };
 
   let version = null;
 
