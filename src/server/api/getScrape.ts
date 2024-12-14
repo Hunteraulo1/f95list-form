@@ -21,8 +21,10 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
     muteHttpExceptions: true,
   });
   const $ = Cheerio.load(response.getContentText());
-  
-  const tagsData = $('.tagItem').map((_, tag) => $(tag).text().trim()).get()
+
+  const tagsData = $('.tagItem')
+    .map((_, tag) => $(tag).text().trim())
+    .get();
   const tags = tagsData.length > 0 ? tagsData.join(', ') : null;
 
   const title = $('title').text();
