@@ -7,7 +7,7 @@ import type { ChangeEventHandler } from 'svelte/elements';
 
 let insertModal = $state(false);
 let insertObject: string = $state('');
-let isValid: boolean = $state(false)
+let isValid: boolean = $state(false);
 
 const handleClickInsert = (): void => {
   if (!$game) throw new Error('no game data');
@@ -26,10 +26,10 @@ const handleClickInsert = (): void => {
 };
 
 const handleInput: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-  const validScrape = ScrapeGame.safeParse(e.currentTarget.value)
+  const validScrape = ScrapeGame.safeParse(e.currentTarget.value);
 
-  isValid = validScrape.success
-}
+  isValid = validScrape.success;
+};
 </script>
 
 <button
