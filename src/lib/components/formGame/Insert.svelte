@@ -26,7 +26,7 @@ const handleClickInsert = (): void => {
 };
 
 const handleInput: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-  const validScrape = ScrapeGame.safeParse(e.currentTarget.value);
+  const validScrape = ScrapeGame.safeParse(JSON.parse(e.currentTarget.value));
 
   isValid = validScrape.success;
 };
@@ -49,11 +49,11 @@ const handleInput: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
       placeholder="Données de LC Extractor"
       class="textarea textarea-bordered max-h-32 w-full"
       oninput={handleInput}
-      value={insertObject}
+      bind:value={insertObject}
     ></textarea>
   {/snippet}
   {#snippet modalAction()}
-    <button onclick={handleClickInsert} class="btn btn-info">
+    <button onclick={handleClickInsert} disabled={!isValid} class="btn btn-info">
       Envoyer
     </button>
   {/snippet}
