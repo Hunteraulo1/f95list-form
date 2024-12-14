@@ -42,7 +42,7 @@ const handleInput: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
 <Modal bind:showModal={insertModal} title="Insérer les données du jeu">
   {#snippet modalContent()}
     <p>Le script fonctionne avec <a class="btn-link" href="https://www.tampermonkey.net">Tampermonkey</a></p>
-    <a class="btn-link" target="_blank" href="https://github.com/Hunteraulo1/f95list-extractor/blob/main/dist/toolExtractor.user.js">Installer le script</a>
+    <a class="btn-link" target="_blank" href="https://github.com/Hunteraulo1/f95list-extractor/raw/refs/heads/main/dist/toolExtractor.user.js">Installer le script</a>
     
     <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
     <textarea
