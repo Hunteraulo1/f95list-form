@@ -38,8 +38,8 @@
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@lmdb/lmdb-linux-x64": "^3.2.0",
-    "@lmdb/lmdb-win32-x64": "^3.2.0",
+    "@lmdb/lmdb-linux-x64": "3.2.0",
+    "@lmdb/lmdb-win32-x64": "3.2.0",
     "@rollup/rollup-win32-x64-msvc": "4.28.1",
     "@rollup/rollup-linux-x64-gnu": "4.28.1"
   },
