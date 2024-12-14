@@ -28,22 +28,22 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
   const title = $('title').text();
   const img = $('img.bbImage').attr('src');
 
-  const image = img?.replace('thumb/', '') ?? '';
+  const image = img?.replace('thumb/', '') ?? null;
 
   const titleMatch = title.match(regTitle) ?? [];
   const nameMatch = title.match(regName) ?? [];
 
-  const name = nameMatch?.[1] ?? '';
+  const name = nameMatch?.[1] ?? null;
   const { status, type } = scrapeGetTitle(titleMatch);
 
-  let version = '';
+  let version = null;
 
   try {
     const result = await f95z(id);
 
     console.info({ result });
 
-    version = result ?? '';
+    version = result ?? null;
   } catch (error) {
     console.error('getScrape ~ Error getFetchF95z: ', error);
     throw new Error('getScrape ~ getFetchF95z no return');
@@ -73,9 +73,9 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
   return validScrapeGame;
 };
 
-const scrapeGetTitle = (data: string[]): { status: string; type: string } => {
-  let status = '';
-  let type = '';
+const scrapeGetTitle = (data: string[]): { status: string | null; type: string | null } => {
+  let status = null;
+  let type = null;
 
   for (const e of data) {
     switch (e) {

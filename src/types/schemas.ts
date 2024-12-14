@@ -56,12 +56,12 @@ const QueryGame = z.object({
 });
 
 const ScrapeGame = z.object({
-  name: Game.shape.name.or(z.literal('')),
-  version: Game.shape.version.or(z.literal('')),
-  status: Game.shape.status.or(z.literal('')),
-  tags: Game.shape.tags.or(z.literal('')),
-  type: Game.shape.type.or(z.literal('')),
-  image: Game.shape.image.or(z.literal('')),
+  name: Game.shape.name.nullable(),
+  version: Game.shape.version.nullable(),
+  status: Game.shape.status.nullable(),
+  tags: Game.shape.tags.nullable(),
+  type: Game.shape.type.nullable(),
+  image: Game.shape.image.nullable(),
 });
 
 const CheckerF95z = z.object({

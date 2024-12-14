@@ -137,10 +137,10 @@ const scrapeData = async ({ id, domain }: ScrapeDataArgs): Promise<void> => {
     $game = {
       ...$game,
       name: name ?? $game.name,
-      tversion: $game.tversion === '' ? version : $game.tversion,
-      status: status === '' ? $game.status : status,
+      tversion: $game.tversion === '' ? version ?? $game.version : $game.tversion,
+      status: status ?? $game.status,
       tags: tags ?? $game.tags,
-      type: type === '' ? $game.type : type,
+      type: type ?? $game.type,
       image: image ?? $game.image,
     };
   } catch (error) {
