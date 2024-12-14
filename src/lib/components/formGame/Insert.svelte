@@ -1,9 +1,13 @@
 <script lang="ts">
 import { game, newToast } from '$lib/stores';
+import { ScrapeGame } from '$types/schemas';
 import Modal from '../Modal.svelte';
+
+import type { ChangeEventHandler } from 'svelte/elements';
 
 let insertModal = $state(false);
 let insertObject: string = $state('');
+let isValid: boolean = $state(false);
 
 const handleClickInsert = (): void => {
   if (!$game) throw new Error('no game data');
@@ -20,6 +24,12 @@ const handleClickInsert = (): void => {
 
   $game.ac = false; // Reload view data
 };
+
+const handleInput: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
+  const validScrape = ScrapeGame.safeParse(e.currentTarget.value);
+
+  isValid = validScrape.success;
+};
 </script>
 
 <button
@@ -31,11 +41,15 @@ const handleClickInsert = (): void => {
 
 <Modal bind:showModal={insertModal} title="Insérer les données du jeu">
   {#snippet modalContent()}
+    <p>Le script fonctionne avec <a class="btn-link" href="https://www.tampermonkey.net">Tampermonkey</a></p>
+    <a class="btn-link" target="_blank" href="https://github.com/Hunteraulo1/f95list-extractor/blob/main/dist/toolExtractor.user.js">Installer le script</a>
+    
     <p class="py-4">Veuillez coller les données de LC Extractor ?</p>
     <textarea
       placeholder="Données de LC Extractor"
       class="textarea textarea-bordered max-h-32 w-full"
-      bind:value={insertObject}
+      oninput={handleInput}
+      value={insertObject}
     ></textarea>
   {/snippet}
   {#snippet modalAction()}
