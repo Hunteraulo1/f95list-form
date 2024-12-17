@@ -39,7 +39,8 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
     (s) =>
       s.query?.id === submit.query?.id &&
       s.query?.name === submit.query?.name &&
-      s.query?.version === submit.query?.version,
+      s.query?.version === submit.query?.version &&
+      s.status === 'wait',
   );
 
   if (submitFound) return 'duplicate';

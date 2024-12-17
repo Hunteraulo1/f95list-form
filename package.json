@@ -1,7 +1,7 @@
 {
   "name": "flist",
   "private": true,
-  "version": "3.4.22",
+  "version": "3.4.23",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,8 +13,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@rollup/plugin-commonjs": "28.0.1",
-    "@rollup/plugin-node-resolve": "15.3.0",
+    "@rollup/plugin-commonjs": "28.0.2",
+    "@rollup/plugin-node-resolve": "16.0.0",
     "@sveltejs/vite-plugin-svelte": "5.0.2",
     "@types/cheerio": "0.22.35",
     "@types/google-apps-script": "1.0.86",
@@ -27,11 +27,11 @@
     "rollup": "4.28.1",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-delete": "2.1.0",
-    "svelte": "5.13.0",
+    "svelte": "5.14.2",
     "svelte-check": "4.1.1",
     "svelte-hero-icons": "5.2.0",
     "svelte-routing": "2.13.0",
-    "tailwindcss": "3.4.16",
+    "tailwindcss": "3.4.17",
     "typescript": "5.7.2",
     "vite": "6.0.3",
     "vite-plugin-singlefile": "2.1.0",
