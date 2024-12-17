@@ -29,12 +29,11 @@ export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void
     (s) =>
       s.query?.id === submit.query?.id &&
       s.query?.name === submit.query?.name &&
-      s.query?.version === submit.query?.version,
+      s.query?.version === submit.query?.version &&
+      s.status === 'wait',
   );
 
   if (!submitFound) throw new Error('putSubmit ~ Submit not found');
-
-  if (submitFound.status === 'validated') throw new Error('putSubmit ~ Submit already validated');
 
   if (status !== 'validated' && status !== 'rejected') throw new Error('putSubmit ~ invalid type');
 
