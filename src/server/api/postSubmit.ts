@@ -47,9 +47,9 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
 
   try {
     const scriptPropertiesService = PropertiesService.getScriptProperties();
-    const submits = JSON.parse(scriptPropertiesService.getProperty('submits') ?? '[]');
+    const submits: SubmitType[] = JSON.parse(scriptPropertiesService.getProperty('submits') ?? '[]');
 
-    submits.push(submit);
+    submits.unshift(submit);
 
     scriptPropertiesService.setProperty('submits', JSON.stringify(submits));
 
