@@ -9,10 +9,10 @@ const deleteSubmits = async (): Promise<void> => {
   const newSubmits: SubmitType[] = [];
 
   if (!submits) throw new Error('postSubmit ~ Submits not found');
-  const dateNow = Date.now();
+  const expiredDate = Date.now() - 7 * 24 * 60 * 60 * 1000;
 
   for (const s of submits) {
-    if ((s.status === 'rejected' || s.status === 'validated') && new Date(s.date).getDate() + 7 >= dateNow) continue;
+    if ((s.status === 'rejected' || s.status === 'validated') && new Date(s.date).getTime() <= expiredDate) continue;
 
     newSubmits.push(s);
   }
