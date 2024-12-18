@@ -40,6 +40,7 @@ if (!$game) throw new Error('no game data');
 let savedId: number | undefined;
 let silentMode = $state(false);
 let scraping = $state(false);
+let savedData = $state({ ...$game });
 
 const isAdmin = checkUser(['admin', 'superAdmin']);
 
@@ -442,7 +443,7 @@ const elements: Element[] = [
               Suivant
             </button>
           {:else}
-            <button class="btn btn-primary w-full sm:w-48" type="submit">
+            <button class="btn btn-primary w-full sm:w-48" type="submit" disabled={JSON.stringify(savedData) === JSON.stringify($game)}>
               {edit ? "Éditer le jeu" : "Ajouter le jeu"}
             </button>
           {/if}
