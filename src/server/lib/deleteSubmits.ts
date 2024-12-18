@@ -12,7 +12,8 @@ const deleteSubmits = async (): Promise<void> => {
   const dateNow = Date.now();
 
   for (const s of submits) {
-    if ((s.status === 'rejected' || s.status === 'validated') && new Date(s.date).getDate() + 7 >= dateNow) continue;
+    if ((s.status === 'rejected' || s.status === 'validated') && new Date(s.date).getTime() + 86_400_000 * 7 >= dateNow)
+      continue;
 
     newSubmits.push(s);
   }
