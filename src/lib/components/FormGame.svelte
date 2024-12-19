@@ -443,7 +443,7 @@ const elements: Element[] = [
               Suivant
             </button>
           {:else}
-            <button class="btn btn-primary w-full sm:w-48" type="submit" disabled={JSON.stringify(savedData) === JSON.stringify($game) || !editor}>
+            <button class="btn btn-primary w-full sm:w-48" type="submit" disabled={JSON.stringify(savedData) === JSON.stringify($game) && !editor}>
               {edit ? "Éditer le jeu" : "Ajouter le jeu"}
             </button>
           {/if}
