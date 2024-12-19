@@ -57,7 +57,7 @@ export const submits: SubmitType[] = [
       ac: true,
       image: '',
     },
-    status: 'rejected',
+    status: 'wait',
     date: '2024-01-01',
     type: 'edit',
     reason: "par-ce que c'est comme ça",
