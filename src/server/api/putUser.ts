@@ -35,7 +35,7 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   };
 
   if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
-    newUser.activity.push({
+    newUser.activity.unshift({
       value: dateNow(),
       label: 'Utilisateur mis à jour',
     });
