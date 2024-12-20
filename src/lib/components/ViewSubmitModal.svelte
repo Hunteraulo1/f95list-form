@@ -141,8 +141,10 @@ const submitAttributes: SubmitAttributes[] = [
     <div class="divider"></div>
       
     {#if gameNotFound}
-      <p>Le jeu à déjà été modifier et ne peut pas être retrouvé</p>
-    {:else if gameAttributes.length > 0}
+      <p class="font-bold text-red-600">Le jeu à déjà été modifier et ne peut pas être retrouvé !</p>
+    {/if}
+
+    {#if gameAttributes.length > 0}
       <div class="grid grid-cols-2 gap-4">
         {#each gameAttributes as { label, value, queryValue }}
           <div class="w-full relative">
