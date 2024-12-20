@@ -21,6 +21,7 @@ let { showModal = $bindable(), submits = $bindable(), index, user }: Props = $pr
 
 let submit = $state(submits[index]);
 let denyModal = $state(false);
+let gameNotFound = $state(false);
 
 interface GameAttributes {
   label: string;
@@ -34,7 +35,12 @@ onMount(async () => {
   let queryGame: GameType | null = null;
 
   if (submit.type !== 'add' && submit.query) {
-    queryGame = await GAS_API.getGame(submit.query);
+    try {
+      queryGame = await GAS_API.getGame(submit.query);
+    } catch {
+      gameNotFound = true;
+      console.warn('getGame ~ game not found');
+    }
   }
 
   gameAttributes = [
@@ -134,7 +140,9 @@ const submitAttributes: SubmitAttributes[] = [
         
     <div class="divider"></div>
       
-    {#if gameAttributes.length > 0}
+    {#if gameNotFound}
+      <p>Le jeu à déjà été modifier et ne peut pas être retrouvé</p>
+    {:else if gameAttributes.length > 0}
       <div class="grid grid-cols-2 gap-4">
         {#each gameAttributes as { label, value, queryValue }}
           <div class="w-full relative">
@@ -156,10 +164,10 @@ const submitAttributes: SubmitAttributes[] = [
   {/snippet}
   {#snippet modalAction()}
     {#if submit.status === 'wait'}
-      <button onclick={handleClickConfirm} class="btn">
+      <button onclick={handleClickConfirm} class="btn" disabled={gameNotFound || gameAttributes.length === 0}>
         Confirmer
       </button>
-      <button onclick={() => { denyModal = true }} class="btn">
+      <button onclick={() => { denyModal = true }} class="btn" disabled={gameAttributes.length === 0}>
         Refuser
       </button>
     {/if}

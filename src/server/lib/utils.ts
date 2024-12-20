@@ -3,7 +3,7 @@ import { getUser } from '../api/getUser';
 
 import type { UserType } from '$types/schemas';
 
-const checkUser = async (rank: UserType['role'][0]): Promise<boolean> => {
+const checkUser = async (rank: UserType['role']): Promise<boolean> => {
   console.info('checkUser');
 
   const user = await getUser();
@@ -12,9 +12,9 @@ const checkUser = async (rank: UserType['role'][0]): Promise<boolean> => {
 
   const validUser = User.parse(user);
 
-  if (validUser.role.includes(rank) || validUser.role.includes('superAdmin')) return true;
+  if (validUser.role !== rank || validUser.role !== 'superAdmin') return false;
 
-  return false;
+  return true;
 };
 
 const dateNow = (): string => new Date().toISOString();
