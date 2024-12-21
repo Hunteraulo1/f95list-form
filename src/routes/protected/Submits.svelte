@@ -109,7 +109,7 @@ onMount(async () => {
                     {getConvert(submit.status, 'status')}
                   </td>
                   <td>
-                    <button onclick={() => (dialogView[index] = true)} class="btn btn-ghost btn-xs">
+                    <button onclick={() => (dialogView[index] = true)} class="btn btn-ghost btn-xs" disabled={!user}>
                       Accèder
                     </button>
                     {#if user}
