@@ -18,7 +18,7 @@ export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void
   const validSubmit = Submit.parse(submit);
   if (!validSubmit) throw new Error('putSubmit ~ Invalid submit');
 
-  const validStatus = Submit.shape.status.parse(status)
+  const validStatus = Submit.shape.status.parse(status);
   if (!validStatus) throw new Error('putSubmitStatus ~ Invalid submit status');
 
   const user = getUser({ email: submit.email });
@@ -80,7 +80,7 @@ export const putSubmitStatus = async ({ query, status }: PutSubmitStatusArgs): P
   const validSubmit = Submit.shape.query.parse(query);
   if (!validSubmit) throw new Error('putSubmitStatus ~ Invalid submit');
 
-  const validStatus = Submit.shape.status.parse(status)
+  const validStatus = Submit.shape.status.parse(status);
   if (!validStatus) throw new Error('putSubmitStatus ~ Invalid submit status');
 
   const submits = await getSubmits({});
@@ -88,10 +88,7 @@ export const putSubmitStatus = async ({ query, status }: PutSubmitStatusArgs): P
   if (!submits) throw new Error('putSubmitStatus ~ Submits not found');
 
   const submitFound = submits.find(
-    (s) =>
-      s.query?.id === query?.id &&
-      s.query?.name === query?.name &&
-      s.query?.version === query?.version
+    (s) => s.query?.id === query?.id && s.query?.name === query?.name && s.query?.version === query?.version,
   );
 
   if (!submitFound) throw new Error('putSubmitStatus ~ Submit not found');
@@ -99,12 +96,7 @@ export const putSubmitStatus = async ({ query, status }: PutSubmitStatusArgs): P
   let confirmed = false;
 
   const result = submits.map((s) => {
-    if (
-      s.query?.id !== query?.id ||
-      s.query?.name !== query?.name ||
-      s.query?.version !== query?.version
-    )
-      return s;
+    if (s.query?.id !== query?.id || s.query?.name !== query?.name || s.query?.version !== query?.version) return s;
 
     s.status = validStatus;
 

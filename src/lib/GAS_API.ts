@@ -23,7 +23,7 @@ import type {
   UserType,
 } from '$types/schemas';
 
-import { DelSubmitArgs } from '../server/api/delSubmit';
+import type { DelSubmitArgs } from '../server/api/delSubmit';
 import './polyfillScriptRun.js';
 
 const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A): Promise<T> => {

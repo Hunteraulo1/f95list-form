@@ -97,7 +97,7 @@ const handleClickConfirm = (): void => {
   editor = true;
 };
 
-const handleClickDelete = async () => {
+const handleClickDelete = async (): Promise<void> => {
   editor = false;
   $isLoading = true;
 
@@ -120,9 +120,9 @@ const handleClickDelete = async () => {
   } finally {
     $isLoading = false;
   }
-}
+};
 
-const handleClickApproved = async () => {
+const handleClickApproved = async (): Promise<void> => {
   editor = false;
   $isLoading = true;
 
@@ -145,7 +145,7 @@ const handleClickApproved = async () => {
   } finally {
     $isLoading = false;
   }
-}
+};
 interface SubmitAttributes {
   label: string;
   value: SubmitType[keyof SubmitType];

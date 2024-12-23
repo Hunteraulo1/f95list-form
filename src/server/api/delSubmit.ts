@@ -17,22 +17,15 @@ export const delSubmit = async ({ query }: DelSubmitArgs): Promise<void> => {
   if (!submits) throw new Error('delSubmit ~ Submits not found');
 
   const submitFound = submits.find(
-    (s) =>
-      s.query?.id === query?.id &&
-      s.query?.name === query?.name &&
-      s.query?.version === query?.version
+    (s) => s.query?.id === query?.id && s.query?.name === query?.name && s.query?.version === query?.version,
   );
 
   if (!submitFound) throw new Error('delSubmit ~ Submit not found');
 
   const result = [];
   for (const s of submits) {
-    if (
-      s.query?.id === query?.id &&
-      s.query?.name === query?.name &&
-      s.query?.version === query?.version
-    ) continue;
-    
+    if (s.query?.id === query?.id && s.query?.name === query?.name && s.query?.version === query?.version) continue;
+
     result.push(s);
   }
 

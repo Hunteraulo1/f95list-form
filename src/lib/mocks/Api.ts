@@ -54,7 +54,7 @@ const getMockEndpoints = (): MockEndpoints => ({
   postSubmit,
   putSubmit,
   putSubmitStatus,
-  delSubmit
+  delSubmit,
 });
 
 export default getMockEndpoints;
