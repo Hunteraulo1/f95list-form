@@ -14,7 +14,7 @@ import { postSubmit } from './api/postSubmit';
 import { postTraductor } from './api/postTraductor';
 import { putAppConfiguration } from './api/putAppConfiguration';
 import { putGame } from './api/putGame';
-import { putSubmit } from './api/putSubmit';
+import { putSubmit, putSubmitStatus } from './api/putSubmit';
 import { putTraductor } from './api/putTraductor';
 import { putUser, putUserRole } from './api/putUser';
 
@@ -53,6 +53,7 @@ const getMockEndpoints = (): MockEndpoints => ({
   getSubmits,
   postSubmit,
   putSubmit,
+  putSubmitStatus,
   delSubmit
 });
 
