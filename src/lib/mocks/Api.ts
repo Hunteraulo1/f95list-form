@@ -1,4 +1,5 @@
 import { delGame } from './api/delGame';
+import { delSubmit } from './api/delSubmit';
 import { delTraductor } from './api/delTraductor';
 import { getAppConfiguration } from './api/getAppConfiguration';
 import { getGame } from './api/getGame';
@@ -52,6 +53,7 @@ const getMockEndpoints = (): MockEndpoints => ({
   getSubmits,
   postSubmit,
   putSubmit,
+  delSubmit
 });
 
 export default getMockEndpoints;
