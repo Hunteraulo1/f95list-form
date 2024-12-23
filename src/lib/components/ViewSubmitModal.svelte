@@ -218,9 +218,11 @@ const submitAttributes: SubmitAttributes[] = [
       <button onclick={handleClickDelete} class="btn">
         Supprimer
       </button>
-      <button onclick={handleClickApproved} class="btn">
-        Approuver
-      </button>
+      {#if submit.status !== 'validated'}
+        <button onclick={handleClickApproved} class="btn">
+          Approuver
+        </button>
+      {/if}
     {/if}
     {#if submit.status === 'wait'}
       <button onclick={handleClickConfirm} class="btn" disabled={gameNotFound || gameAttributes.length === 0}>
