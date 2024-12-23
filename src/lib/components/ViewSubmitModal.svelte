@@ -122,6 +122,30 @@ const handleClickDelete = async () => {
   }
 }
 
+const handleClickApproved = async () => {
+  editor = false;
+  $isLoading = true;
+
+  try {
+    const result = await GAS_API.putSubmitStatus({ query: submit.query, status: 'validated' });
+
+    console.info('Submit approved:', result);
+
+    newToast({
+      alertType: 'success',
+      message: 'Soumission approuvé avec succès!',
+    });
+  } catch (error) {
+    console.error('Could not approved submit:', error);
+
+    newToast({
+      alertType: 'error',
+      message: "Erreur lors de l'approbation de la soumission",
+    });
+  } finally {
+    $isLoading = false;
+  }
+}
 interface SubmitAttributes {
   label: string;
   value: SubmitType[keyof SubmitType];
@@ -193,6 +217,9 @@ const submitAttributes: SubmitAttributes[] = [
     {#if checkUser(['superAdmin'])}
       <button onclick={handleClickDelete} class="btn">
         Supprimer
+      </button>
+      <button onclick={handleClickApproved} class="btn">
+        Approuver
       </button>
     {/if}
     {#if submit.status === 'wait'}
