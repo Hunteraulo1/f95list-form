@@ -57,12 +57,12 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
   if (!userScriptPropertiesUser) throw new Error('putUserRole ~ No user found');
 
   const properties: UserType = userScriptPropertiesUser;
-  
+
   const newUser: UserType = {
     ...properties,
     role,
   };
-  
+
   newUser.activity.unshift({
     value: dateNow(),
     label: 'Rôle changé',

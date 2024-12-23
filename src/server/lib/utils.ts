@@ -12,9 +12,9 @@ const checkUser = async (rank: UserType['role']): Promise<boolean> => {
 
   const validUser = User.parse(user);
 
-  if (!validUser) throw new Error('user not valid')
+  if (!validUser) throw new Error('user not valid');
 
-  const result = validUser.role === rank || validUser.role === 'superAdmin'
+  const result = validUser.role === rank || validUser.role === 'superAdmin';
 
   console.info('checkUser result: ', result);
 

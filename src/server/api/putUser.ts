@@ -52,7 +52,8 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 
   if (!checkUser('admin')) throw new Error('putUserRole ~ A user permission is required to update a user role.');
 
-  if (!checkUser('superAdmin') && ['admin', 'superAdmin'].includes(role)) throw new Error('putUserRole ~ Unauthorized: Only superAdmin can set admin roles');
+  if (!checkUser('superAdmin') && ['admin', 'superAdmin'].includes(role))
+    throw new Error('putUserRole ~ Unauthorized: Only superAdmin can set admin roles');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
@@ -63,7 +64,7 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
   if (!userScriptPropertiesUser) throw new Error('putUserRole ~ No user found');
 
   const properties: UserType = JSON.parse(userScriptPropertiesUser);
-  
+
   const newUser: UserType = {
     ...properties,
     role,
