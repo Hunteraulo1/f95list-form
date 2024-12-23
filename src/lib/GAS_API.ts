@@ -23,6 +23,7 @@ import type {
   UserType,
 } from '$types/schemas';
 
+import { DelSubmitArgs } from '../server/api/delSubmit';
 import './polyfillScriptRun.js';
 
 const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A): Promise<T> => {
@@ -73,4 +74,5 @@ export const GAS_API = {
   postSubmit: (args: PostSubmitType): Promise<undefined | string> =>
     callAPI<undefined | string, typeof args>('postSubmit', args),
   putSubmit: (args: PutSubmitArgs): Promise<void> => callAPI<void, typeof args>('putSubmit', args),
+  delSubmit: (args: DelSubmitArgs): Promise<void> => callAPI<void, typeof args>('delSubmit', args),
 };
