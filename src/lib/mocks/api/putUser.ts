@@ -31,13 +31,6 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   properties.profile = validUser.profile;
 
-  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.unshift({
-      value: dateNow(),
-      label: 'Utilisateur mis à jour',
-    });
-  }
-
   console.info('putUser ~ successfully saved.');
 };
 
@@ -64,17 +57,20 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
   if (!userScriptPropertiesUser) throw new Error('putUserRole ~ No user found');
 
   const properties: UserType = userScriptPropertiesUser;
+  
+  const newUser: UserType = {
+    ...properties,
+    role,
+  };
+  
+  newUser.activity.unshift({
+    value: dateNow(),
+    label: 'Rôle changé',
+  });
 
-  properties.role = validUser.role;
+  const validNewUser = User.parse(newUser);
 
-  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.unshift({
-      value: dateNow(),
-      label: 'Utilisateur mis à jour',
-    });
-  }
-
-  console.info('putUserRole ~ successfully saved.');
+  console.info('putUserRole ~ result:', validNewUser);
 };
 
 export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {

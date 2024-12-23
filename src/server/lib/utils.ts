@@ -8,13 +8,17 @@ const checkUser = async (rank: UserType['role']): Promise<boolean> => {
 
   const user = await getUser();
 
-  console.info('checkUser() called with: ', user, 'by: ', user.email);
+  console.info('checkUser called with: ', user, 'by: ', user.email);
 
   const validUser = User.parse(user);
 
-  if (validUser.role !== rank || validUser.role !== 'superAdmin') return false;
+  if (!validUser) throw new Error('user not valid')
 
-  return true;
+  const result = validUser.role === rank || validUser.role === 'superAdmin'
+
+  console.info('checkUser result: ', result);
+
+  return result;
 };
 
 const dateNow = (): string => new Date().toISOString();

@@ -27,19 +27,12 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? '');
 
-  const { preferences, profile, activity } = validUser;
+  const { preferences, profile } = validUser;
   const newUser: UserType = {
     ...properties,
     preferences,
     profile,
   };
-
-  if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
-    newUser.activity.unshift({
-      value: dateNow(),
-      label: 'Utilisateur mis à jour',
-    });
-  }
 
   const validNewUser = User.parse(newUser);
 
@@ -59,9 +52,7 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 
   if (!checkUser('admin')) throw new Error('putUserRole ~ A user permission is required to update a user role.');
 
-  if (!checkUser('superAdmin') && ['admin', 'superAdmin'].includes(role)) {
-    throw new Error('putUserRole ~ Unauthorized: Only superAdmin can set admin roles');
-  }
+  if (!checkUser('superAdmin') && ['admin', 'superAdmin'].includes(role)) throw new Error('putUserRole ~ Unauthorized: Only superAdmin can set admin roles');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 
@@ -72,21 +63,16 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
   if (!userScriptPropertiesUser) throw new Error('putUserRole ~ No user found');
 
   const properties: UserType = JSON.parse(userScriptPropertiesUser);
-
-  const { preferences, profile, activity } = validUser;
+  
   const newUser: UserType = {
     ...properties,
     role,
-    preferences,
-    profile,
   };
 
-  if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
-    newUser.activity.unshift({
-      value: dateNow(),
-      label: 'Rôle changé',
-    });
-  }
+  newUser.activity.unshift({
+    value: dateNow(),
+    label: 'Rôle changé',
+  });
 
   const validNewUser = User.parse(newUser);
 
