@@ -2,7 +2,7 @@
 import { GAS_API } from '$lib/GAS_API';
 import { getConvert } from '$lib/convert';
 import { game, isLoading, newToast, queryGame } from '$lib/stores';
-import { dateFormat } from '$lib/utils';
+import { checkUser, dateFormat } from '$lib/utils';
 import { onMount } from 'svelte';
 import FormGame from './FormGame.svelte';
 import LoadingSpinner from './LoadingSpinner.svelte';
@@ -97,6 +97,31 @@ const handleClickConfirm = (): void => {
   editor = true;
 };
 
+const handleClickDelete = async () => {
+  editor = false;
+  $isLoading = true;
+
+  try {
+    const result = await GAS_API.delSubmit({ query: submit.query });
+
+    console.info('Submit delete:', result);
+
+    newToast({
+      alertType: 'success',
+      message: 'Soumission supprimé avec succès!',
+    });
+  } catch (error) {
+    console.error('Could not delete submit:', error);
+
+    newToast({
+      alertType: 'error',
+      message: 'Erreur lors de la suppression de la soumission',
+    });
+  } finally {
+    $isLoading = false;
+  }
+}
+
 interface SubmitAttributes {
   label: string;
   value: SubmitType[keyof SubmitType];
@@ -165,6 +190,11 @@ const submitAttributes: SubmitAttributes[] = [
     {/if}
   {/snippet}
   {#snippet modalAction()}
+    {#if checkUser(['superAdmin'])}
+      <button onclick={handleClickDelete} class="btn">
+        Supprimer
+      </button>
+    {/if}
     {#if submit.status === 'wait'}
       <button onclick={handleClickConfirm} class="btn" disabled={gameNotFound || gameAttributes.length === 0}>
         Confirmer
