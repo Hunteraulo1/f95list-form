@@ -47,7 +47,7 @@ export const GAS_API = {
   getUser: (args?: GetUserArgs): Promise<UserType> => callAPI<UserType, typeof args>('getUser', args),
   getUsers: (): Promise<UserType[]> => callAPI<UserType[]>('getUsers'),
   putUser: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUser', args),
-  putUserRole: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUserRole', args),
+  putUserRole: (args: PutUserArgs): Promise<boolean> => callAPI<boolean, typeof args>('putUserRole', args),
 
   // Game
   getGame: (args: GetGameArgs): Promise<GameType> => callAPI<GameType, typeof args>('getGame', args),

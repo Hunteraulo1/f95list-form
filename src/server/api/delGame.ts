@@ -18,7 +18,7 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
   console.info('delGame ~ args:', { query, comment, silentMode });
   const { name, version } = query;
 
-  if (!checkUser('admin')) throw new Error('delGame ~ Unauthorized');
+  if (!(await checkUser('admin'))) throw new Error('delGame ~ Unauthorized');
 
   enableLock();
 

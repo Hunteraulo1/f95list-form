@@ -5,7 +5,7 @@ import { getSubmits } from './getSubmits';
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<string | undefined> => {
   console.info('postSubmit ~ args:', { dataSubmit: { query, game, type, comment } });
 
-  if (!checkUser('traductor')) throw new Error('postSubmit ~ Unauthorized');
+  if (!(await checkUser('traductor'))) throw new Error('postSubmit ~ Unauthorized');
 
   const validSubmit = PostSubmit.parse({ query, game, type, comment });
 

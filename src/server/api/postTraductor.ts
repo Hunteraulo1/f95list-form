@@ -13,7 +13,7 @@ export interface PostTraductorArgs {
 export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
   console.info('postTraductor ~ args:', { dataTraductor: traductor });
 
-  checkUser('admin');
+  await checkUser('admin');
 
   try {
     enableLock();

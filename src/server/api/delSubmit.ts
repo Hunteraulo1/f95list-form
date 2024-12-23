@@ -10,7 +10,7 @@ export interface DelSubmitArgs {
 export const delSubmit = async ({ query }: DelSubmitArgs): Promise<void> => {
   console.info('delSubmit ~ args:', { query });
 
-  if (!checkUser('superAdmin')) throw new Error('delSubmit ~ Unauthorized');
+  if (!(await checkUser('superAdmin'))) throw new Error('delSubmit ~ Unauthorized');
 
   const submits = await getSubmits({});
 

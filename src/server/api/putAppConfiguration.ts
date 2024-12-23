@@ -10,11 +10,11 @@ export type PutAppConfigArgs = {
 /**
  * **API Endpoint** | Updates the app configuration and returns it
  */
-export const putAppConfiguration = ({ appConfiguration }: PutAppConfigArgs): void => {
+export const putAppConfiguration = async ({ appConfiguration }: PutAppConfigArgs): Promise<void> => {
   console.info('putAppConfiguration ~ args:', { appConfiguration });
 
   try {
-    checkUser('superAdmin');
+    await checkUser('superAdmin');
 
     const validAppConfiguration = AppConfiguration.parse(appConfiguration);
 

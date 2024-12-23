@@ -13,7 +13,7 @@ export interface PutSubmitArgs {
 export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void> => {
   console.info('putSubmit ~ args:', { submit, type: status });
 
-  if (!checkUser('admin')) throw new Error('putSubmit ~ Unauthorized');
+  if (!(await checkUser('admin'))) throw new Error('putSubmit ~ Unauthorized');
 
   const validSubmit = Submit.parse(submit);
   if (!validSubmit) throw new Error('putSubmit ~ Invalid submit');
@@ -75,7 +75,7 @@ export interface PutSubmitStatusArgs {
 export const putSubmitStatus = async ({ query, status }: PutSubmitStatusArgs): Promise<void> => {
   console.info('putSubmitStatus ~ args:', { query, type: status });
 
-  if (!checkUser('admin')) throw new Error('putSubmitStatus ~ Unauthorized');
+  if (!(await checkUser('admin'))) throw new Error('putSubmitStatus ~ Unauthorized');
 
   const validSubmit = Submit.shape.query.parse(query);
   if (!validSubmit) throw new Error('putSubmitStatus ~ Invalid submit');

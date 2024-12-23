@@ -21,7 +21,7 @@ export interface PostGameArgs {
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
   console.info('postGame ~ args:', { game, silentMode });
 
-  checkUser('admin');
+  await checkUser('admin');
 
   try {
     enableLock();
