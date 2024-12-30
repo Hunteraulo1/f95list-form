@@ -59,7 +59,8 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
       span.textContent = '⤓';
     }
   }
-  sortedSubmits = submits.sort((a, b) => {
+
+  sortedSubmits = [...submits].sort((a, b) => {
     if (!a[target] || !b[target]) return 0;
 
     if (a[target] < b[target]) {
