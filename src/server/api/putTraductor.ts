@@ -13,7 +13,7 @@ export interface PutTraductorArgs {
 export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<void> => {
   console.info('putTraductor ~ args:', { query, data });
 
-  checkUser('admin');
+  await checkUser('admin');
 
   enableLock();
 

@@ -11,7 +11,7 @@ export interface DelTraductorArgs {
 export const delTraductor = async ({ query }: DelTraductorArgs): Promise<void> => {
   console.info('delTraductor ~ args:', { query });
 
-  if (!checkUser('admin')) throw new Error('delTraductor ~ Unauthorized');
+  if (!(await checkUser('admin'))) throw new Error('delTraductor ~ Unauthorized');
 
   enableLock();
 

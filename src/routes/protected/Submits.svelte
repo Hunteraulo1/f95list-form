@@ -13,6 +13,7 @@ import type { SubmitType, UserType } from '$types/schemas';
 const dialogView: boolean[] = $state([]);
 
 let submits: SubmitType[] = $state([]);
+let sortedSubmits: SubmitType[] = $state([]);
 let users: UserType[] = $state([]);
 
 onMount(async () => {
@@ -21,6 +22,7 @@ onMount(async () => {
 
   try {
     submits = await GAS_API.getSubmits({});
+    sortedSubmits = submits;
 
     users = await GAS_API.getUsers();
   } catch (error) {
@@ -34,6 +36,43 @@ onMount(async () => {
     $isLoading = false;
   }
 });
+
+const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): void => {
+  let reverse = false;
+
+  if (element.children.length === 0) {
+    element.parentElement?.querySelector('.sorted')?.remove();
+
+    const span = document.createElement('span');
+
+    span.classList.value = 'sorted';
+    span.style.paddingLeft = '.25rem';
+    span.textContent = '⤓';
+    element.appendChild(span);
+  } else {
+    const span = element.children[0];
+
+    if (span.textContent === '⤓') {
+      span.textContent = '⤒';
+      reverse = true;
+    } else {
+      span.textContent = '⤓';
+    }
+  }
+  sortedSubmits = submits.sort((a, b) => {
+    if (!a[target] || !b[target]) return 0;
+
+    if (a[target] < b[target]) {
+      return reverse ? 1 : -1;
+    }
+
+    if (a[target] > b[target]) {
+      return reverse ? -1 : 1;
+    }
+
+    return 0;
+  });
+};
 </script>
 
 <div>
@@ -42,20 +81,20 @@ onMount(async () => {
     <p class="text-gray-500">Liste des soumissions en attente de validation</p>
     {/snippet}
     {#snippet panelContent()}
-      {#if submits.length > 0 && users.length > 0}
+      {#if sortedSubmits.length > 0 && users.length > 0}
         <div class="overflow-x-auto">
           <table class="table">
             <thead>
               <tr>
-                <th>Email</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Statut</th>
+                <th onclick={({currentTarget}) => handleClick(currentTarget, 'email')} class="cursor-pointer">Email</th>
+                <th onclick={({currentTarget}) => handleClick(currentTarget, 'date')} class="cursor-pointer">Date</th>
+                <th onclick={({currentTarget}) => handleClick(currentTarget, 'type')} class="cursor-pointer">Type</th>
+                <th onclick={({currentTarget}) => handleClick(currentTarget, 'status')} class="cursor-pointer">Statut</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {#each submits as submit, index}
+              {#each sortedSubmits as submit, index}
                 {@const user = users.find((user) => user.email === submit.email) as UserType}
                 <tr>
                   <td>
@@ -109,7 +148,7 @@ onMount(async () => {
                     {getConvert(submit.status, 'status')}
                   </td>
                   <td>
-                    <button onclick={() => (dialogView[index] = true)} class="btn btn-ghost btn-xs">
+                    <button onclick={() => (dialogView[index] = true)} class="btn btn-ghost btn-xs" disabled={!user}>
                       Accèder
                     </button>
                     {#if user}

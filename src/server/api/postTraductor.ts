@@ -13,7 +13,7 @@ export interface PostTraductorArgs {
 export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
   console.info('postTraductor ~ args:', { dataTraductor: traductor });
 
-  checkUser('admin');
+  await checkUser('admin');
 
   try {
     enableLock();
@@ -35,6 +35,7 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
 
     const convertedTraductor: string[] = [
       validTraductor.name ?? '',
+      '',
       '',
       `=COUNTIF(Jeux!J$3:J;"*"&A${totalRow + 1}&"*")`,
       `=COUNTIF(Jeux!K$3:K;"*"&A${totalRow + 1}&"*")`,

@@ -17,7 +17,7 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
   let validArgs = null;
 
   if (email) {
-    if (!checkUser('admin') && email !== requestingUserEmail) throw new Error('getUser ~ Unauthorized');
+    if (!(await checkUser('admin')) && email !== requestingUserEmail) throw new Error('getUser ~ Unauthorized');
 
     const GetUserArgsSchema = z.object({
       email: User.shape.email,

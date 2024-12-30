@@ -13,10 +13,13 @@ export interface PutSubmitArgs {
 export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void> => {
   console.info('putSubmit ~ args:', { submit, type: status });
 
-  if (!checkUser('admin')) throw new Error('putSubmit ~ Unauthorized');
+  if (!(await checkUser('admin'))) throw new Error('putSubmit ~ Unauthorized');
 
   const validSubmit = Submit.parse(submit);
   if (!validSubmit) throw new Error('putSubmit ~ Invalid submit');
+
+  const validStatus = Submit.shape.status.parse(status);
+  if (!validStatus) throw new Error('putSubmitStatus ~ Invalid submit status');
 
   const user = getUser({ email: submit.email });
   if (!user) throw new Error('putSubmit ~ User not found');
@@ -35,8 +38,6 @@ export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void
 
   if (!submitFound) throw new Error('putSubmit ~ Submit not found');
 
-  if (status !== 'validated' && status !== 'rejected') throw new Error('putSubmit ~ invalid type');
-
   let confirmed = false;
 
   const result = submits.map((s) => {
@@ -47,7 +48,7 @@ export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void
     )
       return s;
 
-    s.status = status;
+    s.status = validStatus;
     s.reason = submit.reason;
 
     confirmed = true;
@@ -64,4 +65,51 @@ export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void
   scriptPropertiesService.setProperty('submits', JSON.stringify(result));
 
   console.info('putSubmit ~ result:', result);
+};
+
+export interface PutSubmitStatusArgs {
+  query: SubmitType['query'];
+  status: string;
+}
+
+export const putSubmitStatus = async ({ query, status }: PutSubmitStatusArgs): Promise<void> => {
+  console.info('putSubmitStatus ~ args:', { query, type: status });
+
+  if (!(await checkUser('admin'))) throw new Error('putSubmitStatus ~ Unauthorized');
+
+  const validSubmit = Submit.shape.query.parse(query);
+  if (!validSubmit) throw new Error('putSubmitStatus ~ Invalid submit');
+
+  const validStatus = Submit.shape.status.parse(status);
+  if (!validStatus) throw new Error('putSubmitStatus ~ Invalid submit status');
+
+  const submits = await getSubmits({});
+
+  if (!submits) throw new Error('putSubmitStatus ~ Submits not found');
+
+  const submitFound = submits.find(
+    (s) => s.query?.id === query?.id && s.query?.name === query?.name && s.query?.version === query?.version,
+  );
+
+  if (!submitFound) throw new Error('putSubmitStatus ~ Submit not found');
+
+  let confirmed = false;
+
+  const result = submits.map((s) => {
+    if (s.query?.id !== query?.id || s.query?.name !== query?.name || s.query?.version !== query?.version) return s;
+
+    s.status = validStatus;
+
+    confirmed = true;
+
+    return s;
+  });
+
+  if (!confirmed) throw new Error('putSubmitStatus ~ Submit not found');
+
+  const scriptPropertiesService = PropertiesService.getScriptProperties();
+
+  scriptPropertiesService.setProperty('submits', JSON.stringify(result));
+
+  console.info('putSubmitStatus ~ result:', result);
 };

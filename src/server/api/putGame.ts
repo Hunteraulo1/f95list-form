@@ -25,7 +25,7 @@ export interface PutGameArgs {
 export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
   console.info('putGame ~ args:', { dataGame });
 
-  checkUser('admin');
+  await checkUser('admin');
 
   try {
     enableLock();

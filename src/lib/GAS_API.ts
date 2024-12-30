@@ -8,7 +8,7 @@ import type { PostGameArgs } from '../server/api/postGame';
 import type { PostTraductorArgs } from '../server/api/postTraductor';
 import type { PutAppConfigArgs } from '../server/api/putAppConfiguration';
 import type { PutGameArgs } from '../server/api/putGame';
-import type { PutSubmitArgs } from '../server/api/putSubmit';
+import type { PutSubmitArgs, PutSubmitStatusArgs } from '../server/api/putSubmit';
 import type { PutTraductorArgs } from '../server/api/putTraductor';
 import type { PutUserArgs } from '../server/api/putUser';
 
@@ -23,6 +23,7 @@ import type {
   UserType,
 } from '$types/schemas';
 
+import type { DelSubmitArgs } from '../server/api/delSubmit';
 import './polyfillScriptRun.js';
 
 const callAPI = async <T, A = unknown>(functionName: string, args: A = [] as unknown as A): Promise<T> => {
@@ -46,7 +47,7 @@ export const GAS_API = {
   getUser: (args?: GetUserArgs): Promise<UserType> => callAPI<UserType, typeof args>('getUser', args),
   getUsers: (): Promise<UserType[]> => callAPI<UserType[]>('getUsers'),
   putUser: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUser', args),
-  putUserRole: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUserRole', args),
+  putUserRole: (args: PutUserArgs): Promise<boolean> => callAPI<boolean, typeof args>('putUserRole', args),
 
   // Game
   getGame: (args: GetGameArgs): Promise<GameType> => callAPI<GameType, typeof args>('getGame', args),
@@ -73,4 +74,6 @@ export const GAS_API = {
   postSubmit: (args: PostSubmitType): Promise<undefined | string> =>
     callAPI<undefined | string, typeof args>('postSubmit', args),
   putSubmit: (args: PutSubmitArgs): Promise<void> => callAPI<void, typeof args>('putSubmit', args),
+  putSubmitStatus: (args: PutSubmitStatusArgs): Promise<void> => callAPI<void, typeof args>('putSubmitStatus', args),
+  delSubmit: (args: DelSubmitArgs): Promise<void> => callAPI<void, typeof args>('delSubmit', args),
 };

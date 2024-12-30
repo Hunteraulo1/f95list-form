@@ -31,17 +31,10 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   properties.profile = validUser.profile;
 
-  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.unshift({
-      value: dateNow(),
-      label: 'Utilisateur mis à jour',
-    });
-  }
-
   console.info('putUser ~ successfully saved.');
 };
 
-export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> => {
+export const putUserRole = async ({ user, role }: PutUserArgs): Promise<boolean> => {
   console.info('putUserRole ~ args:', { user, role });
 
   if (!role) throw new Error('putUserRole ~ No role found');
@@ -50,12 +43,17 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 
   const validUser = User.parse(user);
 
-  if (!validUser) throw new Error('putUserRole ~ Invalid user');
-  if (!(await checkUser('admin')))
-    throw new Error('putUserRole ~ A user permission is required to update a user role.');
+  if (!(await checkUser('admin'))) {
+    console.warn('putUserRole ~ A user permission is required to update a user role.');
 
-  if ((await checkUser('admin')) && ['admin', 'superAdmin'].includes(role))
-    throw new Error('putUserRole ~ A user resource can only be updated by superAdmin.');
+    return false;
+  }
+
+  if (!(await checkUser('superAdmin')) && ['admin', 'superAdmin'].includes(role)) {
+    console.warn('putUserRole ~ Unauthorized: Only superAdmin can set admin roles');
+
+    return false;
+  }
 
   if (!validUser.email) throw new Error('putUserRole ~ No email found');
 
@@ -65,16 +63,21 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 
   const properties: UserType = userScriptPropertiesUser;
 
-  properties.role = validUser.role;
+  const newUser: UserType = {
+    ...properties,
+    role,
+  };
 
-  if (JSON.stringify(validUser.statistics) === JSON.stringify(properties.statistics)) {
-    user.activity.unshift({
-      value: dateNow(),
-      label: 'Utilisateur mis à jour',
-    });
-  }
+  newUser.activity.unshift({
+    value: dateNow(),
+    label: 'Rôle changé',
+  });
 
-  console.info('putUserRole ~ successfully saved.');
+  const validNewUser = User.parse(newUser);
+
+  console.info('putUserRole ~ result:', validNewUser);
+
+  return true;
 };
 
 export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {

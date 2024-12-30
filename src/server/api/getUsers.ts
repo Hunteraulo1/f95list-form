@@ -2,13 +2,13 @@ import { checkUser } from '../lib/utils';
 
 import type { UserType } from '$types/schemas';
 
-export const getUsers = (): UserType[] | undefined => {
+export const getUsers = async (): Promise<UserType[] | undefined> => {
   console.info('getUsers');
   const requestingUserEmail = Session.getActiveUser().getEmail();
 
   console.info('getUsers called by: ', requestingUserEmail);
 
-  checkUser('admin');
+  await checkUser('admin');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();

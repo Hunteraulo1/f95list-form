@@ -27,19 +27,12 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? '');
 
-  const { preferences, profile, activity } = validUser;
+  const { preferences, profile } = validUser;
   const newUser: UserType = {
     ...properties,
     preferences,
     profile,
   };
-
-  if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
-    newUser.activity.unshift({
-      value: dateNow(),
-      label: 'Utilisateur mis à jour',
-    });
-  }
 
   const validNewUser = User.parse(newUser);
 
@@ -48,7 +41,7 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   console.info('putUser ~ successfully saved.');
 };
 
-export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> => {
+export const putUserRole = async ({ user, role }: PutUserArgs): Promise<boolean> => {
   console.info('putUserRole ~ args:', { user, role });
 
   if (!role) throw new Error('putUserRole ~ No role found');
@@ -57,10 +50,16 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 
   const validUser = User.parse(user);
 
-  if (!checkUser('admin')) throw new Error('putUserRole ~ A user permission is required to update a user role.');
+  if (!(await checkUser('admin'))) {
+    console.warn('putUserRole ~ A user permission is required to update a user role.');
 
-  if (!checkUser('superAdmin') && ['admin', 'superAdmin'].includes(role)) {
-    throw new Error('putUserRole ~ Unauthorized: Only superAdmin can set admin roles');
+    return false;
+  }
+
+  if (!(await checkUser('superAdmin')) && ['admin', 'superAdmin'].includes(role)) {
+    console.warn('putUserRole ~ Unauthorized: Only superAdmin can set admin roles');
+
+    return false;
   }
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
@@ -73,26 +72,23 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<void> =>
 
   const properties: UserType = JSON.parse(userScriptPropertiesUser);
 
-  const { preferences, profile, activity } = validUser;
   const newUser: UserType = {
     ...properties,
     role,
-    preferences,
-    profile,
   };
 
-  if (JSON.stringify(validUser.activity) === JSON.stringify(activity)) {
-    newUser.activity.unshift({
-      value: dateNow(),
-      label: 'Rôle changé',
-    });
-  }
+  newUser.activity.unshift({
+    value: dateNow(),
+    label: 'Rôle changé',
+  });
 
   const validNewUser = User.parse(newUser);
 
   scriptPropertiesService.setProperty(validUser.email, JSON.stringify(validNewUser));
 
   console.info('putUserRole ~ successfully saved.');
+
+  return true;
 };
 
 export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {

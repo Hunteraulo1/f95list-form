@@ -21,18 +21,18 @@ const handleEditUserSubmit = async (): Promise<void> => {
   $isLoading = true;
 
   try {
-    await GAS_API.putUserRole({ user, role: selectedRole });
+    const result = await GAS_API.putUserRole({ user, role: selectedRole });
 
-    if (user.role === 'superAdmin' && !checkUser(['superAdmin'])) {
-      newToast({
-        alertType: 'error',
-        message: "Vous n'avez pas les permissions pour modifier le rôle d'un superAdmin ou d'un admin.",
-      });
+    if (!result) {
+      if (user.role === 'superAdmin' && !checkUser(['superAdmin'])) {
+        newToast({
+          alertType: 'error',
+          message: "Vous n'avez pas les permissions pour modifier le rôle d'un superAdmin ou d'un admin.",
+        });
 
-      return;
-    }
+        return;
+      }
 
-    if (['superAdmin', 'admin'].includes(selectedRole) && !checkUser(['superAdmin'])) {
       newToast({
         alertType: 'error',
         message: "Vous n'avez pas les permissions suffisantes pour attribuer le rôle superAdmin ou admin.",
