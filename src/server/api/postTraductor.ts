@@ -36,6 +36,7 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
     const convertedTraductor: string[] = [
       validTraductor.name ?? '',
       '',
+      '',
       `=COUNTIF(Jeux!J$3:J;"*"&A${totalRow + 1}&"*")`,
       `=COUNTIF(Jeux!K$3:K;"*"&A${totalRow + 1}&"*")`,
       `=C${totalRow + 1}+D${totalRow + 1}`,
