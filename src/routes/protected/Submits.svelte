@@ -88,7 +88,10 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
             <thead>
               <tr>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'email')} class="cursor-pointer">Email</th>
-                <th onclick={({currentTarget}) => handleClick(currentTarget, 'date')} class="cursor-pointer">Date</th>
+                <th onclick={({currentTarget}) => handleClick(currentTarget, 'date')} class="cursor-pointer">
+                  Date
+                  <span>⤒</span>
+                </th>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'type')} class="cursor-pointer">Type</th>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'status')} class="cursor-pointer">Statut</th>
                 <th>Action</th>
