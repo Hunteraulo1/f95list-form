@@ -12,7 +12,7 @@ let addModal: boolean = $state(false);
 let search: string = $state('');
 
 let filterTradutors: TraductorType[] | null = $derived(
-  search !== '' ? $traductors.filter(({ name }) => name.includes(search)) : $traductors,
+  search !== '' ? $traductors.filter(({ name }) => name.toLowerCase().includes(search.toLowerCase())) : $traductors,
 );
 
 onMount(async () => {
