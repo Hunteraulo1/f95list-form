@@ -32,12 +32,12 @@ const handleEditUserSubmit = async (): Promise<void> => {
 
         return;
       }
-      
+
       newToast({
         alertType: 'error',
         message: "Vous n'avez pas les permissions suffisantes pour attribuer le rôle superAdmin ou admin.",
       });
-        
+
       return;
     }
 
