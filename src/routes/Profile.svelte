@@ -52,7 +52,7 @@ const deleteLogs = async (): Promise<void> => {
   try {
     await GAS_API.delActivity({ email });
 
-    user.activity = [];
+    user = { ...user, activity: [] };
 
     newToast({
       alertType: 'success',
