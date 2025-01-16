@@ -14,7 +14,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
   if (domain !== 'F95z') throw new Error('getScrape ~ domaine incompatible');
 
   const link = `https://f95zone.to/threads/${id}`;
-  const regName = /.*-\s(.*?)\s\[/i;
+  const regName = /([^>]*)\s\[.*$/i;
   const regTitle = /([\w\\']+)(?=\s-)/gi;
 
   const response = UrlFetchApp.fetch(link, {
@@ -29,11 +29,12 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
 
   const title = $('title').text();
   const img = $('img.bbImage').attr('src');
+  const pTitle = $('.p-title-value').html() ?? '';
 
   const image = img?.replace('thumb/', '') ?? null;
 
   const titleMatch = title.match(regTitle);
-  const nameMatch = title.match(regName) ?? [];
+  const nameMatch = pTitle.match(regName) ?? [];
 
   const name = nameMatch?.[1] ?? null;
 

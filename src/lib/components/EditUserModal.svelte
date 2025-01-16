@@ -15,15 +15,15 @@ interface Props {
 
 let { showModal = $bindable(), user = $bindable(), users = $bindable() }: Props = $props();
 
-let selectedRole = $state(user.role);
+let newUser = $state(user);
 
 const handleEditUserSubmit = async (): Promise<void> => {
   $isLoading = true;
 
   try {
-    const result = await GAS_API.putUserRole({ user, role: selectedRole });
+    const result = await GAS_API.putUserRole({ user, role: newUser.role });
 
-    if (!result) {
+    if (!result && user.role !== newUser.role) {
       if (user.role === 'superAdmin' && !checkUser(['superAdmin'])) {
         newToast({
           alertType: 'error',
@@ -41,10 +41,14 @@ const handleEditUserSubmit = async (): Promise<void> => {
       return;
     }
 
+    if (user.profile !== newUser.profile) {
+      await GAS_API.putUser({ user: newUser });
+    }
+
     users = users.map((u) => {
       if (u.email !== user.email) return u;
 
-      return { ...u, role: selectedRole };
+      return { ...u, newUser };
     });
 
     newToast({
@@ -64,13 +68,28 @@ const handleEditUserSubmit = async (): Promise<void> => {
 };
 </script>
 
-<Modal bind:showModal title="Modifier le rôle">
+<Modal bind:showModal title="Modifier l'utilisateur">
   {#snippet modalContent()}
-    <select bind:value={selectedRole} class="select select-bordered w-full max-w-xs mt-4">
-      {#each User.shape.role.options as role}
-        <option value={role}>{role}</option>
-      {/each}
-    </select>
+    <div class="flex flex-col gap-4 mt-4">
+      <div class="flex flex-col max-w-xs">
+        <label for="userName">Nom de l'utilisateur: </label>
+        <input class="input input-bordered" name="userName" placeholder="Pseudo" value={newUser.profile.pseudo} />
+      </div>
+      
+      <div class="flex flex-col max-w-xs">
+        <label for="userName">Image de profile: </label>
+        <input class="input input-bordered" name="userName" placeholder="Lien de l'image" value={newUser.profile.imageUrl} />
+      </div>
+
+      <div class="flex flex-col max-w-xs">
+        <label for="userName">Rôle: </label>
+        <select bind:value={newUser.role} class="select select-bordered">
+          {#each User.shape.role.options as role}
+            <option value={role}>{role}</option>
+          {/each}
+        </select>
+      </div>
+    </div>
   {/snippet}
 
   {#snippet modalAction()}

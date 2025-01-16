@@ -5,6 +5,7 @@ import { isLoading, newToast } from '$lib/stores';
 import { onMount } from 'svelte';
 import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
 
+import { checkUser } from '$lib/utils';
 import type { UserType } from '$types/schemas';
 
 interface Props {
@@ -37,6 +38,34 @@ const fetchUser = async (): Promise<void> => {
   } finally {
     console.info('User data loaded.');
 
+    $isLoading = false;
+  }
+};
+
+const deleteLogs = async (): Promise<void> => {
+  if (!user) return;
+
+  $isLoading = true;
+
+  console.info('removing user activities...');
+
+  try {
+    await GAS_API.delActivity({ email });
+
+    user = { ...user, activity: [] };
+
+    newToast({
+      alertType: 'success',
+      message: "Les logs de l'utilisateur on été supprimés avec succès",
+    });
+  } catch (error) {
+    console.error('Could not remove user activities:', error);
+
+    newToast({
+      alertType: 'error',
+      message: "Impossible de supprimer les logs de l'utilisateur",
+    });
+  } finally {
     $isLoading = false;
   }
 };
@@ -93,6 +122,9 @@ onMount(() => fetchUser());
       <Panel title="Activité récente" showDivider={false}>
         {#snippet panelContent()}
           <div class="overflow-x-auto">
+            {#if checkUser(['superAdmin'])}
+              <button class="btn btn-error btn-sm float-right" onclick={deleteLogs}>supprimer les logs</button>
+            {/if}
             <table class="table">
               <!-- head -->
             <thead>

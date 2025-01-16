@@ -16,7 +16,7 @@ import { putAppConfiguration } from './api/putAppConfiguration';
 import { putGame } from './api/putGame';
 import { putSubmit, putSubmitStatus } from './api/putSubmit';
 import { putTraductor } from './api/putTraductor';
-import { putUser, putUserRole } from './api/putUser';
+import { delActivity, putUser, putUserRole } from './api/putUser';
 
 import type { GAS_API } from '$lib/GAS_API';
 
@@ -34,6 +34,7 @@ const getMockEndpoints = (): MockEndpoints => ({
   getUsers,
   putUser,
   putUserRole,
+  delActivity,
 
   // Game
   getGame,

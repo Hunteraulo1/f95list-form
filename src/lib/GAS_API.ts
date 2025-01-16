@@ -10,7 +10,7 @@ import type { PutAppConfigArgs } from '../server/api/putAppConfiguration';
 import type { PutGameArgs } from '../server/api/putGame';
 import type { PutSubmitArgs, PutSubmitStatusArgs } from '../server/api/putSubmit';
 import type { PutTraductorArgs } from '../server/api/putTraductor';
-import type { PutUserArgs } from '../server/api/putUser';
+import type { DelActivityArgs, PutUserArgs } from '../server/api/putUser';
 
 import type {
   AppConfigurationType,
@@ -48,6 +48,7 @@ export const GAS_API = {
   getUsers: (): Promise<UserType[]> => callAPI<UserType[]>('getUsers'),
   putUser: (args: PutUserArgs): Promise<void> => callAPI<void, typeof args>('putUser', args),
   putUserRole: (args: PutUserArgs): Promise<boolean> => callAPI<boolean, typeof args>('putUserRole', args),
+  delActivity: (args: DelActivityArgs): Promise<void> => callAPI<void, typeof args>('delActivity', args),
 
   // Game
   getGame: (args: GetGameArgs): Promise<GameType> => callAPI<GameType, typeof args>('getGame', args),
