@@ -22,7 +22,10 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   if (!validUser.email) throw new Error('putUser ~ No email found');
 
-  if (validUser.role.includes('superAdmin') && activeUserEmail !== effectiveUserEmail)
+  if (
+    (validUser.role.includes('superAdmin') && (await getUser()).role !== 'superAdmin') ||
+    activeUserEmail !== effectiveUserEmail
+  )
     throw new Error('putUser ~ A user resource can only be updated by themselves or the superAdmin.');
 
   const properties: UserType | undefined = usersData.find((user) => user.email === validUser.email);
@@ -103,4 +106,22 @@ export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {
       console.info('putStatistics ~ put');
       break;
   }
+};
+
+export interface DelActivityArgs {
+  email: UserType['email'];
+}
+
+export const delActivity = async ({ email }: DelActivityArgs): Promise<void> => {
+  console.info('putStatistics ~ args:', { email });
+
+  if (!email) throw new Error('email args empty');
+
+  const user: UserType | undefined = usersData.find((u) => u.email === email);
+
+  if (!user || !user.email) throw new Error('user not found');
+
+  user.activity = [];
+
+  console.info('delActivity finished');
 };

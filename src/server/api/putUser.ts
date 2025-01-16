@@ -20,7 +20,10 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   if (!validUser.email) throw new Error('putUser ~ No email found');
 
-  if (validUser.role.includes('superAdmin') && activeUserEmail !== effectiveUserEmail)
+  if (
+    (validUser.role.includes('superAdmin') && (await getUser()).role !== 'superAdmin') ||
+    activeUserEmail !== effectiveUserEmail
+  )
     throw new Error('putUser ~ A user resource can only be updated by themselves or the superAdmin.');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
@@ -111,4 +114,24 @@ export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   scriptPropertiesService.setProperty(user.email, JSON.stringify(user));
+};
+
+export interface DelActivityArgs {
+  email: UserType['email'];
+}
+
+export const delActivity = async ({ email }: DelActivityArgs): Promise<void> => {
+  console.info('putStatistics ~ args:', { email });
+
+  if (!email) throw new Error('email args empty');
+
+  const scriptPropertiesService = PropertiesService.getScriptProperties();
+
+  const user: UserType = JSON.parse(scriptPropertiesService.getProperty(email) ?? '');
+
+  if (!user.email) throw new Error('user not found');
+
+  user.activity = [];
+
+  scriptPropertiesService.setProperty(email, JSON.stringify(user));
 };
