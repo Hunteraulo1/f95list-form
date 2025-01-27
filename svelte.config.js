@@ -6,7 +6,7 @@ export default {
   // for more information about preprocessors
   preprocess: vitePreprocess(),
   compilerOptions: {
-    dev: true,
+    dev: process.env.NODE_ENV !== 'production',
   },
   vitePlugin: {
     inspector: true,
