@@ -51,7 +51,7 @@ onMount(async () => {
 
     console.info('User:', result);
 
-    document.querySelector('html')?.setAttribute('data-theme', result.preferences.theme ?? 'night');
+    document.querySelector('html')?.setAttribute('data-theme', result.preferences.theme ?? 'dark');
 
     if (checkUser(['admin', 'superAdmin'])) {
       const submits = await GAS_API.getSubmits({});

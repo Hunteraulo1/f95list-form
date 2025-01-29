@@ -97,7 +97,7 @@ const submitUserUpdate = async (): Promise<void> => {
             class="select select-bordered w-full max-w-xs"
             name="theme">
             <option value="emerald">Clair</option>
-            <option value="night">Foncé</option>
+            <option value="dark">Foncé</option>
           </select>
         </div>
       {/snippet}
