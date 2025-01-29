@@ -28,7 +28,7 @@ const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
       placeholder={title}
       id={name}
       onchange={handleChange}
-      class="textarea textarea-bordered textarea-xs max-h-32 w-full"
+      class="textarea textarea-bordered textarea-xs max-h-32 min-h-10 h-10 w-full"
     >{$game[name]}</textarea>
   </div>
 </div>
