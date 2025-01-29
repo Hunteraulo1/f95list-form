@@ -8,7 +8,7 @@ const User = z.object({
     imageUrl: z.string().or(z.literal('')),
   }),
   preferences: z.object({
-    theme: z.enum(['light', 'dark']).optional(),
+    theme: z.enum(['light', 'dim']).optional(),
   }),
   activity: z.array(
     z.object({

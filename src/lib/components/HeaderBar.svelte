@@ -1,5 +1,5 @@
 <script lang="ts">
-import { isLoading, sessionUser } from '$lib/stores';
+import { sessionUser } from '$lib/stores';
 import { AlignJustify } from '@steeze-ui/lucide-icons';
 import { Icon } from '@steeze-ui/svelte-icon';
 import { onMount } from 'svelte';
@@ -16,7 +16,7 @@ const { title = '', count }: Props = $props();
 onMount(async () => {});
 </script>
 
-<div class="navbar mb-8 bg-base-100" class:loading-border={$isLoading}>
+<div class="navbar mb-8 bg-base-100">
   <div class="flex-none">
     <label for="nav-drawer-control" class="btn btn-square btn-ghost relative">
       <Icon src={AlignJustify} size="1.5rem" />
@@ -41,28 +41,3 @@ onMount(async () => {});
         "https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100"} />
   </button>
 </div>
-
-<style lang="postcss">
-  @keyframes loading {
-    0% {
-      border-bottom-color: transparent;
-    }
-    35% {
-      border-bottom-color: hsl(var(--p));
-    }
-    50% {
-      border-bottom-color: hsl(var(--pf));
-    }
-    65% {
-      border-bottom-color: hsl(var(--p));
-    }
-    100% {
-      border-bottom-color: transparent;
-    }
-  }
-
-  .loading-border {
-    border-bottom: 2px solid transparent;
-    animation: loading 1s linear infinite;
-  }
-</style>
