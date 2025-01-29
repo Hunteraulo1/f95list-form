@@ -22,7 +22,7 @@
     "@types/jsdom": "21.1.7",
     "@types/node": "22.12.0",
     "autoprefixer": "10.4.20",
-    "daisyui": "4.12.23",
+    "daisyui": "^5.0.0-beta.2",
     "postcss": "8.5.1",
     "rollup": "4.32.1",
     "rollup-plugin-copy": "3.5.0",
