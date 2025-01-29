@@ -16,7 +16,7 @@ export const postUser = async (email: string, overrides = {}): Promise<UserType>
     email,
     role: 'user',
     preferences: {
-      theme: 'dim',
+      theme: 'night',
     },
     profile: {
       pseudo: '',

@@ -96,8 +96,8 @@ const submitUserUpdate = async (): Promise<void> => {
             disabled={$isLoading}
             class="select select-bordered w-full max-w-xs"
             name="theme">
-            <option value="light">Clair</option>
-            <option value="dim">Foncé</option>
+            <option value="emerald">Clair</option>
+            <option value="night">Foncé</option>
           </select>
         </div>
       {/snippet}

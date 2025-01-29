@@ -8,7 +8,7 @@ export const user: UserType = {
     imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',
   },
   preferences: {
-    theme: 'dim',
+    theme: 'night',
   },
   activity: [
     { label: 'User Created', value: '2021-01-01T00:00:00.000Z' },
@@ -30,7 +30,7 @@ export const users: UserType[] = [
       imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',
     },
     preferences: {
-      theme: 'light',
+      theme: 'emerald',
     },
     activity: [
       { label: 'User Created', value: '2023-01-01T00:00:00.000Z' },
@@ -49,7 +49,7 @@ export const users: UserType[] = [
       imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100',
     },
     preferences: {
-      theme: 'light',
+      theme: 'emerald',
     },
     activity: [
       { label: 'User Created', value: '2023-01-01T00:00:00.000Z' },

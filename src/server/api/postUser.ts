@@ -16,7 +16,7 @@ export const postUser = (email: string, overrides = {}): UserType => {
     email,
     role: 'user',
     preferences: {
-      theme: 'dim',
+      theme: 'night',
     },
     profile: {
       pseudo: '',
