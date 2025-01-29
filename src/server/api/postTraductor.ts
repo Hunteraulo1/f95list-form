@@ -44,7 +44,7 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
 
     sheet.insertRowAfter(totalRow);
 
-    const row = sheet.getRange(`A${totalRow + 1}:E${totalRow + 1}`);
+    const row = sheet.getRange(`A${totalRow + 1}:F${totalRow + 1}`);
 
     row.setValues([convertedTraductor]);
 
