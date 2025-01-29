@@ -50,7 +50,7 @@ const handleAddLink = (e: Event): void => {
 
   if (!localTraductor) return;
 
-  if (localTraductor.links.find((link: TraductorType['links']) => link.name === '')) return;
+  if (localTraductor.links.find((link: TraductorType['links'][0]) => link.name === '')) return;
 
   localTraductor.links = [...localTraductor.links, { name: '', link: '' }];
 };
