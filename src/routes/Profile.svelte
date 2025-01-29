@@ -3,10 +3,11 @@ import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast } from '$lib/stores';
 import { onMount } from 'svelte';
-import { Icon, PencilSquare, PlusCircle } from 'svelte-hero-icons';
 
 import { checkUser } from '$lib/utils';
 import type { UserType } from '$types/schemas';
+import { CirclePlus, SquarePen } from '@steeze-ui/lucide-icons';
+import { Icon } from '@steeze-ui/svelte-icon';
 
 interface Props {
   email: string;
@@ -102,7 +103,7 @@ onMount(() => fetchUser());
         <div class="stats w-full shadow">
           <div class="stat">
             <div class="stat-figure text-primary">
-              <Icon src={PlusCircle} size="2.5rem" />
+              <Icon src={CirclePlus} size="2.5rem" />
             </div>
             <div class="stat-title">Total de jeu ajouté</div>
             <div class="stat-value text-primary">{user.statistics.gameAdded}</div>
@@ -110,7 +111,7 @@ onMount(() => fetchUser());
 
           <div class="stat">
             <div class="stat-figure text-secondary">
-              <Icon src={PencilSquare} size="2.5rem" />
+              <Icon src={SquarePen} size="2.5rem" />
             </div>
             <div class="stat-title">Total de jeu modifié</div>
             <div class="stat-value text-secondary">

@@ -9,7 +9,7 @@ interface Props extends HTMLTextareaAttributes {
   className?: string;
   active?: number[];
   step?: number;
-  name: keyof GameType;
+  name: keyof GameType & string;
 }
 
 const { title, className, active, step, name }: Props = $props();

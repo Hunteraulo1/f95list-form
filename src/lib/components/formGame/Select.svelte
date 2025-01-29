@@ -10,7 +10,7 @@ interface Props {
   className?: string;
   active?: number[];
   step?: number;
-  name: keyof GameType;
+  name: keyof GameType & string;
 }
 
 const { title, values = [], className, active, step, name }: Props = $props();

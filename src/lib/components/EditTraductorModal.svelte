@@ -1,11 +1,12 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, traductors } from '$lib/stores';
-import { Icon, XMark } from 'svelte-hero-icons';
 import { get } from 'svelte/store';
 import Modal from './Modal.svelte';
 
 import type { TraductorType } from '$types/schemas';
+import { X } from '@steeze-ui/lucide-icons';
+import { Icon } from '@steeze-ui/svelte-icon';
 
 interface Props {
   showModal: boolean;
@@ -49,7 +50,7 @@ const handleAddLink = (e: Event): void => {
 
   if (!localTraductor) return;
 
-  if (localTraductor.links.find((link) => link.name === '')) return;
+  if (localTraductor.links.find((link: TraductorType['links']) => link.name === '')) return;
 
   localTraductor.links = [...localTraductor.links, { name: '', link: '' }];
 };
@@ -108,7 +109,7 @@ const handleRemoveLink = (e: Event, linkIndex: number): void => {
                   link.link = e.currentTarget.value;
                 }}
               />
-              <button class="btn btn-ghost btn-xs" onclick={(e) => handleRemoveLink(e, linkIndex)}><Icon src={XMark} /></button>
+              <button class="btn btn-ghost btn-xs" onclick={(e) => handleRemoveLink(e, linkIndex)}><Icon src={X} /></button>
             </li>
           {:else}
             <li>Il n'y a actuellement aucun lien</li>

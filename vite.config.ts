@@ -1,6 +1,6 @@
+import { resolve } from 'node:path';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import tailwindcss from '@tailwindcss/vite';
-import { resolve } from 'node:path';
 import copy from 'rollup-plugin-copy';
 import del from 'rollup-plugin-delete';
 import { defineConfig } from 'vite';

@@ -274,7 +274,7 @@ type Element = {
   title: string;
   className?: string;
   active?: number[];
-  name: keyof GameType;
+  name: keyof GameType & string;
 };
 
 const elements: Element[] = [
