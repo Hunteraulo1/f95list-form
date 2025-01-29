@@ -1,9 +1,10 @@
 <script lang="ts">
 import { game } from '$lib/stores';
 import { Game } from '$types/schemas';
-import { DocumentDuplicate, Icon, Link, LinkSlash } from 'svelte-hero-icons';
 
 import type { GameType } from '$types/schemas';
+import { Copy, Link2, Link2Off } from '@steeze-ui/lucide-icons';
+import { Icon } from '@steeze-ui/svelte-icon';
 import type { Snippet } from 'svelte';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
@@ -12,7 +13,7 @@ interface Props {
   className?: string;
   active?: number[];
   step?: number;
-  name: keyof GameType;
+  name: keyof GameType & string;
   type?: HTMLInputElement['type'];
   children?: Snippet;
   attributes?: HTMLInputAttributes;
@@ -85,7 +86,7 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
           e.preventDefault();
           if ($game.version) $game.tversion = $game.version;
         }}>
-        <Icon src={DocumentDuplicate} size="1rem" />
+        <Icon src={Copy} size="1rem" />
     </button>
     {:else if name === 'link'}
       <a
@@ -94,7 +95,7 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
         class="btn w-min"
         class:btn-disable={!$game.link}
         class:btn-primary={$game.link}>
-        <Icon src={$game.link ? Link : LinkSlash} size="1rem" />
+        <Icon src={$game.link ? Link2 : Link2Off} size="1rem" />
       </a>
     {:else if name === 'tlink'}
       <a
@@ -103,7 +104,7 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
         class="btn w-min"
         class:btn-disable={!$game.tlink}
         class:btn-primary={$game.tlink}>
-        <Icon src={$game.tlink ? Link : LinkSlash} size="1rem" />
+        <Icon src={$game.tlink ? Link2 : Link2Off} size="1rem" />
       </a>
     {/if}
     {@render children?.()}

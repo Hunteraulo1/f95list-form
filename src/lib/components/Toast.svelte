@@ -1,9 +1,16 @@
 <script lang="ts">
 import { toasts } from '$lib/stores';
-import { ExclamationCircle, ExclamationTriangle, HandThumbUp, Icon, InformationCircle, XMark } from 'svelte-hero-icons';
 import { fade } from 'svelte/transition';
 
 import type { Toast } from '$types/index';
+import {
+  MessageCirclePlus,
+  MessageCircleQuestion,
+  MessageCircleWarning,
+  MessageCircleX,
+  X,
+} from '@steeze-ui/lucide-icons';
+import { Icon } from '@steeze-ui/svelte-icon';
 
 interface Props {
   toast: Toast;
@@ -37,13 +44,13 @@ const alertClass = (): string => {
   <div class="alert {alertClass()} bg-base shadow-lg">
     <div class="flex flex-row items-center">
       {#if alertType == "info"}
-        <Icon src={InformationCircle} size="1.5rem" />
+        <Icon src={MessageCircleQuestion} size="1.5rem" />
       {:else if alertType == "warning"}
-        <Icon src={ExclamationTriangle} size="1.5rem" />
+        <Icon src={MessageCircleWarning} size="1.5rem" />
       {:else if alertType == "success"}
-        <Icon src={HandThumbUp} size="1.5rem" />
+        <Icon src={MessageCirclePlus} size="1.5rem" />
       {:else if alertType == "error"}
-        <Icon src={ExclamationCircle} size="1.5rem" />
+        <Icon src={MessageCircleX} size="1.5rem" />
       {/if}
     </div>
     <div>
@@ -51,7 +58,7 @@ const alertClass = (): string => {
     </div>
     <div>
       <button class="btn btn-circle btn-neutral btn-sm opacity-60" onclick={handleRemove}>
-        <Icon src={XMark} />
+        <Icon src={X} />
       </button>
     </div>
   </div>

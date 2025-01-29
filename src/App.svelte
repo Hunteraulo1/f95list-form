@@ -4,16 +4,6 @@ import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
 import { checkUser } from '$lib/utils';
 import { onMount } from 'svelte';
-import {
-  AdjustmentsVertical,
-  Cog6Tooth,
-  Home as HomeIcon,
-  Icon,
-  InboxArrowDown,
-  InboxStack,
-  Language,
-  UserCircle,
-} from 'svelte-hero-icons';
 import { Route as RoutePrimitive, Router } from 'svelte-routing';
 
 import Home from './routes/Home.svelte';
@@ -32,6 +22,8 @@ import InitialLoad from '$components/InitialLoad.svelte';
 import NavLink from '$components/NavLink.svelte';
 import Route from '$components/Route.svelte';
 import Toaster from '$components/Toaster.svelte';
+import { Bug, CircleUserRound, Cog, House, Inbox, Languages } from '@steeze-ui/lucide-icons';
+import { Icon } from '@steeze-ui/svelte-icon';
 
 interface Props {
   url?: string;
@@ -138,21 +130,21 @@ onMount(async () => {
         <label for="nav-drawer-control" class="drawer-overlay"></label>
         <ul class="menu h-full w-80 bg-base-200 p-4 pt-16 text-base-content">
           <NavLink to="/" onClick={toggleDrawer}>
-            <Icon src={HomeIcon} size="1rem" />
+            <Icon src={House} size="1rem" />
             Accueil
           </NavLink>
 
           {#if checkUser(['admin', 'superAdmin'])}
             <NavLink to="/settings" onClick={toggleDrawer}>
-              <Icon src={Cog6Tooth} size="1rem" />
+              <Icon src={Cog} size="1rem" />
               Paramètres
             </NavLink>
             <NavLink to="/traductor" onClick={toggleDrawer}>
-              <Icon src={Language} size="1rem" />
+              <Icon src={Languages} size="1rem" />
               Traducteurs
             </NavLink>
             <NavLink to="/submits" onClick={toggleDrawer}>
-              <Icon src={InboxStack} size="1rem" />
+              <Icon src={Inbox} size="1rem" />
               Soumissions
               {#if count > 0}
                 <span class="badge badge-error size-4 p-0 pb-0.5 text-white text-xs">{count}</span>
@@ -162,20 +154,20 @@ onMount(async () => {
 
           {#if checkUser(['traductor', 'superAdmin'])}
             <NavLink to="/mysubmits" onClick={toggleDrawer}>
-              <Icon src={InboxArrowDown} size="1rem" />
+              <Icon src={Inbox} size="1rem" />
               Mes Soumissions
             </NavLink>
           {/if}
 
           <NavLink to="/user-preferences" onClick={toggleDrawer}>
-            <Icon src={UserCircle} size="1rem" />
+            <Icon src={CircleUserRound} size="1rem" />
             Préférences utilisateur
           </NavLink>
           <div class="divider"></div>
 
           {#if checkUser(['superAdmin', 'superAdmin'])}
             <NavLink to="/dev" onClick={toggleDrawer}>
-              <Icon src={AdjustmentsVertical} size="1rem" />
+              <Icon src={Bug} size="1rem" />
               Panel développeur
             </NavLink>
           {/if}

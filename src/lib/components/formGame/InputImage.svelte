@@ -9,7 +9,7 @@ interface Props {
   title: string;
   active?: number[];
   step?: number;
-  name: keyof GameType;
+  name: keyof GameType & string;
 }
 
 const { step, title, active, name }: Props = $props();

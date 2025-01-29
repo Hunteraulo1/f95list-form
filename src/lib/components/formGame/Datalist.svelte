@@ -2,9 +2,10 @@
 import AddTraductorModal from '$components/AddTraductorModal.svelte';
 import { game, traductors } from '$lib/stores';
 import { checkUser } from '$lib/utils';
-import { Icon, UserPlus } from 'svelte-hero-icons';
-
 import type { GameType } from '$types/schemas';
+
+import { UserPlus } from '@steeze-ui/lucide-icons';
+import { Icon } from '@steeze-ui/svelte-icon';
 import type { ChangeEventHandler, HTMLInputAttributes } from 'svelte/elements';
 
 interface Props extends HTMLInputAttributes {
@@ -12,7 +13,7 @@ interface Props extends HTMLInputAttributes {
   className?: string;
   active?: number[];
   step?: number;
-  name: keyof GameType;
+  name: keyof GameType & string;
 }
 
 const { title, className, active, step, name }: Props = $props();

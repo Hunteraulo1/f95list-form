@@ -80,7 +80,7 @@ onMount(() => {
   {#snippet panelContent()}
     <div class="flex flex-col gap-4 sm:flex-row">
       <div id="container-search" class="relative w-full">
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="input input-bordered flex items-center gap-2 w-full">
           <input
             disabled={$queryGames.length === 0}
             type="text"
