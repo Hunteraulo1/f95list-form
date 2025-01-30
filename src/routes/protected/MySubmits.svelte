@@ -59,7 +59,7 @@ onMount(async () => {
                     </div>
                     <span class="badge badge-ghost badge-sm mr-2">
                       {#if submit.game.version !== submit.query?.version}
-                        {submit.game.version} → {submit.query?.version}
+                        {submit.query?.version} → {submit.game.version}
                       {:else}
                         {submit.game.version}
                       {/if}
