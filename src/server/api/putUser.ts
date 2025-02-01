@@ -20,8 +20,10 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   if (!validUser.email) throw new Error('putUser ~ No email found');
 
+  const activeUser = await getUser();
+
   if (
-    (validUser.role.includes('superAdmin') && (await getUser()).role !== 'superAdmin') ||
+    (validUser.role.includes('superAdmin') && activeUser.role !== 'superAdmin') ||
     activeUserEmail !== effectiveUserEmail
   )
     throw new Error('putUser ~ A user resource can only be updated by themselves or the superAdmin.');
@@ -31,6 +33,10 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   const properties: UserType = JSON.parse(scriptPropertiesService.getProperty(validUser.email) ?? '');
 
   const { preferences, profile } = validUser;
+
+  if (preferences?.devUser && preferences?.devUser !== '' && activeUser.role !== 'superAdmin')
+    throw new Error('putUser ~ A devUser can only be updated by the superAdmin.');
+
   const newUser: UserType = {
     ...properties,
     preferences,

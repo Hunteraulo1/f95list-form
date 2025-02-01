@@ -40,5 +40,18 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
 
   if (!userObjectString && isRequestForSelf) return postUser(EMAIL_FOR_RETRIEVAL);
 
-  return User.parse(JSON.parse(userObjectString));
+  const parseUser: UserType = JSON.parse(userObjectString);
+  const devUserEmail = parseUser.preferences?.devUser;
+
+  if (devUserEmail && parseUser.email !== devUserEmail) {
+    const devUserObjectString = scriptProperties[devUserEmail];
+    const devUserParse: UserType = JSON.parse(devUserObjectString);
+
+    if (devUserParse?.email) {
+      console.info(`getUser ~ return ${devUserEmail} by devUser`);
+      return User.parse(devUserParse);
+    }
+  }
+
+  return User.parse(parseUser);
 };

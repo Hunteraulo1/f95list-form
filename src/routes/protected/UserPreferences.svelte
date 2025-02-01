@@ -2,7 +2,26 @@
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, sessionUser } from '$lib/stores';
+import { checkUser } from '$lib/utils';
+import type { UserType } from '$types/schemas';
+import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
+
+let users: UserType[] = $state([]);
+
+onMount(async () => {
+  if (checkUser(['superAdmin'])) {
+    $isLoading = true;
+
+    try {
+      users = await GAS_API.getUsers();
+    } catch (error) {
+      console.error('Error fetching users', error);
+    } finally {
+      $isLoading = false;
+    }
+  }
+});
 
 const handleClick = async (): Promise<void> => {
   console.info('Button clicked!');
@@ -105,5 +124,32 @@ const submitUserUpdate = async (): Promise<void> => {
         <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
       {/snippet}
     </Panel>
+    {#if users.length > 0}
+      <Panel title="Préférences utilisateur">
+        {#snippet panelContent()}        
+          <p class="text-gray-500">
+            DEV USER FEATURE
+          </p>
+          
+          <div class="form-control w-full max-w-xs">
+            <label class="label" for="theme">
+              <span class="label-text">Sélectionner un utilisateur</span>
+            </label>
+            <select
+              bind:value={$sessionUser.preferences.devUser}
+              disabled={$isLoading}
+              class="select select-bordered w-full max-w-xs"
+              name="devUser">
+              {#each users as { email }}
+                <option value={email}>{email}</option>
+              {/each}
+            </select>
+          </div>
+        {/snippet}
+        {#snippet button()}
+          <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
+        {/snippet}
+      </Panel>
+    {/if}
   </div>
 {/if}
