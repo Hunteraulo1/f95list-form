@@ -2,7 +2,42 @@
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, sessionUser } from '$lib/stores';
+import { User, type UserType } from '$types/schemas';
+import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
+
+let users: UserType[] = $state([]);
+let user: UserType | undefined = $state();
+
+onMount(async () => {
+  if (!$sessionUser) throw new Error('User not found');
+
+  try {
+    const result = await GAS_API.getUser({ email: 'ignore' });
+
+    const parsedUser = User.parse(result);
+
+    if (!parsedUser) throw new Error('User not found');
+
+    user = parsedUser;
+
+    console.info('User:', user);
+
+    if (user.role === 'superAdmin') {
+      try {
+        users = await GAS_API.getUsers();
+      } catch (error) {
+        console.error('Error fetching users', error);
+      } finally {
+        $isLoading = false;
+      }
+    }
+  } catch (err) {
+    console.error('Could not get user:', err); // TODO: dispatch toast
+  } finally {
+    console.info('User loaded.');
+  }
+});
 
 const handleClick = async (): Promise<void> => {
   console.info('Button clicked!');
@@ -36,6 +71,32 @@ const submitUserUpdate = async (): Promise<void> => {
     newToast({
       alertType: 'error',
       message: "Vos modifications n'ont pas pu être enregistrées",
+    });
+  } finally {
+    $isLoading = false;
+  }
+};
+
+const submitdevUserUpdate = async (): Promise<void> => {
+  $isLoading = true;
+
+  console.info('submitting devUser update', user);
+
+  try {
+    if (!user) return navigate('/');
+
+    const result = await GAS_API.putUser({ user: user });
+
+    console.info('putUser ~ result:', result);
+    newToast({
+      alertType: 'success',
+      message: 'Mise à jour devUser!',
+    });
+  } catch (error) {
+    console.error('Error submitting devUser change', error);
+    newToast({
+      alertType: 'error',
+      message: "Vos modifications du devUser n'ont pas pu être enregistrées",
     });
   } finally {
     $isLoading = false;
@@ -105,5 +166,32 @@ const submitUserUpdate = async (): Promise<void> => {
         <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
       {/snippet}
     </Panel>
+    {#if user && users.length > 0}
+      <Panel title="DEV USER FEATURE">
+        {#snippet panelContent()}        
+          <p class="text-gray-500">
+            Permet de se faire passer pour un autre utilisateur
+          </p>
+          
+          <div class="form-control w-full max-w-xs">
+            <label class="label" for="theme">
+              <span class="label-text">Sélectionner un utilisateur</span>
+            </label>
+            <select
+              bind:value={(user as UserType).preferences.devUser}
+              disabled={$isLoading}
+              class="select select-bordered w-full max-w-xs"
+              name="devUser">
+              {#each users as { email }}
+                <option value={email}>{email}</option>
+              {/each}
+            </select>
+          </div>
+        {/snippet}
+        {#snippet button()}
+          <button onclick={submitdevUserUpdate} class="btn btn-primary">Sauvegarder</button>
+        {/snippet}
+      </Panel>
+    {/if}
   </div>
 {/if}

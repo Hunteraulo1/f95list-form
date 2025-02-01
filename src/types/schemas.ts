@@ -9,6 +9,7 @@ const User = z.object({
   }),
   preferences: z.object({
     theme: z.enum(['emerald', 'dark']).optional(),
+    devUser: z.string().email().or(z.string().nullable()).optional(),
   }),
   activity: z.array(
     z.object({
