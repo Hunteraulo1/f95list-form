@@ -2,24 +2,44 @@
 import Panel from '$components/Panel.svelte';
 import { GAS_API } from '$lib/GAS_API';
 import { isLoading, newToast, sessionUser } from '$lib/stores';
-import { checkUser } from '$lib/utils';
-import type { UserType } from '$types/schemas';
+import { User, type UserType } from '$types/schemas';
 import { onMount } from 'svelte';
 import { navigate } from 'svelte-routing';
 
 let users: UserType[] = $state([]);
+let user: UserType | undefined = $state();
 
 onMount(async () => {
-  if (checkUser(['superAdmin'])) {
-    $isLoading = true;
+  if (!$sessionUser) throw new Error('User not found');
 
-    try {
-      users = await GAS_API.getUsers();
-    } catch (error) {
-      console.error('Error fetching users', error);
-    } finally {
-      $isLoading = false;
+  try {
+    const result = await GAS_API.getUser({ email: 'dev' });
+
+    const parsedUser = User.parse(result);
+
+    if (!parsedUser) throw new Error('User not found');
+
+    user = parsedUser;
+
+    console.info('User:', user);
+
+    if (user.role === 'superAdmin') {
+      $isLoading = true;
+
+      try {
+        users = await GAS_API.getUsers();
+      } catch (error) {
+        console.error('Error fetching users', error);
+      } finally {
+        $isLoading = false;
+      }
     }
+  } catch (err) {
+    console.error('Could not get user:', err); // TODO: dispatch toast
+  } finally {
+    console.info('User loaded.');
+
+    $isLoading = false;
   }
 });
 
@@ -124,11 +144,11 @@ const submitUserUpdate = async (): Promise<void> => {
         <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
       {/snippet}
     </Panel>
-    {#if users.length > 0}
-      <Panel title="Préférences utilisateur">
+    {#if user && users.length > 0}
+      <Panel title="DEV USER FEATURE">
         {#snippet panelContent()}        
           <p class="text-gray-500">
-            DEV USER FEATURE
+            Permet de se faire passer pour un autre utilisateur
           </p>
           
           <div class="form-control w-full max-w-xs">
@@ -136,7 +156,7 @@ const submitUserUpdate = async (): Promise<void> => {
               <span class="label-text">Sélectionner un utilisateur</span>
             </label>
             <select
-              bind:value={$sessionUser.preferences.devUser}
+              bind:value={(user as UserType).preferences.devUser}
               disabled={$isLoading}
               class="select select-bordered w-full max-w-xs"
               name="devUser">

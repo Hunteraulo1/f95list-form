@@ -16,7 +16,7 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
 
   let validArgs = null;
 
-  if (email) {
+  if (email && email !== 'dev') {
     if (!(await checkUser('admin')) && email !== requestingUserEmail) throw new Error('getUser ~ Unauthorized');
 
     const GetUserArgsSchema = z.object({
@@ -43,7 +43,7 @@ export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise
   const parseUser: UserType = JSON.parse(userObjectString);
   const devUserEmail = parseUser.preferences?.devUser;
 
-  if (devUserEmail && parseUser.email !== devUserEmail) {
+  if (devUserEmail && parseUser.email !== devUserEmail && email !== 'dev') {
     const devUserObjectString = scriptProperties[devUserEmail];
     const devUserParse: UserType = JSON.parse(devUserObjectString);
 
