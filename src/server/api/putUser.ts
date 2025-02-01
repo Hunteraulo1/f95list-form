@@ -31,7 +31,7 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   const { preferences, profile } = validUser;
 
-  if (preferences?.devUser && preferences?.devUser !== '' && activeUser.role !== 'superAdmin')
+  if (preferences?.devUser && preferences?.devUser !== '' && !checkUser('superAdmin'))
     throw new Error('putUser ~ A devUser can only be updated by the superAdmin.');
 
   const newUser: UserType = {
