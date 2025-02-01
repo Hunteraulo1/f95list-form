@@ -24,6 +24,8 @@ onMount(async () => {
     console.info('User:', user);
 
     if (user.role === 'superAdmin') {
+      $isLoading = true;
+
       try {
         users = await GAS_API.getUsers();
       } catch (error) {
@@ -36,6 +38,8 @@ onMount(async () => {
     console.error('Could not get user:', err); // TODO: dispatch toast
   } finally {
     console.info('User loaded.');
+
+    $isLoading = false;
   }
 });
 

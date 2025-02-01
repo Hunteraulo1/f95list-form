@@ -6,7 +6,7 @@ import type { UserType } from '$types/schemas';
 const checkUser = async (rank: UserType['role']): Promise<boolean> => {
   console.info('checkUser');
 
-  const user = await getUser({ email: 'dev' });
+  const user = await getUser({ email: 'ignore' });
 
   console.info('checkUser called with: ', user, 'by: ', user.email);
 
