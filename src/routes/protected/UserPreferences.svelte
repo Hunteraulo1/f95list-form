@@ -13,7 +13,7 @@ onMount(async () => {
   if (!$sessionUser) throw new Error('User not found');
 
   try {
-    const result = await GAS_API.getUser({ email: 'dev' });
+    const result = await GAS_API.getUser({ email: 'ignore' });
 
     const parsedUser = User.parse(result);
 
@@ -78,6 +78,28 @@ const submitUserUpdate = async (): Promise<void> => {
     });
   } finally {
     $isLoading = false;
+  }
+};
+
+const submitdevUserUpdate = async (): Promise<void> => {
+  console.info('submitting devUser update', user);
+
+  try {
+    if (!user) return navigate('/');
+
+    const result = await GAS_API.putUser({ user: user });
+
+    console.info('putUser ~ result:', result);
+    newToast({
+      alertType: 'success',
+      message: 'Mise à jour devUser!',
+    });
+  } catch (error) {
+    console.error('Error submitting devUser change', error);
+    newToast({
+      alertType: 'error',
+      message: "Vos modifications du devUser n'ont pas pu être enregistrées",
+    });
   }
 };
 </script>
@@ -167,7 +189,7 @@ const submitUserUpdate = async (): Promise<void> => {
           </div>
         {/snippet}
         {#snippet button()}
-          <button onclick={handleClick} class="btn btn-primary">Sauvegarder</button>
+          <button onclick={submitdevUserUpdate} class="btn btn-primary">Sauvegarder</button>
         {/snippet}
       </Panel>
     {/if}
