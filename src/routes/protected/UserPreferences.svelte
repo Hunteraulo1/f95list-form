@@ -13,7 +13,7 @@ onMount(async () => {
   if (!$sessionUser) throw new Error('User not found');
 
   try {
-    const result = await GAS_API.getUser({ email: 'ignore' });
+    const result = await GAS_API.getUser({ email: 'dev' });
 
     const parsedUser = User.parse(result);
 
@@ -24,8 +24,6 @@ onMount(async () => {
     console.info('User:', user);
 
     if (user.role === 'superAdmin') {
-      $isLoading = true;
-
       try {
         users = await GAS_API.getUsers();
       } catch (error) {
@@ -38,8 +36,6 @@ onMount(async () => {
     console.error('Could not get user:', err); // TODO: dispatch toast
   } finally {
     console.info('User loaded.');
-
-    $isLoading = false;
   }
 });
 
@@ -82,6 +78,8 @@ const submitUserUpdate = async (): Promise<void> => {
 };
 
 const submitdevUserUpdate = async (): Promise<void> => {
+  $isLoading = true;
+
   console.info('submitting devUser update', user);
 
   try {
@@ -100,6 +98,8 @@ const submitdevUserUpdate = async (): Promise<void> => {
       alertType: 'error',
       message: "Vos modifications du devUser n'ont pas pu être enregistrées",
     });
+  } finally {
+    $isLoading = false;
   }
 };
 </script>
