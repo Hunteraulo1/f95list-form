@@ -22,10 +22,7 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
   const activeUser = await getUser();
 
-  if (
-    (validUser.role.includes('superAdmin') && activeUser.role !== 'superAdmin') ||
-    activeUserEmail !== effectiveUserEmail
-  )
+  if ((validUser.role.includes('superAdmin') && !checkUser('superAdmin')) || activeUserEmail !== effectiveUserEmail)
     throw new Error('putUser ~ A user resource can only be updated by themselves or the superAdmin.');
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
