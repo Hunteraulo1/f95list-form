@@ -171,7 +171,7 @@ const submitAttributes: SubmitAttributes[] = [
             alt="Game" />
           </div>
           <div>
-            <div class="font-bold">{submit.email}</div>
+            <div class="font-bold">{user.profile.pseudo !== '' ? user.profile.pseudo : user.email}</div>
           </div>
         </div>
     </div>
