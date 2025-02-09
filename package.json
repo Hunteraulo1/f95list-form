@@ -1,7 +1,7 @@
 {
   "name": "flist",
   "private": true,
-  "version": "3.7.0",
+  "version": "3.7.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,30 +18,30 @@
     "@steeze-ui/lucide-icons": "1.4.1",
     "@steeze-ui/svelte-icon": "1.6.2",
     "@sveltejs/vite-plugin-svelte": "5.0.3",
-    "@tailwindcss/vite": "4.0.3",
+    "@tailwindcss/vite": "4.0.5",
     "@types/cheerio": "0.22.35",
-    "@types/google-apps-script": "1.0.92",
+    "@types/google-apps-script": "1.0.94",
     "@types/google.script.client-side": "0.1.5",
     "@types/jsdom": "21.1.7",
-    "@types/node": "22.13.0",
-    "daisyui": "5.0.0-beta.6",
-    "rollup": "4.34.0",
+    "@types/node": "22.13.1",
+    "daisyui": "5.0.0-beta.7",
+    "rollup": "4.34.6",
     "rollup-plugin-copy": "3.5.0",
     "rollup-plugin-delete": "2.1.0",
-    "svelte": "5.19.6",
+    "svelte": "5.19.9",
     "svelte-check": "4.1.4",
     "svelte-routing": "2.13.0",
-    "tailwindcss": "4.0.3",
+    "tailwindcss": "4.0.5",
     "typescript": "5.7.3",
-    "vite": "6.0.11",
+    "vite": "6.1.0",
     "vite-plugin-singlefile": "2.1.0",
     "vite-tsconfig-paths": "5.1.4"
   },
   "optionalDependencies": {
-    "@lmdb/lmdb-linux-x64": "3.2.2",
-    "@lmdb/lmdb-win32-x64": "3.2.2",
-    "@rollup/rollup-win32-x64-msvc": "4.34.0",
-    "@rollup/rollup-linux-x64-gnu": "4.34.0"
+    "@lmdb/lmdb-linux-x64": "3.2.5",
+    "@lmdb/lmdb-win32-x64": "3.2.5",
+    "@rollup/rollup-win32-x64-msvc": "4.34.6",
+    "@rollup/rollup-linux-x64-gnu": "4.34.6"
   },
   "dependencies": {
     "zod": "3.24.1"

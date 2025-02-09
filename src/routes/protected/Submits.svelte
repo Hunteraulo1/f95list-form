@@ -63,12 +63,22 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
   sortedSubmits = [...submits].sort((a, b) => {
     if (!a[target] || !b[target]) return 0;
 
-    if (a[target] < b[target]) {
-      return reverse ? 1 : -1;
-    }
+    if (target === 'game') {
+      if (a.game.name < b.game.name) {
+        return reverse ? 1 : -1;
+      }
 
-    if (a[target] > b[target]) {
-      return reverse ? -1 : 1;
+      if (a.game.name > b.game.name) {
+        return reverse ? -1 : 1;
+      }
+    } else {
+      if (a[target] < b[target]) {
+        return reverse ? 1 : -1;
+      }
+
+      if (a[target] > b[target]) {
+        return reverse ? -1 : 1;
+      }
     }
 
     return 0;
@@ -88,9 +98,10 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
             <thead>
               <tr>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'email')} class="cursor-pointer">Email</th>
+                <th onclick={({currentTarget}) => handleClick(currentTarget, 'game')} class="cursor-pointer">Jeux</th>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'date')} class="cursor-pointer">
                   Date
-                  <span>⤒</span>
+                  <span class="sorted">⤒</span>
                 </th>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'type')} class="cursor-pointer">Type</th>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'status')} class="cursor-pointer">Statut</th>
@@ -141,6 +152,18 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
                         </div>
                       </div>
                     {/if}
+                  </td>
+                  <td>
+                    <div class="font-bold">
+                      {submit.game.name}
+                    </div>
+                    <span class="badge badge-ghost badge-sm mr-2">
+                      {#if submit.game.version !== submit.query?.version}
+                        {submit.query?.version} → {submit.game.version}
+                      {:else}
+                        {submit.game.version}
+                      {/if}
+                    </span>
                   </td>
                   <td>
                     {dateFormat(new Date(submit.date))}
