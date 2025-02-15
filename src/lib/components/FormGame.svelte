@@ -1,6 +1,6 @@
 <script lang="ts">
 import { GAS_API } from '$lib/GAS_API';
-import { game, isLoading, newToast, queryGame, traductors } from '$lib/stores';
+import { game, isLoading, newToast, queryGame, sessionUser, traductors } from '$lib/stores';
 import { checkUser } from '$lib/utils';
 import { Game } from '$types/schemas';
 import { onMount } from 'svelte';
@@ -43,9 +43,12 @@ let scraping = $state(false);
 let savedData = $state({ ...$game });
 
 const isAdmin = checkUser(['admin', 'superAdmin']);
+const isTraductor = checkUser(['traductor']);
 
 onMount(async () => {
   $isLoading = true;
+
+  if (!$game) throw new Error('no game data');
 
   try {
     const dataTraductors = await GAS_API.getTraductors();
@@ -55,6 +58,12 @@ onMount(async () => {
     }
 
     $traductors = dataTraductors;
+
+    const pseudo = $sessionUser?.profile.pseudo;
+
+    if (isTraductor && pseudo && $traductors.map((t) => t.name).includes(pseudo)) {
+      $game.traductor = pseudo;
+    }
   } catch (error) {
     console.error('getTradutor no return: ', error);
 
@@ -65,8 +74,6 @@ onMount(async () => {
   } finally {
     $isLoading = false;
   }
-
-  if (!$game) throw new Error('no game data');
 
   const { id, domain, ac } = $game;
 
@@ -159,7 +166,7 @@ const handleSubmit = async (): Promise<void> => {
   if (!$game) throw new Error('no game data');
   $isLoading = true;
 
-  if (checkUser(['traductor'])) {
+  if (isTraductor) {
     if (edit && !$queryGame) throw new Error('Query not found');
 
     try {
@@ -451,7 +458,7 @@ const elements: Element[] = [
         {#if (edit && !editor) || (editor && deleteMode)}
           <Remove {silentMode} {handleUpdateSubmit} {editor} />
         {/if}
-        {#if !edit && checkUser(['superAdmin', 'superAdmin'])}
+        {#if !edit && checkUser(['superAdmin'])}
           <Dev {step} {scrapeData} />
         {/if}
         {#if $game?.domain === "LewdCorner" || $game?.domain === "F95z"}
