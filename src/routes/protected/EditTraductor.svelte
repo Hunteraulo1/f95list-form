@@ -55,7 +55,7 @@ onMount(async () => {
     </thead>
     <tbody class="relative">
       {#if filterTradutors}
-        {#each filterTradutors as traductor, index}
+        {#each filterTradutors as traductor, index (traductor.name)}
           <tr>
             <th>{index + 1}</th>
             <td class="font-bold text-primary">{traductor.name}</td>
