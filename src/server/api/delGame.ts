@@ -35,7 +35,9 @@ export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Prom
 
     const sheet = SpreadsheetApp.getActiveSpreadsheet();
 
-    const game: GameType = await getGame({ name, version });
+    const game: GameType | null = await getGame({ name, version });
+
+    if (!game) throw new Error('delGame ~ Game not found !');
 
     const gameSheet = sheet.getSheetByName('Jeux');
 

@@ -7,7 +7,7 @@ export interface GetGameArgs {
   version: string | null;
 }
 
-export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType> => {
+export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType | null> => {
   console.info('getGame ~ args:', { name, version });
 
   const games = await getQueryGames();
@@ -16,7 +16,7 @@ export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType>
 
   if (gameIndex === undefined || gameIndex === -1) {
     console.error('getGame ~ No detected getQueryGames with index:', { gameIndex });
-    throw new Error('getGame ~ No detected getQueryGames');
+    return null;
   }
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
