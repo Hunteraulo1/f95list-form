@@ -3,6 +3,7 @@ import Cheerio from 'cheerio';
 import { f95z } from '../lib/f95z';
 
 import type { GameType, ScrapeGameType } from '$types/schemas';
+import { unescapeHTML } from '../lib/utils';
 export interface GetScrapeArgs {
   domain: Extract<GameType['domain'], 'F95z'>;
   id: GameType['id'];
@@ -36,7 +37,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
   const titleMatch = title.match(regTitle);
   const nameMatch = pTitle.match(regName) ?? [];
 
-  const name = nameMatch?.[1] ?? null;
+  const name = unescapeHTML(nameMatch?.[1]) ?? null;
 
   const { status, type } = titleMatch ? scrapeGetTitle(titleMatch) : { status: null, type: null };
 

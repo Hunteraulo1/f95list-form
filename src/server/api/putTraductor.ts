@@ -59,7 +59,7 @@ export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<v
     richRow.setRichTextValue(value.build());
     rowDiscordID.setValue(validData.discordID);
 
-    reloadFilter({ sheet, end: 'F', sort: 6 });
+    reloadFilter({ sheet, end: 'F', sort: 6, asc: false });
   } catch (error) {
     console.error(error);
 

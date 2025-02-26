@@ -2,9 +2,10 @@ interface ReloadedFilterArgs {
   sheet: GoogleAppsScript.Spreadsheet.Sheet;
   end: string;
   sort: number;
+  asc?: boolean;
 }
 
-export const reloadFilter = async ({ sheet, end, sort }: ReloadedFilterArgs): Promise<void> => {
+export const reloadFilter = async ({ sheet, end, sort, asc = true }: ReloadedFilterArgs): Promise<void> => {
   console.info('reloadFilter');
 
   const oldRange = await sheet.getDataRange();
@@ -13,7 +14,7 @@ export const reloadFilter = async ({ sheet, end, sort }: ReloadedFilterArgs): Pr
   await oldRange?.getFilter()?.remove();
   await newRange.createFilter();
   await SpreadsheetApp.flush();
-  await sheet.sort(sort, true);
+  await sheet.sort(sort, asc);
   await SpreadsheetApp.flush();
 
   console.info('filter reloaded');

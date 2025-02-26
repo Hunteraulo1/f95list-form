@@ -70,7 +70,9 @@ export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs
       validGame.image,
     ];
 
-    const oldGame: GameType = await getGame(query);
+    const oldGame: GameType | null = await getGame(query);
+
+    if (!oldGame) throw new Error('putGame ~ oldGame not found !');
 
     console.info('putGame ~ convert:', { convertedGame });
 

@@ -23,4 +23,17 @@ const checkUser = async (rank: UserType['role']): Promise<boolean> => {
 
 const dateNow = (): string => new Date().toISOString();
 
-export { checkUser, dateNow };
+const unescapeHTML = (str: string): string =>
+  str.replace(
+    /&amp;|&lt;|&gt;|&#39;|&quot;/g,
+    (tag) =>
+      ({
+        '&amp;': '&',
+        '&lt;': '<',
+        '&gt;': '>',
+        '&#39;': "'",
+        '&quot;': '"',
+      })[tag] || tag,
+  );
+
+export { checkUser, dateNow, unescapeHTML };
