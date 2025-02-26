@@ -56,9 +56,19 @@ const checkVersion = async (): Promise<void> => {
           const resultScrape = await getScrape({ domain: 'F95z', id });
           console.info('🚀 ~ checkedGames.forEach ~ resultScrape:', resultScrape);
 
-          sheet
-            ?.getRange(`G${index + 2}:I${index + 2}`)
-            ?.setValues([[resultScrape.status, resultScrape.tags, resultScrape.type]]);
+          const range = sheet?.getRange(`G${index + 2}:I${index + 2}`);
+
+          if (!range) return;
+
+          const oldValue = range.getValues();
+
+          range.setValues([
+            [
+              resultScrape.status ?? oldValue[0][1],
+              resultScrape.tags ?? oldValue[0][1],
+              resultScrape.type ?? oldValue[0][1],
+            ],
+          ]);
 
           if (result?.image === '') throw new Error('no image scraped');
 
