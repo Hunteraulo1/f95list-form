@@ -48,7 +48,7 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
 
     row.setValues([convertedTraductor]);
 
-    reloadFilter({ sheet, end: 'F', sort: 6 });
+    reloadFilter({ sheet, end: 'F', sort: 6, asc: false });
   } catch (error) {
     console.error(error);
 
