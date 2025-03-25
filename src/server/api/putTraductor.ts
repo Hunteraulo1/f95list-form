@@ -4,6 +4,7 @@ import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
 
 import type { TraductorType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 import { reloadFilter } from '../lib/reloadFilter';
 export interface PutTraductorArgs {
   query: { name: TraductorType['name'] };
@@ -12,6 +13,8 @@ export interface PutTraductorArgs {
 
 export const putTraductor = async ({ query, data }: PutTraductorArgs): Promise<void> => {
   console.info('putTraductor ~ args:', { query, data });
+
+  isMaintenance();
 
   await checkUser('admin');
 

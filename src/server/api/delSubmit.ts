@@ -2,6 +2,7 @@ import { checkUser } from '../lib/utils';
 import { getSubmits } from './getSubmits';
 
 import type { SubmitType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export interface DelSubmitArgs {
   query: SubmitType['query'];
@@ -9,6 +10,8 @@ export interface DelSubmitArgs {
 
 export const delSubmit = async ({ query }: DelSubmitArgs): Promise<void> => {
   console.info('delSubmit ~ args:', { query });
+
+  isMaintenance();
 
   if (!(await checkUser('superAdmin'))) throw new Error('delSubmit ~ Unauthorized');
 

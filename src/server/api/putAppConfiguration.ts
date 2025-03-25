@@ -2,6 +2,7 @@ import { AppConfiguration } from '$types/schemas';
 import { checkUser } from '../lib/utils';
 
 import type { AppConfigurationType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export type PutAppConfigArgs = {
   appConfiguration: AppConfigurationType;
@@ -12,6 +13,8 @@ export type PutAppConfigArgs = {
  */
 export const putAppConfiguration = async ({ appConfiguration }: PutAppConfigArgs): Promise<void> => {
   console.info('putAppConfiguration ~ args:', { appConfiguration });
+
+  isMaintenance();
 
   try {
     await checkUser('superAdmin');

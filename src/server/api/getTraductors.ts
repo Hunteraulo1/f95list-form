@@ -1,9 +1,12 @@
 import { Traductor } from '$types/schemas';
 
 import type { TraductorType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export const getTraductors = async (): Promise<TraductorType[]> => {
   console.info('getTraductors');
+
+  isMaintenance();
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
 

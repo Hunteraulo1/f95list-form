@@ -3,6 +3,7 @@ import Cheerio from 'cheerio';
 import { f95z } from '../lib/f95z';
 
 import type { GameType, ScrapeGameType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 import { unescapeHTML } from '../lib/utils';
 export interface GetScrapeArgs {
   domain: Extract<GameType['domain'], 'F95z'>;
@@ -11,6 +12,8 @@ export interface GetScrapeArgs {
 
 export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGameType> => {
   console.info('getScrape ~ args:', { domain, id });
+
+  isMaintenance();
 
   if (domain !== 'F95z') throw new Error('getScrape ~ domaine incompatible');
 

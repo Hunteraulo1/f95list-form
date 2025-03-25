@@ -1,6 +1,7 @@
 import { getUser } from './getUser';
 
 import { User, type UserType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 import { checkUser, dateNow } from '../lib/utils';
 
 export interface PutUserArgs {
@@ -10,6 +11,8 @@ export interface PutUserArgs {
 
 export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
   console.info('putUser ~ args:', { user });
+
+  isMaintenance();
 
   const activeUserEmail = Session.getActiveUser().getEmail();
   const effectiveUserEmail = Session.getEffectiveUser().getEmail();
@@ -49,6 +52,8 @@ export const putUser = async ({ user }: PutUserArgs): Promise<void> => {
 
 export const putUserRole = async ({ user, role }: PutUserArgs): Promise<boolean> => {
   console.info('putUserRole ~ args:', { user, role });
+
+  isMaintenance();
 
   if (!role) throw new Error('putUserRole ~ No role found');
 
@@ -100,6 +105,8 @@ export const putUserRole = async ({ user, role }: PutUserArgs): Promise<boolean>
 export const putStatistics = async (type: 'put' | 'post'): Promise<void> => {
   console.info('putStatistics ~ args:', { type });
 
+  isMaintenance();
+
   const user = await getUser();
 
   if (!user) throw new Error('not user found');
@@ -125,6 +132,8 @@ export interface DelActivityArgs {
 
 export const delActivity = async ({ email }: DelActivityArgs): Promise<void> => {
   console.info('putStatistics ~ args:', { email });
+
+  isMaintenance();
 
   if (!email) throw new Error('email args empty');
 

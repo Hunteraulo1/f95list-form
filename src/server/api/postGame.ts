@@ -12,6 +12,7 @@ import { Game } from '$types/schemas';
 import { checkUser } from '../lib/utils';
 
 import type { GameType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export interface PostGameArgs {
   game: GameType;
@@ -20,6 +21,8 @@ export interface PostGameArgs {
 
 export const postGame = async ({ game, silentMode }: PostGameArgs): Promise<undefined | string> => {
   console.info('postGame ~ args:', { game, silentMode });
+
+  isMaintenance();
 
   await checkUser('admin');
 

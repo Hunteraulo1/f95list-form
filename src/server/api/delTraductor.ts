@@ -3,6 +3,7 @@ import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
 
 import type { TraductorType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export interface DelTraductorArgs {
   query: TraductorType['name'];
@@ -10,6 +11,8 @@ export interface DelTraductorArgs {
 
 export const delTraductor = async ({ query }: DelTraductorArgs): Promise<void> => {
   console.info('delTraductor ~ args:', { query });
+
+  isMaintenance();
 
   if (!(await checkUser('admin'))) throw new Error('delTraductor ~ Unauthorized');
 

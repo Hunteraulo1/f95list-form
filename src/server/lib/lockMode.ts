@@ -1,4 +1,5 @@
-const scriptPropertiesService = PropertiesService.getScriptProperties();
+import { scriptPropertiesService } from './utils';
+
 let inProgress = false;
 
 const isLocked = (): boolean | undefined => {

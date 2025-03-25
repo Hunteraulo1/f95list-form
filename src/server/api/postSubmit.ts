@@ -1,9 +1,12 @@
 import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 import { checkUser, dateNow } from '../lib/utils';
 import { getSubmits } from './getSubmits';
 
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<string | undefined> => {
   console.info('postSubmit ~ args:', { dataSubmit: { query, game, type, comment } });
+
+  isMaintenance();
 
   if (!(await checkUser('traductor'))) throw new Error('postSubmit ~ Unauthorized');
 

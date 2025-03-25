@@ -36,4 +36,6 @@ const unescapeHTML = (str: string): string =>
       })[tag] || tag,
   );
 
-export { checkUser, dateNow, unescapeHTML };
+const scriptPropertiesService = PropertiesService.getScriptProperties();
+
+export { checkUser, dateNow, scriptPropertiesService, unescapeHTML };

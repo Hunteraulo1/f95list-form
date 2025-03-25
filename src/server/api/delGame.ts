@@ -7,6 +7,7 @@ import { getUser } from './getUser';
 import { putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export interface DelGameArgs {
   query: { name: string; version: string };
@@ -16,6 +17,9 @@ export interface DelGameArgs {
 
 export const delGame = async ({ query, comment, silentMode }: DelGameArgs): Promise<void> => {
   console.info('delGame ~ args:', { query, comment, silentMode });
+
+  isMaintenance();
+
   const { name, version } = query;
 
   if (!(await checkUser('admin'))) throw new Error('delGame ~ Unauthorized');

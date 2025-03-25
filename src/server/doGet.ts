@@ -2,11 +2,14 @@
 
 import { initializeApp } from './lib/initializeApp';
 import { loadAppConfiguration } from './lib/loadAppConfiguration';
+import { isMaintenance } from './lib/mainteanceMode';
 
 const doGet = (_e: unknown): GoogleAppsScript.HTML.HtmlOutput => {
   const activeUserEmail = Session.getActiveUser().getEmail();
 
   console.info('doGet ~ activeUserEmail', activeUserEmail);
+
+  isMaintenance();
 
   if (activeUserEmail === '') {
     return HtmlService.createTemplateFromFile('server/noAuth')

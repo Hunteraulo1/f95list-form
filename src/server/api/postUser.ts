@@ -2,9 +2,12 @@ import { User } from '$types/schemas';
 import { dateNow } from '../lib/utils';
 
 import type { UserType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export const postUser = (email: string, overrides = {}): UserType => {
   console.info('postUser ~ args:', { email, overrides });
+
+  isMaintenance();
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
 

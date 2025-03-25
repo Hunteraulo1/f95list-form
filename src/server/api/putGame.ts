@@ -11,6 +11,7 @@ import { putStatistics, putUser } from './putUser';
 
 import type { GameType } from '$types/schemas';
 import { Game } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 import { checkUser } from '../lib/utils';
 
 export interface PutGameArgs {
@@ -24,6 +25,8 @@ export interface PutGameArgs {
 
 export const putGame = async ({ game: dataGame, query, silentMode }: PutGameArgs): Promise<undefined | string> => {
   console.info('putGame ~ args:', { dataGame });
+
+  isMaintenance();
 
   await checkUser('admin');
 

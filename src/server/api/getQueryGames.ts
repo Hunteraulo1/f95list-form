@@ -1,9 +1,12 @@
 import { QueryGame } from '$types/schemas';
 
 import type { QueryGameType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export const getQueryGames = async (): Promise<QueryGameType[]> => {
   console.info('getQueryGames');
+
+  isMaintenance();
 
   const sheet = SpreadsheetApp.getActiveSpreadsheet();
   const gameSheet = sheet.getSheetByName('Jeux');

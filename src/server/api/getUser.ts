@@ -4,6 +4,7 @@ import { checkUser } from '../lib/utils';
 import { postUser } from './postUser';
 
 import type { UserType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export type GetUserArgs = {
   email: string | null;
@@ -11,6 +12,8 @@ export type GetUserArgs = {
 
 export const getUser = async ({ email }: GetUserArgs = { email: null }): Promise<UserType> => {
   console.info('getUser ~ args:', { email });
+
+  isMaintenance();
 
   const requestingUserEmail = Session.getActiveUser().getEmail();
 

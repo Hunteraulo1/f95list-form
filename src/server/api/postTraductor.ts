@@ -4,6 +4,7 @@ import { checkUser } from '../lib/utils';
 import { getTraductors } from './getTraductors';
 
 import type { TraductorType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 import { reloadFilter } from '../lib/reloadFilter';
 
 export interface PostTraductorArgs {
@@ -12,6 +13,8 @@ export interface PostTraductorArgs {
 
 export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<undefined | string> => {
   console.info('postTraductor ~ args:', { dataTraductor: traductor });
+
+  isMaintenance();
 
   await checkUser('admin');
 

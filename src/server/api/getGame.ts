@@ -1,6 +1,7 @@
 import { getQueryGames } from './getQueryGames';
 
 import { Game, type GameType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export interface GetGameArgs {
   name: string | null;
@@ -9,6 +10,8 @@ export interface GetGameArgs {
 
 export const getGame = async ({ name, version }: GetGameArgs): Promise<GameType | null> => {
   console.info('getGame ~ args:', { name, version });
+
+  isMaintenance();
 
   const games = await getQueryGames();
 

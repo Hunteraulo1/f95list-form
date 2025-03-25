@@ -1,6 +1,7 @@
 import { User } from '$types/schemas';
 
 import type { SubmitType, UserType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export interface GetSubmitsArgs {
   user?: UserType;
@@ -8,6 +9,8 @@ export interface GetSubmitsArgs {
 
 export const getSubmits = async ({ user }: GetSubmitsArgs): Promise<SubmitType[]> => {
   console.info('getSubmits ~ args:', { user });
+
+  isMaintenance();
 
   const scriptPropertiesService = PropertiesService.getScriptProperties();
   const scriptProperties = scriptPropertiesService.getProperties();

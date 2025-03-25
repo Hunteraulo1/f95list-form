@@ -1,9 +1,13 @@
 import { checkUser } from '../lib/utils';
 
 import type { UserType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export const getUsers = async (): Promise<UserType[] | undefined> => {
   console.info('getUsers');
+
+  isMaintenance();
+
   const requestingUserEmail = Session.getActiveUser().getEmail();
 
   console.info('getUsers called by: ', requestingUserEmail);

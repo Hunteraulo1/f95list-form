@@ -4,6 +4,7 @@ import { getSubmits } from './getSubmits';
 import { getUser } from './getUser';
 
 import type { SubmitType } from '$types/schemas';
+import { isMaintenance } from '../lib/mainteanceMode';
 
 export interface PutSubmitArgs {
   submit: SubmitType;
@@ -12,6 +13,8 @@ export interface PutSubmitArgs {
 
 export const putSubmit = async ({ submit, status }: PutSubmitArgs): Promise<void> => {
   console.info('putSubmit ~ args:', { submit, type: status });
+
+  isMaintenance();
 
   if (!(await checkUser('admin'))) throw new Error('putSubmit ~ Unauthorized');
 
