@@ -2,7 +2,7 @@
 import { GAS_API } from '$lib/GAS_API';
 import { getConvert } from '$lib/convert';
 import { game, isLoading, newToast, queryGame } from '$lib/stores';
-import { checkUser, dateFormat } from '$lib/utils';
+import { checkSubmits, checkUser, dateFormat } from '$lib/utils';
 import { onMount } from 'svelte';
 import FormGame from './FormGame.svelte';
 import LoadingSpinner from './LoadingSpinner.svelte';
@@ -75,6 +75,8 @@ const handleUpdateSubmit = async (status: 'validated' | 'rejected'): Promise<voi
       alertType: 'success',
       message: 'Soumission mise à jour!',
     });
+
+    checkSubmits();
   } catch (error) {
     console.error('Could not update submit:', error);
 
