@@ -84,18 +84,17 @@ const checkVersion = async (): Promise<void> => {
 
           sheet?.getRange(`N${index + 2}`)?.setValue(resultScrape.image);
 
-          if (tname !== 'Intégrée') return;
-
-          sendWebhookUpdate({
-            title: 'Traduction mise à jour:',
-            url: link,
-            color: 5_814_783,
-            name,
-            tversion: `${version} > ${result[id]}`,
-            traductor,
-            proofreader,
-            image,
-          });
+          if (tname === 'Intégrée')
+            sendWebhookUpdate({
+              title: 'Traduction mise à jour:',
+              url: link,
+              color: 5_814_783,
+              name,
+              tversion: `${version} > ${result[id]}`,
+              traductor,
+              proofreader,
+              image,
+            });
         } catch (error) {
           console.error('scrape image error: ', error);
         }
