@@ -4,6 +4,7 @@ import { F95host } from '../env';
 import { sendTraductorWebhook, sendWebhookAC, sendWebhookUpdate } from './webhook';
 
 import type { GameACType, GameType } from '$types/schemas';
+import { changelog } from './changeLog';
 
 const checkVersion = async (): Promise<void> => {
   console.info('checkVersion');
@@ -84,7 +85,7 @@ const checkVersion = async (): Promise<void> => {
 
           sheet?.getRange(`N${index + 2}`)?.setValue(resultScrape.image);
 
-          if (tname === 'Intégrée')
+          if (tname === 'Intégrée') {
             sendWebhookUpdate({
               title: 'Traduction mise à jour:',
               url: link,
@@ -95,6 +96,9 @@ const checkVersion = async (): Promise<void> => {
               proofreader,
               image,
             });
+
+            changelog({ game: name, status: 'MISE À JOUR' });
+          }
         } catch (error) {
           console.error('scrape image error: ', error);
         }
