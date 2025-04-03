@@ -1,9 +1,12 @@
 import { getGames } from '../api/getGames';
 import { getScrape } from '../api/getScrape';
 import { F95host } from '../env';
-import { sendTraductorWebhook, sendWebhookAC } from './webhook';
+import { sendTraductorWebhook, sendWebhookAC, sendWebhookUpdate } from './webhook';
 
 import type { GameACType, GameType } from '$types/schemas';
+import { delTraductor } from '../api/delTraductor';
+import { getTraductorsCalc } from '../api/getTraductors';
+import { changelog } from './changeLog';
 
 const checkVersion = async (): Promise<void> => {
   console.info('checkVersion');
@@ -12,17 +15,27 @@ const checkVersion = async (): Promise<void> => {
 
   const ids: number[] = [];
   const games: GameType[] = await getGames();
-  const checkedGames: { index: number; id: number; version: string; traductor: string; name: string }[] = [];
+  const checkedGames: {
+    index: number;
+    id: number;
+    version: string;
+    traductor: string;
+    name: string;
+    tname: string;
+    link: string;
+    proofreader: string;
+    image: string;
+  }[] = [];
   let result: { [key: string]: string } = {};
   const changed: GameACType[] = [];
 
   games.forEach((game, index) => {
-    const { domain, id, ac, version, traductor, name } = game;
+    const { domain, id, ac, version, traductor, name, tname, link, image, proofreader } = game;
 
     if (domain !== 'F95z' || !id || !ac) return;
 
     ids.push(id);
-    checkedGames.push({ index, id, version, traductor, name });
+    checkedGames.push({ index, id, version, traductor, name, tname, link, image, proofreader });
   });
 
   for (let index = 0; index <= ids.length / 100; index++) {
@@ -40,7 +53,7 @@ const checkVersion = async (): Promise<void> => {
   }
 
   for (const game of checkedGames) {
-    const { index, id, version, traductor, name } = game;
+    const { index, id, version, traductor, name, tname, link, image, proofreader } = game;
     if (version === result[id]) {
       // console.info(`ID: ${id} | version: ${version} / newVersion: ok`);
     } else if (result[id] === 'Unknown') {
@@ -73,6 +86,21 @@ const checkVersion = async (): Promise<void> => {
           if (result?.image === '') throw new Error('no image scraped');
 
           sheet?.getRange(`N${index + 2}`)?.setValue(resultScrape.image);
+
+          if (tname === 'Intégrée') {
+            sendWebhookUpdate({
+              title: 'Traduction mise à jour:',
+              url: link,
+              color: 5_814_783,
+              name,
+              tversion: `${version} > ${result[id]}`,
+              traductor,
+              proofreader,
+              image,
+            });
+
+            changelog({ game: name, status: 'MISE À JOUR' });
+          }
         } catch (error) {
           console.error('scrape image error: ', error);
         }
@@ -82,6 +110,8 @@ const checkVersion = async (): Promise<void> => {
       }
     }
   }
+
+  checkTraductors();
 
   sendWebhookAC({ games: changed });
 
@@ -108,4 +138,13 @@ const f95Api = async (ids: string | string[]): Promise<Response> => {
   console.info('f95Api ~ result:', result);
 
   return result;
+};
+
+const checkTraductors = async (): Promise<void> => {
+  const traductors = await getTraductorsCalc();
+
+  for (const traductor of traductors) {
+    if (traductor.calc !== 0) continue;
+    delTraductor({ query: traductor.name });
+  }
 };

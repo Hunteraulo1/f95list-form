@@ -1,5 +1,5 @@
 <script lang="ts">
-import { sessionUser } from '$lib/stores';
+import { sessionUser, submitsCount } from '$lib/stores';
 import { AlignJustify } from '@steeze-ui/lucide-icons';
 import { Icon } from '@steeze-ui/svelte-icon';
 import { onMount } from 'svelte';
@@ -8,10 +8,9 @@ import packageJson from '../../../package.json';
 
 interface Props {
   title?: string;
-  count: number;
 }
 
-const { title = '', count }: Props = $props();
+const { title = '' }: Props = $props();
 
 onMount(async () => {});
 </script>
@@ -20,8 +19,8 @@ onMount(async () => {});
   <div class="flex-none">
     <label for="nav-drawer-control" class="btn btn-square btn-ghost relative">
       <Icon src={AlignJustify} size="1.5rem" />
-      {#if count > 0}
-        <span class="badge badge-error absolute top-1 right-1 size-4 p-0 pb-0.5 text-white text-xs">{count}</span>
+      {#if $submitsCount > 0}
+        <span class="badge badge-error absolute top-1 right-1 size-4 p-0 pb-0.5 text-white text-xs">{$submitsCount}</span>
       {/if}
     </label>
   </div>

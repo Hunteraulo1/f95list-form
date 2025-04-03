@@ -2,7 +2,7 @@
 import { GAS_API } from '$lib/GAS_API';
 import { fetchAppConfiguration } from '$lib/fetchAppConfig';
 import { appConfiguration, isLoading, sessionUser } from '$lib/stores';
-import { checkUser } from '$lib/utils';
+import { checkSubmits, checkUser } from '$lib/utils';
 import { onMount } from 'svelte';
 import { Route as RoutePrimitive, Router } from 'svelte-routing';
 
@@ -52,16 +52,6 @@ onMount(async () => {
     console.info('User:', result);
 
     document.querySelector('html')?.setAttribute('data-theme', result.preferences.theme ?? 'dark');
-
-    if (checkUser(['admin', 'superAdmin'])) {
-      const submits = await GAS_API.getSubmits({});
-
-      if (!submits) return;
-
-      const submitsWait = submits.filter((submit) => submit.status === 'wait');
-
-      count = submitsWait.length;
-    }
   } catch (err) {
     console.error('Could not get user:', err); // TODO: dispatch toast
   } finally {
@@ -71,6 +61,8 @@ onMount(async () => {
   }
 
   fetchAppConfiguration();
+
+  checkSubmits();
 });
 </script>
 
@@ -88,7 +80,7 @@ onMount(async () => {
 
       <div class="drawer-content bg-base-200">
         <!-- Page content here -->
-        <HeaderBar title={$appConfiguration.appName} {count} />
+        <HeaderBar title={$appConfiguration.appName} />
 
         <div class="container mx-auto pb-8">
           <Route path="*">

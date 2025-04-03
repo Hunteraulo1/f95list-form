@@ -10,6 +10,7 @@ export const queryGame = writable<QueryGameType | undefined>(undefined);
 export const queryGames = writable<QueryGameType[]>([]);
 export const game = writable<GameType | undefined>();
 export const traductors = writable<TraductorType[]>([]);
+export const submitsCount = writable<number>(0);
 
 export const appConfiguration = writable<AppConfigurationType>();
 

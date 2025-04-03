@@ -40,7 +40,8 @@ const alertClass = (): string => {
 <div
   in:fade={{ delay: 100, duration: 100 }}
   out:fade={{ duration: 100 }}
-  class="block min-w-[200px] scale-100 transform px-3 py-2 transition-all duration-[{milliseconds}ms] ease-out">
+  style:duration="{milliseconds}ms"
+  class="block min-w-[200px] scale-100 transform px-3 py-2 transition-all ease-out">
   <div class="alert {alertClass()} bg-base shadow-lg">
     <div class="flex flex-row items-center">
       {#if alertType == "info"}

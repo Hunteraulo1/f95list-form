@@ -1,5 +1,6 @@
 import { User, type UserType } from '$types/schemas';
-import { sessionUser } from './stores';
+import { GAS_API } from './GAS_API';
+import { sessionUser, submitsCount } from './stores';
 
 const checkUser = (ranks: UserType['role'][]): boolean => {
   let user: UserType | null = null;
@@ -15,6 +16,18 @@ const checkUser = (ranks: UserType['role'][]): boolean => {
   return ranks.includes(validUser.role);
 };
 
+const checkSubmits = async (): Promise<void> => {
+  if (!checkUser(['admin', 'superAdmin'])) return;
+
+  const submits = await GAS_API.getSubmits({});
+
+  if (!submits) return;
+
+  const submitsWait = submits.filter((submit) => submit.status === 'wait');
+
+  submitsCount.set(submitsWait.length);
+};
+
 const dateFormatOptions: Intl.DateTimeFormatOptions = {
   day: 'numeric',
   month: 'numeric',
@@ -25,4 +38,4 @@ const dateFormatOptions: Intl.DateTimeFormatOptions = {
 
 const dateFormat = (date: Date): string => date.toLocaleString('fr-FR', dateFormatOptions);
 
-export { checkUser, dateFormat };
+export { checkSubmits, checkUser, dateFormat };
