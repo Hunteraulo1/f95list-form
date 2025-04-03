@@ -111,11 +111,11 @@ const checkVersion = async (): Promise<void> => {
     }
   }
 
+  checkTraductors();
+
   sendWebhookAC({ games: changed });
 
   sendTraductorWebhook({ games: changed });
-
-  checkTraductors();
 };
 
 interface Response {
@@ -144,7 +144,7 @@ const checkTraductors = async (): Promise<void> => {
   const traductors = await getTraductorsCalc();
 
   for (const traductor of traductors) {
-    if (traductor.calc !== 0) return;
+    if (traductor.calc !== 0) continue;
     delTraductor({ query: traductor.name });
   }
 };
