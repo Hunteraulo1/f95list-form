@@ -32,3 +32,24 @@ export const getTraductors = async (): Promise<TraductorType[]> => {
 
   return result;
 };
+
+export const getTraductorsCalc = async (): Promise<{ name: string; calc: number }[]> => {
+  console.info('getTraductorsCalc');
+
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Traducteurs/Relecteurs');
+
+  if (!sheet) throw new Error('getTraductorsCalc ~ Sheet not found');
+
+  const totalRow = sheet.getLastRow();
+
+  const data = sheet.getRange(`A${2}:F${totalRow}`).getValues();
+
+  const result = data.map((traductor) => ({
+    name: traductor[0],
+    calc: traductor[5],
+  }));
+
+  console.info('getTraductorsCalc ~ result:', result);
+
+  return result;
+};

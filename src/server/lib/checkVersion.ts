@@ -4,6 +4,8 @@ import { F95host } from '../env';
 import { sendTraductorWebhook, sendWebhookAC, sendWebhookUpdate } from './webhook';
 
 import type { GameACType, GameType } from '$types/schemas';
+import { delTraductor } from '../api/delTraductor';
+import { getTraductorsCalc } from '../api/getTraductors';
 import { changelog } from './changeLog';
 
 const checkVersion = async (): Promise<void> => {
@@ -112,6 +114,8 @@ const checkVersion = async (): Promise<void> => {
   sendWebhookAC({ games: changed });
 
   sendTraductorWebhook({ games: changed });
+
+  checkTraductors();
 };
 
 interface Response {
@@ -134,4 +138,13 @@ const f95Api = async (ids: string | string[]): Promise<Response> => {
   console.info('f95Api ~ result:', result);
 
   return result;
+};
+
+const checkTraductors = async (): Promise<void> => {
+  const traductors = await getTraductorsCalc();
+
+  for (const traductor of traductors) {
+    if (traductor.calc !== 0) return;
+    delTraductor({ query: traductor.name });
+  }
 };
