@@ -44,7 +44,7 @@ const attributes: HTMLInputAttributes = {
   <img
     src={$game.image}
     alt="bannière du jeu 2"
-    class="absolute top-20 hidden w-full max-w-md rounded-md"
+    class="absolute top-20 hidden w-full max-w-md rounded-md z-10"
     loading="lazy"
     onerror={handleImageError}
   />
