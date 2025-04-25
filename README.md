@@ -17,7 +17,7 @@ the ground, this project provides a few extra opinions, UI elements, type defini
 
 # Other Notable Dependncies
 
-- [clasp]
+- [clasp@2.x.x]
 - [clasp.env]
 
 # Features
