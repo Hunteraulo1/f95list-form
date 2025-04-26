@@ -22,7 +22,7 @@ import InitialLoad from '$components/InitialLoad.svelte';
 import NavLink from '$components/NavLink.svelte';
 import Route from '$components/Route.svelte';
 import Toaster from '$components/Toaster.svelte';
-import { Bug, CircleUserRound, Cog, House, Inbox, Languages } from '@steeze-ui/lucide-icons';
+import { Bug, CircleUserRound, Cog, House, Inbox, Languages, LogOut } from '@steeze-ui/lucide-icons';
 import { Icon } from '@steeze-ui/svelte-icon';
 
 interface Props {
@@ -64,6 +64,16 @@ onMount(async () => {
 
   checkSubmits();
 });
+
+const handleLogout = async (): Promise<void> => {
+  try {
+    await GAS_API.doLogout();
+
+    window.location.reload();
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 
 <Router {url}>
@@ -155,6 +165,7 @@ onMount(async () => {
             <Icon src={CircleUserRound} size="1rem" />
             Préférences utilisateur
           </NavLink>
+          
           <div class="divider"></div>
 
           {#if checkUser(['superAdmin', 'superAdmin'])}
@@ -163,6 +174,13 @@ onMount(async () => {
               Panel développeur
             </NavLink>
           {/if}
+          
+          <span class="text-red-500 font-bold">
+            <NavLink to="/" onClick={handleLogout}>
+              <Icon src={LogOut} size="1rem"  />
+              Se déconnecter
+            </NavLink>
+          </span>
         </ul>
       </div>
     </div>

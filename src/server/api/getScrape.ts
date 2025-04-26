@@ -81,17 +81,20 @@ const scrapeGetTitle = (data: string[]): { status: string | null; type: string |
   let type = null;
 
   for (const e of data) {
-    switch (e) {
-      case 'Abandoned':
-        status = 'ABANDONNÉ';
-        break;
-      case 'Completed':
-        status = 'TERMINÉ';
-        break;
-      default:
-        status = 'EN COURS';
-        break;
+    if (!status || status === 'EN COURS') {
+      switch (e) {
+        case 'Abandoned':
+          status = 'ABANDONNÉ';
+          break;
+        case 'Completed':
+          status = 'TERMINÉ';
+          break;
+        default:
+          status = 'EN COURS';
+          break;
+      }
     }
+
     switch (e) {
       case "Ren'Py":
         type = 'RenPy';

@@ -36,4 +36,6 @@ const unescapeHTML = (str: string): string =>
       })[tag] || tag,
   );
 
-export { checkUser, dateNow, unescapeHTML };
+const doLogout = (): void => ScriptApp.invalidateAuth();
+
+export { checkUser, dateNow, doLogout, unescapeHTML };

@@ -54,6 +54,7 @@
       "Session",
       "HtmlService",
       "SpreadsheetApp",
+      "ScriptApp",
       "UrlFetchApp",
       "PropertiesService",
       "Utilities",
