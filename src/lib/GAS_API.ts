@@ -69,6 +69,7 @@ export const GAS_API = {
 
   // Others
   getScrape: (args: GetScrapeArgs): Promise<ScrapeGameType> => callAPI<ScrapeGameType, typeof args>('getScrape', args),
+  doLogout: (): Promise<void> => callAPI<void>('doLogout'),
 
   // Submit
   getSubmits: (args: GetSubmitsArgs): Promise<SubmitType[]> => callAPI<SubmitType[], typeof args>('getSubmits', args),

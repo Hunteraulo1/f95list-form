@@ -24,6 +24,8 @@ export type MockEndpoints = {
   [K in keyof typeof GAS_API]: (typeof GAS_API)[K];
 };
 
+const doLogout = async (): Promise<void> => {};
+
 const getMockEndpoints = (): MockEndpoints => ({
   // App Configuration
   getAppConfiguration,
@@ -42,7 +44,10 @@ const getMockEndpoints = (): MockEndpoints => ({
   putGame,
   delGame,
   getQueryGames,
+
+  // Other
   getScrape,
+  doLogout,
 
   // Traductor
   getTraductors,
