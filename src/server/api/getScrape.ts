@@ -35,7 +35,6 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
   const image = img?.replace('thumb/', '') ?? null;
 
   const titleMatch = title.match(regTitle);
-  console.log('🚀 ~ getScrape ~ titleMatch:', titleMatch);
   const nameMatch = pTitle.match(regName) ?? [];
 
   const name = unescapeHTML(nameMatch?.[1]) ?? null;
