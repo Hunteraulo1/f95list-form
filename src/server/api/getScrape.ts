@@ -35,6 +35,7 @@ export const getScrape = async ({ domain, id }: GetScrapeArgs): Promise<ScrapeGa
   const image = img?.replace('thumb/', '') ?? null;
 
   const titleMatch = title.match(regTitle);
+  console.log('🚀 ~ getScrape ~ titleMatch:', titleMatch);
   const nameMatch = pTitle.match(regName) ?? [];
 
   const name = unescapeHTML(nameMatch?.[1]) ?? null;
@@ -81,17 +82,20 @@ const scrapeGetTitle = (data: string[]): { status: string | null; type: string |
   let type = null;
 
   for (const e of data) {
-    switch (e) {
-      case 'Abandoned':
-        status = 'ABANDONNÉ';
-        break;
-      case 'Completed':
-        status = 'TERMINÉ';
-        break;
-      default:
-        status = 'EN COURS';
-        break;
+    if (!status || status === 'EN COURS') {
+      switch (e) {
+        case 'Abandoned':
+          status = 'ABANDONNÉ';
+          break;
+        case 'Completed':
+          status = 'TERMINÉ';
+          break;
+        default:
+          status = 'EN COURS';
+          break;
+      }
     }
+
     switch (e) {
       case "Ren'Py":
         type = 'RenPy';
