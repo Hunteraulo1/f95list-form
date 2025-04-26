@@ -2,7 +2,6 @@
 import { sessionUser, submitsCount } from '$lib/stores';
 import { AlignJustify } from '@steeze-ui/lucide-icons';
 import { Icon } from '@steeze-ui/svelte-icon';
-import { onMount } from 'svelte';
 import { Link, navigate } from 'svelte-routing';
 import packageJson from '../../../package.json';
 
@@ -11,8 +10,6 @@ interface Props {
 }
 
 const { title = '' }: Props = $props();
-
-onMount(async () => {});
 </script>
 
 <div class="navbar mb-8 bg-base-100">
