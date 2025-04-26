@@ -21,15 +21,15 @@ const handleClickScrape = async (): Promise<void> => {
 };
 </script>
 
-<div class="flex flex-col gap-2">
-  <div class="flex">
-    <select class="select select-bordered sm:w-40" onchange={(e) => (selectToastValue = e.currentTarget.value as Toast['alertType'])}>
+<div class="flex flex-col gap-4 max-w-xs">
+  <div class="flex gap-2 w-full">
+    <select class="select select-bordered w-full" onchange={(e) => (selectToastValue = e.currentTarget.value as Toast['alertType'])}>
       {#each alertTypes as alertType}
         <option value={alertType}>{alertType}</option>
       {/each}
     </select>
     <button
-      class="btn btn-primary sm:w-40"
+      class="btn btn-primary w-40"
       onclick={() =>
         newToast({
           alertType: selectToastValue,
@@ -40,12 +40,12 @@ const handleClickScrape = async (): Promise<void> => {
     </button>
   </div>
 
-  <div class="flex">
-    <input type="number" value={id} oninput={(e)=> id = Number.parseInt(e.currentTarget.value)} />
+  <div class="flex gap-2 w-full">
+    <input class="input input-bordered w-full" type="number" value={id} oninput={(e)=> id = Number.parseInt(e.currentTarget.value)} />
     <button
-      class="btn btn-primary sm:w-40"
+      class="btn btn-primary w-40"
       onclick={handleClickScrape}>
-      Valider
+      Check Scrape
     </button>
   </div>
 </div>
