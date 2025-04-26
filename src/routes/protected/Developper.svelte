@@ -34,7 +34,7 @@ const handleClickScrape = async (): Promise<void> => {
         newToast({
           alertType: selectToastValue,
           message: "Test du Dispatch",
-          milliseconds: 60000,
+          milliseconds: 10 * 1000, // 10 secondes
         })}>
       Test Dispatch
     </button>
