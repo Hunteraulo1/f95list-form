@@ -122,7 +122,7 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
                                 src={user?.profile?.imageUrl ||
                                   'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100'
                                 }
-                                alt="Avatar Tailwind CSS Component" />
+                                alt="avatar" />
                             </div>
                           </div>
                           <div>
