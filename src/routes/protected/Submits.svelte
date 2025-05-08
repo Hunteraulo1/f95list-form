@@ -22,7 +22,7 @@ onMount(async () => {
 
   try {
     submits = await GAS_API.getSubmits({});
-    sortedSubmits = submits;
+    sortedSubmits = submits.sort((a, b) => (a.status < b.status ? 1 : -1));
 
     users = await GAS_API.getUsers();
   } catch (error) {
@@ -101,10 +101,12 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'game')} class="cursor-pointer">Jeux</th>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'date')} class="cursor-pointer">
                   Date
-                  <span class="sorted">⤒</span>
                 </th>
                 <th onclick={({currentTarget}) => handleClick(currentTarget, 'type')} class="cursor-pointer">Type</th>
-                <th onclick={({currentTarget}) => handleClick(currentTarget, 'status')} class="cursor-pointer">Statut</th>
+                <th onclick={({currentTarget}) => handleClick(currentTarget, 'status')} class="cursor-pointer">
+                  Statut
+                  <span class="sorted">⤒</span>
+                </th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -122,7 +124,7 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
                                 src={user?.profile?.imageUrl ||
                                   'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100'
                                 }
-                                alt="Avatar Tailwind CSS Component" />
+                                alt="avatar" />
                             </div>
                           </div>
                           <div>
@@ -141,7 +143,7 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
                           <div class="mask mask-squircle h-12 w-12">
                             <img
                               src={'https://lh3.googleusercontent.com/a-/AOh14Gj-cdUSUVoEge7rD5a063tQkyTDT3mripEuDZ0v=s100'}
-                              alt="Avatar Tailwind CSS Component" />
+                              alt="avatar" />
                           </div>
                         </div>
                         <div>
