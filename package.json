@@ -23,7 +23,7 @@
     "@types/google-apps-script": "1.0.97",
     "@types/google.script.client-side": "0.1.5",
     "@types/jsdom": "21.1.7",
-    "@types/node": "22.15.15",
+    "@types/node": "22.15.17",
     "daisyui": "5.0.35",
     "rollup": "4.40.2",
     "rollup-plugin-copy": "3.5.0",
