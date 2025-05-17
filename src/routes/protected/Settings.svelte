@@ -121,6 +121,18 @@ const isSuperAdmin = checkUser(['superAdmin']);
               class="input input-bordered w-full"
               name="app-traductor" />
           </div>
+          <div class="w-full max-w-xs">
+            <label class="label" for="app-lister">
+              <span class="label-text">Url du webhook des listers</span>
+            </label>
+            <input
+              bind:value={$appConfiguration.webhooks.lister}
+              disabled={$isLoading || !isSuperAdmin}
+              type="text"
+              placeholder="url du webhook"
+              class="input input-bordered w-full"
+              name="app-lister" />
+          </div>
         </div>
       {/snippet}
     </Panel>
