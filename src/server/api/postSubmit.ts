@@ -1,5 +1,6 @@
 import { PostSubmit, type PostSubmitType, type SubmitType } from '$types/schemas';
 import { checkUser, dateNow } from '../lib/utils';
+import { sendWebhookLister } from '../lib/webhook';
 import { getSubmits } from './getSubmits';
 
 export const postSubmit = async ({ query, game, type, comment }: PostSubmitType): Promise<string | undefined> => {
@@ -52,6 +53,8 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
     submits.unshift(submit);
 
     scriptPropertiesService.setProperty('submits', JSON.stringify(submits));
+
+    sendWebhookLister("Une nouvelle soumission vient d'être ajouté");
 
     return;
   } catch (error) {
