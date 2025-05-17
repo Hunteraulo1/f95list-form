@@ -28,17 +28,15 @@ const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
 {#if typeof $game[name] === 'boolean'}
   <div class="flex h-full w-full flex-col justify-center" class:hidden={!step || !active?.includes(step) || !checkUser(['admin', 'superAdmin'])}>
     <label for={name}>{title}:</label>
-    <div class="flex gap-1">
-      <input
-        placeholder={title}
-        id={name}
-        type="checkbox"
-        onchange={handleChange}
-        disabled={name === 'ac' && $game.domain !== 'F95z'}
-        bind:checked={$game[name]}
-        class="checkbox checkbox-lg"
-        class:border-error={error}
-      />
-    </div>
+    <input
+      placeholder={title}
+      id={name}
+      type="checkbox"
+      onchange={handleChange}
+      disabled={name === 'ac' && $game.domain !== 'F95z'}
+      bind:checked={$game[name]}
+      class="checkbox checkbox-lg"
+      class:border-error={error}
+    />
   </div>
 {/if}

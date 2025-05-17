@@ -7,5 +7,6 @@ export const appConfiguration = {
     update: '',
     logs: '',
     traductor: '',
+    lister: '',
   },
 };

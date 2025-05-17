@@ -69,7 +69,7 @@ const handleInput: ChangeEventHandler<HTMLInputElement> = (event) => {
       id={name}
       onchange={handleChange}
       oninput={handleInput}
-      disabled={(name === 'tlink' && $game.tname === 'Intégrée') || (name === 'ac' && $game.domain !== 'F95z') || (name === 'id' && $game.domain === 'Autre') || (name === 'tversion' && $game.tname === 'Intégrée')}
+      disabled={(name === 'tlink' && $game.tname === 'Intégrée') || (name === 'ac' && $game.domain !== 'F95z') || (name === 'id' && $game.domain === 'Autre') || (name === 'tversion' && $game.tname === 'Intégrée') || (name === 'tlink' && $game.tname === 'Pas de traduction') || (name === 'tversion' && $game.tname === 'Pas de traduction')}
       bind:value={$game[name]}
       {type}
       class={type === "checkbox" ? "checkbox checkbox-lg" : "input input-bordered w-full"}

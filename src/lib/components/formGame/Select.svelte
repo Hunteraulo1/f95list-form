@@ -18,8 +18,9 @@ const { title, values = [], className, active, step, name }: Props = $props();
 if (!$game) throw new Error('no game data');
 
 const handleChange: ChangeEventHandler<HTMLSelectElement> = (event) => {
-  if (name === 'tname' && $game.tversion === 'Intégrée') {
+  if (name === 'tname' && event.currentTarget.value === 'Pas de traduction') {
     $game.tversion = '';
+    $game.tlink = '';
   }
 
   if (name === 'tname' && event.currentTarget.value === 'Intégrée') {

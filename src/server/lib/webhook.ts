@@ -321,3 +321,35 @@ const getName = (): string => {
       return username || user.getEmail();
   }
 };
+
+export const sendWebhookLister = async (title: string): Promise<void> => {
+  console.info('sendWebhookLister');
+
+  const env = PropertiesService.getScriptProperties();
+  const appConfiguration = env.getProperty('appConfiguration');
+
+  if (!appConfiguration) return;
+
+  const { webhooks } = AppConfiguration.parse(JSON.parse(appConfiguration));
+
+  UrlFetchApp.fetch(webhooks.lister, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    payload: JSON.stringify({
+      content: '',
+      tts: false,
+      embeds: [
+        {
+          title,
+          author: {
+            name: 'Panel de gestion',
+          },
+        },
+      ],
+      components: [],
+      actions: {},
+    }),
+  });
+};
