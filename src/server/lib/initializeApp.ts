@@ -19,6 +19,7 @@ export const initializeApp = (): AppConfigurationType => {
       update: '',
       logs: '',
       traductor: '',
+      lister: '',
     },
   };
 
