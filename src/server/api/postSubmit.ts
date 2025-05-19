@@ -54,7 +54,7 @@ export const postSubmit = async ({ query, game, type, comment }: PostSubmitType)
 
     scriptPropertiesService.setProperty('submits', JSON.stringify(submits));
 
-    sendWebhookLister("Une nouvelle soumission vient d'être ajouté");
+    sendWebhookLister({ title: "Une nouvelle soumission vient d'être ajouté" });
 
     return;
   } catch (error) {

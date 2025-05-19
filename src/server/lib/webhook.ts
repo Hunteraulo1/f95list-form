@@ -322,7 +322,11 @@ const getName = (): string => {
   }
 };
 
-export const sendWebhookLister = async (title: string): Promise<void> => {
+interface SendWebhookListerArgs {
+  title: string;
+}
+
+export const sendWebhookLister = async ({ title }: SendWebhookListerArgs): Promise<void> => {
   console.info('sendWebhookLister');
 
   const env = PropertiesService.getScriptProperties();
