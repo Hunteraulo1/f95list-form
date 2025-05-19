@@ -14,7 +14,7 @@ const baseConfig = {
 export default [
   {
     ...baseConfig,
-    input: 'node_modules/zod/lib/index.js',
+    input: './node_modules/zod/dist/commonjs/index.js',
     output: {
       file: 'dist/server/lib/zod-bundle.js',
       format: 'iife',

@@ -111,7 +111,7 @@ const handleClick = (element: HTMLTableCellElement, target: keyof SubmitType): v
               </tr>
             </thead>
             <tbody>
-              {#each sortedSubmits as submit, index}
+              {#each sortedSubmits as submit, index (submit.date)}
                 {@const user = users.find((user) => user.email === submit.email) as UserType}
                 <tr>
                   <td>
