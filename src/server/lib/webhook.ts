@@ -278,6 +278,11 @@ export const sendTraductorWebhook = async ({ games }: SendTraductorWebhookArgs):
     return;
   }
 
+  if (fields.length !== games.length) {
+    console.info('sendTraductorWebhook ~ fields:', fields);
+    console.info('sendTraductorWebhook ~ games:', games);
+  }
+
   UrlFetchApp.fetch(webhooks.traductor, {
     method: 'post',
     headers: {
