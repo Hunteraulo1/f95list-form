@@ -39,7 +39,7 @@ export const postTraductor = async ({ traductor }: PostTraductorArgs): Promise<u
       '',
       `=COUNTIF(Jeux!J$3:J;"*"&A${totalRow + 1}&"*")`,
       `=COUNTIF(Jeux!K$3:K;"*"&A${totalRow + 1}&"*")`,
-      `=C${totalRow + 1}+D${totalRow + 1}`,
+      `=D${totalRow + 1}+E${totalRow + 1}`,
     ];
 
     sheet.insertRowAfter(totalRow);
